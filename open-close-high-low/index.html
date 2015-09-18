@@ -23,8 +23,10 @@
 <body>
 	<h1>Open Close, High Low chart</h1>
 	<a href="https://github.com/ft-interactive/graphics-examples/tree/master/open-close-high-low">source</a>
-<div class="chart">
-</div>
+
+	<div class="chart">
+	</div>
+
 </body>
 <script type="text/javascript">
 
@@ -58,6 +60,7 @@ function drawChart(loadedData){
 		};
 	});
 
+//create the scales
 	var xScale = d3.time.scale()
 		.domain( d3.extent(processedData, function(d){ return d.date; } ) )
 		.range( [0, plotWidth] )
@@ -71,13 +74,12 @@ function drawChart(loadedData){
 		.range( [0, plotHeight] )
 		.nice();
 
-		console.log(yScale.domain());
-
 	function colourScale(d){ 
 		if(d.close>d.open){ return fallColour; }
 		return riseColour;
 	}
 
+//create the chart itself
 	var svg = d3.select('.chart') // attach this to the first div with the class chart
 		.append('svg')	// add the SVG tot he page
 		.attr({
@@ -85,6 +87,7 @@ function drawChart(loadedData){
 			height: chartHeight
 		});
 
+//create the axes
 	var axes = svg.append('g')
 			.attr({ 
 				'class':'axes',
@@ -107,7 +110,7 @@ function drawChart(loadedData){
 				.scale(yScale)
 				.orient('left') )
 		
-
+//plot the data
 	var plot = svg.append('g')
 			.attr({ 
 				transform:'translate(' + margin.left + ',' + margin.top + ')' 
