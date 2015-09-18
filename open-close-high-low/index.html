@@ -1,0 +1,155 @@
+<html>
+<head>
+	<title>Open High Low Close</title>
+	<script type="text/javascript" src="../d3/d3.v3.min.js"></script>
+	<style type="text/css">
+		*{
+			font-family: sans-serif;
+		}
+		
+		.y.axis .domain,
+		.x.axis .domain{
+			fill:none;
+			stroke:#000;
+		}
+
+		.y.axis .tick line,
+		.x.axis .tick line{
+			fill:none;
+			stroke:#000;
+		}
+	</style>
+</head>
+<body>
+	<h1>Open Close, High Low chart</h1>
+<div class="chart">
+</div>
+</body>
+<script type="text/javascript">
+
+//Configuration
+var data = 'apple-stockprice-data.csv',	//The spreadsheet where the data comes from
+	source = 'FT graphics',
+	title = ''
+
+	chartWidth = 600,
+	chartHeight = 400,
+	margin = { top:50, bottom:50, left:50, right:20 },
+	plotWidth = chartWidth - (margin.left + margin.right),
+	plotHeight = chartHeight - (margin.top + margin.bottom),
+	riseColour = '#00BB00',
+	fallColour = '#EE0000',
+	lineWidth = 5,
+	dateFormat = d3.time.format("%Y-%m-%d"); //default date format is of the form 2015-04-22
+
+//Load the data, when it's loaded draw the chart
+d3.csv(data, drawChart);
+
+//The function that does the actual drawing
+function drawChart(loadedData){
+	var processedData = loadedData.map(function(d){
+		return {
+			date:dateFormat.parse( d.Date ),
+			open:Number(d["Open Price"]),
+			close:Number(d["Close Price"]),
+			high:Number(d["High Price"]),
+			low:Number(d["Low Price"])
+		};
+	});
+
+	var xScale = d3.time.scale()
+		.domain( d3.extent(processedData, function(d){ return d.date; } ) )
+		.range( [0, plotWidth] )
+		.nice();
+
+	var yScale = d3.scale.linear()
+		.domain( [
+			d3.min(processedData, function(d){ return d.low; }),
+			d3.max(processedData, function(d){ return d.high; }),
+		] )
+		.range( [0, plotHeight] )
+		.nice();
+
+		console.log(yScale.domain());
+
+	function colourScale(d){ 
+		if(d.close>d.open){ return fallColour; }
+		return riseColour;
+	}
+
+	var svg = d3.select('.chart') // attach this to the first div with the class chart
+		.append('svg')	// add the SVG tot he page
+		.attr({
+			width: chartWidth,
+			height: chartHeight
+		});
+
+	var axes = svg.append('g')
+			.attr({ 
+				'class':'axes',
+				'transform':'translate(' + margin.left + ',' + margin.top + ')' 
+			});
+
+	axes.append('g')
+		.attr({
+			'class':'x axis',
+			'transform':'translate(0,'+plotHeight+')'
+		})
+		.call( d3.svg.axis().scale(xScale) );
+
+	axes.append('g')
+		.attr({
+			'class':'y axis',
+			'transform':'translate('+(-lineWidth)+',0)'
+		})
+		.call( d3.svg.axis()
+				.scale(yScale)
+				.orient('left') )
+		
+
+	var plot = svg.append('g')
+			.attr({ 
+				transform:'translate(' + margin.left + ',' + margin.top + ')' 
+			});
+
+	plot.selectAll('.day')
+		.data(processedData)
+			.enter()
+		.append('g') // add the data
+			.attr({
+				'class':'day',
+				'transform':function(d){ return 'translate(' + xScale(d.date) + ',0)'; }
+			})
+			.call(function(parent){
+				//to each day, add the following
+				parent.append('line') //high low line
+					.attr({
+						x1:0, 
+						y1:function(d){ return yScale(d.high); }, 
+						x2:0, 
+						y2:function(d){ return yScale(d.low); },
+						'stroke':colourScale
+					}); 
+
+				//open line	
+				parent.append('line').attr({
+						x1:-lineWidth, 
+						y1:function(d){ return yScale(d.open); }, 
+						x2:0, 
+						y2:function(d){ return yScale(d.open); }, 
+						'stroke':colourScale
+					}); 
+
+				//close line
+				parent.append('line').attr({
+						x1:lineWidth, 
+						y1:function(d){ return yScale(d.close); }, 
+						x2:0, 
+						y2:function(d){ return yScale(d.close); }, 
+						'stroke':colourScale
+					}); 
+			});
+}
+
+</script>
+</html>
