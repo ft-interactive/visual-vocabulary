@@ -1,0 +1,38 @@
+<html>
+<head>
+	<title>Open High Low Close</title>
+	<script type="text/javascript" src="../d3/d3.v3.min.js"></script>
+</head>
+<body>
+<div class="chart">
+</div>
+</body>
+<script type="text/javascript">
+
+//Configuration
+var data = 'data.csv',	//The spreadsheet where the data comes from
+	source = 'FT graphics',
+	title = ''
+	
+	//if you leave the following things undefined the script will try to choose sensible values based on the spreadsheet data
+	startDate = undefined,		//the start date for the time scale (X)
+	endDate = undefined,		//the end date for the time scale (X)
+	maxValue = undefined,		//the start date for the value scale (Y)
+	minValue = undefined,		//the end date for the valueScale (Y)
+
+	chartWidth = 600,
+	chartHeight = 400,
+	riseColour = '#00FF00',
+	fallColour = '#FF0000';
+
+
+//Load the data, when it's loaded draw the chart
+d3.csv(data, drawChart);
+
+//The function that does the actual drawing
+function drawChart(loadedData){
+
+}
+
+</script>
+</html>
