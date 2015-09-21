@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>Open High Low Close</title>
+	<title>Open-high-low-close chart</title>
 	<script type="text/javascript" src="../d3/d3.v3.min.js"></script>
 	<style type="text/css">
 		*{
@@ -20,8 +20,9 @@
 		}
 	</style>
 </head>
+
 <body>
-	<h1>Open Close, High Low chart</h1>
+	<h1>Open-high-low-close chart</h1>
 	<a href="https://github.com/ft-interactive/graphics-examples/tree/master/open-close-high-low">source</a>
 
 	<div class="chart">
@@ -29,6 +30,7 @@
 	<div class="key">
 	</div>
 </body>
+
 <script type="text/javascript">
 
 //Configuration
@@ -122,8 +124,8 @@ function drawChart(loadedData){
 	
 	var mark = OHLCMark()	//create the mark drawer
 		.scale(yScale)
-		.riseColour('#0F0')
-		.fallColour('#F00');
+		.riseColour(riseColour)
+		.fallColour(fallColour);
 
 
 //plot the data

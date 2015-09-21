@@ -1,0 +1,100 @@
+<html>
+<head>
+	<title>Constituency Cartogram</title>
+	<script charset="utf-8" src="http://d3js.org/d3.v3.min.js"></script>
+	<script charset="utf-8" src="http://d3js.org/queue.v1.min.js"></script>
+	<style type="text/css">
+		*{
+			font-family: sans-serif;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Constituency Cartogram - categorical</h1>
+	<a href="https://github.com/ft-interactive/graphics-examples/tree/master/constituency-cartogram">source</a>
+	<div class="chart">
+	</div>
+	<div class="key">
+	</div>
+</body>
+<script type="text/javascript">
+
+//configuration stuff
+	var width = 600,
+		height = 600,
+		margin = { top:20, bottom:20, left:20, right:20 },
+		categoryFill = {
+			'Wales':'#F00',
+			'Scotland':'#00F',
+			'London':'#CCC'
+		},
+		defaultCategoryFill = '#FFF',
+		categoryStroke = {
+			'Wales':'#F00',
+			'Scotland':'#00F',
+			'London':'#CCC'
+		},
+		defaultCategoryStroke = '#000',
+		categoryColumn = 'region_name';
+
+
+	queue()
+      .defer(d3.csv, 'carto.csv')
+      .defer(d3.csv, 'data.csv')
+      .await(drawCartogram); // function that uses files
+
+    function drawCartogram(error, cartogram, data){
+    	var lookup = makeLookup(data, 'ons_id'),
+    		plotWidth = width - (margin.left + margin.right),
+    		plotHeight = height - (margin.top + margin.bottom);
+
+    	var scale = d3.scale.linear()
+    		.domain( [0, d3.max(cartogram, function(d){ return parseInt(d.y); })] )
+    		.range( [0, plotHeight] );
+
+
+    	console.log(scale.domain());
+    	console.log(scale.range());
+    	var svg = d3.select('.chart')
+    			.append('svg')
+    				.attr({
+    					width:width,
+    					height:height
+    				});
+
+    	var chart = svg.append('g')
+    					.attr('transform','translate('+ margin.left +', '+ margin.top +')');
+
+    	chart.selectAll('.unit')
+    		.data(cartogram)
+    			.enter()
+    		.append('circle')
+    			.attr({
+   					r:scale(1)/3,
+   					transform:function(d){
+   						return 'translate(' + scale(d.x) + ',' + scale(d.y) + ')';
+   					},
+   					fill:function(d){
+   						var value = lookup[d.id][categoryColumn];
+   						if(categoryFill[value]) return categoryFill[value];
+   						return defaultCategoryFill;
+   					},
+   					stroke:function(d){
+   						var value = lookup[d.id][categoryColumn];
+   						if(categoryStroke[value]) return categoryStroke[value];
+   						return defaultCategoryStroke;
+   					}
+    			})
+
+    }
+
+    function makeLookup(array, property){
+    	var lookup = {};
+    	array.forEach(function(d){
+    		lookup[ d[property] ] = d;
+    	})
+    	return lookup;
+    }
+</script>
+</html>
