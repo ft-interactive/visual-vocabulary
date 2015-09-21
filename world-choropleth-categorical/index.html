@@ -1,0 +1,26 @@
+<html>
+<head>
+	<title></title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-geo-projection/0.2.9/d3.geo.projection.min.js"></script>
+
+</head>
+<body>
+
+</body>
+<script type="text/javascript">
+	var country_shapes = "https://raw.githubusercontent.com/datasets/geo-boundaries-world-110m/master/countries.geojson";
+	var width = 960,
+	    height = 500;
+
+	var projection = d3.geo.robinson()
+	    .scale(150)
+	    .translate([width / 2, height / 2])
+	    .precision(.1);
+
+	var path = d3.geo.path()
+	    .projection(projection);
+
+	var graticule = d3.geo.graticule();
+</script>
+</html>
