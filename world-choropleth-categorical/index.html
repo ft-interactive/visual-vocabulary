@@ -4,7 +4,10 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-geo-projection/0.2.9/d3.geo.projection.min.js"></script>
 	<script charset="utf-8" src="http://d3js.org/queue.v1.min.js"></script>
-
+	<style type="text/css">
+	*{
+		font-family: sans-serif;
+	}</style>
 </head>
 <body>
 <h1>World choropleth categorical</h1>
@@ -31,12 +34,12 @@
 		'Europe':'#A00',
 		'Americas':'#0A0'
 	}
-	var defaultCategoryStroke = '#FFF';
+	var defaultCategoryStroke = '#EAEAEA';
 
 	var projection = d3.geo.robinson()
-	    .scale(150)
-	    .translate([width / 2, height / 2])
-	    .precision(.1);
+	    .scale( 150 )
+	    .translate( [width / 2, height / 2] )
+	    .precision( .1 );
 
 	var path = d3.geo.path()
 	    .projection(projection);
