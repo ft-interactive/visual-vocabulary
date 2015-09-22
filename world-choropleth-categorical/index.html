@@ -7,6 +7,8 @@
 
 </head>
 <body>
+<h1>World choropleth categorical</h1>
+<a href="https://github.com/ft-interactive/graphics-examples/tree/master/world-choropleth-categorical">source</a>
 <div class="chart">
 </div>
 
@@ -26,8 +28,8 @@
 	var defaultCategoryFill = '#FFF';
 
 	var categoryStroke = {
-		'Europe':'#F00',
-		'Americas':'#0F0'
+		'Europe':'#A00',
+		'Americas':'#0A0'
 	}
 	var defaultCategoryStroke = '#FFF';
 
@@ -103,7 +105,6 @@
 					stroke:function(d){ 
 						var id = d.properties.iso_a3;
 						var region = lookup[id].region;
-						console.log(region)
 						if(categoryStroke[ region ] ){
 							return categoryStroke[ region ]; 
 						}
@@ -116,7 +117,6 @@
 	function makeLookup(array, property){
     	var lookup = {};
     	array.forEach(function(d){
-    		console.log(d);
     		lookup[ d[property] ] = d;
     	});
     	return lookup;
