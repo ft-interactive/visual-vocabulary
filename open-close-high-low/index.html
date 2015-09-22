@@ -10,13 +10,28 @@
 		.y.axis .domain,
 		.x.axis .domain{
 			fill:none;
-			stroke:#000;
+			stroke:#a7a59b;
+		}
+
+		.y.axis .domain {
+			stroke: none;
 		}
 
 		.y.axis .tick line,
 		.x.axis .tick line{
 			fill:none;
-			stroke:#000;
+			stroke:#cec6b9;
+		}
+
+		.y.axis .tick text,
+		.x.axis .tick text{
+			fill:#74736c;
+			font-size: 14px;
+		}
+
+		.day line {
+			stroke-width: 2px;
+			shape-rendering: crispEdges;
 		}
 	</style>
 </head>
@@ -40,8 +55,8 @@ var data = 'apple-stockprice-data.csv',	//The spreadsheet where the data comes f
 	margin = { top:50, bottom:50, left:50, right:20 },
 	plotWidth = chartWidth - (margin.left + margin.right),
 	plotHeight = chartHeight - (margin.top + margin.bottom),
-	riseColour = '#00BB00',
-	fallColour = '#EE0000',
+	riseColour = '#0e6dcc',
+	fallColour = '#cc0000',
 	lineWidth = 5,
 	dateFormat = d3.time.format("%Y-%m-%d"),	//default date format is of the form 2015-04-22
 
@@ -115,11 +130,12 @@ function drawChart(loadedData){
 	axes.append('g')
 		.attr({
 			'class':'y axis',
-			'transform':'translate('+(-lineWidth)+',0)'
+			'transform':'translate('+(chartWidth - (margin.right + margin.left))+',0)'
 		})
 		.call( d3.svg.axis()
 				.scale(yScale)
-				.orient('left') )
+				.orient('left')
+				.tickSize(chartWidth - (margin.right + margin.left) + 10) )
 
 	
 	var mark = OHLCMark()	//create the mark drawer
