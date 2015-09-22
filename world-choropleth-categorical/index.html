@@ -3,24 +3,126 @@
 	<title></title>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-geo-projection/0.2.9/d3.geo.projection.min.js"></script>
-
+	<script charset="utf-8" src="http://d3js.org/queue.v1.min.js"></script>
+	<style type="text/css">
+	*{
+		font-family: sans-serif;
+	}</style>
 </head>
 <body>
+<h1>World choropleth categorical</h1>
+<a href="https://github.com/ft-interactive/graphics-examples/tree/master/world-choropleth-categorical">source</a>
+<div class="chart">
+</div>
 
+<div class="key">
+</div>
 </body>
 <script type="text/javascript">
-	var country_shapes = "https://raw.githubusercontent.com/datasets/geo-boundaries-world-110m/master/countries.geojson";
+	var countryShapes = "https://raw.githubusercontent.com/datasets/geo-boundaries-world-110m/master/countries.geojson";
 	var width = 960,
 	    height = 500;
 
+	var category = 'region'
+	var categoryFill = {
+		'Europe':'#F00',
+		'Americas':'#0F0'
+	}
+	var defaultCategoryFill = '#FFF';
+
+	var categoryStroke = {
+		'Europe':'#A00',
+		'Americas':'#0A0'
+	}
+	var defaultCategoryStroke = '#EAEAEA';
+
 	var projection = d3.geo.robinson()
-	    .scale(150)
-	    .translate([width / 2, height / 2])
-	    .precision(.1);
+	    .scale( 150 )
+	    .translate( [width / 2, height / 2] )
+	    .precision( .1 );
 
 	var path = d3.geo.path()
 	    .projection(projection);
 
 	var graticule = d3.geo.graticule();
+
+	var svg = d3.select('.chart').append('svg')
+		.attr({
+			width:width,
+			height:height
+		});
+
+	svg.append('defs').append('path')
+	    .datum({type: 'Sphere'})
+		    .attr('id', 'sphere')
+		    .attr('d', path);
+
+	//create the background 'sphere'
+	svg.append("use")
+	    .attr({
+	    	'fill':'#EFEFFf',
+	    	'stroke':'none'
+	    })
+	    .attr("xlink:href", "#sphere");
+
+	svg.append("use")
+	    .attr({
+	    	"stroke":'#000',
+	    	'stroke-width':'2',
+	    	'fill':'none'
+	    })
+	    .attr("xlink:href", "#sphere");
+
+	//create the grid lines
+	svg.append('path')
+	    .datum(graticule)
+	    .attr({
+	    	'fill':'none',
+	    	'stroke':'#000'
+	    })
+	    .attr('d', path);
+
+	//load and draw the countries
+	queue()
+      .defer(d3.json, countryShapes)
+      .defer(d3.csv, 'data.csv')
+      .await(drawMap); // function that uses files
+
+	function drawMap(error, world, data) {
+		var lookup = makeLookup(data, 'iso_a3');
+
+		svg.selectAll('.nation')
+			.data(world.features)
+			.enter()
+				.append('path')
+				.attr({
+					d:path,
+					fill:function(d){ 
+						var id = d.properties.iso_a3;
+						var region = lookup[id].region;
+						if(categoryFill[region] ){
+							return categoryFill[region]; 
+						}
+						return defaultCategoryFill;
+					},
+					stroke:function(d){ 
+						var id = d.properties.iso_a3;
+						var region = lookup[id].region;
+						if(categoryStroke[ region ] ){
+							return categoryStroke[ region ]; 
+						}
+						return defaultCategoryStroke;
+					}
+				});
+	};
+
+
+	function makeLookup(array, property){
+    	var lookup = {};
+    	array.forEach(function(d){
+    		lookup[ d[property] ] = d;
+    	});
+    	return lookup;
+    }
 </script>
 </html>
