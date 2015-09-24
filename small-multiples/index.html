@@ -1,0 +1,182 @@
+<html>
+<head>
+	<title>Small multiple line charts</title>
+	<script type="text/javascript" src="../d3/d3.v3.min.js"></script>
+	<style type="text/css">
+		*{
+			font-family: sans-serif;
+		}
+		
+		.y.axis .domain,
+		.x.axis .domain{
+			fill:none;
+			stroke:#a7a59b;
+		}
+
+		.y.axis .domain {
+			stroke: none;
+		}
+
+		.y.axis .tick line,
+		.x.axis .tick line{
+			fill:none;
+			stroke:#cec6b9;
+		}
+
+		.y.axis .tick text,
+		.x.axis .tick text{
+			fill:#74736c;
+			font-size: 14px;
+		}
+		
+		.y.axis .title {
+			fill:#74736c;
+			font-size: 11px;
+		}
+
+		.line {
+			stroke-width: 2px;
+			stroke: #af516c;
+			fill: none;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Small multiple line charts</h1>
+	<a href="https://github.com/ft-interactive/graphics-examples/tree/master/open-close-high-low">source</a>
+
+	<div class="chart">
+	</div>
+	<div class="key">
+	</div>
+</body>
+
+<script type='text/javascript'>
+
+	var margin = {top: 30, right: 10, bottom: 30, left: 40},
+	    width = 140 - margin.left - margin.right,
+	    height = 200 - margin.top - margin.bottom;
+
+	/**** Parameters to edit ****/
+  var maxVal = 15,
+  		minVal = 0,
+  		divisor = 1000, //use this number to divide data values to a sensible amount
+  		numTicks = 3;
+
+	/**** end paramaters ****/
+
+	var seriesNames = [];
+	var seriesData = {};
+
+	var parseDate = d3.time.format('%d/%m/%Y').parse;
+
+	var x = d3.time.scale()
+	    .range([0, width]);
+
+	var y = d3.scale.linear()
+	    .range([height, 0]);
+
+  var xAxis = d3.svg.axis()
+    .scale(x)
+    .tickSize(8)
+    .ticks(2)
+    .orient('bottom');
+
+
+	var yAxis = d3.svg.axis()
+	    .scale(y)
+	    .orient('left')
+	    .tickSize(-width);
+
+  if(numTicks) yAxis.ticks(numTicks);
+
+	var line = d3.svg.line()
+	    .x(function(d) { return x(d.date); })
+	    .y(function(d) { return y(d.dataValue/divisor); });
+
+	d3.csv('fake-data.csv', type, function(error, data) {
+
+		for (var prop in data[0]) {
+      if (data[0].hasOwnProperty(prop)) {
+        if (prop !== 'date') {
+          seriesNames.push(prop);
+        }
+      }
+    }
+	
+		seriesData = {
+			'series': [],
+			'date': [],
+			'dataValue': []
+		}
+		seriesNames.forEach(function (key, indx) {
+
+		  data.forEach(function (rIndx, row) {
+				seriesData.dataValue.push(rIndx[key])
+				seriesData.series.push(key)
+				seriesData.date.push(rIndx.date)
+			})
+		});
+
+	  // Nest data by series
+	  var series = d3.nest()
+	      .key(function(d) { return d.series })
+	      .entries(seriesData);
+
+    console.log(seriesData)
+	  if(!maxVal) maxVal = d3.max(series, function(d) { return +d.dataValue/divisor;} );
+	  if(!minVal) minVal = d3.min(series, function(d) { return +d.dataValue/divisor;} );
+
+	  // Compute the minimum and maximum date across series.
+	  // We assume values are sorted by date.
+	  x.domain([
+	    d3.min(series, function(s) { return s.values[0].date; }),
+	    d3.max(series, function(s) { return s.values[s.data.length - 1].date; })
+	  ]);
+
+	  y.domain([minVal, maxVal]);
+
+	  // Add an SVG element for each series with the desired dimensions and margin.
+	  var svg = d3.select('body').selectAll('svg')
+	      .data(series)
+	    .enter().append('svg')
+	      .attr('width', width + margin.left + margin.right)
+	      .attr('height', height + margin.top + margin.bottom)
+	    .append('g')
+	      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+	
+
+
+
+	  // Add a small label for the seriesname.
+    svg.append('g')
+    .attr('class', 'y axis')
+    .call(yAxis)
+    .append('text')
+    .attr('class', 'title')
+    .attr('text-anchor', 'middle')
+    .attr('dx', function() {return (width)/2;})
+    .attr('dy', -5)
+    .text(function(d) {return d.key.toUpperCase();});
+
+	  svg.append('g')
+	    .attr('class', 'x axis')
+	    .attr('transform', 'translate(0,' + height + ')')
+	    .call(xAxis);
+	 
+	  // Add the line path elements. Note: the y-domain is set per element.
+	  svg.append('path')
+	      .attr('class', 'line')
+	      .attr('d', function(d) { return line(d.dataValue); });
+	});
+
+	function type(d) {
+	  // d.dataValue = +d.dataValue;
+	  d.date = parseDate(d.date);
+	  return d;
+	}
+
+</script>
+</html>
