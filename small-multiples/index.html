@@ -44,7 +44,7 @@
 
 <body>
 	<h1>Small multiple line charts</h1>
-	<a href="https://github.com/ft-interactive/graphics-examples/tree/master/open-close-high-low">source</a>
+	<a href="https://github.com/ft-interactive/graphics-examples/tree/master/small-multiples">source</a>
 
 	<div class="chart">
 	</div>
@@ -62,121 +62,101 @@
   var maxVal = 15,
   		minVal = 0,
   		divisor = 1000, //use this number to divide data values to a sensible amount
-  		numTicks = 3;
+  		numTicks = 3,
+  		yDomain = undefined;	//set this to mark the extent of the y axis e,g [0,20000]
 
 	/**** end paramaters ****/
 
 	var seriesNames = [];
 	var seriesData = {};
 
-	var parseDate = d3.time.format('%d/%m/%Y').parse;
+	var dateFormat = d3.time.format('%d/%m/%Y');
 
-	var x = d3.time.scale()
+	var xScale = d3.time.scale()
 	    .range([0, width]);
 
-	var y = d3.scale.linear()
+	var yScale = d3.scale.linear()
 	    .range([height, 0]);
 
-  var xAxis = d3.svg.axis()
-    .scale(x)
-    .tickSize(8)
-    .ticks(2)
-    .orient('bottom');
+	var xAxis = d3.svg.axis()
+		.scale(xScale)
+		.tickSize(8)
+		.ticks(2)
+		.orient('bottom');
 
 
 	var yAxis = d3.svg.axis()
-	    .scale(y)
+	    .scale(yScale)
 	    .orient('left')
-	    .tickSize(-width);
-
-  if(numTicks) yAxis.ticks(numTicks);
-
-	var line = d3.svg.line()
-	    .x(function(d) { return x(d.date); })
-	    .y(function(d) { return y(d.dataValue/divisor); });
-
-	d3.csv('fake-data.csv', type, function(error, data) {
-
-		for (var prop in data[0]) {
-      if (data[0].hasOwnProperty(prop)) {
-        if (prop !== 'date') {
-          seriesNames.push(prop);
-        }
-      }
-    }
-	
-		seriesData = {
-			'series': [],
-			'date': [],
-			'dataValue': []
-		}
-		seriesNames.forEach(function (key, indx) {
-
-		  data.forEach(function (rIndx, row) {
-				seriesData.dataValue.push(rIndx[key])
-				seriesData.series.push(key)
-				seriesData.date.push(rIndx.date)
-			})
+	    .tickSize(-width)
+	    .tickFormat(function(d){
+			return d/divisor;
 		});
 
-	  // Nest data by series
-	  var series = d3.nest()
-	      .key(function(d) { return d.series })
-	      .entries(seriesData);
+	if(numTicks) yAxis.ticks(numTicks);
 
-    console.log(seriesData)
-	  if(!maxVal) maxVal = d3.max(series, function(d) { return +d.dataValue/divisor;} );
-	  if(!minVal) minVal = d3.min(series, function(d) { return +d.dataValue/divisor;} );
+	d3.csv('fake-data.csv', parseDate, function(error, data) {
+		seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
 
-	  // Compute the minimum and maximum date across series.
-	  // We assume values are sorted by date.
-	  x.domain([
-	    d3.min(series, function(s) { return s.values[0].date; }),
-	    d3.max(series, function(s) { return s.values[s.data.length - 1].date; })
-	  ]);
+		if(!yDomain){
+			yDomain = [];
+			data.forEach(function(d,i){
+				var max, min;
+				seriesNames.forEach(function(e){
+					if(i==0) yDomain[0] = yDomain[1] = Number(d[e]);
+					yDomain[0] = Math.min(yDomain[0], Number(d[e]));
+					yDomain[1] = Math.max(yDomain[1], Number(d[e]));
+				});			
+			});
+		}
 
-	  y.domain([minVal, maxVal]);
+	// Compute the minimum and maximum date across series.
+	xScale.domain(d3.extent(data, function(d) { return d.date; } ));
+	yScale.domain(yDomain);
 
-	  // Add an SVG element for each series with the desired dimensions and margin.
-	  var svg = d3.select('body').selectAll('svg')
-	      .data(series)
-	    .enter().append('svg')
-	      .attr('width', width + margin.left + margin.right)
-	      .attr('height', height + margin.top + margin.bottom)
-	    .append('g')
-	      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
-	
-
-
+	// Add an SVG element for each series with the desired dimensions and margin.
+	var svg = d3.select('body').selectAll('svg')
+			.data(seriesNames)
+		.enter().append('svg')
+			.attr('width', width + margin.left + margin.right)
+			.attr('height', height + margin.top + margin.bottom)
+		.append('g')
+			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
 	  // Add a small label for the seriesname.
     svg.append('g')
-    .attr('class', 'y axis')
-    .call(yAxis)
-    .append('text')
-    .attr('class', 'title')
-    .attr('text-anchor', 'middle')
-    .attr('dx', function() {return (width)/2;})
-    .attr('dy', -5)
-    .text(function(d) {return d.key.toUpperCase();});
+	    .attr('class', 'y axis')
+		    .call(yAxis)
+	    .append('text')
+		    .attr('class', 'title')
+		    .attr('text-anchor', 'middle')
+		    .attr('dx', function() {return (width)/2;})
+		    .attr('dy', -5)
+		    .text(function(d) {return d.toUpperCase(); });
 
-	  svg.append('g')
+	svg.append('g')
 	    .attr('class', 'x axis')
 	    .attr('transform', 'translate(0,' + height + ')')
 	    .call(xAxis);
 	 
 	  // Add the line path elements. Note: the y-domain is set per element.
-	  svg.append('path')
-	      .attr('class', 'line')
-	      .attr('d', function(d) { return line(d.dataValue); });
-	});
+	svg.append('path')
+		.attr('class', 'line')
+		.each(function(seriesName){
+			var path = d3.select(this);
+			path.datum(data);
+			var line = d3.svg.line()
+			    .x(function(d) { return xScale(d.date); })
+			    .y(function(d) { return yScale( d[seriesName] ); });
 
-	function type(d) {
-	  // d.dataValue = +d.dataValue;
-	  d.date = parseDate(d.date);
-	  return d;
-	}
+			path.attr('d', function(d){ return line(d); })
+		});
+});
+
+function parseDate(d) {
+  d.date = dateFormat.parse(d.date);
+  return d;
+}
 
 </script>
 </html>
