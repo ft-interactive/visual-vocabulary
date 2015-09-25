@@ -25,16 +25,16 @@
 
 	var category = 'region'
 	var categoryFill = {
-		'Europe':'#F00',
-		'Americas':'#0F0'
+		'Europe':'#76acb8',
+		'Americas':'#d7706c'
 	}
 	var defaultCategoryFill = '#FFF';
 
 	var categoryStroke = {
-		'Europe':'#A00',
-		'Americas':'#0A0'
+		'Europe':'#555',
+		'Americas':'#555'
 	}
-	var defaultCategoryStroke = '#EAEAEA';
+	var defaultCategoryStroke = '#aaa';
 
 	var projection = d3.geo.robinson()
 	    .scale( 150 )
@@ -60,14 +60,14 @@
 	//create the background 'sphere'
 	svg.append("use")
 	    .attr({
-	    	'fill':'#EFEFFf',
+	    	'fill':'#FFF',
 	    	'stroke':'none'
 	    })
 	    .attr("xlink:href", "#sphere");
 
 	svg.append("use")
 	    .attr({
-	    	"stroke":'#000',
+	    	"stroke":'#aaa',
 	    	'stroke-width':'2',
 	    	'fill':'none'
 	    })
@@ -78,7 +78,7 @@
 	    .datum(graticule)
 	    .attr({
 	    	'fill':'none',
-	    	'stroke':'#000'
+	    	'stroke':'#aaa'
 	    })
 	    .attr('d', path);
 
