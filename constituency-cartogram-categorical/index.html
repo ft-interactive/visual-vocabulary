@@ -24,18 +24,19 @@
 	var width = 600,
 		height = 600,
 		margin = { top:20, bottom:20, left:20, right:20 },
+
 		categoryFill = {
-			'Wales':'#F00',
-			'Scotland':'#00F',
-			'London':'#CCC'
+			'Wales':'#9e2f50',
+			'Scotland':'#81d0e6',
+			'London':'#d7706c'
 		},
-		defaultCategoryFill = '#FFF',
+		defaultCategoryFill = '#256ea6',
 		categoryStroke = {
-			'Wales':'#F00',
-			'Scotland':'#00F',
-			'London':'#CCC'
+			// 'Wales':'#aaa',
+			// 'Scotland':'#aaa',
+			// 'London':'#aaa'
 		},
-		defaultCategoryStroke = '#000',
+		defaultCategoryStroke = 'none',
 		categoryColumn = 'region_name';
 
 
@@ -71,7 +72,7 @@
     			.enter()
     		.append('circle')
     			.attr({
-   					r:scale(1)/3,
+   					r:2*scale(1)/5,
    					transform:function(d){
    						return 'translate(' + scale(d.x) + ',' + scale(d.y) + ')';
    					},
