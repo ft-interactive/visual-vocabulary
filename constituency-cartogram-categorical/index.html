@@ -22,12 +22,10 @@
 
 //configuration stuff
 	var width = 600,
-		height = 600,
-		margin = { top:20, bottom:20, left:20, right:20 },
+		height = 1000,
+		margin = { top:200, bottom:20, left:20, right:20 },
 
 		categoryFill = {
-			'Wales':'#9e2f50',
-			'Scotland':'#81d0e6',
 			'London':'#d7706c'
 		},
 		defaultCategoryFill = '#256ea6',
@@ -63,6 +61,15 @@
     					width:width,
     					height:height
     				});
+
+//title and subtitle
+      //add a title and subtitle
+      svg.append('text')
+        .html('London constituencies')
+        .attr({
+          'font-size':30,
+          y:30
+        });
 
     	var chart = svg.append('g')
     					.attr('transform','translate('+ margin.left +', '+ margin.top +')');
