@@ -111,8 +111,11 @@
 		}
 
 	// Compute the minimum and maximum date across series.
-	xScale.domain(d3.extent(data, function(d) { return d.date; } ));
+	var xDomain = d3.extent(data, function(d) { return d.date; } );
+	xScale.domain(xDomain);
 	yScale.domain(yDomain);
+
+	xAxis.tickValues(xDomain);
 
 	// Add an SVG element for each series with the desired dimensions and margin.
 	var svg = d3.select('body').append('svg')
