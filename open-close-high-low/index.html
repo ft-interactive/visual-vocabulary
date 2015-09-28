@@ -247,14 +247,24 @@ function OHLCBoxMark(){
 	var riseColour = '#00FF00';
 	var fallColour = '#FF0000';
 
+<<<<<<< HEAD
 	function strokeScale(d){
+=======
+	function colourScale(d){
+>>>>>>> master
 		if(d.interDayFall){ return fallColour; }
 		return riseColour;
 	}
 
 	function fillScale(d){
+<<<<<<< HEAD
 		if( d.interDayFall ){ return fallColour; }
 		return '#fff';
+=======
+		if( d.open < d.close ) { return '#fff'; }
+		if( d.interDayFall ){ return fallColour; }
+		return riseColour;
+>>>>>>> master
 	}
 
 	function chart(parent){
@@ -264,7 +274,11 @@ function OHLCBoxMark(){
 				y1:function(d){ return scale(d.high); }, 
 				x2:0, 
 				y2:function(d){ return scale(d.low); },
+<<<<<<< HEAD
 				'stroke':strokeScale,
+=======
+				'stroke':colourScale,
+>>>>>>> master
 				'data-date':function(d){return d.date}
 			}); 
 
@@ -276,7 +290,11 @@ function OHLCBoxMark(){
 				height:function(d){ 
 					return scale(Math.min(d.open,d.close)) - scale(Math.max(d.open,d.close)); 
 				}, 
+<<<<<<< HEAD
 				'stroke':strokeScale,
+=======
+				'stroke':colourScale,
+>>>>>>> master
 				'stroke-width':2,
 				'fill':fillScale
 			}); 
