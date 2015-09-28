@@ -23,18 +23,19 @@
 	var width = 960,
 	    height = 500;
 
-	var category = 'region'
+	var category = 'same-sex-marriage'
 	var categoryFill = {
-		'Europe':'#76acb8',
-		'Americas':'#d7706c'
+		'legal':'#4e86b6',
+		'legal in certain sub-jurisdictions':'#81d0e6',
+		'laws not yet in force':'#ff0000'
 	}
-	var defaultCategoryFill = '#FFF';
+	var defaultCategoryFill = '#eee';
 
 	var categoryStroke = {
-		'Europe':'#555',
-		'Americas':'#555'
+		'legal':'#fff',
+		'legal in certain sub-jurisdictions':'#fff'
 	}
-	var defaultCategoryStroke = '#aaa';
+	var defaultCategoryStroke = '#none';
 
 	var projection = d3.geo.robinson()
 	    .scale( 150 )
@@ -67,7 +68,7 @@
 
 	svg.append("use")
 	    .attr({
-	    	"stroke":'#aaa',
+	    	"stroke":'#eee',
 	    	'stroke-width':'2',
 	    	'fill':'none'
 	    })
@@ -78,7 +79,7 @@
 	    .datum(graticule)
 	    .attr({
 	    	'fill':'none',
-	    	'stroke':'#aaa'
+	    	'stroke':'#eee'
 	    })
 	    .attr('d', path);
 
@@ -99,17 +100,17 @@
 					d:path,
 					fill:function(d){ 
 						var id = d.properties.iso_a3;
-						var region = lookup[id].region;
-						if(categoryFill[region] ){
-							return categoryFill[region]; 
+						var cat = lookup[id][category];
+						if(categoryFill[cat] ){
+							return categoryFill[cat]; 
 						}
 						return defaultCategoryFill;
 					},
 					stroke:function(d){ 
 						var id = d.properties.iso_a3;
-						var region = lookup[id].region;
-						if(categoryStroke[ region ] ){
-							return categoryStroke[ region ]; 
+						var cat = lookup[id][category];
+						if(categoryStroke[ cat ] ){
+							return categoryStroke[ cat ]; 
 						}
 						return defaultCategoryStroke;
 					}
