@@ -59,16 +59,13 @@
 	    height = 200 - margin.top - margin.bottom;
 
 	/**** Parameters to edit ****/
-  var maxVal = 15,
-  		minVal = 0,
-  		divisor = 1000, //use this number to divide data values to a sensible amount
+  var divisor = 1000, //use this number to divide data values to a sensible amount
   		numTicks = 3,
-  		yDomain = undefined;	//set this to mark the extent of the y axis e,g [0,20000]
+  		yDomain = [0,15000];	//set this to mark the extent of the y axis e,g [0,20000]
 
 	/**** end paramaters ****/
 
 	var seriesNames = [];
-	var seriesData = {};
 
 	var dateFormat = d3.time.format('%d/%m/%Y');
 
@@ -96,7 +93,7 @@
 	if(numTicks) yAxis.ticks(numTicks);
 
 	d3.csv('fake-data.csv', parseDate, function(error, data) {
-		seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
+		seriesNames = Object.keys( data[0] ).filter(function(d){ return d != 'date'; }); // return the series names from the first row of the spreadsheet
 
 		if(!yDomain){
 			yDomain = [];
