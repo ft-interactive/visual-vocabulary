@@ -75,13 +75,20 @@ d3.csv(data, drawChart);
 //The function that does the actual drawing
 function drawChart(loadedData){
 
-	var processedData = loadedData.map(function(d){
+	var processedData = loadedData.map(function(d,i,a){
+		var interDayFall = undefined;
+
+		if(a[i-1]){
+			interDayFall = (a[i-1][close] > d[close]);
+		}
+
 		return {
 			date:dateFormat.parse( d[date] ),
 			open:Number(d[ open ]),
 			close:Number(d[ close ]),
 			high:Number(d[ high ]),
-			low:Number(d[ low ])
+			low:Number(d[ low ]),
+			interDayFall:interDayFall
 		};
 	});
 
@@ -151,7 +158,7 @@ function drawChart(loadedData){
 				.tickSize(chartWidth - (margin.right + margin.left) + 10) )
 
 	
-	var mark = OHLCMark()	//create the mark drawer
+	var mark = OHLCBoxMark()	//create the mark drawer
 		.scale(yScale)
 		.riseColour(riseColour)
 		.fallColour(fallColour);
@@ -214,6 +221,65 @@ function OHLCMark(){
 				x2:0, 
 				y2:function(d){ return scale(d.close); }, 
 				'stroke':colourScale
+			}); 
+	}
+
+	chart.scale = function(s){
+		scale = s;
+		return chart;
+	}
+
+	chart.riseColour = function(c){
+		riseColour = c;
+		return chart;
+	}
+
+	chart.fallColour = function(c){
+		fallColour = c;
+		return chart;
+	}
+
+	return chart;
+}
+
+function OHLCBoxMark(){
+	var scale = d3.scale.linear();
+	var riseColour = '#00FF00';
+	var fallColour = '#FF0000';
+
+	function colourScale(d){
+		if(d.interDayFall){ return fallColour; }
+		return riseColour;
+	}
+
+	function fillScale(d){
+		if( d.open < d.close ) { return '#fff'; }
+		if( d.interDayFall ){ return fallColour; }
+		return riseColour;
+	}
+
+	function chart(parent){
+		parent.append('line') //high low line
+			.attr({
+				x1:0, 
+				y1:function(d){ return scale(d.high); }, 
+				x2:0, 
+				y2:function(d){ return scale(d.low); },
+				'stroke':colourScale,
+				'data-date':function(d){return d.date}
+			}); 
+
+		//open close box	
+		parent.append('rect').attr({
+				x:-lineWidth, 
+				y:function(d){ return scale(Math.max(d.open,d.close)); }, 
+				width:lineWidth*2, 
+				height:function(d){ 
+					return scale(Math.min(d.open,d.close)) - scale(Math.max(d.open,d.close)); 
+				}, 
+				'stroke':colourScale,
+				'stroke-width':2,
+				'fill':fillScale
 			}); 
 	}
 
