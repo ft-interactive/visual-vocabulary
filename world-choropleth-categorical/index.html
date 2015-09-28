@@ -21,20 +21,22 @@
 <script type="text/javascript">
 	var countryShapes = "https://raw.githubusercontent.com/datasets/geo-boundaries-world-110m/master/countries.geojson";
 	var width = 960,
-	    height = 500;
+	    height = 600,
+	    margin = {top:50,left:0,bottom:0,right:0};
 
-	var category = 'region'
+	var category = 'same-sex-marriage'
 	var categoryFill = {
-		'Europe':'#F00',
-		'Americas':'#0F0'
+		'legal':'#256ea6',
+		'legal in certain sub-jurisdictions':'#81d0e6',
+		'laws not yet in force':'#aaa'
 	}
-	var defaultCategoryFill = '#FFF';
+	var defaultCategoryFill = '#eee';
 
 	var categoryStroke = {
-		'Europe':'#A00',
-		'Americas':'#0A0'
+		'legal':'#fff',
+		'legal in certain sub-jurisdictions':'#fff'
 	}
-	var defaultCategoryStroke = '#EAEAEA';
+	var defaultCategoryStroke = '#none';
 
 	var projection = d3.geo.robinson()
 	    .scale( 150 )
@@ -46,39 +48,73 @@
 
 	var graticule = d3.geo.graticule();
 
-	var svg = d3.select('.chart').append('svg')
+	var map = d3.select('.chart').append('svg')
 		.attr({
 			width:width,
 			height:height
-		});
+		}).append('g')
+			.attr({
+				id:'map',
+				transform:'translate(' + margin.left + ',' + margin.top + ')'
+			});
 
-	svg.append('defs').append('path')
+	d3.select('svg')
+		.append('text')
+			.html('Where same-sex marriage is legal?')
+			.attr({
+				'font-size':30,
+				y:30
+			});
+
+	d3.select('svg')
+		.append('g')
+			.attr('id','key')
+			.attr('transform',function(d,i){return 'translate('+0+','+55+')'; })
+		.selectAll('.keyElement')
+			.data(Object.keys(categoryFill))
+		.enter()
+			.append('g')
+			.attr('transform',function(d,i){return 'translate('+30+','+(i*20)+')'; })
+			.call(function(p){
+				p.append('text').text(function(d){return d;});
+				p.append('circle').attr({ 
+					cx:-20,
+					cy:-6,
+					r:8,
+					fill: function(d){return categoryFill[d];},
+					stroke: function(d){return categoryStroke[d];}
+				})
+			});
+
+
+	map.append('defs').append('path')
 	    .datum({type: 'Sphere'})
 		    .attr('id', 'sphere')
 		    .attr('d', path);
 
 	//create the background 'sphere'
-	svg.append("use")
+	map.append("use")
 	    .attr({
-	    	'fill':'#EFEFFf',
+	    	'fill':'#FFF',
 	    	'stroke':'none'
 	    })
 	    .attr("xlink:href", "#sphere");
 
-	svg.append("use")
+	map.append("use")
 	    .attr({
-	    	"stroke":'#000',
+	    	"stroke":'#eee',
 	    	'stroke-width':'2',
 	    	'fill':'none'
 	    })
 	    .attr("xlink:href", "#sphere");
 
 	//create the grid lines
-	svg.append('path')
+	map.append('path')
 	    .datum(graticule)
 	    .attr({
 	    	'fill':'none',
-	    	'stroke':'#000'
+	    	'stroke':'#eee',
+	    	'id':'grid'
 	    })
 	    .attr('d', path);
 
@@ -91,7 +127,7 @@
 	function drawMap(error, world, data) {
 		var lookup = makeLookup(data, 'iso_a3');
 
-		svg.selectAll('.nation')
+		map.selectAll('.nation')
 			.data(world.features)
 			.enter()
 				.append('path')
@@ -99,17 +135,17 @@
 					d:path,
 					fill:function(d){ 
 						var id = d.properties.iso_a3;
-						var region = lookup[id].region;
-						if(categoryFill[region] ){
-							return categoryFill[region]; 
+						var cat = lookup[id][category];
+						if(categoryFill[cat] ){
+							return categoryFill[cat]; 
 						}
 						return defaultCategoryFill;
 					},
 					stroke:function(d){ 
 						var id = d.properties.iso_a3;
-						var region = lookup[id].region;
-						if(categoryStroke[ region ] ){
-							return categoryStroke[ region ]; 
+						var cat = lookup[id][category];
+						if(categoryStroke[ cat ] ){
+							return categoryStroke[ cat ]; 
 						}
 						return defaultCategoryStroke;
 					}

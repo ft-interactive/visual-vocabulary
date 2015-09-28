@@ -49,17 +49,17 @@
 <script type="text/javascript">
 
 //Configuration
-var data = 'apple-stockprice-data.csv',	//The spreadsheet where the data comes from
+var data = 'vw-stockprice-data.csv',	//The spreadsheet where the data comes from
 	chartWidth = 600,
-	chartHeight = 400,
-	margin = { top:50, bottom:50, left:50, right:20 },
+	chartHeight = 500,
+	margin = { top:100, bottom:50, left:40, right:25 },
 	plotWidth = chartWidth - (margin.left + margin.right),
 	plotHeight = chartHeight - (margin.top + margin.bottom),
 	riseColour = '#0e6dcc',
 	fallColour = '#cc0000',
-	lineWidth = 5,
-	dateFormat = d3.time.format("%Y-%m-%d"),	//default date format is of the form 2015-04-22
-
+	lineWidth = 4,
+	//dateFormat = d3.time.format("%Y-%m-%d"),	//default date format is of the form 2015-04-22
+	dateFormat = d3.time.format("%d/%m/%y"),
 	// this is what the columns of data are called, hopefully the defaulst are self explanatory...
 	open = "Open Price",	
 	high = "High Price",
@@ -75,13 +75,20 @@ d3.csv(data, drawChart);
 //The function that does the actual drawing
 function drawChart(loadedData){
 
-	var processedData = loadedData.map(function(d){
+	var processedData = loadedData.map(function(d,i,a){
+		var interDayFall = undefined;
+
+		if(a[i-1]){
+			interDayFall = (a[i-1][close] > d[close]);
+		}
+
 		return {
 			date:dateFormat.parse( d[date] ),
 			open:Number(d[ open ]),
 			close:Number(d[ close ]),
 			high:Number(d[ high ]),
-			low:Number(d[ low ])
+			low:Number(d[ low ]),
+			interDayFall:interDayFall
 		};
 	});
 
@@ -98,7 +105,7 @@ function drawChart(loadedData){
 			d3.min(processedData, function(d){ return d.low; }),
 			d3.max(processedData, function(d){ return d.high; }),
 		] )
-		.range( [0, plotHeight] )
+		.range( [plotHeight, 0] )
 		.nice();
 
 	
@@ -110,6 +117,19 @@ function drawChart(loadedData){
 			height: chartHeight
 		});
 
+//add a title and subtitle
+	svg.append('text')
+		.html('Volkswagen&apos;s Fall')
+		.attr({
+			'font-size':30,
+			y:30
+		});
+
+	svg.append('text')
+		.html('Volkswagen AG August & September 2015')
+		.attr({
+			y:60
+		});
 
 //create the axes
 	var axes = svg.append('g')
@@ -124,7 +144,7 @@ function drawChart(loadedData){
 			'class':'x axis',
 			'transform':'translate(0,'+plotHeight+')'
 		})
-		.call( d3.svg.axis().scale(xScale) );
+		.call( d3.svg.axis().scale(xScale).ticks(8) );
 
 
 	axes.append('g')
@@ -138,7 +158,7 @@ function drawChart(loadedData){
 				.tickSize(chartWidth - (margin.right + margin.left) + 10) )
 
 	
-	var mark = OHLCMark()	//create the mark drawer
+	var mark = OHLCBoxMark()	//create the mark drawer
 		.scale(yScale)
 		.riseColour(riseColour)
 		.fallColour(fallColour);
@@ -170,7 +190,7 @@ function OHLCMark(){
 	var fallColour = '#FF0000';
 
 	function colourScale(d){ 
-		if(d.close>d.open){ return fallColour; }
+		if(d.close<d.open){ return fallColour; }
 		return riseColour;
 	}
 
@@ -181,7 +201,8 @@ function OHLCMark(){
 				y1:function(d){ return scale(d.high); }, 
 				x2:0, 
 				y2:function(d){ return scale(d.low); },
-				'stroke':colourScale
+				'stroke':colourScale,
+				'data-date':function(d){return d.date}
 			}); 
 
 		//open line	
@@ -200,6 +221,64 @@ function OHLCMark(){
 				x2:0, 
 				y2:function(d){ return scale(d.close); }, 
 				'stroke':colourScale
+			}); 
+	}
+
+	chart.scale = function(s){
+		scale = s;
+		return chart;
+	}
+
+	chart.riseColour = function(c){
+		riseColour = c;
+		return chart;
+	}
+
+	chart.fallColour = function(c){
+		fallColour = c;
+		return chart;
+	}
+
+	return chart;
+}
+
+function OHLCBoxMark(){
+	var scale = d3.scale.linear();
+	var riseColour = '#00FF00';
+	var fallColour = '#FF0000';
+
+	function strokeScale(d){
+		if(d.interDayFall){ return fallColour; }
+		return riseColour;
+	}
+
+	function fillScale(d){
+		if( d.interDayFall ){ return fallColour; }
+		return '#fff';
+	}
+
+	function chart(parent){
+		parent.append('line') //high low line
+			.attr({
+				x1:0, 
+				y1:function(d){ return scale(d.high); }, 
+				x2:0, 
+				y2:function(d){ return scale(d.low); },
+				'stroke':strokeScale,
+				'data-date':function(d){return d.date}
+			}); 
+
+		//open close box	
+		parent.append('rect').attr({
+				x:-lineWidth, 
+				y:function(d){ return scale(Math.max(d.open,d.close)); }, 
+				width:lineWidth*2, 
+				height:function(d){ 
+					return scale(Math.min(d.open,d.close)) - scale(Math.max(d.open,d.close)); 
+				}, 
+				'stroke':strokeScale,
+				'stroke-width':2,
+				'fill':fillScale
 			}); 
 	}
 

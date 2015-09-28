@@ -22,20 +22,19 @@
 
 //configuration stuff
 	var width = 600,
-		height = 600,
-		margin = { top:20, bottom:20, left:20, right:20 },
+		height = 1000,
+		margin = { top:200, bottom:20, left:20, right:20 },
+
 		categoryFill = {
-			'Wales':'#F00',
-			'Scotland':'#00F',
-			'London':'#CCC'
+			'London':'#d7706c'
 		},
-		defaultCategoryFill = '#FFF',
+		defaultCategoryFill = '#256ea6',
 		categoryStroke = {
-			'Wales':'#F00',
-			'Scotland':'#00F',
-			'London':'#CCC'
+			// 'Wales':'#aaa',
+			// 'Scotland':'#aaa',
+			// 'London':'#aaa'
 		},
-		defaultCategoryStroke = '#000',
+		defaultCategoryStroke = 'none',
 		categoryColumn = 'region_name';
 
 
@@ -63,6 +62,15 @@
     					height:height
     				});
 
+//title and subtitle
+      //add a title and subtitle
+      svg.append('text')
+        .html('London constituencies')
+        .attr({
+          'font-size':30,
+          y:30
+        });
+
     	var chart = svg.append('g')
     					.attr('transform','translate('+ margin.left +', '+ margin.top +')');
 
@@ -71,7 +79,7 @@
     			.enter()
     		.append('circle')
     			.attr({
-   					r:scale(1)/3,
+   					r:2*scale(1)/5,
    					transform:function(d){
    						return 'translate(' + scale(d.x) + ',' + scale(d.y) + ')';
    					},
