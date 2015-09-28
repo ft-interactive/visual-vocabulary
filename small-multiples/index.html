@@ -54,14 +54,16 @@
 
 <script type='text/javascript'>
 
-	var margin = {top: 30, right: 10, bottom: 30, left: 40},
-	    width = 140 - margin.left - margin.right,
-	    height = 200 - margin.top - margin.bottom;
+	var margin = {top: 40, right: 10, bottom: 30, left: 40},
+			chartWidth = 600,
+	    width = 120 - margin.left - margin.right,
+	    height = 140;
 
 	/**** Parameters to edit ****/
   var divisor = 1000, //use this number to divide data values to a sensible amount
   		numTicks = 3,
-  		yDomain = [0,15000];	//set this to mark the extent of the y axis e,g [0,20000]
+  		yDomain = [0, 15000], 	//set this to mark the extent of the y axis e,g [0,20000]
+  		columns = 5; // number of columns;
 
 	/**** end paramaters ****/
 
@@ -100,6 +102,7 @@
 			data.forEach(function(d,i){
 				var max, min;
 				seriesNames.forEach(function(e){
+					console.log(e);
 					if(i==0) yDomain[0] = yDomain[1] = Number(d[e]);
 					yDomain[0] = Math.min(yDomain[0], Number(d[e]));
 					yDomain[1] = Math.max(yDomain[1], Number(d[e]));
@@ -112,32 +115,47 @@
 	yScale.domain(yDomain);
 
 	// Add an SVG element for each series with the desired dimensions and margin.
-	var svg = d3.select('body').selectAll('svg')
-			.data(seriesNames)
-		.enter().append('svg')
-			.attr('width', width + margin.left + margin.right)
-			.attr('height', height + margin.top + margin.bottom)
-		.append('g')
-			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	var svg = d3.select('body').append('svg')
+			.attr('width', chartWidth)
 
+	var chart = svg.selectAll('g')
+			.data(seriesNames)
+		.enter().append('g')
+			.attr('width', width + margin.left + margin.right)
+			.attr('height', height)
+		.append('g')
+			.attr('transform',  function(d, i) { 
+				var yPos = Number((Math.floor( i / columns) * (height + margin.top + margin.bottom) + margin.top));
+				var xPos = i%columns;
+				return 'translate(' + ((width + margin.left) * xPos + margin.left) + ',' + yPos + ')'
+			});
+
+	svg
+		.attr('height', function(d) {
+			var numCharts = seriesNames.length;
+			var rows = Math.ceil(numCharts / columns);
+			var chartHeight = rows * (height + margin.top + margin.bottom) + margin.top
+			return chartHeight;
+		})
+		
 	  // Add a small label for the seriesname.
-    svg.append('g')
+    chart.append('g')
 	    .attr('class', 'y axis')
 		    .call(yAxis)
 	    .append('text')
 		    .attr('class', 'title')
 		    .attr('text-anchor', 'middle')
 		    .attr('dx', function() {return (width)/2;})
-		    .attr('dy', -5)
+		    .attr('dy', -15)
 		    .text(function(d) {return d.toUpperCase(); });
 
-	svg.append('g')
+	chart.append('g')
 	    .attr('class', 'x axis')
 	    .attr('transform', 'translate(0,' + height + ')')
 	    .call(xAxis);
 	 
 	  // Add the line path elements. Note: the y-domain is set per element.
-	svg.append('path')
+	chart.append('path')
 		.attr('class', 'line')
 		.each(function(seriesName){
 			var path = d3.select(this);
