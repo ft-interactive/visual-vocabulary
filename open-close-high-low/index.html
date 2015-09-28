@@ -247,15 +247,14 @@ function OHLCBoxMark(){
 	var riseColour = '#00FF00';
 	var fallColour = '#FF0000';
 
-	function colourScale(d){
+	function strokeScale(d){
 		if(d.interDayFall){ return fallColour; }
 		return riseColour;
 	}
 
 	function fillScale(d){
-		if( d.open < d.close ) { return '#fff'; }
 		if( d.interDayFall ){ return fallColour; }
-		return riseColour;
+		return '#fff';
 	}
 
 	function chart(parent){
@@ -265,7 +264,7 @@ function OHLCBoxMark(){
 				y1:function(d){ return scale(d.high); }, 
 				x2:0, 
 				y2:function(d){ return scale(d.low); },
-				'stroke':colourScale,
+				'stroke':strokeScale,
 				'data-date':function(d){return d.date}
 			}); 
 
@@ -277,7 +276,7 @@ function OHLCBoxMark(){
 				height:function(d){ 
 					return scale(Math.min(d.open,d.close)) - scale(Math.max(d.open,d.close)); 
 				}, 
-				'stroke':colourScale,
+				'stroke':strokeScale,
 				'stroke-width':2,
 				'fill':fillScale
 			}); 
