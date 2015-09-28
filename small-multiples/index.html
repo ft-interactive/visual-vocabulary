@@ -111,18 +111,12 @@
 		}
 
 	// Compute the minimum and maximum date across series.
-<<<<<<< HEAD
 	var xDomain = d3.extent(data, function(d) { return d.date; } );
 	xScale.domain(xDomain);
 	yScale.domain(yDomain);
 
 	xAxis.tickValues(xDomain);
 
-=======
-	xScale.domain(d3.extent(data, function(d) { return d.date; } ));
-	yScale.domain(yDomain);
-
->>>>>>> master
 	// Add an SVG element for each series with the desired dimensions and margin.
 	var svg = d3.select('body').append('svg')
 			.attr('width', chartWidth)
@@ -133,20 +127,13 @@
 			.attr('width', width + margin.left + margin.right)
 			.attr('height', height)
 		.append('g')
-<<<<<<< HEAD
 			.attr('transform',  function(d, i) { 
-=======
-			.attr('transform',  function(d, i) { //set the x and y positions of each chart
->>>>>>> master
+
 				var yPos = Number((Math.floor( i / columns) * (height + margin.top + margin.bottom) + margin.top));
 				var xPos = i%columns;
 				return 'translate(' + ((width + margin.left) * xPos + margin.left) + ',' + yPos + ')'
 			});
-
-<<<<<<< HEAD
-=======
 	//set the height of the svg container		
->>>>>>> master
 	svg
 		.attr('height', function(d) {
 			var numCharts = seriesNames.length;
