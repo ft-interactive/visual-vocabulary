@@ -4,44 +4,6 @@
 	<script type="text/javascript" src="../d3/d3.v3.min.js"></script>
 	<style type="text/css">
 
-		text {
-			font-family: metric,sans-serif;
-		}
-		
-		.y.axis .domain,
-		.x.axis .domain{
-			fill:none;
-			stroke:none;
-		}
-
-		.y.axis .domain {
-			stroke: none;
-		}
-
-		.y.axis .tick line,
-		.x.axis .tick line{
-			fill:none;
-			stroke:#cec6b9;
-		}
-
-		.y.axis .tick text,
-		.x.axis .tick text{
-			fill:#74736c;
-			font-size: 14px;
-		}
-		
-		.y.axis .title {
-			fill:#74736c;
-			font-size: 11px;
-		}
-
-		.positive {
-			fill: #6898c1;
-		}
-
-		.negative {
-			fill: #bb6d82;
-		}
 	</style>
 </head>
 
@@ -57,10 +19,47 @@
 
 <script type='text/javascript'>
 
-	var margin = {top: 40, right: 10, bottom: 30, left: 40},
-			chartWidth = 600,
-	    width = 120 - margin.left - margin.right,
-	    height = 140;
+var styles = {
+	'text':{
+		'font-family': 'metric,sans-serif'
+	},
+	'.y.axis .domain, .x.axis .domain':{
+		'fill':'none',
+		'stroke':'none'
+	},
+	'.y.axis .domain':{
+		'stroke': 'none'
+	},
+	'.y.axis .tick line, .x.axis .tick line': {
+		'fill':'none',
+		'stroke':'#cec6b9'
+	},
+	'.y.axis .tick text, .x.axis .tick text': {
+		'fill':'#74736c',
+		'font-size': '14'
+	},
+	'.y.axis .tick text':{
+		'text-anchor':'end'
+	},
+	'.x.axis .tick text':{
+		'text-anchor':'middle'
+	},
+	'.y.axis .title': {
+		'fill': '#74736c',
+		'font-size': '11'
+	},
+	'.positive': {
+		'fill': '#6898c1'
+	},
+	'.negative': {
+		'fill': '#bb6d82'
+	}
+};
+
+var margin = {top: 40, right: 10, bottom: 30, left: 40},
+		chartWidth = 600,
+    width = 120 - margin.left - margin.right,
+    height = 140;
 
 	/**** Parameters to edit ****/
   var divisor = 1000, //use this number to divide data values to a sensible amount
@@ -103,7 +102,6 @@
 	xAxis.tickValues([minDate,maxDate]);
 
 
-  // console.log(xMin);
 		seriesNames = Object.keys( data[0] ).filter(function(d){ return d != 'date'; }); // return the series names from the first row of the spreadsheet
 
 		if(!yDomain){
@@ -111,7 +109,6 @@
 			data.forEach(function(d,i){
 				var max, min;
 				seriesNames.forEach(function(e){
-					console.log(e);
 					if(i==0) yDomain[0] = yDomain[1] = Number(d[e]);
 					yDomain[0] = Math.min(yDomain[0], Number(d[e]));
 					yDomain[1] = Math.max(yDomain[1], Number(d[e]));
@@ -156,7 +153,6 @@
 		    .call(yAxis)
 	    .append('text')
 		    .attr('class', 'title')
-		    .attr('text-anchor', 'middle')
 		    .attr('dx', function() {return (width)/2;})
 		    .attr('dy', -15)
 		    .text(function(d) {return d.toUpperCase(); });
@@ -169,16 +165,23 @@
 	  // Add the line path elements. Note: the y-domain is set per element.
 	chart.append('g')
 		.each(function(seriesName){
-			console.log(this);
 			var bars = d3.select(this).selectAll('rect');
 			bars.data(data)
-			.enter().append('rect')
-			.attr('class', function(d){return d[seriesName] < 0 ? 'negative' : 'positive';})
-			.attr('y', function(d) { return yScale(Math.max(0, d[seriesName]) ); })
-			.attr('x', function(d) { return xScale(d.date); })
-			.attr('height', function(d) { return Math.abs(yScale( d[seriesName] ) - yScale(0) ); })
-			.attr('width', xScale.rangeBand())
+				.enter().append('rect')
+				.attr('class', function(d){return d[seriesName] < 0 ? 'negative' : 'positive';})
+				.attr('y', function(d) { return yScale(Math.max(0, d[seriesName]) ); })
+				.attr('x', function(d) { return xScale(d.date); })
+				.attr('height', function(d) { return Math.abs(yScale( d[seriesName] ) - yScale(0) ); })
+				.attr('width', xScale.rangeBand())
 		});
+
+
+    //apply the styles as attributes
+    d3.selectAll('*').attr('style','');
+    Object.keys(styles).forEach(function(selector){
+        d3.selectAll(selector)
+            .attr(styles[selector]);
+    });
 });
 
 function parseDate(d) {
