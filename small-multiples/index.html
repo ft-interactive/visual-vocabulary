@@ -62,14 +62,14 @@
 	/**** Parameters to edit ****/
   var divisor = 1000, //use this number to divide data values to a sensible amount
   		numTicks = 3,
-  		yDomain = [0, 15000], 	//set this to mark the extent of the y axis e,g [0,20000]
-  		columns = 5; // number of columns;
+  		yDomain = undefined, 	//set this to mark the extent of the y axis e,g [0,20000]
+  		columns = 5, // number of columns;
+			dateFormat = d3.time.format('%d/%m/%Y'); // change the dateFormat to match your data ---> https://github.com/mbostock/d3/wiki/Time-Formatting for list of options 
 
 	/**** end paramaters ****/
 
 	var seriesNames = [];
 
-	var dateFormat = d3.time.format('%d/%m/%Y');
 
 	var xScale = d3.time.scale()
 	    .range([0, width]);
