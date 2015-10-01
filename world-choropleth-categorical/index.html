@@ -4,10 +4,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-geo-projection/0.2.9/d3.geo.projection.min.js"></script>
 	<script charset="utf-8" src="http://d3js.org/queue.v1.min.js"></script>
-	<style type="text/css">
-	*{
-		font-family: sans-serif;
-	}</style>
+	<style type="text/css"></style>
 </head>
 <body>
 <h1>World choropleth categorical</h1>
@@ -19,6 +16,12 @@
 </div>
 </body>
 <script type="text/javascript">
+	var styles = {
+	    'text': {
+	        'font-family': 'Metric, sans-serif'
+	    }
+	};
+
 	var countryShapes = "https://raw.githubusercontent.com/datasets/geo-boundaries-world-110m/master/countries.geojson";
 	var width = 960,
 	    height = 600,
@@ -150,6 +153,13 @@
 						return defaultCategoryStroke;
 					}
 				});
+	
+	    //apply the styles as attributes
+        d3.selectAll('*').attr('style','');
+        Object.keys(styles).forEach(function(selector){
+            d3.selectAll(selector)
+                .attr(styles[selector]);
+        });
 	};
 
 
