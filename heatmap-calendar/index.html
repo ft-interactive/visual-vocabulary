@@ -3,41 +3,45 @@
 <head>
 <title>Data Calendar</title>
 <style>
-    .month {
-        fill: none;
-        stroke: #000;
-        stroke-width: 2px;
-    }
-    .day {
-        fill: #fff;
-        stroke: #ccc;
-    }
-    text    {
-        font-family:metric,sans-serif;
-        font-size:1.5em;
-    }
-    .dayLabel   {
-        fill:#aaa;
-        font-size:0.8em;
-    }
-    .monthLabel {
-        text-anchor:middle;
-        font-size:0.8em;
-        fill:#aaa;
-    }
-    .yearLabel  {
-        fill:#aaa;
-        font-size:1.2em;
-    }
-    
-    .key    {font-size:0.5em;}
     
 </style>
 </head>
 <body>
 <script type="text/javascript" src="../d3/d3.v3.min.js"></script>
 <script>
-    
+    //programatically style 
+    var styles = {
+        '.month': {
+            'fill': 'none',
+            'stroke': '#000',
+            'stroke-width': '2'
+        },
+        '.day': {
+            'fill': '#fff',
+            'stroke': '#ccc'
+        },
+        'text' :{
+            'font-family':'metric,sans-serif',
+            'font-size':'1.5em'
+        },
+        '.dayLabel': {
+            'fill':'#aaa',
+            'font-size':'0.8em'
+        },
+        '.monthLabel':{
+            'text-anchor':'middle',
+            'font-size':'0.8em',
+            'fill':'#aaa'
+        },
+        '.yearLabel': {
+            'fill':'#aaa',
+            'font-size':'1.2em'
+        },
+        '.key': {
+            'font-size':'0.5em'
+        }
+    };
+
     var title="Migrant deaths in the Mediterranean";
     var units=" dead or missing";
     var breaks=[10,25,50,100];
@@ -245,12 +249,13 @@
                 }
             });
             
+        //apply the styles as attributes
+        d3.selectAll('*').attr('style','');
+        Object.keys(styles).forEach(function(selector){
+            d3.selectAll(selector)
+                .attr(styles[selector]);
+        });
         
-        /*
-        change required:
-        create a key
-        apply a filter to label the top category value  
-        */
         
     });//end data load
     
