@@ -19,3 +19,7 @@ i.e. copying them to your computer. either : [Download them from here](https://g
 or in the terminal window type `git clone https://github.com/ft-interactive/graphics-examples.git TARGET-LOCATION`
 
 replacing `TARGET-LOCATION` with the name of the folder you wish to put the examples in.
+
+# Getting you graphic off the page and into illustrator
+
+Use the SVG crowbar bookmark [which is available here]](http://nytimes.github.io/svg-crowbar/)
