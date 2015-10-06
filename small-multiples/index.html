@@ -3,42 +3,7 @@
 	<title>Small multiple line charts</title>
 	<script type="text/javascript" src="../d3/d3.v3.min.js"></script>
 	<style type="text/css">
-		text{
-			font-family: metric, sans-serif;
-		}
 		
-		.y.axis .domain,
-		.x.axis .domain{
-			fill:none;
-			stroke:#a7a59b;
-		}
-
-		.y.axis .domain {
-			stroke: none;
-		}
-
-		.y.axis .tick line,
-		.x.axis .tick line{
-			fill:none;
-			stroke:#cec6b9;
-		}
-
-		.y.axis .tick text,
-		.x.axis .tick text{
-			fill:#74736c;
-			font-size: 14px;
-		}
-		
-		.y.axis .title {
-			fill:#74736c;
-			font-size: 11px;
-		}
-
-		.line {
-			stroke-width: 2px;
-			stroke: #af516c;
-			fill: none;
-		}
 	</style>
 </head>
 
@@ -53,6 +18,35 @@
 </body>
 
 <script type='text/javascript'>
+	var styles = {
+		'text': {
+			'font-family': 'metric, sans-serif'
+		},
+		'.y.axis .domain, .x.axis .domain': {
+			'fill':'none',
+			'stroke':'#a7a59b'
+		},
+		'.y.axis .domain': {
+			'stroke': 'none',
+		},
+		'.y.axis .tick line, .x.axis .tick line': {
+			'fill':'none',
+			'stroke':'#cec6b9'
+		},
+		'.y.axis .tick text, .x.axis .tick text': {
+			'fill':'#74736c',
+			'font-size': '14'
+		},
+		'.y.axis .title': {
+			'fill':'#74736c',
+			'font-size': '11'
+		},
+		'.line': {
+			'stroke-width': '2',
+			'stroke': '#af516c',
+			'fill': 'none'
+		}
+	};
 
 	var margin = {top: 40, right: 10, bottom: 30, left: 40},
 			chartWidth = 600,
@@ -170,6 +164,13 @@
 
 			path.attr('d', function(d){ return line(d); })
 		});
+
+	//apply the styles as attributes
+    d3.selectAll('*').attr('style','');
+    Object.keys(styles).forEach(function(selector){
+        d3.selectAll(selector)
+            .attr(styles[selector]);
+    });
 });
 
 function parseDate(d) {

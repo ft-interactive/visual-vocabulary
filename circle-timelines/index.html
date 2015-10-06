@@ -3,32 +3,6 @@
 <head>
 <title>Circle timelines</title>
 <style>
-    text    {font-family:Metric,sans-serif;}
-    rect   {stroke-width:1px;stroke:#ccc;}
-    
-    .label  {text-anchor:end;}
-    .title  {font-size:21px;}
-    .subtitle   {font-size:14px;}
-    .circles    {fill-opacity:0.4;stroke-width:1px;}
-    
-    .axis path,
-    .axis line  {
-        fill:none;
-        stroke: #777;
-        shape-rendering: crispEdges;
-    }
-    
-    .axis text  {
-        font-family:Metric,sans-serif;
-        font-size:11px;
-    }
-    
-    .dayAxis path,
-    .dayAxis line   {
-        fill:none;
-        stroke: #ccc;
-        shape-rendering: crispEdges;
-    }
     
 </style>
 </head>
@@ -42,6 +16,48 @@
     id's for circles that include data
     key for circle size?*/
     
+//styling as attributes
+    var styles = {
+        'text':{
+            'font-family':'Metric, sans-serif'
+        },
+        'rect' :{
+            'stroke-width':'1',
+            'stroke':'#ccc'
+        },
+        '.label':{ 
+            'text-anchor':'end' 
+        },
+        '.title':{ 
+            'font-size':'21' 
+        },
+        '.subtitle':{ 
+            'font-size':'14' 
+        },
+        '.circles':{ 
+            'fill-opacity':'0.4',
+            'stroke-width':'1'
+        },
+        '.axis path, .axis line':{
+            'fill':'none',
+            'stroke': '#777',
+            'shape-rendering': 'crispEdges'
+        },
+        '.axis text':{
+            'font-family':'Metric,sans-serif',
+            'font-size':'11'
+        },
+        '.dayAxis path, .dayAxis line':{
+            'fill':'none',
+            'stroke':'#ccc',
+            'shape-rendering':'crispEdges'
+        }
+
+    }    
+    
+    
+
+
     var title="Incidences of International Piracy and Armed Robbery at Sea";
     var subtitle="by region, 1984-2010";
     var source="Source: International Maritime Organisation";
@@ -176,7 +192,12 @@
                 return radius(d.value);
             })
         
-        
+        //apply the styles as attributes
+        d3.selectAll('*').attr('style','');
+        Object.keys(styles).forEach(function(selector){
+            d3.selectAll(selector)
+                .attr(styles[selector]);
+        });
         
         //sort function
         function sortFunction(a,b)    {

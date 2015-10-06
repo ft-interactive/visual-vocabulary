@@ -3,36 +3,7 @@
 	<title>Open-high-low-close chart</title>
 	<script type="text/javascript" src="../d3/d3.v3.min.js"></script>
 	<style type="text/css">
-		*{
-			font-family: sans-serif;
-		}
-		
-		.y.axis .domain,
-		.x.axis .domain{
-			fill:none;
-			stroke:#a7a59b;
-		}
 
-		.y.axis .domain {
-			stroke: none;
-		}
-
-		.y.axis .tick line,
-		.x.axis .tick line{
-			fill:none;
-			stroke:#cec6b9;
-		}
-
-		.y.axis .tick text,
-		.x.axis .tick text{
-			fill:#74736c;
-			font-size: 14px;
-		}
-
-		.day line {
-			stroke-width: 2px;
-			shape-rendering: crispEdges;
-		}
 	</style>
 </head>
 
@@ -47,7 +18,37 @@
 </body>
 
 <script type="text/javascript">
-
+//styling
+var styles = {
+    'text': {
+        'font-family': 'Metric, sans-serif'
+    },
+	'.y.axis .domain, .x.axis .domain': {
+		'fill': 'none',
+		'stroke': '#a7a59b'
+	},
+	'.y.axis .domain': {
+		'stroke': 'none'
+	},
+	'.y.axis .tick line, .x.axis .tick line': {
+		'fill': 'none',
+		'stroke': '#cec6b9'
+	},
+	'.y.axis .tick text, .x.axis .tick text': {
+		'fill': '#74736c',
+		'font-size': '14'
+	},
+	'.y.axis .tick text': {
+		'text-anchor': 'end'
+	},
+	'.x.axis .tick text': {
+		'text-anchor': 'middle'
+	},
+	'.day line': {
+		'stroke-width': '2',
+		'shape-rendering': 'crispEdges'
+	}
+};
 //Configuration
 var data = 'vw-stockprice-data.csv',	//The spreadsheet where the data comes from
 	chartWidth = 600,
@@ -180,6 +181,13 @@ function drawChart(loadedData){
 				'transform':function(d){ return 'translate(' + xScale(d.date) + ',0)'; }
 			})
 			.call( mark );
+
+	//apply the styles as attributes
+    d3.selectAll('*').attr('style','');
+    Object.keys(styles).forEach(function(selector){
+        d3.selectAll(selector)
+            .attr(styles[selector]);
+    });
 }
 
 
