@@ -37,9 +37,16 @@
 			'fill':'#74736c',
 			'font-size': '14'
 		},
-		'.y.axis .title': {
+		'.y.axis .tick text': {
+			'text-anchor':'end'
+		},
+		'.x.axis .tick text': {
+			'text-anchor':'middle'
+		},
+		'.item-title': {
 			'fill':'#74736c',
-			'font-size': '11'
+			'font-size': '11',
+			'text-anchor': 'middle'
 		},
 		'.line': {
 			'stroke-width': '2',
@@ -49,7 +56,7 @@
 	};
 
 	var margin = {top: 40, right: 10, bottom: 30, left: 40},
-			chartWidth = 600,
+		chartWidth = 600,
 	    width = 120 - margin.left - margin.right,
 	    height = 140;
 
@@ -63,7 +70,6 @@
 	/**** end paramaters ****/
 
 	var seriesNames = [];
-
 
 	var xScale = d3.time.scale()
 	    .range([0, width]);
@@ -96,7 +102,6 @@
 			data.forEach(function(d,i){
 				var max, min;
 				seriesNames.forEach(function(e){
-					console.log(e);
 					if(i==0) yDomain[0] = yDomain[1] = Number(d[e]);
 					yDomain[0] = Math.min(yDomain[0], Number(d[e]));
 					yDomain[1] = Math.max(yDomain[1], Number(d[e]));
@@ -104,79 +109,83 @@
 			});
 		}
 
-	// Compute the minimum and maximum date across series.
-	var xDomain = d3.extent(data, function(d) { return d.date; } );
-	xScale.domain(xDomain);
-	yScale.domain(yDomain);
+		// Compute the minimum and maximum date across series.
+		var xDomain = d3.extent(data, function(d) { return d.date; } );
+		xScale.domain(xDomain);
+		yScale.domain(yDomain);
+		
+		xAxis.tickValues(xDomain);
 
-	xAxis.tickValues(xDomain);
+		// Add an SVG element for each series with the desired dimensions and margin.
+		var svg = d3.select('body').append('svg')
+				.attr('width', chartWidth)
 
-	// Add an SVG element for each series with the desired dimensions and margin.
-	var svg = d3.select('body').append('svg')
-			.attr('width', chartWidth)
-
-	var chart = svg.selectAll('g')
+		var chart = svg.selectAll('g')
 			.data(seriesNames)
-		.enter().append('g')
-			.attr('width', width + margin.left + margin.right)
-			.attr('height', height)
-		.append('g')
-			.attr('transform',  function(d, i) { 
+				.enter()
+			.append('g')
+				.attr({
+					'id': function(d){ return d; },
+					'transform': function(d, i) { 
+						var yPos = Number((Math.floor( i / columns) * (height + margin.top + margin.bottom) + margin.top));
+						var xPos = i%columns;
+						return 'translate(' + ((width + margin.left) * xPos + margin.left) + ',' + yPos + ')'
+					}
+				});
 
-				var yPos = Number((Math.floor( i / columns) * (height + margin.top + margin.bottom) + margin.top));
-				var xPos = i%columns;
-				return 'translate(' + ((width + margin.left) * xPos + margin.left) + ',' + yPos + ')'
-			});
-	//set the height of the svg container		
-	svg
-		.attr('height', function(d) {
+		//set the height of the svg container		
+		svg.attr('height', function(d) {
 			var numCharts = seriesNames.length;
 			var rows = Math.ceil(numCharts / columns);
 			var chartHeight = rows * (height + margin.top + margin.bottom) + margin.top
 			return chartHeight;
-		})
-		
-	  // Add a small label for the seriesname.
-    chart.append('g')
-	    .attr('class', 'y axis')
-		    .call(yAxis)
-	    .append('text')
-		    .attr('class', 'title')
-		    .attr('text-anchor', 'middle')
-		    .attr('dx', function() {return (width)/2;})
-		    .attr('dy', -15)
-		    .text(function(d) {return d.toUpperCase(); });
-
-	chart.append('g')
-	    .attr('class', 'x axis')
-	    .attr('transform', 'translate(0,' + height + ')')
-	    .call(xAxis);
-	 
-	  // Add the line path elements. Note: the y-domain is set per element.
-	chart.append('path')
-		.attr('class', 'line')
-		.each(function(seriesName){
-			var path = d3.select(this);
-			path.datum(data);
-			var line = d3.svg.line()
-			    .x(function(d) { return xScale(d.date); })
-			    .y(function(d) { return yScale( d[seriesName] ); });
-
-			path.attr('d', function(d){ return line(d); })
 		});
+			
+		  // Add a small label for the seriesname.
+		chart.append('text')
+			.attr({
+				'class':'item-title',
+			    'dx':function() {return (width)/2;},
+			    'dy': -15
+			})
+			.text(function(d) {return d.toUpperCase(); });
 
-	//apply the styles as attributes
-    d3.selectAll('*').attr('style','');
-    Object.keys(styles).forEach(function(selector){
-        d3.selectAll(selector)
-            .attr(styles[selector]);
-    });
-});
+	    chart.append('g')
+	    	.attr('class', 'y axis')
+	    	.call(yAxis);
 
-function parseDate(d) {
-  d.date = dateFormat.parse(d.date);
-  return d;
-}
+		chart.append('g')
+			.attr({
+				'class':'x axis',
+				'transform':'translate(0,' + height + ')'
+			})
+		    .call(xAxis);
+		 
+		  // Add the line path elements. Note: the y-domain is set per element.
+		chart.append('path')
+			.attr('class', 'line')
+			.each(function(seriesName){
+				var line = d3.svg.line()
+				    .x(function(d) { return xScale(d.date); })
+				    .y(function(d) { return yScale( d[seriesName] ); });
+
+				d3.select(this)
+					.datum(data)
+					.attr('d', function(d){ return line(d); });
+			});
+
+		//apply the styles as attributes
+	    d3.selectAll('*').attr('style','');
+	    Object.keys(styles).forEach(function(selector){
+	        d3.selectAll(selector)
+	            .attr(styles[selector]);
+	    });
+	});
+
+	function parseDate(d) {
+	  d.date = dateFormat.parse(d.date);
+	  return d;
+	}
 
 </script>
 </html>

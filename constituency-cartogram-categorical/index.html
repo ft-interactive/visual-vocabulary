@@ -83,6 +83,7 @@ var styles = {
     			.enter()
     		.append('circle')
     			.attr({
+            id:function(d,i){ return (d.id + ' value: ' + lookup[d.id][categoryColumn] ); },
    					r:2*scale(1)/5,
    					transform:function(d){
    						return 'translate(' + scale(d.x) + ',' + scale(d.y) + ')';
