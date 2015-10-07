@@ -130,11 +130,16 @@
 	function drawMap(error, world, data) {
 		var lookup = makeLookup(data, 'iso_a3');
 
-		map.selectAll('.nation')
-			.data(world.features)
+		map.append('g').attr('id','countries')
+			.selectAll('.nation')
+				.data(world.features)
 			.enter()
 				.append('path')
 				.attr({
+					id:function(d){ 
+						var id = d.properties.iso_a3;
+						return id + ' value: ' + lookup[id][category];
+					},
 					d:path,
 					fill:function(d){ 
 						var id = d.properties.iso_a3;
