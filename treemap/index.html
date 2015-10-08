@@ -1,146 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
-<meta charset=utf-8>
-<title>CSV to tremap drap and drop</title>
+	<title>treemap</title>
+	<script type="text/javascript" src="../d3/d3.v3.min.js"></script>
+	<style type="text/css">
 
-
+	</style>
 </head>
+
 <body>
-<style type="text/css">
-body {
-	background-color: #fff1e0;
-	margin: 0;
-	border: 0;
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size: 0.9em;
-}
-#main {
-	display:block;
-	margin:0 auto;
-	text-align: center;
-	font-size: 0.9em;
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	<h1>Treemap</h1>
+	<!-- <a href="https://github.com/ft-interactive/graphics-examples/tree/master/open-close-high-low">source</a> -->
 
-	}
-
-.instructions {
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	text-align: center;
-	color: #333;
-	margin-top: 20px;
-	}
-
-.measurements {
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size: 0.9em;
-	display: block;
-	margin:0 auto;
-	text-align: center;
-	color: #333;
-	margin-top: 10px;
-	margin-bottom: 20px;
-	}
-
-#dragBox {
-	display:block;
-	text-align: center;
-	font-size: 2.0em;
-	border: 5px dashed #ccc; 
-	height: 150px; 
-	color: #333;
-	margin:0 auto;
-	}
-
-#dragBox.hover { 
-	border: 5px solid #ccc;
-	color: #333;
-}
-.node {
-  font-size: 9.6px;
-  line-height: 12px;
-  overflow: hidden;
-  position: absolute;
-  text-indent: 2px;
-}
-
-
-</style>
-<div id="main">
-	<div id="intruc" class="instructions"></div>
-	<div id="example"class="instructions"><img src="/example.pmg"></div>
-	<div class="measurements">Enter you dimensions
-		Width: <input type="number" min="0" max="1000" value="600" id="treewidth">
-		Height: <input type="number" min="0" max="1000" value="400" id="treeheight">
+	<div class="chart">
 	</div>
-	<div id="dragBox">Make sure you fill in the height and width before you drag and drop your csv file here</div>
-</div>
+	<div class="key">
+	</div>
+</body>
 
-<script>
-var addEvent = (function () {
-  if (document.addEventListener) {
-    return function (el, type, fn) {
-      if (el && el.nodeName || el === window) {
-        el.addEventListener(type, fn, false);
-      } else if (el && el.length) {
-        for (var i = 0; i < el.length; i++) {
-          addEvent(el[i], type, fn);
-        }
-      }
-    };
-  } else {
-    return function (el, type, fn) {
-      if (el && el.nodeName || el === window) {
-        el.attachEvent('on' + type, function () { return fn.call(el, window.event); });
-      } else if (el && el.length) {
-        for (var i = 0; i < el.length; i++) {
-          addEvent(el[i], type, fn);
-        }
-      }
-    };
-  }
-})();
-
-
-var width=0.60 * window.innerWidth;
-var svgWidth=600
-var svgHeight=400
-
-
-d3.selectAll("input").on("change", function change() {
-	console.log(treewidth.value);
-	console.log(treeheight.value);
-	svgWidth=(treewidth.value);
-	svgHeight=(treeheight.value);
-	//pixels = (mm * dpi) / 25.4 givemn that dpi is 72
-
-});
-
-d3.select("#dragBox").style("width",width + "px")
-var doThis="Create a spread sheet in either Google docs or Excel with three column headings:</br>'group', 'item and 'value'. Make sure they are all lower case.</br>Enter your data grouping each item as shown in the example below. Don't leave any blank cells.<br>Save this as a separate csv file so you can come back to the original if you need to amend it"
-d3.select("#intruc").html(doThis);
-
-var dataset
-
-var dragBox = document.getElementById('dragBox');
-dragBox.ondragover = function () { this.className = 'hover'; return false; };
-dragBox.ondragend = function () { this.className = ''; return false; };
-dragBox.ondrop = function (e) {
-	this.className = 'hover';
-	e.preventDefault();
-	var file = e.dataTransfer.files[0],
-		reader = new FileReader();
-	reader.onload = function (event) {
-		var csvData=event.target.result;
-		dataset = d3.csv.parse(csvData);
-		dataset = nest(dataset);
-		drawTreemap(dataset);
-		drawKey(dataset);
-	};
-	reader.readAsText(file);
-	return false;
+<script type="text/javascript">
+//styling
+var styles = {
+    'text': {
+        'font-family': 'Metric, sans-serif'
+    },
+	'.y.axis .domain, .x.axis .domain': {
+		'fill': 'none',
+		'stroke': '#a7a59b'
+	},
+	'.y.axis .domain': {
+		'stroke': 'none'
+	},
+	'.y.axis .tick line, .x.axis .tick line': {
+		'fill': 'none',
+		'stroke': '#cec6b9'
+	},
+	'.y.axis .tick text, .x.axis .tick text': {
+		'fill': '#74736c',
+		'font-size': '14'
+	},
+	'.y.axis .tick text': {
+		'text-anchor': 'end'
+	},
+	'.x.axis .tick text': {
+		'text-anchor': 'middle'
+	},
+	'.day line': {
+		'stroke-width': '2',
+		'shape-rendering': 'crispEdges'
+	}
 };
+
+//Configuration
+var data = 'tremap-data.csv',	//The spreadsheet where the data comes from
+	chartWidth = 600,
+	chartHeight = 500,
+	margin = { top:100, bottom:50, left:40, right:25 },
+	plotWidth = chartWidth - (margin.left + margin.right),
+	plotHeight = chartHeight - (margin.top + margin.bottom);
+
+//Load the data, when it's loaded draw the chart
+d3.csv(data, drawChart);
+
+function drawChart(loadedData){
+	var dataset=loadedData//assigns the dataset name to the loaded data, as this is what I'm mostly used to with working with. var name could be anythiung.
+	console.log("dataset before nest function",dataset)//shows the data its parsed csv format
+
+}
+
 
 function nest(data) {
 	return {
