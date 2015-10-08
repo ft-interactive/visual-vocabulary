@@ -10,9 +10,8 @@
 
 <body>
 	<div id="title"></div>
-	<div id="subtitle">Daily cups of tea drunk, spurious data by department</div>
+	<div id="subtitle"></div>
 	<!-- <a href="https://github.com/ft-interactive/graphics-examples/tree/master/open-close-high-low">source</a> -->
-
 	<div id="treemap">
 	</div>
 </body>
@@ -20,7 +19,7 @@
 <script type="text/javascript">
 
 //Configuration
-var title="Weekly number of teas drunk";
+var title="Daily number of teas drunk";
 var subtitle="By department";
 var source="Source: Spurious data example";
 
@@ -53,13 +52,6 @@ function process(error,loadedData){
 	console.log("Data that has been arranged by group",dataset)
 	drawTreemap(dataset);//Passes the sorted data to the treemap function
 	drawKey(dataset)//Passes the sorted data to the function that creates the key
-
-	//set the styles
-	// d3.selectAll('*').attr('style','');
- //        Object.keys(styles).forEach(function(selector){
- //            d3.selectAll(selector)
- //                .attr(styles[selector]);
- //        });
 
 }
 
