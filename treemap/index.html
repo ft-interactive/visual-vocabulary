@@ -115,7 +115,7 @@ function drawTreemap(data){
 			})
 		.call(function(parent){//adds a rectangle into the g element and define height widht etc
 			parent.append('rect')
-				.attr("x",0)
+				.attr("x",0-7)
 				.attr("y",0-12)
 				.attr("width",function(d){ return d.dx })
 				.attr("height",function(d){ return d.dy })
