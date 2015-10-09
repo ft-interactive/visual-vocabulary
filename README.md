@@ -1,5 +1,5 @@
 # Graphics Examples
-Small examples of data driven graphics -- to be used as starting points for generating print graphics.
+Small examples of data driven graphics -- to be used as starting points for static graphics to be further refined through Illustrator.
 [viewable here](http://ft-interactive.github.io/graphics-examples/)
 # Getting started
 For ease of use we suggest you use [`srvlr`](https://github.com/kavanagh/srvlr) to help you see your changes reflected immediately in your browser.
