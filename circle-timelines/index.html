@@ -66,13 +66,13 @@ var colours=['#4479b8','#ea9942','#454545','#87b700','#a765a6','#8f7666','#aa001
 //general layout information
 var margin = {
     top:80,
-    left:50,
+    left:30,
     bottom:0,
-    right:50
+    right:30
 };
 var width=600;
 var height = 800;
-var maxCircle = 30;
+var maxCircle = 30; // the size of the largest circle
 
 //date formatter, matching the format of the incoming csv...
 var dateFormat = d3.time.format('%Y'); //in the example case the data is per years
@@ -103,7 +103,7 @@ function drawChart(error, data) {
     
     //establish proportional sizes
     var radius = d3.scale.sqrt()
-        .domain([0,maxValue])
+        .domain([0, maxValue])
         .range([0, maxCircle]);
     
     //set up the scale we will use for plotting out the timeline
