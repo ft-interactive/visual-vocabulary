@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
+<meta charset='utf-8'>
 <head>
 <title>Circle timelines</title>
 <style>
@@ -7,7 +7,7 @@
 </style>
 </head>
 <body>
-<script type="text/javascript" src="../d3/d3.v3.min.js"></script>
+<script type='text/javascript' src='../d3/d3.v3.min.js'></script>
 <script>
     
    /* remaining work
@@ -17,197 +17,214 @@
     key for circle size?*/
     
 //styling as attributes
-    var styles = {
-        'text':{
-            'font-family':'Metric, sans-serif'
-        },
-        'rect' :{
-            'stroke-width':'1',
-            'stroke':'#ccc'
-        },
-        '.label':{ 
-            'text-anchor':'end' 
-        },
-        '.title':{ 
-            'font-size':'21' 
-        },
-        '.subtitle':{ 
-            'font-size':'14' 
-        },
-        '.circles':{ 
-            'fill-opacity':'0.4',
-            'stroke-width':'1'
-        },
-        '.axis path, .axis line':{
-            'fill':'none',
-            'stroke': '#777',
-            'shape-rendering': 'crispEdges'
-        },
-        '.axis text':{
-            'font-family':'Metric,sans-serif',
-            'font-size':'11'
-        },
-        '.dayAxis path, .dayAxis line':{
-            'fill':'none',
-            'stroke':'#ccc',
-            'shape-rendering':'crispEdges'
-        }
-
-    }    
+var styles = {
+    'text':{
+        'font-family':'Metric, sans-serif'
+    },
+    'rect' :{
+        'stroke-width':'1',
+        'stroke':'#ccc'
+    },
+    '.label':{ 
+        'text-anchor':'end' 
+    },
+    '.title':{ 
+        'font-size':'21' 
+    },
+    '.subtitle':{ 
+        'font-size':'14' 
+    },
+    '.circles':{ 
+        'fill-opacity':'0.4',
+        'stroke-width':'1'
+    },
+    '.axis path, .axis line':{
+        'fill':'none',
+        'stroke': '#777',
+        'shape-rendering': 'crispEdges'
+    },
+    '.axis text':{
+        'font-family':'Metric,sans-serif',
+        'font-size':'11'
+    },
+    '.dayAxis path, .dayAxis line':{
+        'fill':'none',
+        'stroke':'#ccc',
+        'shape-rendering':'crispEdges'
+    }
+}    
     
     
 
+//Configuration
+var dataLocation = 'data_piracy.csv';
+var title='International Piracy and Armed Robbery at Sea';
+var subtitle='incidents by region, 1984-2010';
+var source='Source: International Maritime Organisation';
+var colours=['#4479b8','#ea9942','#454545','#87b700','#a765a6','#8f7666','#aa0016'];
 
-    var title="Incidences of International Piracy and Armed Robbery at Sea";
-    var subtitle="by region, 1984-2010";
-    var source="Source: International Maritime Organisation";
-    var colours=["#4479b8","#ea9942","#454545","#87b700","#a765a6","#8f7666","#aa0016"];
-    
-    //general layout information
-    var xOffset=50;
-    var yOffset=80;
-    var timelineW=600;
-    var maxCircle=30;
-    
-    //date formatter, matching the format of the incoming csv...
-    var parseDate = d3.time.format("%Y").parse;
+//general layout information
+var margin = {
+    top:80,
+    left:50,
+    bottom:0,
+    right:50
+};
+var width=600;
+var height = 800;
+var maxCircle = 30;
 
+//date formatter, matching the format of the incoming csv...
+var dateFormat = d3.time.format('%Y'); //in the example case the data is per years
+
+d3.csv(dataLocation, drawChart);
+
+function drawChart(error, data) {
+    //set up an array of all the dates and values which we need to work out the range of the data
+    var dates = new Array();
+    var values = new Array();
     
-    d3.csv("data_piracy.csv", function(error, data) {
-        
-        //set up an array of all the dates and values which we need to work out the range of the data
-        var dates = new Array();
-        var values = new Array();
-        
-        //parse the data
-        data.forEach(function(d)    {
-                d.date=parseDate(d.date);
-                dates.push(d.date);
-                values.push(d.value);
-        });
-        
-        //establish range of dates
-        dates =dates.sort(sortFunction);
-        var dateRange=[dates[0],dates[dates.length-1]];
-        //calculate number of days between dates - needed later for ticks
-        var numDays = daydiff(dates[0],dates[dates.length-1]);
-        
-        //establish max data value
-        values = values.sort(sortFunction);
-        var maxValue=values[values.length-1];
-        
-        //establish proportional sizes
-        var radius = d3.scale.sqrt()
-            .domain([0,maxValue])
-            .range([0,maxCircle]);
-        
-        //set up the scale we will use for plotting out the timeline
-        var xScale = d3.time.scale()
-            .domain(dateRange)
-            .range([0,timelineW]);
-        
-        //define a main axis based on the scale
-        var xAxis = d3.svg.axis()
-            .scale(xScale)
-            .orient("bottom");
-        
-        //define another axis based on days
-        var dayAxis = d3.svg.axis()
-            .scale(xScale)
-            .orient("bottom")
-            .tickFormat("");
-        
-        //roll up the data by category
-        var catData = d3.nest()
-            .key(function(d){return d.category;})
-            .entries(data);
-        
-        //set up document structure
-        var svg = d3.select("body").append("svg")
-            .attr("width","600px")
-            .attr("viewBox","0 0 "+((xOffset*2)+timelineW)+" 800")
-        
-        //title
-        svg.append("text")
-            .attr("x",xOffset)
-            .attr("y",20)
-            .attr("class","title")
-            .text(title);
-        
-         svg.append("text")
-            .attr("x",xOffset)
-            .attr("y",40)
-            .attr("class","subtitle")
-            .text(subtitle);
-        
-        svg.append("text")
-            .attr("x",xOffset)
-            .attr("y",function(){
-                return (maxCircle*catData.length)*3+(maxCircle*2);
+    //parse the data
+    data.forEach(function(d)    {
+            d.date = dateFormat.parse(d.date);
+            dates.push(d.date);
+            values.push(d.value);
+    });
+    
+    //establish range of dates
+    dates =dates.sort(sortFunction);
+    var dateRange=[dates[0],dates[dates.length-1]];
+    //calculate number of days between dates - needed later for ticks
+    var numDays = daydiff(dates[0],dates[dates.length-1]);
+    
+    //establish max data value
+    values = values.sort(sortFunction);
+    var maxValue=values[values.length-1];
+    
+    //establish proportional sizes
+    var radius = d3.scale.sqrt()
+        .domain([0,maxValue])
+        .range([0, maxCircle]);
+    
+    //set up the scale we will use for plotting out the timeline
+    var xScale = d3.time.scale()
+        .domain(dateRange)
+        .range([0, width-(margin.left+margin.right)]);
+    
+    //define a main axis based on the scale
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .orient('bottom');
+    
+    //define another axis based on days
+    var dayAxis = d3.svg.axis()
+        .scale(xScale)
+        .orient('bottom')
+        .tickFormat('');
+    
+    //roll up the data by category
+    var catData = d3.nest()
+        .key(function(d){return d.category;})
+        .entries(data);
+    
+    //set up document structure
+    var svg = d3.select('body')
+        .append('svg')
+            .attr({
+                'width': width,
+                'height': height
             })
-            .attr("class","subtitle")
-            .text(source);
-        
-        //create a group timeline for each category - and space them out vertically 
-        var timelines = svg.selectAll("g")
-            .data(catData)
-            .enter()
-            .append("g")
-            .attr("id",function(d){return d.key})
-            .attr("transform",function(d,i){
-                  return "translate("+xOffset+","+(i+1)*(maxCircle*3)+")";
+        .append('g')
+            .attr({
+                'transform':'translate('+margin.left+','+margin.top+')'
             });
-        
-        timelines.append("text")
-            .text(function(d,i){
-                return d.key;
-            })
-            .attr("y",-(maxCircle*0.4));
-        
-        timelines.append("g")
-            .attr("class","dayAxis")
-            .call(dayAxis);
-        
-        timelines.append("g")
-            .attr("class","axis")
-            .call(xAxis);
-        
-        var circles = timelines.append("g")
-            .attr("class","circles")
-            .attr("fill",function(d,i){
-                return colours[i];  
-            })
-            .attr("stroke",function(d,i){
-                return colours[i];  
-            })
-            .selectAll("circle")
-            .data(function(d){return d.values;})
+    
+    //title
+    svg.append('text')
+        .attr('y',20)
+        .attr('class','title')
+        .text(title);
+    
+     svg.append('text')
+        .attr('y',40)
+        .attr('class','subtitle')
+        .text(subtitle);
+    
+    svg.append('text')
+        .attr({
+            'y':function(){
+                return (maxCircle*catData.length)*3+(maxCircle*2);
+            },
+            'class':'subtitle'
+        })
+        .text(source);
+    
+    //create a group timeline for each category - and space them out vertically 
+    var timelines = svg.selectAll('g')
+        .data(catData)
             .enter()
-            .append("circle")
-            .attr("cy",0)
-            .attr("cx",function(d){
-                return xScale(d.date);
+        .append('g')
+            .attr({
+                'id':function(d){ return d.key; },
+                'transform':function(d,i){
+                  return 'translate(0,'+(i+1)*(maxCircle*3)+')'
+              }
+            });
+    
+    timelines.append('text')
+        .text(function(d,i){
+            return d.key;
+        })
+        .attr('y',-(maxCircle*0.4));
+    
+    timelines.append('g')
+        .attr('class','dayAxis')
+        .call(dayAxis);
+    
+    timelines.append('g')
+        .attr('class','axis')
+        .call(xAxis);
+    
+    var circles = timelines.append('g')
+            .attr({
+                'class': 'circles',
+                'fill': function(d,i){
+                    return colours[i];  
+                },
+                'stroke':function(d,i){
+                    return colours[i];  
+                }
             })
-            .attr("r",function(d){
-                return radius(d.value);
-            })
-        
-        //apply the styles as attributes
-        d3.selectAll('*').attr('style','');
-        Object.keys(styles).forEach(function(selector){
-            d3.selectAll(selector)
-                .attr(styles[selector]);
-        });
-        
-        //sort function
-        function sortFunction(a,b)    {
-            return a-b;   
-        }
-        
-        function daydiff(a,b)   {
-            return Math.round((b-a)/(1000*60*60*24));   
-        }
-    })     
+        .selectAll('circle')
+            .data(function(d){ return d.values; })
+            .enter()
+        .append('circle')
+            .attr({
+                'cy':0,
+                'cx':function(d) {
+                    return xScale(d.date);
+                },
+                'r':function(d) {
+                    return radius(d.value);
+                }
+            });
+    
+    //apply the styles as attributes
+    d3.selectAll('*').attr('style','');
+    Object.keys(styles).forEach(function(selector){
+        d3.selectAll(selector)
+            .attr(styles[selector]);
+    });
+    
+    //sort function
+    function sortFunction(a,b)    {
+        return a-b;   
+    }
+    
+    function daydiff(a,b)   {
+        return Math.round((b-a)/(1000 * 60 * 60 * 24));   
+    }
+}  
 
 </script>
 </body>
