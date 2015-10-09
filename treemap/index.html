@@ -97,7 +97,7 @@ function drawTreemap(data){
 			.attr("id",function(d){if(d.children){
 				return d.key+" "+d.value
 				}
-				else {return d.item+" "+d.value}
+				else {return d.group+" "+d.item+" "+d.value}
 			})
 			.attr({
 				"class": "node",//assigns class name node
