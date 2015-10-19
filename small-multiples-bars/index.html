@@ -58,6 +58,9 @@ var styles = {
 	},
 	'.negative': {
 		'fill': '#bb6d82'
+	},
+	'.tint': {
+		'fill': '#f6e9d8'
 	}
 };
 
@@ -67,15 +70,15 @@ var margin = {top: 40, right: 20, bottom: 30, left: 50},
     width = 150 - margin.left - margin.right,
     height = 140,
     xPos,
-    yPos;
+    yPos,
+    max,
+    min;
 
 	/**** Parameters to edit ****/
   var divisor = 1, //use this number to divide data values to a sensible amount
   		numTicks = 3,
   		xDomain = [-100,100], 	//set this to mark the extent of the y axis e,g [0,20000]
   		columns = 4 // number of columns;
-			// dateFormat = d3.time.format('%d/%m/%Y'); // change the dateFormat to match your data ---> https://github.com/mbostock/d3/wiki/Time-Formatting for list of options 
-			// xAxisTickFormat = d3.time.format("%b %y") // change the x axis label format to what you want see url above for list of options
 	/**** end paramaters ****/
 
 	var seriesNames = [];
@@ -104,16 +107,11 @@ var margin = {top: 40, right: 20, bottom: 30, left: 50},
 
 	d3.csv('fake-data.csv', function(error, data) {
 
-  console.log(data);
-	//yAxis.tickValues([data.category]);
-
-
 		seriesNames = Object.keys( data[0] ).filter(function(d){ return d != 'category'; }); // return the series names from the first row of the spreadsheet
 
 		if(!xDomain){
 			xDomain = [];
 			data.forEach(function(d,i){
-				var max, min;
 				seriesNames.forEach(function(e){
 					if(i==0) xDomain[0] = xDomain[1] = Number(d[e]);
 					xDomain[0] = Math.min(xDomain[0], Number(d[e]));
@@ -168,6 +166,26 @@ var margin = {top: 40, right: 20, bottom: 30, left: 50},
 	    	console.log(d);
 	    	return d.toUpperCase(); });
 
+	//Add tint bars to aid readability of categories when there are negative values
+	chart.append('g')
+		.each(function(d,i){
+			console.log(min)
+			if ( d3.select(this.parentNode).attr('xPosition') === '0' && xDomain[0] < 0) {
+				var tints = d3.select(this).selectAll('rect');
+				tints.data(data)
+					.enter()
+					.append('rect')
+					.attr({
+					 	'class' : 'tint',					 	
+					 	'y': function(d) { 
+							return yScale(d.category);
+						},
+						'x' : -chartMarginLeft,
+						'width' : chartWidth,
+						'height': yScale.rangeBand()
+					});
+		  }
+	 });
 
    chart.each(function (d, i) { 
    		if ( d3.select(this).attr('xPosition') === '0') {
@@ -177,17 +195,14 @@ var margin = {top: 40, right: 20, bottom: 30, left: 50},
    		  	.call(yAxis);
 			}
 		})
-   	
-   		
 
 	chart.append('g')
 		.attr({
 			'class': 'x axis',
 	    	'transform': 'translate(0,0)'
 		})
-	    .call(xAxis);
-	 
-	  // Add the line path elements. Note: the y-domain is set per element.
+    .call(xAxis);
+
 	chart.append('g')
 		.each(function(seriesName){
 			var bars = d3.select(this).selectAll('rect');
@@ -202,7 +217,7 @@ var margin = {top: 40, right: 20, bottom: 30, left: 50},
 							return yScale(d.category);
 						},
 						'x': function(d) { 
-							return xScale(Math.min(0, d[seriesName]) );; 
+							return xScale(Math.min(0, d[seriesName]) );
 						},
 						'width': function(d) { 
 							return Math.abs(xScale( d[seriesName] ) - xScale(0) ); 
