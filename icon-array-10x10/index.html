@@ -12,7 +12,15 @@
 var styles = {
 	'text': {
 		'font-family': 'metric, sans-serif'
+	},
+	'#title': {
+		dy:20,
+		'font-size':27
+	},
+	'#subtitle': {
+		dy:50
 	}
+
 };
 
 </script>
@@ -23,9 +31,16 @@ var styles = {
 
 <script type="text/javascript">
 var dataFile = 'data.csv';	//the name of the data file to be loaded
+var title = 'Fruit percentages',
+	subtitle = '%'
 
 var width = 600, height = 600,	//some properties for the SVG
-	margin = {top:25, left:25, bottom:25, right:25},
+	margin = {
+		top:80, 
+		left:18, 
+		bottom:18, 
+		right:18
+	},
 	plotWidth = width - (margin.left + margin.right),
 	plotHeight = height - (margin.top + margin.bottom);
 
@@ -92,6 +107,15 @@ function drawChart(data){
 				'class':'icon'
 			})
 		.call(circle, iconSize); // you can change circle to squaer if you like!
+
+	d3.select('svg')
+		.append('text').attr('id','title')
+			.text(title);
+
+	d3.select('svg')
+		.append('text').attr('id','subtitle')
+			.text(subtitle);
+
 
 	//apply the styles as attributes
     d3.selectAll('*').attr('style','');
