@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<head>
+<title>Simple Icon Array</title>
+<style>
+    
+</style>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+//styles
+var styles = {
+	'text': {
+		'font-family': 'metric, sans-serif'
+	}
+};
+
+</script>
+<body>
+
+</body>
+<script type="text/javascript" src="iconarray.js"></script>
+
+<script type="text/javascript">
+var dataFile = 'data.csv';	//the name of the data file to be loaded
+
+var width = 600, height = 600,	//some properties for the SVG
+	margin = {top:25, left:25, bottom:25, right:25},
+	plotWidth = width - (margin.left + margin.right),
+	plotHeight = height - (margin.top + margin.bottom);
+
+var blockWidth = 10,
+	blockHeight = 10,
+	iconProportion = 0.8;
+
+var colours = {
+	'cherries':'#AA0000',
+	'bananas':'#AAAA00',
+	'pears':'#00AA00'
+};
+
+var categoryColumn = 'category',
+	countColumn = 'count';
+
+d3.csv(dataFile, drawChart);
+
+
+function expand(data, count, catgory){ //this function 
+	if(!count) count = 'count';
+	if(!catgory) category = 'category';
+
+	return data.reduce(function(value, d){
+	    var l = new Array( Number(d[count]) )
+	    for(var i=0;i<d.count;i++){
+	        value.push(d[category]);
+	    }
+	    return value;
+	}, []);
+}
+
+
+function drawChart(data){
+	data = expand(data);
+	var layout = d3.layout.iconArray()
+		.blockWidth( blockWidth )
+		.blockHeight( blockHeight );
+
+	//calcuate the required scale
+	var arrayScale = d3.scale.linear()
+		.domain([0, layout.maxDimensions( data.length ).max ])
+		.range([0, Math.min(plotHeight, plotWidth)]);
+
+	var iconSize = arrayScale(iconProportion);
+
+	//add the icon array...
+	d3.select('body')
+		.append('svg').attr({ 
+			width:width+(margin.left+margin.right), 
+			height:height+(margin.top+margin.bottom) })
+		.append('g').attr({
+			'transform':'translate('+margin.left+','+margin.top+')',
+			'id':'icon array'
+		})
+		.selectAll('g.icon')
+		.data( layout( data ) )
+			.enter()
+		.append('g')
+			.attr({
+				'transform':function(d){
+					return 'translate(' + arrayScale(d.x) + ',' + arrayScale(d.y) + ')';
+				},
+				'class':'icon'
+			})
+		.call(circle, iconSize); // you can change circle to squaer if you like!
+
+	//apply the styles as attributes
+    d3.selectAll('*').attr('style','');
+    Object.keys(styles).forEach(function(selector){
+        d3.selectAll(selector)
+            .attr(styles[selector]);
+    });
+}
+
+function circle(p, size){
+	p.append('circle')
+		.attr({
+			fill:function(d){ return colours[d.data]; },
+			r:size/2
+		});
+}
+
+function square(p, size){
+	p.append('rect')
+		.attr({
+			fill:function(d){ return colours[d.data]; },
+			x:-size/2,
+			y:-size/2,
+			width:size,
+			height:size
+		});
+}
+
+</script>
+</html>
