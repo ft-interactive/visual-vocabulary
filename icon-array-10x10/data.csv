@@ -1,4 +1,10 @@
-category,count
-cherries,10
-bananas,50
-pears,40
+year,category,count
+2010,cherries,13
+2010,bananas,45
+2010,pears,42
+2011,cherries,20
+2011,bananas,5
+2011,pears,75
+2012,cherries,6
+2012,bananas,4
+2012,pears,90

@@ -31,7 +31,7 @@ var styles = {
 
 <script type="text/javascript">
 var dataFile = 'data.csv';	//the name of the data file to be loaded
-var title = 'Fruit percentages',
+var title = 'Fruit!',
 	subtitle = '%'
 
 var width = 600, height = 600,	//some properties for the SVG
@@ -42,20 +42,22 @@ var width = 600, height = 600,	//some properties for the SVG
 		right:18
 	},
 	plotWidth = width - (margin.left + margin.right),
-	plotHeight = height - (margin.top + margin.bottom);
+	plotHeight = height - (margin.top + margin.bottom),
+	chartSpacing = 20;
 
 var blockWidth = 10,
 	blockHeight = 10,
 	iconProportion = 0.8;
 
 var colours = {
-	'cherries':'#AA0000',
-	'bananas':'#AAAA00',
-	'pears':'#00AA00'
+	'cherries':'#FF0000',
+	'bananas':'#FFFF00',
+	'pears':'#00FF00'
 };
 
-var categoryColumn = 'category',
-	countColumn = 'count';
+var chartColumn = 'year', //i.e. make an icon array for each of year 
+	categoryColumn = 'category', //each chart is split into these categories
+	countColumn = 'count';	//with this representing the count
 
 d3.csv(dataFile, drawChart);
 
@@ -73,40 +75,76 @@ function expand(data, count, catgory){ //this function
 	}, []);
 }
 
+function enumerateProperty(data, property){
+	var o = {};
+	data.forEach(function(value){
+		if(!o[value[property]]) o[value[property]] = true;
+	})
+	return Object.keys(o);
+}
 
 function drawChart(data){
-	data = expand(data);
+	var charts = enumerateProperty(data,'year');
 	var layout = d3.layout.iconArray()
 		.blockWidth( blockWidth )
 		.blockHeight( blockHeight );
 
-	//calcuate the required scale
-	var arrayScale = d3.scale.linear()
-		.domain([0, layout.maxDimensions( data.length ).max ])
-		.range([0, Math.min(plotHeight, plotWidth)]);
+	//we lay the charts out in a line so the chart range is the available space / the number of charts
+	var chartWidth = Math.floor((plotWidth - (charts.length-1*chartSpacing))/charts.length);
+	var chartRange = [0, chartWidth];
 
-	var iconSize = arrayScale(iconProportion);
-
-	//add the icon array...
-	d3.select('body')
+	var plot = d3.select('body')
 		.append('svg').attr({ 
-			width:width+(margin.left+margin.right), 
-			height:height+(margin.top+margin.bottom) })
-		.append('g').attr({
-			'transform':'translate('+margin.left+','+margin.top+')',
-			'id':'icon array'
+			width:width, 
+			height:height
 		})
-		.selectAll('g.icon')
-		.data( layout( data ) )
+		.append('g').attr({
+			'transform':'translate('+margin.left+','+margin.top+')'
+		});
+
+	plot.selectAll('g.array-chart')
+		.data(charts)
 			.enter()
 		.append('g')
 			.attr({
-				'transform':function(d){
-					return 'translate(' + arrayScale(d.x) + ',' + arrayScale(d.y) + ')';
-				},
-				'class':'icon'
+				'class':'array-chart',
+				'id':function(d){ return d + '-chart' },
+				'transform':function(d,i){
+					return 'translate(' + i*chartWidth+ ',0 )'
+				}
 			})
-		.call(circle, iconSize); // you can change circle to squaer if you like!
+		.each(iconArrayChart)
+
+	function iconArrayChart(chartName, chartIndex){
+		//calcuate the required scale
+		var parent = d3.select(this);
+		var chartData = expand(data.filter(function(d){ 
+			return ( chartName == d[chartColumn] ); 
+		}));
+
+		var arrayScale = d3.scale.linear()
+			.domain( [0, layout.maxDimensions( chartData.length ).max ] )
+			.range( [0, Math.min(plotHeight, chartRange[1])] );
+
+		var iconSize = arrayScale(iconProportion);
+
+		parent.selectAll('g.icon')
+			.data( layout( chartData ) )
+				.enter()
+			.append('g')
+				.attr({
+					'transform':function(d){
+						return 'translate(' + arrayScale(d.x) + ',' + arrayScale(d.y) + ')';
+					},
+					'class':'icon'
+				})
+			.call(circle, iconSize); // you can change circle to square if you like!
+	
+		parent.append('text')
+			.text(chartName);
+
+		console.log(chartData);
+	}
 
 	d3.select('svg')
 		.append('text').attr('id','title')
