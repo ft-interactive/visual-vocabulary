@@ -38,7 +38,7 @@ var width = 600, height = 600,	//some properties for the SVG
 	margin = {
 		top:80, 
 		left:0, 
-		bottom:18, 
+		bottom:80, 
 		right:0
 	},
 	plotWidth = width - (margin.left + margin.right),
@@ -150,13 +150,13 @@ function drawChart(data){
 					},
 					'class':'icon'
 				})
-			.call(square, iconSize); // you can change circle to square if you like!
+			.call(circle, iconSize); // you can change circle to square if you like!
 	
 		parent.append('text')
 			.attr({
 				'id':function(d,i){ return d + '-title'},
 				'class':'chart-title',
-				'transform':'translate(' + arrayScale(blockWidth/2) + ', '+arrayScale(blockHeight+2)+')' //the charts title is positioned relatice to the block dimensions and the icon size
+				'transform':'translate(' + arrayScale(blockWidth/2) + ', '+arrayScale(blockHeight+0.5)+')' //the charts title is positioned relatice to the block dimensions and the icon size
 			})
 			.text(chartName);
 
@@ -173,6 +173,44 @@ function drawChart(data){
 			.attr('id','subtitle')
 			.text(subtitle);
 
+	d3.select('svg')
+		.append('text')
+			.attr('id','subtitle')
+			.text(subtitle);
+
+
+	var keyIconSize = 20;
+	var keyIconSpacing = 10;
+
+	var keyYPos = height - (Object.keys(colours).length * (keyIconSize + keyIconSpacing))
+	d3.select('svg')
+		.append('g')
+			.attr({
+				'transform':'translate(0,' + keyYPos + ')',
+				'id':'key'
+			})
+		.selectAll('g.key-element')
+			.data(Object.keys(colours).map(function(d){
+				return { data:d }
+			}))
+			.enter()
+		.append('g')
+			.attr({
+				'class':'key-element',
+				'transform':function(d,i){
+					return 'translate(0,'+((keyIconSize + keyIconSpacing)*i)+')';
+				}
+			})
+			.call(function(parent){
+				
+				parent.call(circle, keyIconSize);
+				parent.append('text')
+					.attr('transform',function(){
+						return 'translate(' + (keyIconSize + keyIconSpacing) + ',' + keyIconSize + ')';
+					})
+					.text(function(d){return d.data;})
+
+			});
 
 	//apply the styles as attributes
     d3.selectAll('*').attr('style','');

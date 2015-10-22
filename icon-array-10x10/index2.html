@@ -31,7 +31,7 @@ var styles = {
 };
 
 var dataFile = 'data2.csv';	//the name of the data file to be loaded
-var title = 'US Banks&rsquo; assets held abroad',
+var title = 'Market share',
 	subtitle = 'Amount outstanding as % of GDP'
 
 var width = 600, height = 600,	//some properties for the SVG
@@ -54,7 +54,7 @@ var emptyColour = '#AAAAFF';
 
 var chartColumn = 'year', //i.e. make an icon array for each of year 
 	categoryColumn = 'year', //each chart is split into these categories
-	countColumn = 'assests held abroad';	//with this representing the count
+	countColumn = 'market share';	//with this representing the count
 
 d3.csv(dataFile, drawChart);
 
