@@ -1,11 +1,11 @@
 <html>
 <head>
-	<title>Small multiple column charts</title>
+	<title>Small multiple bar charts</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
 </head>
 
 <body>
-	<h1>Small multiple column charts</h1>
+	<h1>Small multiple bar charts</h1>
 	<a href="https://github.com/ft-interactive/graphics-examples/tree/master/small-multiples">source</a>
 
 	<div class="chart">
@@ -58,71 +58,70 @@ var styles = {
 	},
 	'.negative': {
 		'fill': '#bb6d82'
+	},
+	'.tint': {
+		'fill': '#f6e9d8'
 	}
 };
 
-var margin = {top: 40, right: 10, bottom: 30, left: 40},
+var margin = {top: 40, right: 20, bottom: 30, left: 50},
 		chartWidth = 600,
-    width = 120 - margin.left - margin.right,
-    height = 140;
+		chartMarginLeft = 100,
+    width = 150 - margin.left - margin.right,
+    height = 140,
+    xPos,
+    yPos,
+    max,
+    min;
 
 	/**** Parameters to edit ****/
-  var divisor = 1000, //use this number to divide data values to a sensible amount
+  var divisor = 1, //use this number to divide data values to a sensible amount
   		numTicks = 3,
-  		yDomain = undefined, 	//set this to mark the extent of the y axis e,g [0,20000]
-  		columns = 5, // number of columns;
-			dateFormat = d3.time.format('%d/%m/%Y'); // change the dateFormat to match your data ---> https://github.com/mbostock/d3/wiki/Time-Formatting for list of options 
-			xAxisTickFormat = d3.time.format("%b %y") // change the x axis label format to what you want see url above for list of options
+  		xDomain = [-100,100], 	//set this to mark the extent of the y axis e,g [0,20000]
+  		columns = 4 // number of columns;
 	/**** end paramaters ****/
 
 	var seriesNames = [];
 
-	var xScale = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .1);
+	var xScale = d3.scale.linear()
+	    .range([0, width]);
 
-	var yScale = d3.scale.linear()
-	    .range([height, 0]);
+	var yScale = d3.scale.ordinal()
+    	.rangeRoundBands([0, height], .1);
 
 	var xAxis = d3.svg.axis()
 		.scale(xScale)
-		.tickSize(8)
-		.orient('bottom')
-		.tickFormat(xAxisTickFormat);
+		.tickSize(-height)
+		.orient('top')
+    .tickFormat(function(d){
+			return d/divisor;
+		});
 
 
 	var yAxis = d3.svg.axis()
 	    .scale(yScale)
 	    .orient('left')
-	    .tickSize(-width)
-	    .tickFormat(function(d){
-			return d/divisor;
-		});
+	    .tickSize(0)
 
-	if(numTicks) yAxis.ticks(numTicks);
+	if(numTicks) xAxis.ticks(numTicks);
 
-	d3.csv('fake-data.csv', parseDate, function(error, data) {
-	var minDate = data[0].date,
-    	maxDate = data[data.length - 1].date;
+	d3.csv('fake-data.csv', function(error, data) {
 
-	xAxis.tickValues([minDate,maxDate]);
+		seriesNames = Object.keys( data[0] ).filter(function(d){ return d != 'category'; }); // return the series names from the first row of the spreadsheet
 
-
-		seriesNames = Object.keys( data[0] ).filter(function(d){ return d != 'date'; }); // return the series names from the first row of the spreadsheet
-
-		if(!yDomain){
-			yDomain = [];
+		if(!xDomain){
+			xDomain = [];
 			data.forEach(function(d,i){
-				var max, min;
 				seriesNames.forEach(function(e){
-					if(i==0) yDomain[0] = yDomain[1] = Number(d[e]);
-					yDomain[0] = Math.min(yDomain[0], Number(d[e]));
-					yDomain[1] = Math.max(yDomain[1], Number(d[e]));
+					if(i==0) xDomain[0] = xDomain[1] = Number(d[e]);
+					xDomain[0] = Math.min(xDomain[0], Number(d[e]));
+					xDomain[1] = Math.max(xDomain[1], Number(d[e]));
 				});			
 			});
 		}
 
 	// Compute the minimum and maximum date across series.
-	var xDomain = data.map(function(d) { return d.date; });
+	var yDomain = data.map(function(d) { return d.category; });
 	xScale.domain(xDomain);
 	yScale.domain(yDomain);
 
@@ -137,11 +136,15 @@ var margin = {top: 40, right: 10, bottom: 30, left: 40},
 		.append('g')
 			.attr({
 				'transform': function(d, i) { 
-					var yPos = Number((Math.floor( i / columns) * (height + margin.top + margin.bottom) + margin.top));
-					var xPos = i%columns;
-					return 'translate(' + ((width + margin.left) * xPos + margin.left) + ',' + yPos + ')';
+					yPos = Number((Math.floor( i / columns) * (height + margin.top + margin.bottom) + margin.top));
+					xPos = i%columns;
+					return 'translate(' + ((width + margin.left) * xPos + chartMarginLeft) + ',' + yPos + ')';
 				},
-				'id':function(d){ return d; }
+				'id':function(d){ return d; },
+				'xPosition': function (d,i) {
+					xPos = i%columns;
+					return (width + margin.left) * xPos
+				},
 			});
 
 	//set the height of the svg container		
@@ -157,22 +160,49 @@ var margin = {top: 40, right: 10, bottom: 30, left: 40},
 		.attr({
 			'class':'item-title',
 		    'dx': function() {return (width)/2;},
-		    'dy': -15
+		    'dy': -25
 		})
-	    .text(function(d) {return d.toUpperCase(); });
+	    .text(function(d) {
+	    	console.log(d);
+	    	return d.toUpperCase(); });
 
-    chart.append('g')
-	    .attr('class', 'y axis')
-		    .call(yAxis);
+	//Add tint bars to aid readability of categories when there are negative values
+	chart.append('g')
+		.each(function(d,i){
+			console.log(min)
+			if ( d3.select(this.parentNode).attr('xPosition') === '0' && xDomain[0] < 0) {
+				var tints = d3.select(this).selectAll('rect');
+				tints.data(data)
+					.enter()
+					.append('rect')
+					.attr({
+					 	'class' : 'tint',					 	
+					 	'y': function(d) { 
+							return yScale(d.category);
+						},
+						'x' : -chartMarginLeft,
+						'width' : chartWidth,
+						'height': yScale.rangeBand()
+					});
+		  }
+	 });
+
+   chart.each(function (d, i) { 
+   		if ( d3.select(this).attr('xPosition') === '0') {
+   			d3.select(this).append('g')
+			    .attr('class', 'y axis')
+			    .attr('transform', 'translate(-5,0)')
+   		  	.call(yAxis);
+			}
+		})
 
 	chart.append('g')
 		.attr({
 			'class': 'x axis',
-	    	'transform': 'translate(0,' + height + ')'
+	    	'transform': 'translate(0,0)'
 		})
-	    .call(xAxis);
-	 
-	  // Add the line path elements. Note: the y-domain is set per element.
+    .call(xAxis);
+
 	chart.append('g')
 		.each(function(seriesName){
 			var bars = d3.select(this).selectAll('rect');
@@ -184,18 +214,18 @@ var margin = {top: 40, right: 10, bottom: 30, left: 40},
 							return d[seriesName] < 0 ? 'negative' : 'positive';
 						},
 						'y': function(d) { 
-							return yScale(Math.max(0, d[seriesName]) );
+							return yScale(d.category);
 						},
 						'x': function(d) { 
-							return xScale(d.date); 
+							return xScale(Math.min(0, d[seriesName]) );
 						},
-						'height': function(d) { 
-							return Math.abs(yScale( d[seriesName] ) - yScale(0) ); 
+						'width': function(d) { 
+							return Math.abs(xScale( d[seriesName] ) - xScale(0) ); 
 						},
 						'id':function(d){
-							return seriesName + ' ' + dateFormat(d.date) + ' value: ' + d[seriesName];
+							return seriesName + ' ' + d.category + ' value: ' + d[seriesName];
 						},
-						'width': xScale.rangeBand()
+						'height': yScale.rangeBand()
 					});
 		});
 
@@ -207,11 +237,6 @@ var margin = {top: 40, right: 10, bottom: 30, left: 40},
             .attr(styles[selector]);
     });
 });
-
-function parseDate(d) {
-  d.date = dateFormat.parse(d.date);
-  return d;
-}
 
 </script>
 </html>
