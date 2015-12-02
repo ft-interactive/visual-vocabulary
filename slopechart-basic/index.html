@@ -18,7 +18,7 @@
         
         //slope config
         var startZero=true;
-        var showDots=true;
+        var showDots=false;
         var showLabels=true;
         var showValues=true;
         
@@ -26,7 +26,7 @@
         var xOffset=200;
         var yOffset=80;
         var slopeWidth=200;
-        var slopeHeight=850;
+        var slopeHeight=650;
 
         //styling as attributes
         var styles = {
@@ -77,7 +77,7 @@
         //create scale for y axis
         var yScale = d3.scale.linear()
             .domain([minVal,maxVal])
-            .range([0,slopeHeight])
+            .range([slopeHeight,0])
         
         //axis
         var yAxis = d3.svg.axis()
