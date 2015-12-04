@@ -122,7 +122,8 @@
         }   else    {
         yScaleWeb = d3.scale.linear()
             .domain(yDomain)
-            .range([plotHeightWeb,0]);
+            .range([plotHeightWeb,0])
+            .nice();
         }
         
         //web axes
@@ -306,7 +307,8 @@
         }   else    {
         yScalePrt = d3.scale.linear()
             .domain(yDomain)
-            .range([plotHeightPrt,0]);
+            .range([plotHeightPrt,0])
+            .nice();
         }
         
         //print axes
