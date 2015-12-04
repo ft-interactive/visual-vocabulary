@@ -12,15 +12,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
 <script>
     
-    /*
-    FURTHER ENHANCEMENTS FOR POSSIBLE
-    accent lines and grey with accent
-    annotation...
-    
-    option to add an area fill [on single series]
-    option to fill difference between 2 series
-    */
-    
     //titles
     var title="Political support in Germany";
     var subtitle="Per cent";
@@ -39,8 +30,9 @@
     var marginWeb={left:15,top:50,bottom:50,right:25};
     var coloursWeb=["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"];
     var webMarkers=false;//show circle markers on web version?
-    var yTicksWeb = 4;
-    var xTicksWeb = 4;
+    var yTicksWeb = 4;//rough number of ticks for y axis
+    var xTicksWeb = 4;//rough number of ticks for x axis
+    var ticksWeb//=[0.2,0.3];//option to force tick values for online
 
     //print - all sizes in millimeters
     var printWidthMM=87;
@@ -48,8 +40,9 @@
     var printMarginsMM={left:5,top:15,right:10,bottom:15};
     var coloursPrt=["#005D7E","#D9AB44","#C4D2C5","#A8352C","#4B99BA","pink"];
     var printMarkers=false;//show circle markers on print version?
-    var yTicksPrt = 4;
-    var xTicksPrt = 4;
+    var yTicksPrt = 4;//rough number of ticks for y axis
+    var xTicksPrt = 4;//rough number of ticks for x axis
+    var ticksPrt//=[0.2,0.3];//option to force tick values for web
     
     //date formatter, matching the format of the incoming csv...
     //var parseDate = d3.time.format("%Y %b").parse;
@@ -139,6 +132,7 @@
         var yAxisWeb = d3.svg.axis()
             .scale(yScaleWeb)
             .ticks(yTicksWeb)
+            .tickValues(ticksWeb)
             .tickSize(plotWidthWeb)
             .orient("right")
         
@@ -324,6 +318,7 @@
         var yAxisPrint = d3.svg.axis()
             .scale(yScalePrt)
             .ticks(yTicksPrt)
+            .tickValues(ticksPrt)
             .tickSize(plotWidthPrt)
             .orient("right")
         
