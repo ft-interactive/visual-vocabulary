@@ -24,3 +24,7 @@ replacing `TARGET-LOCATION` with the name of the folder you wish to put the exam
 # Getting you graphic off the page and into illustrator
 
 Use the SVG crowbar bookmark [which is available here]](http://nytimes.github.io/svg-crowbar/)
+
+
+## Licence
+This software is published by the Financial Times under the [MIT licence](http://opensource.org/licenses/MIT).
