@@ -74,6 +74,7 @@
   		yDomain = undefined, 	//set this to mark the extent of the y axis e,g [0,20000]
   		columns = 5, // number of columns;
 			dateFormat = d3.time.format('%d/%m/%Y'); // change the dateFormat to match your data ---> https://github.com/mbostock/d3/wiki/Time-Formatting for list of options 
+			showAllYAxisLabels = false; //change to true if you want to turn on all y-axis labels
 
 	/**** end paramaters ****/
 
@@ -174,13 +175,15 @@
 		    .call(xAxis);
 		 
 		// turn off y-axis labels on charts not in first column
-		chart.each(function (d, i) { 
-			var parent = d3.select(this);
-   		if ( parent.attr('xPosition') !== '0') {
-   			parent.selectAll('.y.axis text')
-   				.attr( 'class', 'hide' )
-			}
-		})
+		if (!showAllYAxisLabels) {
+				chart.each(function (d, i) { 
+				var parent = d3.select(this);
+	   		if ( parent.attr('xPosition') !== '0') {
+	   			parent.selectAll('.y.axis text')
+	   				.attr( 'class', 'hide' )
+				}
+			});
+		}
 
 		// Add the line path elements. Note: the y-domain is set per element.
 		chart.append('path')
