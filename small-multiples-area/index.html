@@ -1,0 +1,216 @@
+<html>
+<head>
+	<title>Small multiple area charts</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+	<style type="text/css">
+		
+	</style>
+</head>
+
+<body>
+	<h1>Small multiple area charts</h1>
+	<a href="https://github.com/ft-interactive/graphics-examples/tree/master/small-multiples">source</a>
+
+	<div class="chart">
+	</div>
+	<div class="key">
+	</div>
+</body>
+
+<script type='text/javascript'>
+	var styles = {
+		'text': {
+			'font-family': 'metric, sans-serif'
+		},
+		'.y.axis .domain, .x.axis .domain': {
+			'fill':'none',
+			'stroke':'#a7a59b'
+		},
+		'.y.axis .domain': {
+			'stroke': 'none',
+		},
+		'.y.axis .tick line, .x.axis .tick line': {
+			'fill':'none',
+			'stroke':'#cec6b9'
+		},
+		'.y.axis .tick text, .x.axis .tick text': {
+			'fill':'#74736c',
+			'font-size': '14'
+		},
+		'.y.axis .tick text': {
+			'text-anchor':'end'
+		},
+		'.x.axis .tick text': {
+			'text-anchor':'middle'
+		},
+		'.item-title': {
+			'fill':'#74736c',
+			'font-size': '11',
+			'text-anchor': 'middle'
+		},
+		'.line': {
+			'stroke-width': '2',
+			'stroke': '#af516c',
+			'fill': 'none'
+		},
+		'.area': {
+			'stroke': 'none',
+			'fill': '#b46c80'
+		},
+		'.hide': {
+			'fill': 'none'
+		}
+
+	};
+
+	var margin = {top: 40, right: 10, bottom: 30, left: 40},
+		chartWidth = 600,
+	    width = 120 - margin.left - margin.right,
+	    height = 140;
+
+	/**** Parameters to edit ****/
+  var divisor = 1000, //use this number to divide data values to a sensible amount
+  		numTicks = 3,
+  		yDomain = undefined, 	//set this to mark the extent of the y axis e,g [0,20000]
+  		columns = 5, // number of columns;
+			dateFormat = d3.time.format('%d/%m/%Y'); // change the dateFormat to match your data ---> https://github.com/mbostock/d3/wiki/Time-Formatting for list of options 
+			showAllYAxisLabels = false; //change to true if you want to turn on all y-axis labels
+
+	/**** end paramaters ****/
+
+	var seriesNames = [];
+
+	var xScale = d3.time.scale()
+	    .range([0, width]);
+
+	var yScale = d3.scale.linear()
+	    .range([height, 0]);
+
+	var xAxis = d3.svg.axis()
+		.scale(xScale)
+		.tickSize(8)
+		.ticks(2)
+		.orient('bottom');
+
+
+	var yAxis = d3.svg.axis()
+	    .scale(yScale)
+	    .orient('left')
+	    .tickSize(-width)
+	    .tickFormat(function(d){
+			return d/divisor;
+		});
+
+	if(numTicks) yAxis.ticks(numTicks);
+
+	d3.csv('fake-data.csv', parseDate, function(error, data) {
+		seriesNames = Object.keys( data[0] ).filter(function(d){ return d != 'date'; }); // return the series names from the first row of the spreadsheet
+
+		if(!yDomain){
+			yDomain = [];
+			data.forEach(function(d,i){
+				var max, min;
+				seriesNames.forEach(function(e){
+					if(i==0) yDomain[0] = yDomain[1] = Number(d[e]);
+					yDomain[0] = Math.min(yDomain[0], Number(d[e]));
+					yDomain[1] = Math.max(yDomain[1], Number(d[e]));
+				});			
+			});
+		}
+
+		// Compute the minimum and maximum date across series.
+		var xDomain = d3.extent(data, function(d) { return d.date; } );
+		xScale.domain(xDomain);
+		yScale.domain(yDomain);
+		
+		xAxis.tickValues(xDomain);
+
+		// Add an SVG element for each series with the desired dimensions and margin.
+		var svg = d3.select('body').append('svg')
+				.attr('width', chartWidth)
+
+		var chart = svg.selectAll('g')
+			.data(seriesNames)
+				.enter()
+			.append('g')
+				.attr({
+					'id': function(d){ return d; },
+					'xPosition': function (d,i) {
+						xPos = i%columns;
+						return (width + margin.left) * xPos
+					},
+					'transform': function(d, i) { 
+						var yPos = Number((Math.floor( i / columns) * (height + margin.top + margin.bottom) + margin.top));
+						var xPos = i%columns;
+						return 'translate(' + ((width + margin.left) * xPos + margin.left) + ',' + yPos + ')'
+					}
+				});
+
+		//set the height of the svg container		
+		svg.attr('height', function(d) {
+			var numCharts = seriesNames.length;
+			var rows = Math.ceil(numCharts / columns);
+			var chartHeight = rows * (height + margin.top + margin.bottom) + margin.top
+			return chartHeight;
+		});
+			
+		  // Add a small label for the seriesname.
+		chart.append('text')
+			.attr({
+				'class':'item-title',
+			    'dx':function() {return (width)/2;},
+			    'dy': -15
+			})
+			.text(function(d) {return d.toUpperCase(); });
+
+    chart.append('g')
+    	.attr('class', 'y axis')
+    	.call(yAxis);
+
+		chart.append('g')
+			.attr({
+				'class':'x axis',
+				'transform':'translate(0,' + height + ')'
+			})
+		    .call(xAxis);
+		 
+		// turn off y-axis labels on charts not in first column
+		if (!showAllYAxisLabels) {
+				chart.each(function (d, i) { 
+				var parent = d3.select(this);
+	   		if ( parent.attr('xPosition') !== '0') {
+	   			parent.selectAll('.y.axis text')
+	   				.attr( 'class', 'hide' )
+				}
+			});
+		}
+
+		// Add the line path elements. Note: the y-domain is set per element.
+		chart.append('path')
+			.attr('class', 'area')
+			.each(function(seriesName){
+				var area = d3.svg.area()
+				    .x(function(d) { return xScale(d.date); })
+				    .y0(height)
+				    .y1(function(d) { return yScale( d[seriesName] );; });
+
+				d3.select(this)
+					.datum(data)
+					.attr('d', function(d){ return area(d); });
+			});
+
+		//apply the styles as attributes
+	    d3.selectAll('*').attr('style','');
+	    Object.keys(styles).forEach(function(selector){
+	        d3.selectAll(selector)
+	            .attr(styles[selector]);
+	    });
+	});
+
+	function parseDate(d) {
+	  d.date = dateFormat.parse(d.date);
+	  return d;
+	}
+
+</script>
+</html>
