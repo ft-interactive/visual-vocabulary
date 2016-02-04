@@ -61,7 +61,7 @@
 	    height = 140;
 
 	/**** Parameters to edit ****/
-  var divisor = 1000, //use this number to divide data values to a sensible amount
+  var divisor = 1, //use this number to divide data values to a sensible amount
   		numTicks = 3,
   		yDomain = undefined, 	//set this to mark the extent of the y axis e,g [0,20000]
   		columns = 5, // number of columns;
@@ -97,17 +97,33 @@
 	d3.csv('fake-data.csv', parseDate, function(error, data) {
 		seriesNames = Object.keys( data[0] ).filter(function(d){ return d != 'date'; }); // return the series names from the first row of the spreadsheet
 
-		if(!yDomain){
-			yDomain = [];
-			data.forEach(function(d,i){
-				var max, min;
-				seriesNames.forEach(function(e){
-					if(i==0) yDomain[0] = yDomain[1] = Number(d[e]);
-					yDomain[0] = Math.min(yDomain[0], Number(d[e]));
-					yDomain[1] = Math.max(yDomain[1], Number(d[e]));
-				});			
-			});
-		}
+		// if(!yDomain){
+		// 	yDomain = [];
+		// 	data.forEach(function(d,i){
+		// 		var max, min;
+		// 		seriesNames.forEach(function(e){
+		// 			console.log(d[e])
+		// 			if(i==0) yDomain[0] = yDomain[1] = Number(d[e]);
+		// 			yDomain[0] = Math.min(yDomain[0], Number(d[e]));
+		// 			yDomain[1] = Math.max(yDomain[1], Number(d[e]));
+		// 		});			
+		// 	});
+		// }
+
+
+	if(!yDomain){
+    yDomain = [];
+    data.forEach(function(d,i){
+      var max, min;
+      seriesNames.forEach(function(e){
+        if(!isNaN(d[e]) && d[e] !== null){
+          if(i==0) yDomain[0] = yDomain[1] = Number(d[e]);
+          yDomain[0] = Math.min(yDomain[0], Number(d[e]));
+          yDomain[1] = Math.max(yDomain[1], Number(d[e]));
+        }
+      });            
+    });
+	}
 
 		// Compute the minimum and maximum date across series.
 		var xDomain = d3.extent(data, function(d) { return d.date; } );
@@ -162,16 +178,17 @@
 		    .call(xAxis);
 		 
 		  // Add the line path elements. Note: the y-domain is set per element.
+
 		chart.append('path')
 			.attr('class', 'line')
 			.each(function(seriesName){
 				var line = d3.svg.line()
+				  	.defined(function(d) { return ( !isNaN( d[seriesName] ) ) })
 				    .x(function(d) { return xScale(d.date); })
-				    .y(function(d) { return yScale( d[seriesName] ); });
-
+				    .y(function(d) { return yScale( d[seriesName] ); })
 				d3.select(this)
 					.datum(data)
-					.attr('d', function(d){ return line(d); });
+					.attr('d', function(d){console.log(line(d)); return line(d); });
 			});
 
 		//apply the styles as attributes
