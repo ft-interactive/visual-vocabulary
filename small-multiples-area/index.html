@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>Small multiple line charts</title>
+	<title>Small multiple area charts</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
 	<style type="text/css">
 		
@@ -8,7 +8,7 @@
 </head>
 
 <body>
-	<h1>Small multiple line charts</h1>
+	<h1>Small multiple area charts</h1>
 	<a href="https://github.com/ft-interactive/graphics-examples/tree/master/small-multiples">source</a>
 
 	<div class="chart">
@@ -52,7 +52,15 @@
 			'stroke-width': '2',
 			'stroke': '#af516c',
 			'fill': 'none'
+		},
+		'.area': {
+			'stroke': 'none',
+			'fill': '#b46c80'
+		},
+		'.hide': {
+			'fill': 'none'
 		}
+
 	};
 
 	var margin = {top: 40, right: 10, bottom: 30, left: 40},
@@ -61,11 +69,12 @@
 	    height = 140;
 
 	/**** Parameters to edit ****/
-  var divisor = 1, //use this number to divide data values to a sensible amount
+  var divisor = 1000, //use this number to divide data values to a sensible amount
   		numTicks = 3,
   		yDomain = undefined, 	//set this to mark the extent of the y axis e,g [0,20000]
   		columns = 5, // number of columns;
 			dateFormat = d3.time.format('%d/%m/%Y'); // change the dateFormat to match your data ---> https://github.com/mbostock/d3/wiki/Time-Formatting for list of options 
+			showAllYAxisLabels = false; //change to true if you want to turn on all y-axis labels
 
 	/**** end paramaters ****/
 
@@ -97,33 +106,17 @@
 	d3.csv('fake-data.csv', parseDate, function(error, data) {
 		seriesNames = Object.keys( data[0] ).filter(function(d){ return d != 'date'; }); // return the series names from the first row of the spreadsheet
 
-		// if(!yDomain){
-		// 	yDomain = [];
-		// 	data.forEach(function(d,i){
-		// 		var max, min;
-		// 		seriesNames.forEach(function(e){
-		// 			console.log(d[e])
-		// 			if(i==0) yDomain[0] = yDomain[1] = Number(d[e]);
-		// 			yDomain[0] = Math.min(yDomain[0], Number(d[e]));
-		// 			yDomain[1] = Math.max(yDomain[1], Number(d[e]));
-		// 		});			
-		// 	});
-		// }
-
-
-	if(!yDomain){
-    yDomain = [];
-    data.forEach(function(d,i){
-      var max, min;
-      seriesNames.forEach(function(e){
-        if(!isNaN(d[e]) && d[e] !== null){
-          if(i==0) yDomain[0] = yDomain[1] = Number(d[e]);
-          yDomain[0] = Math.min(yDomain[0], Number(d[e]));
-          yDomain[1] = Math.max(yDomain[1], Number(d[e]));
-        }
-      });            
-    });
-	}
+		if(!yDomain){
+			yDomain = [];
+			data.forEach(function(d,i){
+				var max, min;
+				seriesNames.forEach(function(e){
+					if(i==0) yDomain[0] = yDomain[1] = Number(d[e]);
+					yDomain[0] = Math.min(yDomain[0], Number(d[e]));
+					yDomain[1] = Math.max(yDomain[1], Number(d[e]));
+				});			
+			});
+		}
 
 		// Compute the minimum and maximum date across series.
 		var xDomain = d3.extent(data, function(d) { return d.date; } );
@@ -142,6 +135,10 @@
 			.append('g')
 				.attr({
 					'id': function(d){ return d; },
+					'xPosition': function (d,i) {
+						xPos = i%columns;
+						return (width + margin.left) * xPos
+					},
 					'transform': function(d, i) { 
 						var yPos = Number((Math.floor( i / columns) * (height + margin.top + margin.bottom) + margin.top));
 						var xPos = i%columns;
@@ -166,9 +163,9 @@
 			})
 			.text(function(d) {return d.toUpperCase(); });
 
-	    chart.append('g')
-	    	.attr('class', 'y axis')
-	    	.call(yAxis);
+    chart.append('g')
+    	.attr('class', 'y axis')
+    	.call(yAxis);
 
 		chart.append('g')
 			.attr({
@@ -177,18 +174,29 @@
 			})
 		    .call(xAxis);
 		 
-		  // Add the line path elements. Note: the y-domain is set per element.
+		// turn off y-axis labels on charts not in first column
+		if (!showAllYAxisLabels) {
+				chart.each(function (d, i) { 
+				var parent = d3.select(this);
+	   		if ( parent.attr('xPosition') !== '0') {
+	   			parent.selectAll('.y.axis text')
+	   				.attr( 'class', 'hide' )
+				}
+			});
+		}
 
+		// Add the line path elements. Note: the y-domain is set per element.
 		chart.append('path')
-			.attr('class', 'line')
+			.attr('class', 'area')
 			.each(function(seriesName){
-				var line = d3.svg.line()
-				  	.defined(function(d) { return ( !isNaN( d[seriesName] ) ) })
+				var area = d3.svg.area()
 				    .x(function(d) { return xScale(d.date); })
-				    .y(function(d) { return yScale( d[seriesName] ); })
+				    .y0(height)
+				    .y1(function(d) { return yScale( d[seriesName] );; });
+
 				d3.select(this)
 					.datum(data)
-					.attr('d', function(d){console.log(line(d)); return line(d); });
+					.attr('d', function(d){ return area(d); });
 			});
 
 		//apply the styles as attributes

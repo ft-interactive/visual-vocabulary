@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chord diagram</title>
+    <style>
+        text{
+            font-family:Metric,sans-serif;
+        }
+
+        .chord path {
+              fill-opacity: .67;
+        }
+        
+    </style>
+    <body>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+        <script>
+            
+var svg;   
+var colours = ["#b0657c", "#ec9c9e", "#d36968", "#d1948b","#a0686b","#c0b1b2","#80708a","#0079a1","#5999b3","#8cb7ba"];
+            
+d3.csv("2014goods.csv",function(data){
+    
+    //extract label names
+    var dataLabels = Object.keys(data[0])
+    //format the data ready for chord layout
+    var dataArray = new Array()
+    data.forEach(function(d,i)    {
+        var rowArray = [];
+        dataLabels.forEach(function(e,j){
+            rowArray.push(parseFloat(d[e]))
+        })
+        dataArray.push(rowArray)
+    });
+    createChord(dataLabels,dataArray)
+})
+
+            
+function createChord(labels,data){
+         
+    var chord = d3.layout.chord()
+        .padding(.05)
+        .sortSubgroups(d3.descending)
+        .matrix(data);
+
+    var width = 960,
+        height = 500,
+        innerRadius = Math.min(width, height) * .41,
+        outerRadius = innerRadius * 1.1;
+
+    var fill = d3.scale.ordinal()
+        .domain(d3.range(10))
+        .range(colours);
+
+    svg = d3.select("body").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+      .append("g")
+        .attr("id","chord_diagram")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+    svg.append("g").attr("id","outer_ring").selectAll("path")
+        .data(chord.groups)
+      .enter().append("path")
+        .attr("id",function(d,i){
+            return labels[i]
+        })
+        .style("fill", function(d) { return fill(d.index); })
+        .style("stroke", function(d) { return fill(d.index); })
+        .attr("d", d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius))
+        .on("click", fade(.1))
+
+    var ticks = svg.append("g").attr("id","axis_ticks").selectAll("g")
+        .data(chord.groups)
+      .enter().append("g").selectAll("g")
+        .data(groupTicks)
+      .enter().append("g")
+        .attr("transform", function(d) {
+          return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
+              + "translate(" + outerRadius + ",0)";
+        });
+
+    ticks.append("line")
+        .attr("x1", 1)
+        .attr("y1", 0)
+        .attr("x2", 5)
+        .attr("y2", 0)
+        .style("stroke", "#000");
+
+    ticks.append("text")
+        .attr("x", 8)
+        .attr("dy", ".35em")
+        .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-16)" : null; })
+        .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
+        .text(function(d) { return d.label; });
+
+    svg.append("g")
+        .attr("id","flows")
+        .attr("class", "chord")
+      .selectAll("path")
+        .data(chord.chords)
+      .enter().append("path")
+        .attr("d", d3.svg.chord().radius(innerRadius))
+        .attr("id",function(d){
+            return "source:"+labels[d.source.index]+", dest:"+labels[d.target.index]
+        })
+        .style("fill", function(d) { return fill(d.target.index); })
+        .style("opacity", 1);
+
+    // Returns an array of tick angles and labels, given a group.
+    function groupTicks(d) {
+      var k = (d.endAngle - d.startAngle) / d.value;
+      return d3.range(0, d.value, 0.01).map(function(v, i) {
+        return {
+          angle: v * k + d.startAngle,
+          label: i % 1 ? null : (v / 0.01).toFixed(0)
+        };
+      });
+    }
+    
+    //create sector labels
+    
+    
+    
+}//end create chord
+
+// Returns an event handler for fading a given chord group.
+function fade(opacity) {
+  return function(g, i) {
+    svg.selectAll(".chord path")
+        .filter(function(d) { return d.source.index != i && d.target.index != i; })
+      .transition()
+        .style("opacity", opacity);
+  };
+}
+               
+        </script>
+    </body>
+</head>
