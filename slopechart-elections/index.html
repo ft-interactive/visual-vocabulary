@@ -8,25 +8,26 @@
     <script>
     
     d3.csv("data.csv", function(error, data) {
-        
+            
         //titles
-        var title="Education and pay";
-        var subtitle="by country world rank";
-        var source="Source: forumchart.xls";
-        var col1="Education system"
-        var col2="Pay and productivity"
+        var title="Saxony-Anhalt state election, 2016";
+        var subtitle="Vote by party vs 2011";
+        var source="Source: Spiegel.de";
+        var col1="2011"
+        var col2="2016"
         
         //slope config
         var startZero=true;
-        var showDots=false;
+        var showDots=true;
         var showLabels=true;
         var showValues=true;
+        var political=true;
         
         //dimensions
-        var xOffset=200;
-        var yOffset=80;
+        var xOffset=60;
+        var yOffset=60;
         var slopeWidth=200;
-        var slopeHeight=650;
+        var slopeHeight=200;
 
         //styling as attributes
         var styles = {
@@ -39,12 +40,12 @@
             'svg':{
                 'width':'600px','height':'1075px'
             },
-            '#slope line':{
-                'stroke-width':'2px','stroke':'#F19F9E'
-            },
-            '#slope circle':{
-                'fill':'#F19F9E'
-            },
+           '#slope line':{
+             'stroke-width':'2px' //needs to be var from data
+           },
+            //'#slope circle':{
+              //  'fill':'#F19F9E'                        //needs to be var from data
+          //  },
             '.title':{
                 'font-size':'21pt'
             },
@@ -55,7 +56,7 @@
                 'font-weight':'600','font-size':'14pt'
             },
             '.axis line':{
-                'fill':'none','stroke':'#c1b5a7','stroke-width':'1px','stroke-dasharray':'1,2','shape-rendering':'crispEdges'
+                'fill':'none','stroke':'#c1b5a7','stroke-width':'2px','stroke-dasharray':'1,2','shape-rendering':'crispEdges'
             },
             '.axis path':{
                 'display':'none'
@@ -64,6 +65,7 @@
                 'font-size':'12pt','fill':'#c1b5a7'
             }
        } 
+
         
         //workout dimensions of data
         var maxVal = Math.max(d3.max(data, function(d){return parseFloat(d.val1);}),d3.max(data, function(d){return parseFloat(d.val2);}));
@@ -110,17 +112,21 @@
             .attr("x2",slopeWidth)
             .attr("y1",function(d){return yScale(d.val1)})
             .attr("y2",function(d){return yScale(d.val2)})
+            .style("stroke",function(d){return(d.color)})
+
         
         //create dots if requested
         if (showDots)   {
             slopes.append("circle")
                 .attr("r",3)
                 .attr("cx",0)
-                .attr("cy",function(d){return yScale(d.val1)});
+                .attr("cy",function(d){return yScale(d.val1)})
+                .style("fill",function(d){return(d.color)});
             slopes.append("circle")
                 .attr("r",3)
                 .attr("cx",slopeWidth)
-                .attr("cy",function(d){return yScale(d.val2)});
+                .attr("cy",function(d){return yScale(d.val2)})
+                .style("fill",function(d){return(d.color)});
         }
         
         //create labels if needed
@@ -132,14 +138,14 @@
                 .attr("y",function(d){return yScale(d.val1)+5})
                 .text(function(d){
                 if (showValues){
-                return d.name+" "+d.val1;
+                return d.val1;
                 }   else    {
                 return d.name;
                 }
             });
             slopes.append("text")
                 .attr("class","label")
-                .attr("x",slopeWidth+7)
+                .attr("x",slopeWidth+25)
                 .attr("text-anchor","start")
                 .attr("y",function(d){return yScale(d.val2)+5})
                 .text(function(d){
@@ -185,7 +191,7 @@
             .text(source);
         
         //apply the styles as attributes
-        d3.selectAll('*').attr('style','');
+        d3.selectAll('*:not(circle):not(line)').attr('style','');
         Object.keys(styles).forEach(function(selector){
             d3.selectAll(selector)
                 .attr(styles[selector]);
