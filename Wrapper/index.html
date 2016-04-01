@@ -63,12 +63,6 @@
         }
         
         //print size - all of these sizes are in mm
-        var widthPrint = 53.71;
-        var heightPrint = 80;
-        var marginPrint = {
-            left:3,
-            right:3
-        }
         var innerPaddingPrint = {
             left:3,
             right:3,
@@ -111,11 +105,14 @@
                 chartWeb.subtitle(subtitle)
             }
             
-            //print version
+            //print version - all of these sizes are in mm
             var chartPrint = new printFrame(styleprint,"print")
-                .width(widthPrint)
-                .height(heightPrint)
-                .margin(marginPrint)
+                .width(53.71)
+                .height(80)
+                .margin({
+                    left:5,
+                    right:5
+                })
                 .title(title)
                 .source(source)
             //optional elements
