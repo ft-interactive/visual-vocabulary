@@ -1,6 +1,7 @@
 
 var styleweb = [
-{class:".framefill{fill: #fff1e0}"},
+{class:".background{fill: #fff1e0}"},
+{class:".framefill{fill: #ffffff}"},
 {class:".title{font-size:21px; fill: #3b3d3b; font-weight: 100}"},
 {class:".subtitle{font-size:14px; fill: #6b6e68; font-weight: 100}"},
 {class:".source{fill: #6b6e68; font-size: 11.5px; font-weight: 100}"},

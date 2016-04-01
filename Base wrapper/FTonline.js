@@ -40,6 +40,11 @@ function webFrame(styles) {
             .attr("width", width)
             .attr("height", height)
             .attr("viewBox", "0 0 " + width + " " + height);
+
+        chart.append("rect")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("class", "background");
         
         var header = chart.append("g")
             .attr("id","header-web");
