@@ -1,13 +1,22 @@
 'use strict';
 
 function webFrame(styles) {
-    console.log(styles);
+    console.log(styles.length)
+
+    var HTML="";
+    for(var i = 0; i < styles.length; i++){
+        console.log(styles[i].class)
+        HTML=HTML+styles[i].class
+    }
+    console.log(HTML)
+
 
 
     var stylesheet = document.createElement('style');
     stylesheet.type = 'text/css';
-    //style.innerHTML = '.cssClass { color: #F00; }';
-    stylesheet.innerHTML = styles;
+    stylesheet.innerHTML = HTML
+    //stylesheet.innerHTML = '.title {fill: #3b3d3b; font-size: 21px; font-weight: 100; }';
+
     console.log(stylesheet);
     document.getElementsByTagName('head')[0].appendChild(stylesheet);
 

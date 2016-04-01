@@ -1,17 +1,15 @@
 
+var styleweb = [
+{class:".framefill{fill: #fff1e0}"},
+{class:".title{font-size:21px; fill: #3b3d3b; font-weight: 100}"},
+{class:".subtitle{font-size:14px; fill: #6b6e68; font-weight: 100}"},
+{class:".source{fill: #6b6e68; font-size: 11.5px; font-weight: 100}"},
+{class:".logo{fill: #dacfc5}"}
 
-// var test=[{'id':'web','styles':{
-//     'title':[{'font-size':'21px','fill':'#3b3d3b','font-weight':'100'}],
-//     'subtitle':[{'font-size':'14px','fill':'#6b6e68','font-weight':'100'}]
-// }
-// },
-// {'id':'print','styles':{
-//     'title':[{'font-size':'21px','fill':'#3b3d3b','font-weight':'100'}],
-//     'subtitle':[{'font-size':'14px','fill':'#6b6e68','font-weight':'100'}]
-// }
-// }]
+]
 
-var styleweb = {
+
+var OLdstyleweb = {
     'text':{'font-family':'Metric, sans-serif'},
         'framefill':{'fill':'#000000'},
         '.chartholder':{'fill':'#fff1e0'},
