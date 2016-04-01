@@ -1,26 +1,20 @@
 'use strict';
 
-function webFrame(styles) {
-    console.log(styles.length)
-
+function webFrame(styles, media) {
+    //build a string from the styles variable held on styles.js
+    //Note that the media variable is placed at the begining of each
+    //class to make it unique to the chart type, such as web or print
     var HTML="";
     for(var i = 0; i < styles.length; i++){
-        console.log(styles[i].class)
-        HTML=HTML+styles[i].class
+        HTML=HTML+("."+media+styles[i].class)
     }
-    console.log(HTML)
-
-
-
+    //Creats a new empty css stylesheet dynamically
     var stylesheet = document.createElement('style');
     stylesheet.type = 'text/css';
+    //Places in the string built above to create the styles
     stylesheet.innerHTML = HTML
-    //stylesheet.innerHTML = '.title {fill: #3b3d3b; font-size: 21px; font-weight: 100; }';
-
-    console.log(stylesheet);
+    //Adds it to the head of the document
     document.getElementsByTagName('head')[0].appendChild(stylesheet);
-
-
     
     var width = 600,
         height = 200,
@@ -36,7 +30,6 @@ function webFrame(styles) {
         
         var chart = p.append("svg")
             .attr("id","webchart")
-            .attr("class","framefill")
             .attr("width", width)
             .attr("height", height)
             .attr("viewBox", "0 0 " + width + " " + height);
@@ -44,7 +37,7 @@ function webFrame(styles) {
         chart.append("rect")
             .attr("width", width)
             .attr("height", height)
-            .attr("class", "background");
+            .attr("class", media+"background");
         
         var header = chart.append("g")
             .attr("id","header-web");
@@ -52,7 +45,7 @@ function webFrame(styles) {
         //headers - title and subtitle
         header.append("text")
             .attr("id","webTitle")
-            .attr("class", "title")
+            .attr("class", media+"title")
             .attr("x", margin.left)
             .attr("y", titleYoffset)
             .text(title)
@@ -63,7 +56,7 @@ function webFrame(styles) {
         
         header.append("text")
             .attr("id","webSubtitle")
-            .attr("class", "subtitle")
+            .attr("class", media+"subtitle")
             .attr("x", margin.left)
             .attr("y", subYOffset+subtitleYoffset)
             .text(subtitle)
@@ -80,7 +73,7 @@ function webFrame(styles) {
         
         footer.append("text")
             .attr("id","webFooter")
-            .attr("class", "source")
+            .attr("class", media+"source")
             .selectAll("tspan")
             .data(sourcelines)
             .enter()
@@ -99,7 +92,7 @@ function webFrame(styles) {
         //logo
         footer.append("g")
             .attr("transform", "translate(" + (width - 30 - margin.left) + "," + (height - 22) + ")")
-            .attr("class", "logo")
+            .attr("class", media+"logo")
             .append("path")
             .attr("d", "M0,16h7.6v-0.6c-0.5,0-0.9,0-1.2-0.1c-0.3,0-0.5-0.1-0.7-0.3c-0.2-0.1-0.3-0.3-0.4-0.6c-0.1-0.2-0.1-0.6-0.1-1V8.2h1.2c1.1,0,1.9,0.2,2.3,0.5c0.5,0.3,0.8,0.9,1,1.9h0.6V5H9.8C9.7,5.6,9.5,6,9.3,6.3c-0.2,0.3-0.5,0.5-1,0.6C7.9,7,7.3,7.1,6.5,7.1H5.3V2c0-0.3,0.1-0.5,0.2-0.7c0.1-0.1,0.3-0.2,0.7-0.2h2.4c0.8,0,1.4,0,1.9,0.1c0.5,0.1,0.9,0.2,1.2,0.4c0.3,0.2,0.6,0.4,0.7,0.7c0.2,0.3,0.3,0.7,0.5,1.1h0.7L13.4,0H0v0.6c0.4,0,0.8,0.1,1,0.1c0.2,0,0.4,0.1,0.6,0.3C1.8,1.1,1.9,1.3,2,1.5c0.1,0.2,0.1,0.6,0.1,1v10.9c0,0.4,0,0.8-0.1,1c-0.1,0.2-0.2,0.4-0.4,0.6c-0.2,0.1-0.4,0.2-0.6,0.3c-0.2,0-0.6,0.1-1,0.1V16z M14.2,3.5H15c0.3-0.9,0.6-1.5,1-1.8c0.4-0.4,1.1-0.5,1.9-0.5h2v12.3c0,0.4,0,0.8-0.1,1c-0.1,0.2-0.2,0.4-0.4,0.6c-0.2,0.1-0.4,0.2-0.7,0.3c-0.3,0-0.6,0.1-1.1,0.1V16h7.7v-0.6c-0.5,0-0.9,0-1.1-0.1c-0.3,0-0.5-0.1-0.7-0.3c-0.2-0.1-0.3-0.3-0.4-0.6c-0.1-0.2-0.1-0.6-0.1-1V1.2h2c0.8,0,1.5,0.2,1.9,0.5c0.4,0.4,0.8,1,1,1.8h0.8L28.5,0H14.6L14.2,3.5z");
         
@@ -110,7 +103,7 @@ function webFrame(styles) {
         
         //now we can reveal the content area...by filling in the space between header and footer
         var canvas = chart.append("g")
-            .attr("class", "chartholder")
+            .attr("class", media+"chartholder")
             .attr("transform","translate("+margin.left+","+contentOffsetTop+")");
         canvas.append("rect")
             .attr("id","chart-rect")

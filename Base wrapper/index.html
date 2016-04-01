@@ -7,21 +7,6 @@
     <style>
         text{font-family:metric}
         
-        
-        .chart-canvas.web{fill:none;stroke:none}
-        
-        .title-prt{font-size:12;fill:#2e2113;font-weight:600}
-        .subtitle-prt{font-size:9.6;fill:#2e2113}
-        .source-prt{font-size:7.2;fill:#2e2113}
-        .chart-canvas.prt{fill:none;stroke:none}
-        .print-hat{fill:none;stroke-width:1px;stroke:#22190f}
-        
-        .title-soc{font-size:32;fill:#fff}
-        .subtitle-soc{font-size:14;fill:#fff}
-        .source-soc{font-size:14;fill:#fff}
-        .ft-logo-soc{fill:#fff}
-        .chart-canvas.soc{fill:#454545}
-        
         .axis-web path{fill:none;}
         .axis-web text{fill:#111}
         .axis-web line{fill:none;stroke:#111;stroke-width:1px}
@@ -45,7 +30,7 @@
         var dataURL = "changeme.csv"
         
         //titles, footnotes
-        var title = "Trump! It's a comedy word in Britain then add some words";
+        var title = "Trump! It's a comedy word in Britain";
         var subtitle = "Units and descriptions of measure go here and will wrap onto extra lines if needed";//comment out subtitle assignment if not needed
         var source = "Sources: various bits of research|FT graphic Liz Faunce|Other lines can be added using|a vertical pipe symbol";
         
@@ -55,12 +40,6 @@
             social = true
         
         //online size
-        var widthWeb = 300;
-        var heightWeb = 400;
-        var marginWeb = {
-            left:5,
-            right:5
-        }
         //sets the padding inside the chart area
         var innerPaddingWeb = {
             left:5,
@@ -70,8 +49,8 @@
         }
         
         //social media size
-        var widthSocial = 250;
-        var heightSocial = 400;
+        var widthSocial = 560;
+        var heightSocial = 750;
         var marginSocial = {
             left:2,
             right:2
@@ -84,7 +63,7 @@
         }
         
         //print size - all of these sizes are in mm
-        var widthPrint = 187;
+        var widthPrint = 53.71;
         var heightPrint = 80;
         var marginPrint = {
             left:3,
@@ -118,10 +97,13 @@
         d3.csv(dataURL,function(data){
 
             //web version
-            var chartWeb = new webFrame(styleweb)
-                .width(widthWeb)
-                .height(heightWeb)
-                .margin(marginWeb)
+            var chartWeb = new webFrame(styleweb,"web")
+                .width(300)
+                .height(400)
+                .margin({
+                    left:5,
+                    right:5
+                })
                 .title(title)
                 .source(source)
             //optional elements
@@ -130,7 +112,7 @@
             }
             
             //print version
-            var chartPrint = new printFrame()
+            var chartPrint = new printFrame(styleprint,"print")
                 .width(widthPrint)
                 .height(heightPrint)
                 .margin(marginPrint)
@@ -142,10 +124,13 @@
             }
         
             //social media version
-            var chartSocial = new socialFrame()
-                .width(widthSocial)
-                .height(heightSocial)
-                .margin(marginSocial)
+            var chartSocial = new socialFrame(stylesoc,"soc")
+                .width(560)
+                .height(750)
+                .margin({
+                    left:2,
+                    right:2
+                })
                 .title(title)
                 .source(source)
 
@@ -157,11 +142,9 @@
            //call editions
             if (online){
                 d3.select("body").call(chartWeb)
-                //setstyles("webchart",styleweb);
             }
             if (print){
                 d3.select("body").call(chartPrint);
-                //setstyles("printchart",styleprint);
             }
             if (social){
                 d3.select("body").call(chartSocial)
@@ -261,7 +244,6 @@
                 .attr("transform","translate(0,"+(h-padding.bottom)+")")
                 .attr("class","axis-"+chartType)
                 .call(xAxis)
-
                 
         }
         
@@ -270,18 +252,6 @@
             var px = mm*2.83464480558843;
             return px;
         }
-
-        function setstyles(chartname,style) {
-            var chart=d3.select("#"+chartname)
-            //console.log(chart)
-            d3.selectAll('*').attr('style','');
-            Object.keys(style).forEach(function(selector){
-                d3.selectAll(selector)
-                    .attr(style[selector]);
-            //console.log(style[selector])
-            });
-
-}
         
         
         

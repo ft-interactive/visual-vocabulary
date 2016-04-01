@@ -1,6 +1,20 @@
 'use strict';
 
-function printFrame() {
+function printFrame(styles, media) {
+    //build a string from the styles variable held on styles.js
+    //Note that the media variable is placed at the begining of each
+    //class to make it unique to the chart type, such as web or print
+    var HTML="";
+    for(var i = 0; i < styles.length; i++){
+        HTML=HTML+("."+media+styles[i].class)
+    }
+    //Creats a new empty css stylesheet dynamically
+    var stylesheet = document.createElement('style');
+    stylesheet.type = 'text/css';
+    //Places in the string built above to create the styles
+    stylesheet.innerHTML = HTML
+    //Adds it to the head of the document
+    document.getElementsByTagName('head')[0].appendChild(stylesheet);
     
     var width = 600,
         height = 200,
@@ -27,7 +41,7 @@ function printFrame() {
         //headers - title and subtitle
         header.append("text")
             .attr("id","webTitle")
-            .attr("class", "title")
+            .attr("class", media+"title")
             .attr("x", margin.left)
             .attr("y", titleYoffset)
             .text(title)
@@ -38,7 +52,7 @@ function printFrame() {
         
         header.append("text")
             .attr("id","prtSubtitle")
-            .attr("class", "subtitle")
+            .attr("class", media+"subtitle")
             .attr("x", margin.left)
             .attr("y", subYOffset+subtitleYoffset)
             .text(subtitle)
@@ -47,7 +61,7 @@ function printFrame() {
         
         //add the hat!
         header.append("path")
-            .attr("class","print-hat")
+            .attr("class",media+"hat")
             .attr("d","M0,"+titleYoffset+" L0,0 "+width+",0 "+width+","+titleYoffset)
         
         var contentOffsetTop = chart.select("#header-prt").node().getBBox().y + chart.select("#header-prt").node().getBBox().height;
@@ -60,7 +74,7 @@ function printFrame() {
         
         footer.append("text")
             .attr("id","prtFooter")
-            .attr("class", "source-prt")
+            .attr("class", media+"source")
             .selectAll("tspan")
             .data(sourcelines)
             .enter()
@@ -84,7 +98,7 @@ function printFrame() {
         
         //now we can reveal the content area...by filling in the space between header and footer
         var canvas = chart.append("g")
-            .attr("class", "chart-canvas prt")
+            .attr("class", media+"chartholder")
             .attr("transform","translate("+margin.left+","+contentOffsetTop+")");
         canvas.append("rect")
             .attr("id","chart-rect")

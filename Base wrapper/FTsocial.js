@@ -1,8 +1,22 @@
 'use strict';
 
-function socialFrame() {
+function socialFrame(styles, media) {
+    //build a string from the styles variable held on styles.js
+    //Note that the media variable is placed at the begining of each
+    //class to make it unique to the chart type, such as web or print
+    var HTML="";
+    for(var i = 0; i < styles.length; i++){
+        HTML=HTML+("."+media+styles[i].class)
+    }
+    //Creats a new empty css stylesheet dynamically
+    var stylesheet = document.createElement('style');
+    stylesheet.type = 'text/css';
+    //Places in the string built above to create the styles
+    stylesheet.innerHTML = HTML
+    //Adds it to the head of the document
+    document.getElementsByTagName('head')[0].appendChild(stylesheet);
     
-    var width = 600,
+    var width = 280,
         height = 200,
         titleYoffset = 25,
         subtitleYoffset = 15,
@@ -31,7 +45,7 @@ function socialFrame() {
         
         //headers - title and subtitle
         header.append("text")
-            .attr("class", "title-soc")
+            .attr("class", media+"title")
             .attr("x", margin.left)
             .attr("y", titleYoffset)
             .text(title)
@@ -41,7 +55,7 @@ function socialFrame() {
         var subYOffset = chart.select("#header-soc").node().getBBox().y + chart.select("#header-soc").node().getBBox().height;
         
         header.append("text")
-            .attr("class", "subtitle-soc")
+            .attr("class", media+"subtitle")
             .attr("x", margin.left)
             .attr("y", subYOffset+subtitleYoffset)
             .text(subtitle)
@@ -58,7 +72,7 @@ function socialFrame() {
         
         footer.append("text")
             .attr("id","socFooter")
-            .attr("class", "source-soc")
+            .attr("class", media+"source")
             .selectAll("tspan")
             .data(sourcelines)
             .enter()
@@ -77,7 +91,7 @@ function socialFrame() {
         //logo
         footer.append("g")
             .attr("transform", "translate(" + (width - 30 - margin.left) + "," + (height - 22) + ")")
-            .attr("class", "ft-logo-soc")
+            .attr("class", media+"logo")
             .append("path")
             .attr("d", "M0,16h7.6v-0.6c-0.5,0-0.9,0-1.2-0.1c-0.3,0-0.5-0.1-0.7-0.3c-0.2-0.1-0.3-0.3-0.4-0.6c-0.1-0.2-0.1-0.6-0.1-1V8.2h1.2c1.1,0,1.9,0.2,2.3,0.5c0.5,0.3,0.8,0.9,1,1.9h0.6V5H9.8C9.7,5.6,9.5,6,9.3,6.3c-0.2,0.3-0.5,0.5-1,0.6C7.9,7,7.3,7.1,6.5,7.1H5.3V2c0-0.3,0.1-0.5,0.2-0.7c0.1-0.1,0.3-0.2,0.7-0.2h2.4c0.8,0,1.4,0,1.9,0.1c0.5,0.1,0.9,0.2,1.2,0.4c0.3,0.2,0.6,0.4,0.7,0.7c0.2,0.3,0.3,0.7,0.5,1.1h0.7L13.4,0H0v0.6c0.4,0,0.8,0.1,1,0.1c0.2,0,0.4,0.1,0.6,0.3C1.8,1.1,1.9,1.3,2,1.5c0.1,0.2,0.1,0.6,0.1,1v10.9c0,0.4,0,0.8-0.1,1c-0.1,0.2-0.2,0.4-0.4,0.6c-0.2,0.1-0.4,0.2-0.6,0.3c-0.2,0-0.6,0.1-1,0.1V16z M14.2,3.5H15c0.3-0.9,0.6-1.5,1-1.8c0.4-0.4,1.1-0.5,1.9-0.5h2v12.3c0,0.4,0,0.8-0.1,1c-0.1,0.2-0.2,0.4-0.4,0.6c-0.2,0.1-0.4,0.2-0.7,0.3c-0.3,0-0.6,0.1-1.1,0.1V16h7.7v-0.6c-0.5,0-0.9,0-1.1-0.1c-0.3,0-0.5-0.1-0.7-0.3c-0.2-0.1-0.3-0.3-0.4-0.6c-0.1-0.2-0.1-0.6-0.1-1V1.2h2c0.8,0,1.5,0.2,1.9,0.5c0.4,0.4,0.8,1,1,1.8h0.8L28.5,0H14.6L14.2,3.5z");
         
