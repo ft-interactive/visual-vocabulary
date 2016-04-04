@@ -1,0 +1,260 @@
+<html>
+<head>
+    <title>Frames for FT graphics</title>
+    <script type="text/javascript" src="styles.js"></script>
+</head>
+<body>
+    <style>
+        text{font-family:metric}
+        
+        .axis-web path{fill:none;}
+        .axis-web text{fill:#111}
+        .axis-web line{fill:none;stroke:#111;stroke-width:1px}
+        
+        .axis-soc path{fill:none;}
+        .axis-soc text{fill:#fff}
+        .axis-soc line{fill:none;stroke:#fff;stroke-width:1px}
+        
+        .axis-prt path{fill:none;}
+        .axis-prt text{fill:#111}
+        .axis-prt line{fill:none;stroke:#111;stroke-width:1px}
+        
+    </style>
+    <script src="d3.min.js"></script>
+    <script src="FTonline.js"></script>
+    <script src="FTprint.js"></script>
+    <script src="FTsocial.js"></script>
+    <script>
+        
+        //datafile
+        var dataURL = "changeme.csv"
+        
+        //titles, footnotes
+        var title = "Trump! It's a comedy word in Britain";
+        var subtitle = "Units and descriptions of measure go here and will wrap onto extra lines if needed";//comment out subtitle assignment if not needed
+        var source = "Sources: various bits of research|FT graphic Liz Faunce|Other lines can be added using|a vertical pipe symbol";
+        
+        //choose editions
+        var print = true,
+            online = true,
+            social = true
+        
+        //online size
+        //sets the padding inside the chart area
+        var innerPaddingWeb = {
+            left:5,
+            right:5,
+            top:0,
+            bottom:40
+        }
+        
+        //social media size
+        var widthSocial = 560;
+        var heightSocial = 750;
+        var marginSocial = {
+            left:2,
+            right:2
+        }
+        var innerPaddingSocial = {
+            left:10,
+            right:14,
+            top:0,
+            bottom:21
+        }
+        
+        //print size - all of these sizes are in mm
+        var innerPaddingPrint = {
+            left:3,
+            right:3,
+            top:0,
+            bottom:7
+        }
+
+        
+        //CHART-SPECIFIC SETTINGS TO GO HERE
+        var minCircleRadius = 5;//minimum circle size - advice - you should make this zero if your data contains zeros...
+        var maxCircleRadius = 40;//maximum circle size
+        //category colours taken from FT web political spectrum...
+        var colours = [ "#6da8e1","#e25050","#ffc660","#ca6dbf","#65a68c","#9e9e9e","#99bf70","#827996","#99d2d0","#bed676"];
+        var circleLabelFormat = d3.format(",");
+        //specify any formatting you want on the key value
+        
+    
+        /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
+        
+        //convert print sizes
+        widthPrint = mmToPx(widthPrint);
+        heightPrint = mmToPx(heightPrint);
+        marginPrint.left = mmToPx(marginPrint.left);
+        marginPrint.right = mmToPx(marginPrint.right);
+        
+        d3.csv(dataURL,function(data){
+
+            //web version
+            var chartWeb = new webFrame(styleweb,"web")
+                .width(300)
+                .height(400)
+                .margin({
+                    left:5,
+                    right:5
+                })
+                .title(title)
+                .source(source)
+            //optional elements
+            if (subtitle){
+                chartWeb.subtitle(subtitle)
+            }
+            
+            //print version - all of these sizes are in mm
+            var chartPrint = new printFrame(styleprint,"print")
+                .width(53.71)
+                .height(80)
+                .margin({
+                    left:5,
+                    right:5
+                })
+                .title(title)
+                .source(source)
+            //optional elements
+            if (subtitle){
+                chartPrint.subtitle(subtitle)
+            }
+        
+            //social media version
+            var chartSocial = new socialFrame(stylesoc,"soc")
+                .width(560)
+                .height(750)
+                .margin({
+                    left:2,
+                    right:2
+                })
+                .title(title)
+                .source(source)
+
+            //optional elements
+            if (subtitle){
+                chartSocial.subtitle(subtitle)
+            }
+            
+           //call editions
+            if (online){
+                d3.select("body").call(chartWeb)
+            }
+            if (print){
+                d3.select("body").call(chartPrint);
+            }
+            if (social){
+                d3.select("body").call(chartSocial)
+            }
+
+           
+            //select all charts and create things on them
+            var charts = d3.selectAll(".chart");
+                
+            charts.each(function(d,i){
+                
+                //get content area
+                var canvas = d3.select(this).select(".chart-canvas")
+
+                bubbleChart(canvas,data);
+                
+            })
+            
+        })//end data load
+        
+        
+        function bubbleChart(panel,data){
+            
+            //identify bounding space for content
+            var space = panel.select("#chart-rect");
+
+            //h and w for chart
+            var w = space.attr("width"),
+                h = space.attr("height")
+            
+            var chartType;
+            
+            var padding;
+            
+            //determine type of chart
+            if (panel.classed("web")){
+                chartType='web';
+                padding = innerPaddingWeb;
+            }   else if (panel.classed("soc")){
+                chartType='soc'
+                padding = innerPaddingSocial;
+            }   else {
+                chartType='prt';
+                padding = innerPaddingPrint;
+                padding.left = mmToPx(padding.left);
+                padding.right = mmToPx(padding.right);
+                padding.top = mmToPx(padding.top);
+                padding.bottom = mmToPx(padding.bottom);
+            }
+            
+            //parse the data
+            data.forEach(function(d){
+                d.x = +d.x;
+                d.y = +d.y;
+                d.size = +d.size;
+            })
+            
+            //work out extents and default scale
+            var xExtent = d3.extent(data,function(d){
+                return d.x;
+            })
+            var yExtent = d3.extent(data,function(d){
+                return d.y;
+            })
+            var sizeExtent = d3.extent(data,function(d){
+                return d.size;
+            })
+            
+            //comment these lines out to accept d3 default values
+            xExtent[0]=0;//set just one custom scale value - e.g. start the x axis at zero
+            yExtent=[0,70];//set both values like this
+            
+            //determine categories
+            var cats = d3.nest()
+                .key(function(d){return d.cat})
+                .entries(data)
+                .map(function(d){return d.key});
+            
+            //scales
+            var xScale=d3.scale.linear()
+                .domain(xExtent)
+                .range([padding.left,w-(padding.right)]);
+            var yScale=d3.scale.linear()
+                .domain(yExtent)
+                .range([h,0])
+            var circleScale = d3.scale.sqrt()
+                .domain(sizeExtent)
+                .range([minCircleRadius,maxCircleRadius]);
+            
+
+            //x axis
+            var xAxis = d3.svg.axis()
+                .scale(xScale)
+                .orient("bottom")
+                .ticks(4);
+            panel.append("g")
+                .attr("transform","translate(0,"+(h-padding.bottom)+")")
+                .attr("class","axis-"+chartType)
+                .call(xAxis)
+                
+        }
+        
+        
+        function mmToPx(mm){
+            var px = mm*2.83464480558843;
+            return px;
+        }
+        
+        
+        
+
+        
+        
+    </script>
+</body>
+</html>
