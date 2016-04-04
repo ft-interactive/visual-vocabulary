@@ -19,13 +19,14 @@ var styleprint = [
 ]
 
 var stylesoc = [
-{class:"background{fill: #fff1e0}"},
+{class:"background{fill: #343334}"},
 {class:"chartholder{fill: #58595b}"},
 {class:"title{font-size: 32px; fill: #ffffff; font-weight: 100}"},
 {class:"subtitle{font-size: 14; fill: #ffffff; font-weight: 100}"},
 {class:"source{font-size: 14; fill: #ffffff; font-weight: 100}"},
 {class:"logo{fill: #ffffff}"}
 ]
+
 
     //Tabular with 
     //-webkit-font-feature-settings: 'tnum' 1;
