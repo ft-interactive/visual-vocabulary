@@ -40,36 +40,47 @@
             social = true
         
         //online size
-        //sets the padding inside the chart area
-        var innerPaddingWeb = {
+        var widthWeb = 600;
+        var heightWeb = 400;
+        var marginWeb = {
             left:5,
-            right:5,
+            right:5
+        }
+        //sets the padding inside the chart area - hoping we can automate this calculation
+        var innerPaddingWeb = {
+            left:20,
+            right:10,
             top:0,
             bottom:40
         }
         
         //social media size
-        var widthSocial = 560;
-        var heightSocial = 750;
+        var widthSocial = 600;
+        var heightSocial = 300;
         var marginSocial = {
-            left:2,
-            right:2
+            left:10,
+            right:10
         }
         var innerPaddingSocial = {
-            left:10,
+            left:30,
             right:14,
             top:0,
-            bottom:21
+            bottom:26
         }
         
         //print size - all of these sizes are in mm
-        var innerPaddingPrint = {
+        var widthPrint = 87;
+        var heightPrint = 120;
+        var marginPrint = {
             left:3,
+            right:3
+        }
+        var innerPaddingPrint = {
+            left:6,
             right:3,
             top:0,
             bottom:7
         }
-
         
         //CHART-SPECIFIC SETTINGS TO GO HERE
         var minCircleRadius = 5;//minimum circle size - advice - you should make this zero if your data contains zeros...
@@ -92,8 +103,8 @@
 
             //web version
             var chartWeb = new webFrame(styleweb,"web")
-                .width(300)
-                .height(400)
+                .width(widthWeb)
+                .height(heightWeb)
                 .margin({
                     left:5,
                     right:5
@@ -107,8 +118,8 @@
             
             //print version - all of these sizes are in mm
             var chartPrint = new printFrame(styleprint,"print")
-                .width(53.71)
-                .height(80)
+                .width(widthPrint)
+                .height(heightPrint)
                 .margin({
                     left:5,
                     right:5
@@ -122,8 +133,8 @@
         
             //social media version
             var chartSocial = new socialFrame(stylesoc,"soc")
-                .width(560)
-                .height(750)
+                .width(widthSocial)
+                .height(heightSocial)
                 .margin({
                     left:2,
                     right:2
