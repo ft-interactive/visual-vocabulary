@@ -52,16 +52,16 @@ function drawFrame(styles, media) {
             .attr("dy",0)
             .call(wrap,width - (margin.left + margin.right),margin.left);
         
-        // var subYOffset = chart.select("#header-web").node().getBBox().y + chart.select("#header-web").node().getBBox().height;
+        var subYOffset = chart.select("#"+media+"header").node().getBBox().y + chart.select("#"+media+"header").node().getBBox().height;
         
-        // header.append("text")
-        //     .attr("id","webSubtitle")
-        //     .attr("class", media+"subtitle")
-        //     .attr("x", margin.left)
-        //     .attr("y", subYOffset+subtitleYoffset)
-        //     .text(subtitle)
-        //     .attr("dy",0)
-        //     .call(wrap,width - (margin.left + margin.right),margin.left);;
+        header.append("text")
+            .attr("id","webSubtitle")
+            .attr("class", media+"subtitle")
+            .attr("x", margin.left)
+            .attr("y", subYOffset+subtitleYoffset)
+            .text(subtitle)
+            .attr("dy",0)
+            .call(wrap,width - (margin.left + margin.right),margin.left);
         
         // var contentOffsetTop = chart.select("#header-web").node().getBBox().y + chart.select("#header-web").node().getBBox().height;
         

@@ -20,7 +20,7 @@ function webFrame(styles, media) {
         height = 200,
         titleYoffset = 25,
         subtitleYoffset = 15,
-        margin = {top: 50, left: 50, bottom: 50, right: 20},
+        margin = {top: 25, left: 50, bottom: 50, right: 20},
         title = "Title goes here",
         subtitle,// = "Subtitle goes here",
         source = "Source: add source,|chart author and relevant footnotes",
@@ -168,7 +168,7 @@ function wrap(text, width,x) {
             word,
             line = [],
             lineNumber = 0,
-            lineHeight = 1.1,
+            lineHeight = 2.1,
             y = text.attr("y"),
             dy = parseFloat(text.attr("dy")),
             tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
