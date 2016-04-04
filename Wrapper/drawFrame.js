@@ -53,6 +53,7 @@ function drawFrame(styles, media) {
             .call(wrap,width - (margin.left + margin.right),margin.left);
         
         var titleYoffset = margin.top+chart.select("#"+media+"Title").node().getBBox().height;
+        console.log (titleYoffset);
         chart.select("#"+media+"Title").attr("y",titleYoffset)
         
         header.append("text")
