@@ -18,8 +18,6 @@ function drawFrame(styles, media) {
     
     var width = 600,
         height = 200,
-        titleYoffset = 25,
-        subtitleYoffset = 15,
         margin = {top: 50, left: 50, bottom: 50, right: 20},
         title = "Title goes here",
         subtitle,// = "Subtitle goes here",
@@ -27,6 +25,8 @@ function drawFrame(styles, media) {
         footnote;
 
     function frame(p) {
+
+        var subtitleYoffset = 15;
         
         var chart = p.append("svg")
             .attr("id","webchart")
@@ -44,7 +44,7 @@ function drawFrame(styles, media) {
         
         //headers - title and subtitle
         header.append("text")
-            .attr("id","webTitle")
+            .attr("id",media+"Title")
             .attr("class", media+"title")
             .attr("x", margin.left)
             .attr("y", titleYoffset)
@@ -52,16 +52,20 @@ function drawFrame(styles, media) {
             .attr("dy",0)
             .call(wrap,width - (margin.left + margin.right),margin.left);
         
-        var subYOffset = chart.select("#"+media+"header").node().getBBox().y + chart.select("#"+media+"header").node().getBBox().height;
+        var titleYoffset = margin.top+chart.select("#"+media+"Title").node().getBBox().height;
+        chart.select("#"+media+"Title").attr("y",titleYoffset)
         
         header.append("text")
-            .attr("id","webSubtitle")
+            .attr("id",media+"Subtitle")
             .attr("class", media+"subtitle")
             .attr("x", margin.left)
-            .attr("y", subYOffset+subtitleYoffset)
             .text(subtitle)
             .attr("dy",0)
             .call(wrap,width - (margin.left + margin.right),margin.left);
+
+        var subYOffset = titleYoffset + chart.select("#"+media+"Subtitle").node().getBBox().height;
+        chart.select("#"+media+"Subtitle").attr("y",subYOffset+7)
+
         
         // var contentOffsetTop = chart.select("#header-web").node().getBBox().y + chart.select("#header-web").node().getBBox().height;
         
