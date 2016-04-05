@@ -77,6 +77,7 @@ var colours=['#4479b8','#ea9942','#454545','#87b700','#a765a6','#8f7666','#aa001
 var circleSize= 3;
 
 //general layout information
+//right margin nudged up to make space for label on rightmost data point
 var margin = {
     top:80,
     left:50,
@@ -100,6 +101,7 @@ function drawChart(error, data) {
     var coords = new Array();
 
     data.forEach(function(d)   {
+        //turn date string into javascript date-time object before using it
         d.date = parseDate(d.date),
         coords.push([d.date,d.debt/1000,d.prod/1000]);
     });
@@ -115,6 +117,7 @@ function drawChart(error, data) {
         y.push(d.prod);
     });  
 
+    //create an array containing the data required to draw each line between two points. You could omit this step and just draw a single path through all points, but you would then be unable to add the 'marker-mid' arrows showing the direction in which the line should be followed
     segmentData = [];
     for(var i = 0; i < data.length-1; i++){
         segment = {
@@ -166,8 +169,10 @@ function drawChart(error, data) {
                 'height': height
             });
 
+    //adding a defs object to hold the marker arrows
     var defs = svg.append('defs');
 
+    //marker arrows added, these will go at the mid-points of each 'segment' path
     svg.append('marker')
         .attr('id', 'midArrow')
         .attr('viewBox', '-10 -10 20 20')
@@ -234,16 +239,19 @@ function drawChart(error, data) {
     .x(function(d,i){return xScale(d.debt)})
     .y(function(d,i){return yScale(d.prod)});
 
+    //these groups will hold the paths. Could just draw paths straight onto the chart, but using groups in case we wanted to add anything else in addition
     var segmentHolders = plot.selectAll('g').data(segmentData).enter().append('g')
     .attr({
         class:'segmentHolder'
     });
 
+    //draws the point-to-point paths, making sure each is drawn as three points -- a start, middle and end -- so we can use the 'marker-mid' arrows, which only appear on the vertices of a path
     var segments = segmentHolders.append('path')
     .attr({
         d:function(d,i){return "M" + xScale(d.startX) + " " + yScale(d.startY) + "L" + xScale(d3.mean([d.startX,d.endX])) + " " + yScale(d3.mean([d.startY,d.endY])) + "L" + xScale(d.endX) + " " + yScale(d.endY) + ""}
     });
 
+    //draws the individual data points
     var points = plot.selectAll('circle').data(data).enter().append('circle')
     .attr({
         class:'circles',
@@ -252,11 +260,13 @@ function drawChart(error, data) {
         r:5
     })
     .style({
+        //colour gradient from pale (oldest point) to strong (latest point) makes it easier to read the graphic. Could drop this if you want and just use same colour for all points
         fill:function(d,i){return colourTimeScale(d.date)},
         stroke:'#fff1e0',
         'stroke-width':1
     });
 
+    //adds a text label to each point, positioned immediately above and to the right. I'm using .getFullYear() since it's annual data, but you may want to go more granular if the data suits it. Possible improvement here would be to add a variable to the data saying whether the line bends back on itself at this point, which would allow us to set whether the label should appear to the left/right and above/below its circle
     var labels = plot.selectAll('text').data(data).enter().append('text')
     .attr({
         x:function(d,i){
