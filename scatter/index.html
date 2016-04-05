@@ -59,10 +59,10 @@ var styles = {
     
 
 //Configuration
-var dataLocation = 'data.csv';
-var title='Debt fuelled the US oil boom';
-var subtitle='The surge in US crude production since 2009 has been accompanied by a sharp rise in oil companies’debts';
-var source='Sources: Bloomberg, U.S. Energy Information Administration';
+var dataLocation = 'scatterdata.csv';
+var title='International Piracy and Armed Robbery at Sea';
+var subtitle='incidents by region, 1984-2010';
+var source='Source: International Maritime Organisation';
 var colours=['#4479b8','#ea9942','#454545','#87b700','#a765a6','#8f7666','#aa0016'];
 var circleSize= 3;
 
@@ -81,7 +81,7 @@ var plotHeight = height - (margin.top + margin.bottom);
 
 
 //date formatter, matching the format of the incoming csv...
-var parseDate = d3.time.format("%Y-%m-%d").parse;
+var dateFormat = d3.time.format('%Y'); //in the example case the data is per years
 
 d3.csv(dataLocation, drawChart);
 
@@ -90,7 +90,7 @@ function drawChart(error, data) {
     var coords = new Array();
 
     data.forEach(function(d)   {
-        coords.push([parseDate(d.date),d.debt,d.prod]);
+        coords.push([d.x,d.y,d.name]);
     });
 
     //setup x and y arrays to find range
@@ -190,18 +190,18 @@ function drawChart(error, data) {
                 transform:'translate(' + margin.left + ',' + margin.top + ')' 
             });
 
-    // var circles = plot.selectAll('circle')
-    //     .data(coords)
-    //     .enter()
-    //     .append('circle')
-    //         .attr({
-    //             'class':'circles',
-    //             'cx': function(d) { return xScale(d[0]) },
-    //             'cy': function(d) { return yScale(d[1]) },
-    //             'r': circleSize,
-    //             'id': function(d) { return d[2] },
-    //             'fill': colours[0]
-    //         });
+    var circles = plot.selectAll('circle')
+        .data(coords)
+        .enter()
+        .append('circle')
+            .attr({
+                'class':'circles',
+                'cx': function(d) { return xScale(d[0]) },
+                'cy': function(d) { return yScale(d[1]) },
+                'r': circleSize,
+                'id': function(d) { return d[2] },
+                'fill': colours[0]
+            });
   
     //apply the styles as attributes
     d3.selectAll('*').attr('style','');

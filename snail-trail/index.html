@@ -37,9 +37,19 @@ var styles = {
     '.source':{ 
     'font-size':'12' 
     },
-    '.circles':{ 
-        'fill-opacity':'0.4',
-        'stroke-width':'1'
+    // '.circles':{ 
+    //     'fill-opacity':'0.4',
+    //     'stroke-width':'1'
+    // },
+    '#midArrow':{
+        stroke:'#cec6b9',
+        fill:'none',
+        'stroke-width':2
+    },
+    '.segmentHolder path':{ 
+        'stroke':'#cec6b9',
+        'stroke-width':'1',
+        'marker-mid':'url(#midArrow)'
     },
     '.axis path, .axis line':{
         'fill':'none',
@@ -59,10 +69,10 @@ var styles = {
     
 
 //Configuration
-var dataLocation = 'scatterdata.csv';
-var title='International Piracy and Armed Robbery at Sea';
-var subtitle='incidents by region, 1984-2010';
-var source='Source: International Maritime Organisation';
+var dataLocation = 'data.csv';
+var title='Debt fuelled the US oil boom';
+var subtitle='The surge in US crude production has been accompanied by a sharp rise in oil companies’ debts';
+var source='Sources: Bloomberg, U.S. Energy Information Administration';
 var colours=['#4479b8','#ea9942','#454545','#87b700','#a765a6','#8f7666','#aa0016'];
 var circleSize= 3;
 
@@ -71,7 +81,7 @@ var margin = {
     top:80,
     left:50,
     bottom:50,
-    right:30
+    right:40
 };
 var padding = 30;
 var width=600;
@@ -81,7 +91,7 @@ var plotHeight = height - (margin.top + margin.bottom);
 
 
 //date formatter, matching the format of the incoming csv...
-var dateFormat = d3.time.format('%Y'); //in the example case the data is per years
+var parseDate = d3.time.format("%Y-%m-%d").parse;
 
 d3.csv(dataLocation, drawChart);
 
@@ -90,17 +100,33 @@ function drawChart(error, data) {
     var coords = new Array();
 
     data.forEach(function(d)   {
-        coords.push([d.x,d.y,d.name]);
+        d.date = parseDate(d.date),
+        coords.push([d.date,d.debt/1000,d.prod/1000]);
     });
 
     //setup x and y arrays to find range
+    var dates = new Array();
     var x = new Array();
     var y = new Array();
 
         data.forEach(function(d)   {
-        x.push(d.x);
-        y.push(d.y);
-    });    
+        dates.push(d.date);
+        x.push(d.debt);
+        y.push(d.prod);
+    });  
+
+    segmentData = [];
+    for(var i = 0; i < data.length-1; i++){
+        segment = {
+            startX: data[i].debt,
+            endX: data[i+1].debt,
+            startY: data[i].prod,
+            endY: data[i+1].prod,
+            startDate: data[i].date,
+            endDate: data[i+1].date
+        }
+        segmentData.push(segment);
+    }  
 
     //establish data range
 
@@ -108,8 +134,8 @@ function drawChart(error, data) {
     var xRange = [x[0],x[x.length-1]];
 
     var y =y.sort(sortFunction);
-    var yRange = [0,y[y.length-1]];
-    console.log(yRange)
+    var yRange = [y[0],y[y.length-1]];
+    // console.log(data,segmentData)
     //set up the scale we will use for plotting our scatter plot
     var xScale = d3.scale.linear()
         .domain(xRange)
@@ -118,8 +144,10 @@ function drawChart(error, data) {
     var yScale = d3.scale.linear()
     .domain(yRange)
     .range([height-(margin.top+margin.bottom),0]);
- 
 
+    var colourTimeScale = d3.time.scale()
+    .range(['#eec3c3','#8c2242'])
+    .domain(d3.extent(data,function(d,i){return d.date}));
     
     //define axes based on the scale
     var xAxis = d3.svg.axis()
@@ -137,6 +165,17 @@ function drawChart(error, data) {
                 'width': width,
                 'height': height
             });
+
+    var defs = svg.append('defs');
+
+    svg.append('marker')
+        .attr('id', 'midArrow')
+        .attr('viewBox', '-10 -10 20 20')
+        .attr('markerWidth', 15)
+        .attr('markerHeight', 15)
+        .attr('orient', 'auto')
+        .append('path')
+        .attr('d', 'M-3.75,-4.75 L 5,0 L -3.75,4.75');
     
     //title
     svg.append('text')
@@ -190,21 +229,47 @@ function drawChart(error, data) {
                 transform:'translate(' + margin.left + ',' + margin.top + ')' 
             });
 
-    var circles = plot.selectAll('circle')
-        .data(coords)
-        .enter()
-        .append('circle')
-            .attr({
-                'class':'circles',
-                'cx': function(d) { return xScale(d[0]) },
-                'cy': function(d) { return yScale(d[1]) },
-                'r': circleSize,
-                'id': function(d) { return d[2] },
-                'fill': colours[0]
-            });
+    var line = d3.svg.line()
+    .interpolate("linear")
+    .x(function(d,i){return xScale(d.debt)})
+    .y(function(d,i){return yScale(d.prod)});
+
+    var segmentHolders = plot.selectAll('g').data(segmentData).enter().append('g')
+    .attr({
+        class:'segmentHolder'
+    });
+
+    var segments = segmentHolders.append('path')
+    .attr({
+        d:function(d,i){return "M" + xScale(d.startX) + " " + yScale(d.startY) + "L" + xScale(d3.mean([d.startX,d.endX])) + " " + yScale(d3.mean([d.startY,d.endY])) + "L" + xScale(d.endX) + " " + yScale(d.endY) + ""}
+    });
+
+    var points = plot.selectAll('circle').data(data).enter().append('circle')
+    .attr({
+        class:'circles',
+        cx:function(d,i){return xScale(d.debt)},
+        cy:function(d,i){return yScale(d.prod)},
+        r:5
+    })
+    .style({
+        fill:function(d,i){return colourTimeScale(d.date)},
+        stroke:'#fff1e0',
+        'stroke-width':1
+    });
+
+    var labels = plot.selectAll('text').data(data).enter().append('text')
+    .attr({
+        x:function(d,i){
+            return xScale(d.debt)+3
+        },
+        y:function(d,i){
+            return yScale(d.prod)-3
+        }
+    })
+    .html(function(d,i){return d.date.getFullYear()});
   
     //apply the styles as attributes
-    d3.selectAll('*').attr('style','');
+    d3.selectAll('*:not(.circles):not(.segmentHolder)').attr('style','');
     Object.keys(styles).forEach(function(selector){
         d3.selectAll(selector)
             .attr(styles[selector]);
@@ -218,12 +283,6 @@ function drawChart(error, data) {
     function daydiff(a,b)   {
         return Math.round((b-a)/(1000 * 60 * 60 * 24));   
     }
-    // d3.select('g#Total')
-    //     .attr({
-    //         'transform':function(d,i){
-    //               return 'translate(0,'+((catData.length)*(maxCircle*1.5)+100)+')'
-    //           }
-    //     });
 }  
 
 </script>
