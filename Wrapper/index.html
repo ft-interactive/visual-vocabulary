@@ -35,33 +35,19 @@
         //Use the frames array to set unique values for each media type of frame
         var frames=[
         {name:"print",width:87,height:120,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint},
-        {name:"web",width:600,height:400,units:'px',margins:[{top:4,right:5,bottom:5,left:5}],stylesheet:styleweb},
+        {name:"web",width:600,height:400,units:'px',margins:[{top:10,right:5,bottom:5,left:5}],stylesheet:styleweb},
         {name:"social",width:600,height:300,units:'px',margins:[{top:0,right:10, bottom:5, left:10}],stylesheet:stylesoc},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid}
         ]
         
-        //sets the padding inside the chart area - hoping we can automate this calculation
-        var innerPaddingWeb = {
-            left:20,
-            right:10,
-            top:0,
-            bottom:40
-        }
+        //sets the padding inside the chart area
+        var chartpading=[
+        {media:"print",padding:[{top:5,right:5,bottom:5, left:3}]},
+        {media:"web",padding:[{top:5,right:5,bottom:5, left:3}]},
+        {media:"social",padding:[{top:5,right:5,bottom:5, left:3}]},
+        {media:"video",padding:[{top:5,right:5,bottom:5, left:3}]}
+        ]
         
-        var innerPaddingSocial = {
-            left:30,
-            right:14,
-            top:0,
-            bottom:26
-        }
-        
-        var innerPaddingPrint = {
-            left:6,
-            right:3,
-            top:0,
-            bottom:7
-        }
-    
         /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
         for (var i=0;i<frames.length;i++){
             var sylename=frames[i].stylesheet;
