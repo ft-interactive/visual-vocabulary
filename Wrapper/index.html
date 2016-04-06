@@ -21,9 +21,6 @@
         
     </style>
     <script src="d3.min.js"></script>
-    <script src="FTonline.js"></script>
-    <script src="FTprint.js"></script>
-    <script src="FTsocial.js"></script>
     <script src="drawFrame.js"></script>
     <script>
         
@@ -35,25 +32,12 @@
         var subtitle = "Some Units and descriptions of measure go here and will wrap onto extra lines if needed";//comment out subtitle assignment if not needed
         var source = "Sources: various bits of research|FT graphic Liz Faunce|Other lines can be added using|a vertical pipe symbol";
 
-        
-        //choose editions
-        var print = false,
-            online = false,
-            social = false
-
         var frames=[
         {name:"print",width:87,height:120,units:'mm',margins:[{top:3,right:5,left:3}],stylesheet:styleprint},
         {name:"web",width:600,height:400,units:'px',margins:[{top:4,left:5,right:5}],stylesheet:styleweb},
-        {name:"social",width:600,height:300,units:'px',margins:[{top:0,left:10,right:10}],stylesheet:stylesoc}
+        //{name:"social",width:600,height:300,units:'px',margins:[{top:0,left:10,right:10}],stylesheet:stylesoc}
         ]
         
-        //online size
-        var widthWeb = 600;
-        var heightWeb = 400;
-        var marginWeb = {
-            left:5,
-            right:5
-        }
         //sets the padding inside the chart area - hoping we can automate this calculation
         var innerPaddingWeb = {
             left:20,
@@ -62,13 +46,6 @@
             bottom:40
         }
         
-        //social media size
-        var widthSocial = 600;
-        var heightSocial = 300;
-        var marginSocial = {
-            left:10,
-            right:10
-        };
         var innerPaddingSocial = {
             left:30,
             right:14,
@@ -76,13 +53,6 @@
             bottom:26
         }
         
-        //print size - all of these sizes are in mm
-        var widthPrint = 87;
-        var heightPrint = 120;
-        var marginPrint = {
-            left:3,
-            right:3
-        }
         var innerPaddingPrint = {
             left:6,
             right:3,
@@ -118,85 +88,25 @@
 
         }
         
-        //convert print sizes
-        widthPrint = mmToPx(widthPrint);
-        heightPrint = mmToPx(heightPrint);
-        marginPrint.left = mmToPx(marginPrint.left);
-        marginPrint.right = mmToPx(marginPrint.right);
-        
         d3.csv(dataURL,function(data){
-
-            //web version
-            var chartWeb = new webFrame(styleweb,"web")
-                .width(widthWeb)
-                .height(heightWeb)
-                .margin(marginWeb)
-                .title(title)
-                .source(source)
-            //optional elements
-            if (subtitle){
-                chartWeb.subtitle(subtitle)
-            }
-            
-            //print version - all of these sizes are in mm
-            var chartPrint = new printFrame(styleprint,"print")
-                .width(widthPrint)
-                .height(heightPrint)
-                .margin(marginPrint)
-                .title(title)
-                .source(source)
-            //optional elements
-            if (subtitle){
-                chartPrint.subtitle(subtitle)
-            }
-        
-            //social media version
-            var chartSocial = new socialFrame(stylesoc,"soc")
-                .width(widthSocial)
-                .height(heightSocial)
-                .margin(marginSocial)
-                .title(title)
-                .source(source)
-
-            //optional elements
-            if (subtitle){
-                chartSocial.subtitle(subtitle)
-            }
-            
-           //call editions
-            if (online){
-                d3.select("body").call(chartWeb)
-            }
-            if (print){
-                d3.select("body").call(chartPrint);
-            }
-            if (social){
-                d3.select("body").call(chartSocial)
-            }
-
-           
             //select all charts and create things on them
             var charts = d3.selectAll(".chart");
                 
             charts.each(function(d,i){
                 
                 //get content area
-                var canvas = d3.select(this).select(".chart-canvas")
+                var canvas = d3.select(this).select(".chartholder")
 
                 console.log ("add the chart function in here")
                 
-            })
-            
+            })    
         })//end data load
         
         function mmToPx(mm){
             var px = mm*2.83464480558843;
             return px;
         }
-        
-        
-     
-        
+            
     </script>
 </body>
 </html>
