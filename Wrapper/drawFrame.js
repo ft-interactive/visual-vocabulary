@@ -86,7 +86,7 @@ function drawFrame(styles, media) {
             .attr("dy","1.1em");
         
         //now we can layout the text in right place
-        d3.select(media+"Footer").attr("y",function(){
+        d3.select("#"+media+"Footer").attr("y",function(){
             return height-d3.select(this).node().getBBox().height-5
         })
         
