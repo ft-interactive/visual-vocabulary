@@ -64,6 +64,11 @@ function webFrame(styles, media) {
             .attr("dy",0)
             .call(wrap,width - (margin.left + margin.right),margin.left);;
         
+        //add the hat!
+        header.append("path")
+            .attr("class",media+"hat")
+            .attr("d","M0,"+titleYoffset+" L0,0 "+width+",0 "+width+","+titleYoffset)
+
         var contentOffsetTop = chart.select("#header-web").node().getBBox().y + chart.select("#header-web").node().getBBox().height;
         
         //footers - source/footnote and logo
