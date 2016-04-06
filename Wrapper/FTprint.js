@@ -50,7 +50,6 @@ function printFrame(styles, media) {
         
         var subYOffset = chart.select("#header-prt").node().getBBox().y + chart.select("#header-prt").node().getBBox().height;
         
-        console.log("subtitleYoffset on print",subYOffset+subtitleYoffset)
         header.append("text")
             .attr("id","prtSubtitle")
             .attr("class", media+"subtitle")
