@@ -24,6 +24,7 @@
     <script src="FTonline.js"></script>
     <script src="FTprint.js"></script>
     <script src="FTsocial.js"></script>
+    <script src="drawFrame.js"></script>
     <script>
         
         //datafile
@@ -33,54 +34,90 @@
         var title = "Trump! It's a comedy word in Britain";
         var subtitle = "Units and descriptions of measure go here and will wrap onto extra lines if needed";//comment out subtitle assignment if not needed
         var source = "Sources: various bits of research|FT graphic Liz Faunce|Other lines can be added using|a vertical pipe symbol";
+
         
         //choose editions
         var print = true,
             online = true,
             social = true
+
+        var frames=[
+        {name:"print",width:87,height:120,units:'mm',margins:[{top:3, right:5, left:3}],stylesheet:styleprint},
+        {name:"web",width:600,height:400,units:'px',margins:[{top:4, left:5,right:5}],stylesheet:styleweb},
+        {name:"social",width:600,height:300,units:'px',margins:[{top:0,left:10,right:10}],stylesheet:stylesoc}
+        ]
         
         //online size
-        //sets the padding inside the chart area
-        var innerPaddingWeb = {
+        var widthWeb = 600;
+        var heightWeb = 400;
+        var marginWeb = {
             left:5,
-            right:5,
+            right:5
+        }
+        //sets the padding inside the chart area - hoping we can automate this calculation
+        var innerPaddingWeb = {
+            left:20,
+            right:10,
             top:0,
             bottom:40
         }
         
         //social media size
-        var widthSocial = 560;
-        var heightSocial = 750;
+        var widthSocial = 600;
+        var heightSocial = 300;
         var marginSocial = {
-            left:2,
-            right:2
-        }
-        var innerPaddingSocial = {
             left:10,
+            right:10
+        };
+        var innerPaddingSocial = {
+            left:30,
             right:14,
             top:0,
-            bottom:21
+            bottom:26
         }
         
         //print size - all of these sizes are in mm
-        var innerPaddingPrint = {
+        var widthPrint = 87;
+        var heightPrint = 120;
+        var marginPrint = {
             left:3,
+            right:3
+        }
+        var innerPaddingPrint = {
+            left:6,
             right:3,
             top:0,
             bottom:7
         }
-
-        
-        //CHART-SPECIFIC SETTINGS TO GO HERE
-        var minCircleRadius = 5;//minimum circle size - advice - you should make this zero if your data contains zeros...
-        var maxCircleRadius = 40;//maximum circle size
-        //category colours taken from FT web political spectrum...
-        var colours = [ "#6da8e1","#e25050","#ffc660","#ca6dbf","#65a68c","#9e9e9e","#99bf70","#827996","#99d2d0","#bed676"];
-        var circleLabelFormat = d3.format(",");
-        //specify any formatting you want on the key value
-        
     
         /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
+        for (var i=0;i<frames.length;i++){
+            var sylename=frames[i].stylesheet;
+            var media = frames[i].name;
+            if(frames[i].units=="mm") {
+                framewidth = mmToPx(frames[i].width);
+                frameheight = mmToPx(frames[i].height);
+            }
+            else{
+                framewidth = frames[i].width;
+                frameheight = frames[i].height;
+            }
+            var framemargin = frames[i].margins[0];
+            console.log(framemargin)
+            var frame = new drawFrame(sylename,media)
+                .width(framewidth)
+                .height(frameheight)
+                .margin(framemargin)
+                .title(title)
+                .source(source)
+            //optional elements
+            if (subtitle){
+                frame.subtitle(subtitle)
+            }
+            d3.select("body").call(frame)
+            //drawFrame
+
+        }
         
         //convert print sizes
         widthPrint = mmToPx(widthPrint);
@@ -92,12 +129,9 @@
 
             //web version
             var chartWeb = new webFrame(styleweb,"web")
-                .width(300)
-                .height(400)
-                .margin({
-                    left:5,
-                    right:5
-                })
+                .width(widthWeb)
+                .height(heightWeb)
+                .margin(marginWeb)
                 .title(title)
                 .source(source)
             //optional elements
@@ -107,12 +141,9 @@
             
             //print version - all of these sizes are in mm
             var chartPrint = new printFrame(styleprint,"print")
-                .width(53.71)
-                .height(80)
-                .margin({
-                    left:5,
-                    right:5
-                })
+                .width(widthPrint)
+                .height(heightPrint)
+                .margin(marginPrint)
                 .title(title)
                 .source(source)
             //optional elements
@@ -122,12 +153,9 @@
         
             //social media version
             var chartSocial = new socialFrame(stylesoc,"soc")
-                .width(560)
-                .height(750)
-                .margin({
-                    left:2,
-                    right:2
-                })
+                .width(widthSocial)
+                .height(heightSocial)
+                .margin(marginSocial)
                 .title(title)
                 .source(source)
 
@@ -156,94 +184,11 @@
                 //get content area
                 var canvas = d3.select(this).select(".chart-canvas")
 
-                bubbleChart(canvas,data);
+                console.log ("add the chart function in here")
                 
             })
             
         })//end data load
-        
-        
-        function bubbleChart(panel,data){
-            
-            //identify bounding space for content
-            var space = panel.select("#chart-rect");
-
-            //h and w for chart
-            var w = space.attr("width"),
-                h = space.attr("height")
-            
-            var chartType;
-            
-            var padding;
-            
-            //determine type of chart
-            if (panel.classed("web")){
-                chartType='web';
-                padding = innerPaddingWeb;
-            }   else if (panel.classed("soc")){
-                chartType='soc'
-                padding = innerPaddingSocial;
-            }   else {
-                chartType='prt';
-                padding = innerPaddingPrint;
-                padding.left = mmToPx(padding.left);
-                padding.right = mmToPx(padding.right);
-                padding.top = mmToPx(padding.top);
-                padding.bottom = mmToPx(padding.bottom);
-            }
-            
-            //parse the data
-            data.forEach(function(d){
-                d.x = +d.x;
-                d.y = +d.y;
-                d.size = +d.size;
-            })
-            
-            //work out extents and default scale
-            var xExtent = d3.extent(data,function(d){
-                return d.x;
-            })
-            var yExtent = d3.extent(data,function(d){
-                return d.y;
-            })
-            var sizeExtent = d3.extent(data,function(d){
-                return d.size;
-            })
-            
-            //comment these lines out to accept d3 default values
-            xExtent[0]=0;//set just one custom scale value - e.g. start the x axis at zero
-            yExtent=[0,70];//set both values like this
-            
-            //determine categories
-            var cats = d3.nest()
-                .key(function(d){return d.cat})
-                .entries(data)
-                .map(function(d){return d.key});
-            
-            //scales
-            var xScale=d3.scale.linear()
-                .domain(xExtent)
-                .range([padding.left,w-(padding.right)]);
-            var yScale=d3.scale.linear()
-                .domain(yExtent)
-                .range([h,0])
-            var circleScale = d3.scale.sqrt()
-                .domain(sizeExtent)
-                .range([minCircleRadius,maxCircleRadius]);
-            
-
-            //x axis
-            var xAxis = d3.svg.axis()
-                .scale(xScale)
-                .orient("bottom")
-                .ticks(4);
-            panel.append("g")
-                .attr("transform","translate(0,"+(h-padding.bottom)+")")
-                .attr("class","axis-"+chartType)
-                .call(xAxis)
-                
-        }
-        
         
         function mmToPx(mm){
             var px = mm*2.83464480558843;
@@ -251,9 +196,7 @@
         }
         
         
-        
-
-        
+     
         
     </script>
 </body>
