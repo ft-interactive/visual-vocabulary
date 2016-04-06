@@ -24,6 +24,15 @@ var stylesoc = [
 {class:"source{font-size: 14; fill: #ffffff; font-weight: 100;}"},
 {class:"logo{fill: #ffffff;}"}
 ]
+var stylevid = [
+{class:"background{fill: #dfd0bd;}"},
+{class:"titleframe{fill: #757575;}"},
+{class:"chartholder{fill: #000000;}"},
+{class:"title{font-size: 68px; fill: #ffffff; font-weight: 600;}"},
+{class:"subtitle{font-size: 48; fill: #000000; font-weight: 600;}"},
+{class:"source{font-size: 44; fill: #000000; font-weight: 600;}"},
+{class:"logo{fill: #ffffff;}"}
+]
 
 
     //Tabular with 

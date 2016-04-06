@@ -33,9 +33,10 @@
         var source = "Sources: various bits of research|FT graphic Liz Faunce|Other lines can be added using|a vertical pipe symbol";
 
         var frames=[
-        {name:"print",width:87,height:120,units:'mm',margins:[{top:3,right:5,left:3}],stylesheet:styleprint},
-        {name:"web",width:600,height:400,units:'px',margins:[{top:4,left:5,right:5}],stylesheet:styleweb},
-        //{name:"social",width:600,height:300,units:'px',margins:[{top:0,left:10,right:10}],stylesheet:stylesoc}
+        {name:"print",width:87,height:120,units:'mm',margins:[{top:3,right:5,bottom:5, left:3}],stylesheet:styleprint},
+        {name:"web",width:600,height:400,units:'px',margins:[{top:4,right:5,bottom:5,left:5}],stylesheet:styleweb},
+        {name:"social",width:600,height:300,units:'px',margins:[{top:0,right:10, bottom:5, left:10}],stylesheet:stylesoc},
+        //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:5,left:207}],stylesheet:stylevid}
         ]
         
         //sets the padding inside the chart area - hoping we can automate this calculation
