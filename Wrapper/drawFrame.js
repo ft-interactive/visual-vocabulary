@@ -97,19 +97,19 @@ function drawFrame(styles, media) {
             .append("path")
             .attr("d", "M0,16h7.6v-0.6c-0.5,0-0.9,0-1.2-0.1c-0.3,0-0.5-0.1-0.7-0.3c-0.2-0.1-0.3-0.3-0.4-0.6c-0.1-0.2-0.1-0.6-0.1-1V8.2h1.2c1.1,0,1.9,0.2,2.3,0.5c0.5,0.3,0.8,0.9,1,1.9h0.6V5H9.8C9.7,5.6,9.5,6,9.3,6.3c-0.2,0.3-0.5,0.5-1,0.6C7.9,7,7.3,7.1,6.5,7.1H5.3V2c0-0.3,0.1-0.5,0.2-0.7c0.1-0.1,0.3-0.2,0.7-0.2h2.4c0.8,0,1.4,0,1.9,0.1c0.5,0.1,0.9,0.2,1.2,0.4c0.3,0.2,0.6,0.4,0.7,0.7c0.2,0.3,0.3,0.7,0.5,1.1h0.7L13.4,0H0v0.6c0.4,0,0.8,0.1,1,0.1c0.2,0,0.4,0.1,0.6,0.3C1.8,1.1,1.9,1.3,2,1.5c0.1,0.2,0.1,0.6,0.1,1v10.9c0,0.4,0,0.8-0.1,1c-0.1,0.2-0.2,0.4-0.4,0.6c-0.2,0.1-0.4,0.2-0.6,0.3c-0.2,0-0.6,0.1-1,0.1V16z M14.2,3.5H15c0.3-0.9,0.6-1.5,1-1.8c0.4-0.4,1.1-0.5,1.9-0.5h2v12.3c0,0.4,0,0.8-0.1,1c-0.1,0.2-0.2,0.4-0.4,0.6c-0.2,0.1-0.4,0.2-0.7,0.3c-0.3,0-0.6,0.1-1.1,0.1V16h7.7v-0.6c-0.5,0-0.9,0-1.1-0.1c-0.3,0-0.5-0.1-0.7-0.3c-0.2-0.1-0.3-0.3-0.4-0.6c-0.1-0.2-0.1-0.6-0.1-1V1.2h2c0.8,0,1.5,0.2,1.9,0.5c0.4,0.4,0.8,1,1,1.8h0.8L28.5,0H14.6L14.2,3.5z");
         
-        // var footerHeight = footer.node().getBBox().height;
-        // var footerExtent = footerHeight+footer.node().getBBox().y;
-        // var footerGap = height - footerExtent;
-        // var contentHeight = height - (contentOffsetTop+footerHeight+footerGap+5)
+        var footerHeight = footer.node().getBBox().height;
+        var footerExtent = footerHeight+footer.node().getBBox().y;
+        var footerGap = height - footerExtent;
+        var contentHeight = height - (contentOffsetTop+footerHeight+footerGap+5)
         
-        // //now we can reveal the content area...by filling in the space between header and footer
-        // var canvas = chart.append("g")
-        //     .attr("class", media+"chartholder")
-        //     .attr("transform","translate("+margin.left+","+contentOffsetTop+")");
-        // canvas.append("rect")
-        //     .attr("id","chart-rect")
-        //     .attr("width", width - (margin.left + margin.right))
-        //     .attr("height", contentHeight)
+        //now we can reveal the content area...by filling in the space between header and footer
+        var canvas = chart.append("g")
+            .attr("class", media+"chartholder")
+            .attr("transform","translate("+margin.left+","+contentOffsetTop+")");
+        canvas.append("rect")
+            .attr("id","chart-rect")
+            .attr("width", width - (margin.left + margin.right))
+            .attr("height", contentHeight)
             
         
     }
@@ -163,7 +163,6 @@ return frame;
 
 //wrap text function adapted from Mike Bostock
 function wrap(text, width,x) {
-    console.log(text)
       text.each(function() {
         var text = d3.select(this),
             words = text.text().split(/\s+/).reverse(),
