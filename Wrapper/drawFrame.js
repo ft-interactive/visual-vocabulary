@@ -1,6 +1,6 @@
 'use strict';
 
-function drawFrame(styles, media) {
+function drawFrame(styles, media,titley,suby) {
     //build a string from the styles variable held on styles.js
     //Note that the media variable is placed at the begining of each
     //class to make it unique to the chart type, such as web or print
@@ -18,6 +18,8 @@ function drawFrame(styles, media) {
     
     var width = 600,
         height = 200,
+        titleYoffset = titley,
+        subtitleYoffset = suby,
         margin = {top: 50, left: 50, bottom: 50, right: 20},
         title = "Title goes here",
         subtitle,// = "Subtitle goes here",
@@ -38,13 +40,13 @@ function drawFrame(styles, media) {
             .attr("class", media+"background");
 
         if(media=="video") {
-            var tOffset=20
+            var boxOffset=20
             chart.append("rect")
             .attr("id",media+"Titlebox")
             .attr("class", media+"titleframe")
-            .attr("x", margin.left-tOffset)
+            .attr("x", margin.left-boxOffset)
             .attr("y", 73)
-            .attr("width", width-margin.left-margin.right+(tOffset*2))
+            .attr("width", width-margin.left-margin.right+(boxOffset*2))
             .attr("height", 110);
         }
         
@@ -56,29 +58,28 @@ function drawFrame(styles, media) {
             .attr("id",media+"Title")
             .attr("class", media+"title")
             .attr("x", margin.left)
+            .attr("y", titleYoffset+margin.top)
             .text(title)
             .attr("dy",0)
             .call(wrap,width - (margin.left + margin.right),margin.left);
-        
-        var titleYoffset = margin.top+chart.select("#"+media+"Title").node().getBBox().height;
-        chart.select("#"+media+"Title").attr("y",titleYoffset)
         
         header.append("text")
             .attr("id",media+"Subtitle")
             .attr("class", media+"subtitle")
             .attr("x", margin.left)
+            .attr("y", subtitleYoffset+titleYoffset+margin.top)
             .text(subtitle)
             .attr("dy",0)
             .call(wrap,width - (margin.left + margin.right),margin.left);
 
-        var subYOffset =margin.top+chart.select("#"+media+"header").node().getBBox().height;
-        chart.select("#"+media+"Subtitle").attr("y",subYOffset)
-
-        //adds the hat to the print version only
+        //adds the hat and basline to the print version only
         if(media=="print") {
             header.append("path")
             .attr("class",media+"hat")
-            .attr("d","M0,"+titleYoffset+" L0,0 "+width+",0 "+width+","+titleYoffset)
+            .attr("d","M1,"+(titleYoffset+margin.top)+" L1,0 "+(width-1)+",0 "+(width-1)+","+(titleYoffset+margin.top))
+            header.append("path")
+            // .attr("class",media+"hat")
+            // .attr("d","M1,"+height+","+(width-1)+","+height)
         };
         
         var contentOffsetTop = chart.select("#"+media+"header").node().getBBox().y + chart.select("#"+media+"header").node().getBBox().height;
@@ -108,7 +109,7 @@ function drawFrame(styles, media) {
         })
         
         //logo 
-        if(media!="print") {
+        if(media=="web" || media=="social") {
             footer.append("g")
             .attr("transform", "translate(" + (width - 30 - margin.left) + "," + (height - 16-margin.bottom) + ")")
             .attr("class", media+"logo")

@@ -32,11 +32,12 @@
         var subtitle = "Some Units and descriptions of measure go here and will wrap onto extra lines if needed";//comment out subtitle assignment if not needed
         var source = "Sources: various bits of research|FT graphic Liz Faunce";
 
+        //Use the frames array to set unique values for each media type of frame
         var frames=[
-        {name:"print",width:87,height:120,units:'mm',margins:[{top:3,right:5,bottom:5, left:3}],stylesheet:styleprint},
+        {name:"print",width:87,height:120,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint},
         {name:"web",width:600,height:400,units:'px',margins:[{top:4,right:5,bottom:5,left:5}],stylesheet:styleweb},
         {name:"social",width:600,height:300,units:'px',margins:[{top:0,right:10, bottom:5, left:10}],stylesheet:stylesoc},
-        {name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid}
+        //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid}
         ]
         
         //sets the padding inside the chart area - hoping we can automate this calculation
@@ -74,7 +75,9 @@
                 frameheight = frames[i].height;
             }
             var framemargin = frames[i].margins[0];
-            var frame = new drawFrame(sylename,media)
+            var titleYoffset=sylename.titleOffset;
+            var subYoffset=sylename.subOffset
+            var frame = new drawFrame(sylename.classes,media,titleYoffset,subYoffset)
                 .width(framewidth)
                 .height(frameheight)
                 .margin(framemargin)
