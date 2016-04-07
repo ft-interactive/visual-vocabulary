@@ -18,7 +18,7 @@ function lineChart(data,stylename,media,plotpading){
       });
     margin=margin[0].margin[0]
     var colours=stylename.linecolours;
-    var markers=false;//show circle markers on web version?
+    var markers=false;//show circle markers
     var yTicks = 4;//rough number of ticks for y axis
     var xTicks = 4;//rough number of ticks for x axis
     var ticks//=[0.2,0.3];//option to force tick values for online
@@ -86,7 +86,7 @@ function lineChart(data,stylename,media,plotpading){
         .orient("bottom");
     var yAxis = d3.svg.axis()
         .scale(yScale)
-        //.ticks(yTicks)
+        .ticks(yTicks)
         .tickValues(ticks)
         .tickSize(plotWidth)
         .orient("right")
@@ -97,7 +97,7 @@ function lineChart(data,stylename,media,plotpading){
         })   
     }
     plot.append("g").attr("class",media+"yAxis").call(yAxis);
-    plot.append("g").attr("class","xAxis")
+    plot.append("g").attr("class",media+"xAxis")
             .attr("transform",function(){
                 return "translate(0,"+plotHeight+")"
             })
@@ -107,7 +107,7 @@ function lineChart(data,stylename,media,plotpading){
     var originValue = 0;
     var origin = plot.selectAll(".tick").filter(function(d, i) {
             return d==0;
-        }).classed('origin',function(d,i){
+        }).classed(media+"origin",function(d,i){
             return (d == originValue);
         });
 
@@ -121,7 +121,7 @@ function lineChart(data,stylename,media,plotpading){
         })
         .interpolate(lineSmoothing)
 
-    var lines = plot.append("g").attr("id","webSeries").selectAll("g")
+    var lines = plot.append("g").attr("id","series").selectAll("g")
             .data(plotArrays)
             .enter()
             .append("g")
@@ -129,10 +129,22 @@ function lineChart(data,stylename,media,plotpading){
                 return seriesNames[i];  
             })
         lines.append("path")
-            .attr("class","dataLinesWeb")
+            .attr("class",media+"lines")
             .attr("stroke",function(d,i){
                 return colours[i];  
             })
             .attr('d', function(d){ return lineData(d); });
+
+     //if needed, create markers
+        if (markers){
+            lines.append("g").attr("fill",function(d,i){return colours[i]})
+                .selectAll("circle")
+                .data(function(d){return d;})
+                .enter()
+                .append("circle")
+                .attr("r",3)
+                .attr("cx",function(d){return xScale(d.date)})
+                .attr("cy",function(d){return yScale(d.val)});
+        }
 
 }

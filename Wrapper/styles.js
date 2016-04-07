@@ -9,11 +9,12 @@ var styleprint = {classes:
 {class:"hat{fill:none; stroke-width:.3px; stroke:#22190f;}"},
 {class:"xAxis{fill:none; stroke-width:.3px; stroke:#22190f;}"},
 {class:"yAxis{fill:none; stroke-width:.3px; stroke:#22190f;}"},
-{class:"origin{fill:none; stroke-width:1.0px; stroke:#000000;}"}
+{class:"origin{fill:none; stroke-width:2.0px;}"},
+{class:"lines{fill:none; stroke-width:2.0px;}"}
 ],
 titleOffset:10,
 subOffset:15,
-linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
+linecolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
 }
 
 var styleweb = {classes:
@@ -25,7 +26,8 @@ var styleweb = {classes:
 {class:"logo{fill: #dacfc5;}"},
 {class:"xAxis{fill:none; stroke-width:.3px; stroke:#22190f;}"},
 {class:"yAxis{fill:none; stroke-width:.3px; stroke:#22190f;}"},
-{class:"origin{fill:none; stroke-width:1.0px; stroke:#000000;}"}
+{class:"origin{fill:none; stroke-width: 2.5px;}"},
+{class:"lines{fill:none; stroke-width: 2.5px; stroke-linecap: round;}"}
 ],
 titleOffset:21,
 subOffset:20,
@@ -41,7 +43,8 @@ var stylesoc = {classes:
 {class:"logo{fill: #ffffff;}"},
 {class:"xAxis{fill:none; stroke-width:.3px; stroke:#22190f;}"},
 {class:"yAxis{fill:none; stroke-width:.3px; stroke:#22190f;}"},
-{class:"origin{fill:none; stroke-width:1.0px; stroke:#000000;}"}
+{class:"origin{fill:none; stroke-width:1.0px;}"},
+{class:"lines{fill:none; stroke-width:1.0px;}"}
 ],
 titleOffset:36,
 subOffset:20,
@@ -57,7 +60,8 @@ var stylevid = {classes:
 {class:"logo{fill: #ffffff;}"},
 {class:"xAxis{fill:none; stroke-width:.3px; stroke:#22190f;}"},
 {class:"yAxis{fill:none; stroke-width:.3px; stroke:#22190f;}"},
-{class:"origin{fill:none; stroke-width:3.0px; stroke:#000000;}"}
+{class:"origin{fill:none; stroke-width:3.0px;}"},
+{class:"lines{fill:none; stroke-width:1.0px;}"}
 ],
 titleOffset:68,
 subOffset:90,
