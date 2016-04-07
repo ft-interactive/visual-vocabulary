@@ -7,10 +7,13 @@ var styleprint = {classes:
 {class:"source{fill: #000000; font-size: 7.2px; font-weight: 100;}"},
 {class:"logo{fill: #dacfc5;}"},
 {class:"hat{fill:none; stroke-width:.3px; stroke:#22190f;}"},
-{class:"yaxis{fill:none; stroke-width:.3px; stroke:#22190f;}"}],
+{class:"xAxis{fill:none; stroke-width:.3px; stroke:#22190f;}"},
+{class:"yAxis{fill:none; stroke-width:.3px; stroke:#22190f;}"},
+{class:"origin{fill:none; stroke-width:1.0px; stroke:#000000;}"}
+],
 titleOffset:10,
 subOffset:15,
-colours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
+linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 }
 
 var styleweb = {classes:
@@ -20,10 +23,13 @@ var styleweb = {classes:
 {class:"subtitle{font-size:14px; fill: #6b6e68; font-weight: 100;}"},
 {class:"source{fill: #6b6e68; font-size: 11.5px; font-weight: 100;}"},
 {class:"logo{fill: #dacfc5;}"},
-{class:"yaxis{fill:none; stroke-width:.3px; stroke:#22190f;}"}],
+{class:"xAxis{fill:none; stroke-width:.3px; stroke:#22190f;}"},
+{class:"yAxis{fill:none; stroke-width:.3px; stroke:#22190f;}"},
+{class:"origin{fill:none; stroke-width:1.0px; stroke:#000000;}"}
+],
 titleOffset:21,
 subOffset:20,
-colours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
+linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 }
 
 var stylesoc = {classes:
@@ -33,10 +39,13 @@ var stylesoc = {classes:
 {class:"subtitle{font-size: 14; fill: #ffffff; font-weight: 100;}"},
 {class:"source{font-size: 14; fill: #ffffff; font-weight: 100;}"},
 {class:"logo{fill: #ffffff;}"},
-{class:"yaxis{fill:none; stroke-width:.3px; stroke:#22190f;}"}],
+{class:"xAxis{fill:none; stroke-width:.3px; stroke:#22190f;}"},
+{class:"yAxis{fill:none; stroke-width:.3px; stroke:#22190f;}"},
+{class:"origin{fill:none; stroke-width:1.0px; stroke:#000000;}"}
+],
 titleOffset:36,
 subOffset:20,
-colours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
+linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 }
 var stylevid = {classes:
 [{class:"background{fill: #dfd0bd;}"},
@@ -46,10 +55,13 @@ var stylevid = {classes:
 {class:"subtitle{font-size: 48; fill: #000000; font-weight: 600;}"},
 {class:"source{font-size: 44; fill: #000000; font-weight: 600;}"},
 {class:"logo{fill: #ffffff;}"},
-{class:"yaxis{fill:none; stroke-width:.3px; stroke:#22190f;}"}],
+{class:"xAxis{fill:none; stroke-width:.3px; stroke:#22190f;}"},
+{class:"yAxis{fill:none; stroke-width:.3px; stroke:#22190f;}"},
+{class:"origin{fill:none; stroke-width:3.0px; stroke:#000000;}"}
+],
 titleOffset:68,
 subOffset:90,
-colours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
+linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 }
 
 

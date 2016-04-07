@@ -17,7 +17,7 @@ function lineChart(data,stylename,media,plotpading){
         return (d.name === media);
       });
     margin=margin[0].margin[0]
-    var colours=stylename.colours;
+    var colours=stylename.linecolours;
     var markers=false;//show circle markers on web version?
     var yTicks = 4;//rough number of ticks for y axis
     var xTicks = 4;//rough number of ticks for x axis
@@ -96,6 +96,43 @@ function lineChart(data,stylename,media,plotpading){
             return yScale.tickFormat(1,d3.format(",d"))(d)
         })   
     }
-    plot.append("g").attr("class",media+"yaxis").call(yAxis);
+    plot.append("g").attr("class",media+"yAxis").call(yAxis);
+    plot.append("g").attr("class","xAxis")
+            .attr("transform",function(){
+                return "translate(0,"+plotHeight+")"
+            })
+            .call(xAxis);
+
+    //identify 0 line if there is one
+    var originValue = 0;
+    var origin = plot.selectAll(".tick").filter(function(d, i) {
+            return d==0;
+        }).classed('origin',function(d,i){
+            return (d == originValue);
+        });
+
+    //create a line function that can convert data[] into x and y points
+    var lineData= d3.svg.line()
+        .x(function(d,i) { 
+            return xScale(d.date); 
+        })
+        .y(function(d) { 
+            return yScale(d.val); 
+        })
+        .interpolate(lineSmoothing)
+
+    var lines = plot.append("g").attr("id","webSeries").selectAll("g")
+            .data(plotArrays)
+            .enter()
+            .append("g")
+            .attr("id",function(d,i){
+                return seriesNames[i];  
+            })
+        lines.append("path")
+            .attr("class","dataLinesWeb")
+            .attr("stroke",function(d,i){
+                return colours[i];  
+            })
+            .attr('d', function(d){ return lineData(d); });
 
 }
