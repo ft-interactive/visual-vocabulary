@@ -21,31 +21,33 @@
         
     </style>
     <script src="d3.min.js"></script>
-    <script src="drawFrame.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.js"></script>
+    --> <script src="drawFrame.js"></script>
+    <script src="line.js"></script>
     <script>
         
         //datafile
-        var dataURL = "changeme.csv"
+        var dataURL = "germany.csv"
         
         //titles, footnotes
-        var title = "Trump! It's a comedy word in Britain";
-        var subtitle = "Some Units and descriptions of measure go here and will wrap onto extra lines if needed";//comment out subtitle assignment if not needed
-        var source = "Sources: various bits of research|FT graphic Liz Faunce";
+        var title = "Political support in Germany";
+        var subtitle = "Per cent";//comment out subtitle assignment if not needed
+        var source = "Source: TNS-Emnid|FT graphic Bob Haslett";
 
         //Use the frames array to set unique values for each media type of frame
         var frames=[
-        {name:"print",width:87,height:120,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint},
-        {name:"web",width:600,height:400,units:'px',margins:[{top:10,right:5,bottom:5,left:5}],stylesheet:styleweb},
+        {name:"print",width:53.5,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint},
+        {name:"web",width:600,height:422,units:'px',margins:[{top:7,right:5,bottom:5,left:5}],stylesheet:styleweb},
         {name:"social",width:600,height:300,units:'px',margins:[{top:0,right:10, bottom:5, left:10}],stylesheet:stylesoc},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid}
         ]
         
         //sets the padding inside the chart area
         var chartpading=[
-        {media:"print",padding:[{top:5,right:5,bottom:5, left:3}]},
-        {media:"web",padding:[{top:5,right:5,bottom:5, left:3}]},
-        {media:"social",padding:[{top:5,right:5,bottom:5, left:3}]},
-        {media:"video",padding:[{top:5,right:5,bottom:5, left:3}]}
+        {name:"print",margin:[{top:5,right:20,bottom:0, left:0}]},
+        {name:"web",margin:[{top:5,right:20,bottom:5, left:0}]},
+        {name:"social",margin:[{top:0,right:25,bottom:5, left:0}]},
+        {name:"video",margin:[{top:5,right:5,bottom:5, left:3}]}
         ]
         
         /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
@@ -78,18 +80,33 @@
 
         }
         
-        d3.csv(dataURL,function(data){
-            //select all charts and create things on them
-            var charts = d3.selectAll(".chart");
-                
-            charts.each(function(d,i){
-                
-                //get content area
-                var canvas = d3.select(this).select(".chartholder")
+        d3.csv(dataURL,function(error, data){
+            //date formatter, matching the format of the incoming csv...
+            //var parseDate = d3.time.format("%Y %b").parse;
+            //var parseDate = d3.time.format("%Y").parse;//just full year
+            var parseDate = d3.time.format("%d.%m.%Y").parse;
+            /*
+            some common formatting parsers....
+            d3.time.format("%Y %b") 1986 Jan
+            d3.time.format("%d-%b-%y")  28-Jan-86
+            d3.time.format("%Y-%m-%d")  1986-01-28
+            d3.time.format("%m/%d/%Y")  01/28/1986
+            d3.time.format("%H:%M") 11:39
+            d3.time.format("%H:%M %p")  11:39 AM
+            d3.time.format("%B %d") January 28
+            d3.time.format("%d %b") 28 Jan
+             */
 
-                console.log ("add the chart function in here")
-                
-            })    
+            //parse the data
+            data.forEach(function(d) {
+                d.date=parseDate(d.date);
+            });
+
+            for (var i=0;i<frames.length;i++){
+                var stylename=frames[i].stylesheet;
+                var media = frames[i].name;
+                lineChart(data, stylename, media, chartpading);
+            }   
         })//end data load
         
         function mmToPx(mm){

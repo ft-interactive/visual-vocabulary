@@ -30,6 +30,7 @@ function drawFrame(styles, media,titley,suby) {
         
         var chart = p.append("svg")
             .attr("id",media+"chart")
+            .attr("class","chart")
             .attr("width", width)
             .attr("height", height)
             .attr("viewBox", "0 0 " + width + " " + height);
@@ -123,11 +124,12 @@ function drawFrame(styles, media,titley,suby) {
         var contentHeight = height - (contentOffsetTop+footerHeight+footerGap+5)
         
         //now we can reveal the content area...by filling in the space between header and footer
-        var canvas = chart.append("g")
+        var plot = chart.append("g")
             .attr("class", media+"chartholder")
+            .attr("id", media+"plot")
             .attr("transform","translate("+margin.left+","+contentOffsetTop+")");
-        canvas.append("rect")
-            .attr("id","chart-rect")
+        plot.append("rect")
+            .attr("id",media+"Chart")
             .attr("width", width - (margin.left + margin.right))
             .attr("height", contentHeight)
             
@@ -183,25 +185,25 @@ return frame;
 
 //wrap text function adapted from Mike Bostock
 function wrap(text, width,x) {
-      text.each(function() {
+    text.each(function() {
         var text = d3.select(this),
-            words = text.text().split(/\s+/).reverse(),
-            word,
-            line = [],
-            lineNumber = 0,
-            lineHeight = 1.1,
-            y = text.attr("y"),
-            dy = parseFloat(text.attr("dy")),
-            tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
+        words = text.text().split(/\s+/).reverse(),
+        word,
+        line = [],
+        lineNumber = 0,
+        lineHeight = 1.1,
+        y = text.attr("y"),
+        dy = parseFloat(text.attr("dy")),
+        tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
         while (word = words.pop()) {
-          line.push(word);
-          tspan.text(line.join(" "));
-          if (tspan.node().getComputedTextLength() > width) {
-            line.pop();
+            line.push(word);
             tspan.text(line.join(" "));
-            line = [word];
-            tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy",++lineNumber * lineHeight + dy + "em").text(word);
-          }
+            if (tspan.node().getComputedTextLength() > width) {
+                line.pop();
+                tspan.text(line.join(" "));
+                line = [word];
+                tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy",++lineNumber * lineHeight + dy + "em").text(word);
+            }
         }
-      });
+    });
 }
