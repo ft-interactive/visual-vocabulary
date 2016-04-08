@@ -1,9 +1,12 @@
-function lineChart(data,stylename,media,plotpadding){
+function lineChart(data,stylename,media,plotpadding,legAlign){
 
 	//graph options
     var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
     var logScale=false;
     var logScaleStart=1000;
+
+    // return the series names from the first row of the spreadsheet
+    var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
 
     //Select the plot space in the frame from which to take measurements
     var plot=d3.select("#"+media+"plot")
@@ -18,19 +21,16 @@ function lineChart(data,stylename,media,plotpadding){
     var colours=stylename.linecolours;
     var markers=false;//show circle markers
     var numTicksy = 5;//rough number of ticks for y axis
-    var numTicksx = 26;//rough number of ticks for x axis
+    var numTicksx = 46;//rough number of ticks for x axis
     var ticks//=[0.2,0.3];//option to force tick values for online
-
-    // return the series names from the first row of the spreadsheet
-    var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
 
     //calculate range of time series
     var xDomain = d3.extent(data, function(d) {return d.date;});
     var yDomain;
 
     //calculate range of y axis series data
-    var min=40;
-    var max=120;
+    var min=0;
+    var max=0.4;
     data.forEach(function(d,i){
         seriesNames.forEach(function(e){
             if (d[e]){
@@ -156,5 +156,53 @@ function lineChart(data,stylename,media,plotpadding){
             .attr("cx",function(d){return xScale(d.date)})
             .attr("cy",function(d){return yScale(d.val)});
     }
+
+    //create a legend first
+    var compoundWidth=0
+    var legend = plot.append("g")
+        .attr("id","legend")
+        .selectAll("g")
+        .data(seriesNames)
+        .enter()
+        .append("g")
+        .attr ("id",function(d,i){
+            return media+"l"+i
+        })
+        
+    legend.append("text")
+            .attr("id",function(d,i){
+                return media+"t"+i
+            })
+            .attr("x",25)
+            .attr("y",10)
+            .attr("class",media+"subtitle")
+            .text(function(d){
+                return d;
+            })
+    legend.append("line")
+            .attr("stroke",function(d,i){
+                return colours[i];  
+            })
+            .attr("x1",0)
+            .attr("x2",20)
+            .attr("y1",5)
+            .attr("y2",5)
+            .attr("class",media+"lines")
+
+    legend.attr("transform",function(d,i){
+        console.log(media)
+        if (legAlign=='hori') {
+            if (i>0) {
+                var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width
+            }
+            else {gWidth=0};
+            console.log("gWidth", gWidth); 
+            compoundWidth=compoundWidth+gWidth+20 
+            return "translate("+(compoundWidth)+",0)";  
+        }
+        else {return "translate(0,"+(i*15)+")"};
+    })
+
+
 
 }
