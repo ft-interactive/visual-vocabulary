@@ -9,6 +9,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign){
     var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
 
     //Select the plot space in the frame from which to take measurements
+    var frame=d3.select("#"+media+"chart")
     var plot=d3.select("#"+media+"plot")
     
     //Get the width,height and the marginins unique to this plot
@@ -159,14 +160,8 @@ function lineChart(data,stylename,media,plotpadding,legAlign){
 
     //create a legend first
     var legendyOffset=0
-    var legend = plot.append("g")
-        .attr("id","legend")
-        .attr("transform",function(){
-            var x=d3.select("#"+media+"Subtitle").node().getBBox().width
-            var y=d3.select("#"+media+"Subtitle").node().getBBox().height
-            console.log(x,y)
-        return "translate("+(x+20)+","+(-y)+")"
-        })
+    var legend = frame.append("g")
+        .attr("id",media+"legend")
         .selectAll("g")
         .data(seriesNames)
         .enter()
@@ -206,6 +201,13 @@ function lineChart(data,stylename,media,plotpadding,legAlign){
         }
         else {return "translate(0,"+(i*15)+")"};
     })
+    d3.select("#"+media+"legend")
+        .attr("transform",function(){
+            var x=d3.select("#"+media+"Subtitle").node().getBBox().width+plot.node().getBBox().x
+            var y=d3.select("#"+media+"Subtitle").node().getBBox().height
+            console.log(x,y)
+            return "translate("+(x+20+margin.left)+","+(margin.top+y)+")"
+        })
 
 
 
