@@ -1,4 +1,4 @@
-function lineChart(data,stylename,media,plotpading){
+function lineChart(data,stylename,media,plotpadding){
 
 	//graph options
     var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
@@ -11,7 +11,7 @@ function lineChart(data,stylename,media,plotpading){
     //Get the width,height and the marginins unique to this plot
     var w=plot.node().getBBox().width;
     var h=plot.node().getBBox().height;
-    var margin=plotpading.filter(function(d){
+    var margin=plotpadding.filter(function(d){
         return (d.name === media);
       });
     margin=margin[0].margin[0]
@@ -120,7 +120,7 @@ function lineChart(data,stylename,media,plotpading){
             return xScale(d.date); 
         })
         .y(function(d) { 
-            return yScale(d.val); 
+            return yScale(d.val)+margin.top; 
         })
         .interpolate(lineSmoothing)
 
