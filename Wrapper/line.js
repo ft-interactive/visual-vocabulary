@@ -7,20 +7,18 @@ function lineChart(data,stylename,media,plotpading){
 
     //Select the plot space in the frame from which to take measurements
     var plot=d3.select("#"+media+"plot")
-    console.log(plot)
     
     //Get the width,height and the marginins unique to this plot
     var w=plot.node().getBBox().width;
     var h=plot.node().getBBox().height;
-    console.log(w,h)
     var margin=plotpading.filter(function(d){
         return (d.name === media);
       });
     margin=margin[0].margin[0]
     var colours=stylename.linecolours;
     var markers=false;//show circle markers
-    var yTicks = 4;//rough number of ticks for y axis
-    var xTicks = 4;//rough number of ticks for x axis
+    var numTicksy = 5;//rough number of ticks for y axis
+    var numTicksx = 26;//rough number of ticks for x axis
     var ticks//=[0.2,0.3];//option to force tick values for online
 
     // return the series names from the first row of the spreadsheet
@@ -31,8 +29,8 @@ function lineChart(data,stylename,media,plotpading){
     var yDomain;
 
     //calculate range of y axis series data
-    var min=0;
-    var max=0;
+    var min=40;
+    var max=120;
     data.forEach(function(d,i){
         seriesNames.forEach(function(e){
             if (d[e]){
@@ -66,7 +64,7 @@ function lineChart(data,stylename,media,plotpading){
     var plotHeight = h-(margin.top+margin.bottom);
     var xScale = d3.time.scale()
         .domain(xDomain)
-        .range([0,plotWidth])
+        .range([margin.left,plotWidth])
 
     var yScale;
         if (logScale) {
@@ -82,13 +80,14 @@ function lineChart(data,stylename,media,plotpading){
 		}
 	var xAxis = d3.svg.axis()
         .scale(xScale)
-        //.ticks(xTicks)
+        .tickSize(margin.bottom/3)
+        .ticks(numTicksx)
         .orient("bottom");
     var yAxis = d3.svg.axis()
         .scale(yScale)
-        .ticks(yTicks)
+        .ticks(numTicksy)
         .tickValues(ticks)
-        .tickSize(plotWidth)
+        .tickSize(w-margin.left)
         .orient("right")
 
     if (logScale){
@@ -96,20 +95,24 @@ function lineChart(data,stylename,media,plotpading){
             return yScale.tickFormat(1,d3.format(",d"))(d)
         })   
     }
-    plot.append("g").attr("class",media+"yAxis").call(yAxis);
-    plot.append("g").attr("class",media+"xAxis")
-            .attr("transform",function(){
-                return "translate(0,"+plotHeight+")"
-            })
-            .call(xAxis);
+    var ytext=plot.append("g")
+    .attr("class",media+"yAxis")
+    .attr("transform",function(){
+        return "translate("+margin.left+","+margin.top+")"
+        })
+    .call(yAxis);
 
-    //identify 0 line if there is one
-    var originValue = 0;
-    var origin = plot.selectAll(".tick").filter(function(d, i) {
-            return d==0;
-        }).classed(media+"origin",function(d,i){
-            return (d == originValue);
-        });
+    var xtext=plot.append("g")
+    .attr("class",media+"xAxis")
+    .attr("transform",function(){
+        return "translate(0,"+(h-margin.bottom)+")"
+        })
+    .call(xAxis);
+
+    ytext.selectAll("text")
+    .attr("dy", -4)
+    .style("text-anchor", "end")
+
 
     //create a line function that can convert data[] into x and y points
     var lineData= d3.svg.line()
@@ -120,6 +123,12 @@ function lineChart(data,stylename,media,plotpading){
             return yScale(d.val); 
         })
         .interpolate(lineSmoothing)
+
+    //identify 0 line if there is one
+    var originValue = 0;
+    var origin = plot.selectAll(".tick").filter(function(d, i) {
+            return d==0;
+        }).classed(media+"origin",true);
 
     var lines = plot.append("g").attr("id","series").selectAll("g")
             .data(plotArrays)
@@ -135,16 +144,17 @@ function lineChart(data,stylename,media,plotpading){
             })
             .attr('d', function(d){ return lineData(d); });
 
-     //if needed, create markers
-        if (markers){
-            lines.append("g").attr("fill",function(d,i){return colours[i]})
-                .selectAll("circle")
-                .data(function(d){return d;})
-                .enter()
-                .append("circle")
-                .attr("r",3)
-                .attr("cx",function(d){return xScale(d.date)})
-                .attr("cy",function(d){return yScale(d.val)});
-        }
+
+    //if needed, create markers
+    if (markers){
+        lines.append("g").attr("fill",function(d,i){return colours[i]})
+            .selectAll("circle")
+            .data(function(d){return d;})
+            .enter()
+            .append("circle")
+            .attr("r",3)
+            .attr("cx",function(d){return xScale(d.date)})
+            .attr("cy",function(d){return yScale(d.val)});
+    }
 
 }

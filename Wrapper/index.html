@@ -6,48 +6,34 @@
 <body>
     <style>
         text{font-family:metric}
-        
-        .axis-web path{fill:none;}
-        .axis-web text{fill:#111}
-        .axis-web line{fill:none;stroke:#111;stroke-width:1px}
-        
-        .axis-soc path{fill:none;}
-        .axis-soc text{fill:#fff}
-        .axis-soc line{fill:none;stroke:#fff;stroke-width:1px}
-        
-        .axis-prt path{fill:none;}
-        .axis-prt text{fill:#111}
-        .axis-prt line{fill:none;stroke:#111;stroke-width:1px}
-        
     </style>
     <script src="d3.min.js"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.js"></script>
-    --> <script src="drawFrame.js"></script>
+    <script src="drawFrame.js"></script>
     <script src="line.js"></script>
     <script>
         
         //datafile
-        var dataURL = "germany.csv"
+        var dataURL = "russia.csv"
         
         //titles, footnotes
-        var title = "Political support in Germany";
-        var subtitle = "Per cent";//comment out subtitle assignment if not needed
-        var source = "Source: TNS-Emnid|FT graphic Bob Haslett";
+        var title = "Ethanol and crude prices";
+        var subtitle = "$ per barrel";//comment out subtitle assignment if not needed
+        var source = "Source: Bloomberg|FT graphic Bob Haslett";
 
         //Use the frames array to set unique values for each media type of frame
         var frames=[
-        {name:"print",width:53.5,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint},
-        {name:"web",width:600,height:422,units:'px',margins:[{top:7,right:35,bottom:5,left:5}],stylesheet:styleweb},
-        {name:"social",width:600,height:300,units:'px',margins:[{top:0,right:10, bottom:5, left:10}],stylesheet:stylesoc},
+        {name:"print",width:53.5,height:68,units:'mm',margins:[{top:5,right:3,bottom:5, left:3}],stylesheet:styleprint},
+        {name:"web",width:600,height:422,units:'px',margins:[{top:7,right:40,bottom:5,left:10}],stylesheet:styleweb},
+        {name:"social",width:600,height:300,units:'px',margins:[{top:0,right:40, bottom:5, left:10}],stylesheet:stylesoc},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid}
         ]
         
         //sets the padding inside the chart area
         var chartpading=[
-        {name:"print",margin:[{top:5,right:20,bottom:0, left:0}]},
-        {name:"web",margin:[{top:5,right:20,bottom:5, left:0}]},
-        {name:"social",margin:[{top:0,right:25,bottom:5, left:0}]},
-        {name:"video",margin:[{top:5,right:5,bottom:5, left:3}]}
+        {name:"print",margin:[{top:5,right:20,bottom:15, left:10}]},
+        {name:"web",margin:[{top:14,right:20,bottom:20, left:15}]},
+        {name:"social",margin:[{top:0,right:20,bottom:27, left:15}]},
+        {name:"video",margin:[{top:5,right:5,bottom:25, left:3}]}
         ]
         
         /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
@@ -84,7 +70,7 @@
             //date formatter, matching the format of the incoming csv...
             //var parseDate = d3.time.format("%Y %b").parse;
             //var parseDate = d3.time.format("%Y").parse;//just full year
-            var parseDate = d3.time.format("%d.%m.%Y").parse;
+            var parseDate = d3.time.format("%Y").parse;
             /*
             some common formatting parsers....
             d3.time.format("%Y %b") 1986 Jan
