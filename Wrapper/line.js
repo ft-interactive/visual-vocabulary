@@ -193,11 +193,11 @@ function lineChart(data,stylename,media,plotpadding,legAlign){
         console.log(media)
         if (legAlign=='hori') {
             if (i>0) {
-                var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width
+                var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+20 
             }
             else {gWidth=0};
             console.log("gWidth", gWidth); 
-            compoundWidth=compoundWidth+gWidth+20 
+            compoundWidth=compoundWidth+gWidth
             return "translate("+(compoundWidth)+",0)";  
         }
         else {return "translate(0,"+(i*15)+")"};
