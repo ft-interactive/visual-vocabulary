@@ -158,9 +158,15 @@ function lineChart(data,stylename,media,plotpadding,legAlign){
     }
 
     //create a legend first
-    var compoundWidth=0
+    var legendyOffset=0
     var legend = plot.append("g")
         .attr("id","legend")
+        .attr("transform",function(){
+            var x=d3.select("#"+media+"Subtitle").node().getBBox().width
+            var y=d3.select("#"+media+"Subtitle").node().getBBox().height
+            console.log(x,y)
+        return "translate("+(x+20)+","+(-y)+")"
+        })
         .selectAll("g")
         .data(seriesNames)
         .enter()
@@ -190,15 +196,13 @@ function lineChart(data,stylename,media,plotpadding,legAlign){
             .attr("class",media+"lines")
 
     legend.attr("transform",function(d,i){
-        console.log(media)
         if (legAlign=='hori') {
             if (i>0) {
-                var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+20 
+                var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15 
             }
             else {gWidth=0};
-            console.log("gWidth", gWidth); 
-            compoundWidth=compoundWidth+gWidth
-            return "translate("+(compoundWidth)+",0)";  
+            legendyOffset=legendyOffset+gWidth;
+            return "translate("+(legendyOffset)+",0)";  
         }
         else {return "translate(0,"+(i*15)+")"};
     })

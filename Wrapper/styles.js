@@ -6,7 +6,7 @@ var styleprint = {classes:
 {class:"subtitle{font-size:9.6px; fill: #000000; font-weight: 200;}"},
 {class:"source{fill: #000000; font-size: 7.2px; font-weight: 200;}"},
 {class:"logo{fill: #dacfc5;}"},
-{class:"hat{fill:none; stroke-width:.3px; stroke:#22190f;}"},
+{class:"hat{fill:none; stroke-width:1.0px; stroke:#22190f;}"},
 {class:"xAxis{fill:none; stroke-width:0px; stroke:none;}"},
 {class:"xAxis line{fill:none; stroke-width:.3px; stroke:#000000;}"},
 {class:"xAxis text{fill:#000000; font-size: 9.6px;}"},
@@ -18,11 +18,12 @@ var styleprint = {classes:
 ],
 titleOffset:10,
 subOffset:15,
+legendyOffset:0,
 linecolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
 }
 
 var styleweb = {classes:
-[{class:"background{fill: #fff1e0;}"},
+[{class:"background{fill: none}"},
 {class:"chartholder{fill: #ffffff;}"},
 {class:"title{font-size:21px; fill: #3b3d3b; font-weight: 100;}"},
 {class:"subtitle{font-size:14px; fill: #6b6e68; font-weight: 100;}"},
@@ -39,6 +40,7 @@ var styleweb = {classes:
 ],
 titleOffset:21,
 subOffset:20,
+legendyOffset:0,
 linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 }
 
@@ -60,6 +62,7 @@ var stylesoc = {classes:
 ],
 titleOffset:36,
 subOffset:20,
+legendyOffset:0,
 linecolours:["#ffffff","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 }
 var stylevid = {classes:
@@ -81,6 +84,7 @@ var stylevid = {classes:
 ],
 titleOffset:68,
 subOffset:90,
+legendyOffset:15,
 linecolours:["#b34b41","#5a8caf","#9baa6e","#eda45e","#9c5f87","#486ba0"]
 }
 

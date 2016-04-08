@@ -72,6 +72,7 @@ function drawFrame(styles, media,titley,suby) {
             .text(subtitle)
             .attr("dy",0)
             .call(wrap,width - (margin.left + margin.right),margin.left);
+        console.log("subtitle y=",subtitleYoffset+titleYoffset+margin.top)
 
         //adds the hat and basline to the print version only
         if(media=="print") {
@@ -103,11 +104,11 @@ function drawFrame(styles, media,titley,suby) {
             })
             .attr("x",margin.left)
             .attr("dy","1.1em");
-        
         //now we can layout the text in right place
-        d3.select("#"+media+"Footer").attr("y",function(){
+        d3.select("#"+media+"Footer")
+            .attr("y",function(){
             return height-d3.select(this).node().getBBox().height-margin.bottom
-        })
+            })
         
         //logo 
         if(media=="web" || media=="social") {
