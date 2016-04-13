@@ -72,7 +72,6 @@ function drawFrame(styles, media,titley,suby) {
             .text(subtitle)
             .attr("dy",0)
             .call(wrap,width - (margin.left + margin.right),margin.left);
-        console.log("subtitle y=",subtitleYoffset+titleYoffset+margin.top)
 
         //adds the hat and basline to the print version only
         if(media=="print") {

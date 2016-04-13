@@ -23,7 +23,7 @@ linecolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
 }
 
 var styleweb = {classes:
-[{class:"background{fill: none}"},
+[{class:"background{fill: #fff1e0}"},
 {class:"chartholder{fill: #ffffff;}"},
 {class:"title{font-size:21px; fill: #3b3d3b; font-weight: 100;}"},
 {class:"subtitle{font-size:14px; fill: #6b6e68; font-weight: 100;}"},
@@ -48,8 +48,8 @@ var stylesoc = {classes:
 [{class:"background{fill: #343334;}"},
 {class:"chartholder{fill: #4d4d4f;}"},
 {class:"title{font-size: 24px; fill: #ffffff; font-weight: 100;}"},
-{class:"subtitle{font-size: 18; fill: #ffffff; font-weight: 100;}"},
-{class:"source{font-size: 18; fill: #ffffff; font-weight: 100;}"},
+{class:"subtitle{font-size: 18px; fill: #ffffff; font-weight: 100; line-height: 18px;}"},
+{class:"source{font-size: 18px; fill: #ffffff; font-weight: 100;}"},
 {class:"logo{fill: #ffffff;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
 {class:"xAxis line{fill:none; stroke-width: 1.5px; stroke:#ffffff;}"},

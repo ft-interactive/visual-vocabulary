@@ -4,6 +4,9 @@ function lineChart(data,stylename,media,plotpadding,legAlign){
     var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
     var logScale=false;
     var logScaleStart=1000;
+    var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
+    var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height
+
 
     // return the series names from the first row of the spreadsheet
     var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
@@ -160,7 +163,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign){
 
     //create a legend first
     var legendyOffset=0
-    var legend = frame.append("g")
+    var legend = plot.append("g")
         .attr("id",media+"legend")
         .selectAll("g")
         .data(seriesNames)
@@ -169,6 +172,9 @@ function lineChart(data,stylename,media,plotpadding,legAlign){
         .attr ("id",function(d,i){
             return media+"l"+i
         })
+
+    var drag = d3.behavior.drag().on("drag", moveLegend);
+    d3.select("#"+media+"legend").call(drag);
         
     legend.append("text")
             .attr("id",function(d,i){
@@ -201,13 +207,15 @@ function lineChart(data,stylename,media,plotpadding,legAlign){
         }
         else {return "translate(0,"+(i*15)+")"};
     })
-    d3.select("#"+media+"legend")
-        .attr("transform",function(){
-            var x=d3.select("#"+media+"Subtitle").node().getBBox().width+plot.node().getBBox().x
-            var y=d3.select("#"+media+"Subtitle").node().getBBox().height
-            console.log(x,y)
-            return "translate("+(x+20+margin.left)+","+(margin.top+y)+")"
-        })
+
+    function moveLegend() {
+        var dX = d3.event.x; // subtract cx
+        var dY = d3.event.y; // subtract cy
+        d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");
+
+    }
+
+
 
 
 
