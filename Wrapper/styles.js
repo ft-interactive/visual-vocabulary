@@ -1,7 +1,7 @@
 
 var styleprint = {classes:
 [{class:"background{fill: none}"},
-{class:"chartholder{fill: #e6e7e8}"},
+{class:"chartholder{fill: none}"},
 {class:"title{font-size:12px; fill: #000000; font-weight: 600;}"},
 {class:"subtitle{font-size:9.6px; fill: #000000; font-weight: 200;}"},
 {class:"source{fill: #000000; font-size: 7.2px; font-weight: 200;}"},
@@ -11,9 +11,9 @@ var styleprint = {classes:
 {class:"xAxis line{fill:none; stroke-width:.3px; stroke:#000000;}"},
 {class:"xAxis text{fill:#000000; font-size: 9.6px;}"},
 {class:"yAxis{fill:none; stroke-width:0px; stroke:none;}"},
-{class:"yAxis line{fill:none; stroke-width:.3px; stroke:#22190f;}"},
+{class:"yAxis line{fill:none; stroke-width:0.3px; stroke:#22190f;}"},
 {class:"yAxis text{fill:#000000; font-size: 9.6px; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
-{class:"origin{fill:none; stroke-width:2.0px;}"},
+{class:"origin line{fill:none; stroke-width:0.6px;}"},
 {class:"lines{fill:none; stroke-width:2.0px;stroke-linecap: round;}"}
 ],
 titleOffset:10,
@@ -23,7 +23,7 @@ linecolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
 }
 
 var styleweb = {classes:
-[{class:"background{fill: #fff1e0}"},
+[{class:"background{fill: none}"},
 {class:"chartholder{fill: #ffffff;}"},
 {class:"title{font-size:21px; fill: #3b3d3b; font-weight: 100;}"},
 {class:"subtitle{font-size:14px; fill: #6b6e68; font-weight: 100;}"},

@@ -1,4 +1,4 @@
-function lineChart(data,stylename,media,plotpadding,legAlign){
+function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight){
 
 	//graph options
     var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
@@ -25,7 +25,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign){
     var colours=stylename.linecolours;
     var markers=false;//show circle markers
     var numTicksy = 5;//rough number of ticks for y axis
-    var numTicksx = 46;//rough number of ticks for x axis
+    var numTicksx = 10;//rough number of ticks for x axis
     var ticks//=[0.2,0.3];//option to force tick values for online
 
     //calculate range of time series
@@ -33,8 +33,8 @@ function lineChart(data,stylename,media,plotpadding,legAlign){
     var yDomain;
 
     //calculate range of y axis series data
-    var min=0;
-    var max=0.4;
+    var min=80;
+    var max=120;
     data.forEach(function(d,i){
         seriesNames.forEach(function(e){
             if (d[e]){
@@ -129,9 +129,10 @@ function lineChart(data,stylename,media,plotpadding,legAlign){
         .interpolate(lineSmoothing)
 
     //identify 0 line if there is one
-    var originValue = 0;
+    var originValue = 80;
+    console.log(yHighlight)
     var origin = plot.selectAll(".tick").filter(function(d, i) {
-            return d==0;
+            return d==originValue || d==yHighlight;
         }).classed(media+"origin",true);
 
     var lines = plot.append("g").attr("id","series").selectAll("g")
@@ -177,24 +178,25 @@ function lineChart(data,stylename,media,plotpadding,legAlign){
     d3.select("#"+media+"legend").call(drag);
         
     legend.append("text")
-            .attr("id",function(d,i){
-                return media+"t"+i
-            })
-            .attr("x",25)
-            .attr("y",10)
-            .attr("class",media+"subtitle")
-            .text(function(d){
-                return d;
-            })
+
+        .attr("id",function(d,i){
+            return media+"t"+i
+        })
+        .attr("x",25)
+        .attr("y",10)
+        .attr("class",media+"subtitle")
+        .text(function(d){
+            return d;
+        })
     legend.append("line")
-            .attr("stroke",function(d,i){
-                return colours[i];  
-            })
-            .attr("x1",0)
-            .attr("x2",20)
-            .attr("y1",5)
-            .attr("y2",5)
-            .attr("class",media+"lines")
+        .attr("stroke",function(d,i){
+            return colours[i];  
+        })
+        .attr("x1",0)
+        .attr("x2",20)
+        .attr("y1",5)
+        .attr("y2",5)
+        .attr("class",media+"lines")
 
     legend.attr("transform",function(d,i){
         if (legAlign=='hori') {
@@ -209,6 +211,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign){
     })
 
     function moveLegend() {
+        this.style.cursor='pointer'
         var dX = d3.event.x; // subtract cx
         var dY = d3.event.y; // subtract cy
         d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");

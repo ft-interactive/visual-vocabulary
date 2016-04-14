@@ -78,9 +78,9 @@ function drawFrame(styles, media,titley,suby) {
             header.append("path")
             .attr("class",media+"hat")
             .attr("d","M1,"+(titleYoffset+margin.top)+" L1,0 "+(width-1)+",0 "+(width-1)+","+(titleYoffset+margin.top))
-            header.append("path")
-            // .attr("class",media+"hat")
-            // .attr("d","M1,"+height+","+(width-1)+","+height)
+            chart.append("path")
+            .attr("class",media+"hat")
+            .attr("d","M1,"+(height)+" L"+(width-1)+","+(width-1)+"")
         };
         
         var contentOffsetTop = chart.select("#"+media+"header").node().getBBox().y + chart.select("#"+media+"header").node().getBBox().height;
