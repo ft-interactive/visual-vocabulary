@@ -6,90 +6,37 @@
 <body>
     <style>
         text{font-family:metric}
-        
-        .axis-web path{fill:none;}
-        .axis-web text{fill:#111}
-        .axis-web line{fill:none;stroke:#111;stroke-width:1px}
-        
-        .axis-soc path{fill:none;}
-        .axis-soc text{fill:#fff}
-        .axis-soc line{fill:none;stroke:#fff;stroke-width:1px}
-        
-        .axis-prt path{fill:none;}
-        .axis-prt text{fill:#111}
-        .axis-prt line{fill:none;stroke:#111;stroke-width:1px}
-        
     </style>
     <script src="d3.min.js"></script>
-    <script src="FTonline.js"></script>
-    <script src="FTprint.js"></script>
-    <script src="FTsocial.js"></script>
     <script src="drawFrame.js"></script>
+    <script src="line.js"></script>
     <script>
         
         //datafile
-        var dataURL = "changeme.csv"
+        var dataURL = "2lines.csv"
         
         //titles, footnotes
-        var title = "Trump! It's a comedy word in Britain";
-        var subtitle = "Units and descriptions of measure go here and will wrap onto extra lines if needed";//comment out subtitle assignment if not needed
-        var source = "Sources: various bits of research|FT graphic Liz Faunce|Other lines can be added using|a vertical pipe symbol";
+        var title = "European IPO market";
+        var subtitle = "$ per barrel";//comment out subtitle assignment if not needed
+        var source = "Source: PwC|FT graphic Bob Haslett";
+        var yHighlight=100
 
-        
-        //choose editions
-        var print = true,
-            online = true,
-            social = true
-
+        //Use the frames array to set unique values for each media type of frame
         var frames=[
-        {name:"print",width:87,height:120,units:'mm',margins:[{top:3, right:5, left:3}],stylesheet:styleprint},
-        {name:"web",width:600,height:400,units:'px',margins:[{top:4, left:5,right:5}],stylesheet:styleweb},
-        {name:"social",width:600,height:300,units:'px',margins:[{top:0,left:10,right:10}],stylesheet:stylesoc}
+        {name:"print",width:53.5,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert"},
+        {name:"web",width:600,height:422,units:'px',margins:[{top:10,right:40,bottom:5,left:10}],stylesheet:styleweb,legend:"hori"},
+        {name:"social",width:600,height:300,units:'px',margins:[{top:0,right:40, bottom:5, left:10}],stylesheet:stylesoc,legend:"vert"},
+        //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori"}
         ]
         
-        //online size
-        var widthWeb = 600;
-        var heightWeb = 400;
-        var marginWeb = {
-            left:5,
-            right:5
-        }
-        //sets the padding inside the chart area - hoping we can automate this calculation
-        var innerPaddingWeb = {
-            left:20,
-            right:10,
-            top:0,
-            bottom:40
-        }
+        //sets the padding inside the chart area
+        var chartpadding=[
+        {name:"print",margin:[{top:10,right:10,bottom:15, left:7}]},
+        {name:"web",margin:[{top:14,right:20,bottom:20, left:15}]},
+        {name:"social",margin:[{top:14,right:20,bottom:27, left:15}]},
+        {name:"video",margin:[{top:55,right:35,bottom:68, left:42}]}
+        ]
         
-        //social media size
-        var widthSocial = 600;
-        var heightSocial = 300;
-        var marginSocial = {
-            left:10,
-            right:10
-        };
-        var innerPaddingSocial = {
-            left:30,
-            right:14,
-            top:0,
-            bottom:26
-        }
-        
-        //print size - all of these sizes are in mm
-        var widthPrint = 87;
-        var heightPrint = 120;
-        var marginPrint = {
-            left:3,
-            right:3
-        }
-        var innerPaddingPrint = {
-            left:6,
-            right:3,
-            top:0,
-            bottom:7
-        }
-    
         /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
         for (var i=0;i<frames.length;i++){
             var sylename=frames[i].stylesheet;
@@ -103,8 +50,9 @@
                 frameheight = frames[i].height;
             }
             var framemargin = frames[i].margins[0];
-            console.log(framemargin)
-            var frame = new drawFrame(sylename,media)
+            var titleYoffset=sylename.titleOffset;
+            var subYoffset=sylename.subOffset
+            var frame = new drawFrame(sylename.classes,media,titleYoffset,subYoffset)
                 .width(framewidth)
                 .height(frameheight)
                 .margin(framemargin)
@@ -119,85 +67,41 @@
 
         }
         
-        //convert print sizes
-        widthPrint = mmToPx(widthPrint);
-        heightPrint = mmToPx(heightPrint);
-        marginPrint.left = mmToPx(marginPrint.left);
-        marginPrint.right = mmToPx(marginPrint.right);
-        
-        d3.csv(dataURL,function(data){
+        d3.csv(dataURL,function(error, data){
+            //date formatter, matching the format of the incoming csv...
+            //var parseDate = d3.time.format("%Y %b").parse;
+            //var parseDate = d3.time.format("%Y").parse;//just full year
+            var parseDate = d3.time.format("%d-%b-%y").parse;
+            /*
+            some common formatting parsers....
+            d3.time.format("%Y %b") 1986 Jan
+            d3.time.format("%d-%b-%y")  28-Jan-86
+            d3.time.format("%Y-%m-%d")  1986-01-28
+            d3.time.format("%m/%d/%Y")  01/28/1986
+            d3.time.format("%H:%M") 11:39
+            d3.time.format("%H:%M %p")  11:39 AM
+            d3.time.format("%B %d") January 28
+            d3.time.format("%d %b") 28 Jan
+             */
 
-            //web version
-            var chartWeb = new webFrame(styleweb,"web")
-                .width(widthWeb)
-                .height(heightWeb)
-                .margin(marginWeb)
-                .title(title)
-                .source(source)
-            //optional elements
-            if (subtitle){
-                chartWeb.subtitle(subtitle)
-            }
-            
-            //print version - all of these sizes are in mm
-            var chartPrint = new printFrame(styleprint,"print")
-                .width(widthPrint)
-                .height(heightPrint)
-                .margin(marginPrint)
-                .title(title)
-                .source(source)
-            //optional elements
-            if (subtitle){
-                chartPrint.subtitle(subtitle)
-            }
-        
-            //social media version
-            var chartSocial = new socialFrame(stylesoc,"soc")
-                .width(widthSocial)
-                .height(heightSocial)
-                .margin(marginSocial)
-                .title(title)
-                .source(source)
+            //parse the data
+            data.forEach(function(d) {
+                d.date=parseDate(d.date);
+            });
 
-            //optional elements
-            if (subtitle){
-                chartSocial.subtitle(subtitle)
-            }
-            
-           //call editions
-            if (online){
-                d3.select("body").call(chartWeb)
-            }
-            if (print){
-                d3.select("body").call(chartPrint);
-            }
-            if (social){
-                d3.select("body").call(chartSocial)
-            }
-
-           
-            //select all charts and create things on them
-            var charts = d3.selectAll(".chart");
-                
-            charts.each(function(d,i){
-                
-                //get content area
-                var canvas = d3.select(this).select(".chart-canvas")
-
-                console.log ("add the chart function in here")
-                
-            })
-            
+            for (var i=0;i<frames.length;i++){
+                var stylename=frames[i].stylesheet;
+                var media = frames[i].name;
+                var legend=frames[i].legend;
+                lineChart(data, stylename, media, chartpadding,legend, yHighlight);
+            }   
         })//end data load
         
         function mmToPx(mm){
             var px = mm*2.83464480558843;
             return px;
         }
-        
-        
-     
-        
+            
     </script>
 </body>
 </html>
