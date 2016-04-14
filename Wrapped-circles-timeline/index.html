@@ -1,0 +1,107 @@
+<html>
+<head>
+    <title>Frames for FT graphics</title>
+    <script type="text/javascript" src="styles.js"></script>
+</head>
+<body>
+    <style>
+        text{font-family:metric}
+    </style>
+    <script src="d3.min.js"></script>
+    <script src="drawFrame.js"></script>
+    <script src="circles-timeline.js"></script>
+    <script>
+        
+        //datafile
+        var dataURL = "2lines.csv"
+        
+        //titles, footnotes
+        var title = "European IPO market";
+        var subtitle = "$ per barrel";//comment out subtitle assignment if not needed
+        var source = "FT graphic Bob Haslett|Source: PwC";
+        var yAxisHighlight=100
+
+        //Use the frames array to set unique values for each media type of frame
+        var frames=[
+        {name:"print",width:53.5,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert"},
+        {name:"web",width:600,height:422,units:'px',margins:[{top:10,right:40,bottom:5,left:10}],stylesheet:styleweb,legend:"hori"},
+        {name:"social",width:280,height:375,units:'px',margins:[{top:25,right:25, bottom:25, left:25}],stylesheet:stylesoc,legend:"vert"},
+        //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori"}
+        ]
+        
+        //sets the padding inside the chart area
+        var chartpadding=[
+        {name:"print",margin:[{top:10,right:10,bottom:15, left:7}]},
+        {name:"web",margin:[{top:14,right:20,bottom:20, left:15}]},
+        {name:"social",margin:[{top:0,right:0,bottom:20, left:0}]},
+        {name:"video",margin:[{top:55,right:35,bottom:68, left:42}]}
+        ]
+        
+        /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
+        for (var i=0;i<frames.length;i++){
+            var sylename=frames[i].stylesheet;
+            var media = frames[i].name;
+            if(frames[i].units=="mm") {
+                framewidth = mmToPx(frames[i].width);
+                frameheight = mmToPx(frames[i].height);
+            }
+            else{
+                framewidth = frames[i].width;
+                frameheight = frames[i].height;
+            }
+            var framemargin = frames[i].margins[0];
+            var titleYoffset=sylename.titleOffset;
+            var subYoffset=sylename.subOffset
+            var frame = new drawFrame(sylename.classes,media,titleYoffset,subYoffset)
+                .width(framewidth)
+                .height(frameheight)
+                .margin(framemargin)
+                .title(title)
+                .source(source)
+            //optional elements
+            if (subtitle){
+                frame.subtitle(subtitle)
+            }
+            d3.select("body").call(frame)
+            //drawFrame
+
+        }
+        
+        d3.csv(dataURL,function(error, data){
+            //date formatter, matching the format of the incoming csv...
+            //var parseDate = d3.time.format("%Y %b").parse;
+            //var parseDate = d3.time.format("%Y").parse;//just full year
+            var parseDate = d3.time.format("%d-%b-%y").parse;
+            /*
+            some common formatting parsers....
+            d3.time.format("%Y %b") 1986 Jan
+            d3.time.format("%d-%b-%y")  28-Jan-86
+            d3.time.format("%Y-%m-%d")  1986-01-28
+            d3.time.format("%m/%d/%Y")  01/28/1986
+            d3.time.format("%H:%M") 11:39
+            d3.time.format("%H:%M %p")  11:39 AM
+            d3.time.format("%B %d") January 28
+            d3.time.format("%d %b") 28 Jan
+             */
+
+            //parse the data
+            data.forEach(function(d) {
+                d.date=parseDate(d.date);
+            });
+
+            for (var i=0;i<frames.length;i++){
+                var stylename=frames[i].stylesheet;
+                var media = frames[i].name;
+                var legend=frames[i].legend;
+                circlesTimelineChart(data, stylename, media, chartpadding,legend, yAxisHighlight);
+            }   
+        })//end data load
+        
+        function mmToPx(mm){
+            var px = mm*2.83464480558843;
+            return px;
+        }
+            
+    </script>
+</body>
+</html>
