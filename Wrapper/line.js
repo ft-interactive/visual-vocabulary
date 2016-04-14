@@ -33,8 +33,8 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight){
     var yDomain;
 
     //calculate range of y axis series data
-    var min=80;
-    var max=120;
+    var min=0;
+    var max=6;
     data.forEach(function(d,i){
         seriesNames.forEach(function(e){
             if (d[e]){
@@ -129,7 +129,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight){
         .interpolate(lineSmoothing)
 
     //identify 0 line if there is one
-    var originValue = 80;
+    var originValue = 0;
     console.log(yHighlight)
     var origin = plot.selectAll(".tick").filter(function(d, i) {
             return d==originValue || d==yHighlight;
