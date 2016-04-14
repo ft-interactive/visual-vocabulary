@@ -77,10 +77,10 @@ function drawFrame(styles, media,titley,suby) {
         if(media=="print") {
             header.append("path")
             .attr("class",media+"hat")
-            .attr("d","M1,"+(titleYoffset+margin.top)+" L1,0 "+(width-1)+",0 "+(width-1)+","+(titleYoffset+margin.top))
+            .attr("d","M 0.5,"+(titleYoffset+margin.top)+" L1,0 "+(width-0.5)+",0 "+(width-1)+","+(titleYoffset+margin.top))
             chart.append("path")
             .attr("class",media+"hat")
-            .attr("d","M1,"+(height)+" L"+(width-1)+","+(width-1)+"")
+            .attr("d","M 0.5,"+(height-0.5)+" L"+(width-0.5)+","+(height-0.5)+"")
         };
         
         var contentOffsetTop = chart.select("#"+media+"header").node().getBBox().y + chart.select("#"+media+"header").node().getBBox().height;

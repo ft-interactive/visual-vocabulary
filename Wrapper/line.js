@@ -33,8 +33,8 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight){
     var yDomain;
 
     //calculate range of y axis series data
-    var min=80;
-    var max=120;
+    var min=0;
+    var max=6;
     data.forEach(function(d,i){
         seriesNames.forEach(function(e){
             if (d[e]){
@@ -63,7 +63,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight){
         });
     });
 
-    //web scales
+    //Scales
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
     var xScale = d3.time.scale()
@@ -129,7 +129,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight){
         .interpolate(lineSmoothing)
 
     //identify 0 line if there is one
-    var originValue = 80;
+    var originValue = 0;
     console.log(yHighlight)
     var origin = plot.selectAll(".tick").filter(function(d, i) {
             return d==originValue || d==yHighlight;
@@ -166,6 +166,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight){
     var legendyOffset=0
     var legend = plot.append("g")
         .attr("id",media+"legend")
+        .on("mouseover",pointer)
         .selectAll("g")
         .data(seriesNames)
         .enter()
@@ -210,8 +211,11 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight){
         else {return "translate(0,"+(i*15)+")"};
     })
 
-    function moveLegend() {
+    function pointer() {
         this.style.cursor='pointer'
+    }
+
+    function moveLegend() {
         var dX = d3.event.x; // subtract cx
         var dY = d3.event.y; // subtract cy
         d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");
