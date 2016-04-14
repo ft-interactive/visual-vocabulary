@@ -167,6 +167,7 @@ function drawChart(error, data) {
             .attr({
                 'id':function(d){ return d.key; },
                 'transform':function(d,i){
+                console.log(i)
                   return 'translate(0,'+(i+1)*(maxCircle*3)+')'
               }
             });
