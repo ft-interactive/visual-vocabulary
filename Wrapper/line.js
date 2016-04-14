@@ -63,7 +63,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight){
         });
     });
 
-    //web scales
+    //Scales
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
     var xScale = d3.time.scale()
@@ -166,6 +166,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight){
     var legendyOffset=0
     var legend = plot.append("g")
         .attr("id",media+"legend")
+        .on("mouseover",pointer)
         .selectAll("g")
         .data(seriesNames)
         .enter()
@@ -210,8 +211,11 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight){
         else {return "translate(0,"+(i*15)+")"};
     })
 
-    function moveLegend() {
+    function pointer() {
         this.style.cursor='pointer'
+    }
+
+    function moveLegend() {
         var dX = d3.event.x; // subtract cx
         var dY = d3.event.y; // subtract cy
         d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");

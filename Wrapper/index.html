@@ -19,7 +19,7 @@
         var title = "European IPO market";
         var subtitle = "$ per barrel";//comment out subtitle assignment if not needed
         var source = "Source: PwC|FT graphic Bob Haslett";
-        var yHighlight=100
+        var yAxisHighlight=100
 
         //Use the frames array to set unique values for each media type of frame
         var frames=[
@@ -93,7 +93,7 @@
                 var stylename=frames[i].stylesheet;
                 var media = frames[i].name;
                 var legend=frames[i].legend;
-                lineChart(data, stylename, media, chartpadding,legend, yHighlight);
+                lineChart(data, stylename, media, chartpadding,legend, yAxisHighlight);
             }   
         })//end data load
         
