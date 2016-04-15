@@ -13,27 +13,26 @@
     <script>
         
         //datafile
-        var dataURL = "2lines.csv"
+        var dataURL = "data_piracy.csv"
         
         //titles, footnotes
-        var title = "European IPO market";
-        var subtitle = "$ per barrel";//comment out subtitle assignment if not needed
-        var source = "FT graphic Bob Haslett|Source: PwC";
-        var yAxisHighlight=100
+        var title = "International Piracy and Armed Robbery at Sea";
+        var subtitle = "Incidents by region, 1984-2010";//comment out subtitle assignment if not needed
+        var source = "Source: International Maritime Organisation|FT graphic Bob Haslett";
 
         //Use the frames array to set unique values for each media type of frame
         var frames=[
-        {name:"print",width:53.5,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert"},
-        {name:"web",width:600,height:422,units:'px',margins:[{top:10,right:40,bottom:5,left:10}],stylesheet:styleweb,legend:"hori"},
-        {name:"social",width:280,height:375,units:'px',margins:[{top:25,right:25, bottom:25, left:25}],stylesheet:stylesoc,legend:"vert"},
-        //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori"}
+        {name:"print",width:211,height:190,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert"},
+        {name:"web",width:600,height:540,units:'px',margins:[{top:10,right:40,bottom:5,left:10}],stylesheet:styleweb,legend:"hori"},
+        {name:"social",width:280,height:360,units:'px',margins:[{top:25,right:25, bottom:25, left:25}],stylesheet:stylesoc,legend:"vert"},
+        {name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori"}
         ]
         
         //sets the padding inside the chart area
         var chartpadding=[
-        {name:"print",margin:[{top:10,right:10,bottom:15, left:7}]},
-        {name:"web",margin:[{top:14,right:20,bottom:20, left:15}]},
-        {name:"social",margin:[{top:0,right:0,bottom:20, left:0}]},
+        {name:"print",margin:[{top:0,right:35,bottom:15, left:10}]},
+        {name:"web",margin:[{top:0,right:30,bottom:20, left:5}]},
+        {name:"social",margin:[{top:0,right:15,bottom:20, left:5}]},
         {name:"video",margin:[{top:55,right:35,bottom:68, left:42}]}
         ]
         
@@ -71,7 +70,7 @@
             //date formatter, matching the format of the incoming csv...
             //var parseDate = d3.time.format("%Y %b").parse;
             //var parseDate = d3.time.format("%Y").parse;//just full year
-            var parseDate = d3.time.format("%d-%b-%y").parse;
+            var parseDate = d3.time.format('%Y').parse;
             /*
             some common formatting parsers....
             d3.time.format("%Y %b") 1986 Jan
@@ -93,7 +92,7 @@
                 var stylename=frames[i].stylesheet;
                 var media = frames[i].name;
                 var legend=frames[i].legend;
-                circlesTimelineChart(data, stylename, media, chartpadding,legend, yAxisHighlight);
+                circlesTimelineChart(data, stylename, media, chartpadding,legend);
             }   
         })//end data load
         
