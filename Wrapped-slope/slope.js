@@ -45,9 +45,39 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
         .ticks(5)
         .tickSize(w)
 
-    plot.append("g")
+    var yText=plot.append("g")
         .attr("class",media+"yAxis") 
         .call(yAxis);
+
+    yText.selectAll("text")
+    .attr("dy", -4)
+    .style("text-anchor", "end")
+
+    //identify 0 line if there is one
+    var originValue = 0;
+    console.log(yHighlight)
+    var origin = plot.selectAll(".tick").filter(function(d, i) {
+            return d==originValue || d==yHighlight;
+        }).classed(media+"origin",true);
+
+    var graph = plot.append("g")
+            .attr("id",media+"slope");
+
+    var slopes = graph.selectAll("g")
+        .data(data)
+        .enter()
+        .append("g")
+        .attr("id",function(d){return media+d.name})
+
+    slopes.append("line")
+        .attr("class",media+"lines")
+        .attr("stroke",function(d,i){
+                return colours[0];  
+            })
+        .attr("x1",0)
+        .attr("x2",w)
+        .attr("y1",function(d){return yScale(d.val1)})
+        .attr("y2",function(d){return yScale(d.val2)})
 
 
     
