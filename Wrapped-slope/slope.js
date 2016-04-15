@@ -1,4 +1,4 @@
-function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZero, showDots, showLabels, showValues){
+function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZero, showDots, showLabels, showValuesvar, col1, col2){
 
 	//graph options
     var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
@@ -129,6 +129,20 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             }
         });
     }
+
+    //column headings
+    plot.append("text")
+        .attr("x",margin.left)
+        .attr("y",margin.top)
+        .attr("class",media+"label")
+        .attr("text-anchor","end")
+        .text(col1);
+
+    plot.append("text")
+        .attr("x",w-margin.right)
+        .attr("y",margin.top)
+        .attr("class",media+"label")
+        .text(col2);
 
 
     

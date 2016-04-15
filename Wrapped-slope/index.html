@@ -20,6 +20,8 @@
         var subtitle = "by country world rank";//comment out subtitle assignment if not needed
         var source = "Source: forumchart.xls|FT graphic Bob Haslett";
         //slope config
+        var col1="Education system"
+        var col2="Pay and productivity"
         var startZero=true;
         var showDots=true;
         var showLabels=true;
@@ -36,8 +38,8 @@
         
         //sets the padding inside the chart area
         var chartpadding=[
-        {name:"print",margin:[{top:10,right:50,bottom:15, left:50}]},
-        {name:"web",margin:[{top:14,right:80,bottom:20, left:80}]},
+        {name:"print",margin:[{top:10,right:80,bottom:15, left:65}]},
+        {name:"web",margin:[{top:14,right:115,bottom:20, left:94}]},
         {name:"social",margin:[{top:0,right:40,bottom:20, left:40}]},
         {name:"video",margin:[{top:55,right:35,bottom:68, left:42}]}
         ]
@@ -78,7 +80,7 @@
                 var stylename=frames[i].stylesheet;
                 var media = frames[i].name;
                 var legend=frames[i].legend;
-                slopeChart(data, stylename, media, chartpadding,legend, yAxisHighlight,startZero, showDots, showLabels, showValues);
+                slopeChart(data, stylename, media, chartpadding,legend, yAxisHighlight,startZero, showDots, showLabels, showValues, col1, col2);
             }
         })//end data load
         
