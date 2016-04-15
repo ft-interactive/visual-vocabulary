@@ -24,8 +24,8 @@ linecolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
 }
 
 var styleweb = {classes:
-[{class:"background{fill: #FFF1E0;}"},
-{class:"chartholder{fill: #FFFFFF;}"},
+[{class:"background{fill: none;}"},
+{class:"chartholder{fill: none;}"},
 {class:"title{font-size:21px; fill: #3b3d3b; font-weight: 100;}"},
 {class:"subtitle{font-size:14px; fill: #6b6e68; font-weight: 100;}"},
 {class:"label{font-size:14px; fill: #6b6e68; font-weight: 400;}"},

@@ -36,7 +36,7 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
     //create scale for y axis
     var yScale = d3.scale.linear()
         .domain([minVal,maxVal])
-        .range([h,0])
+        .range([h-margin.top,0+margin.bottom])
 
     //axis
     var yAxis = d3.svg.axis()
@@ -48,7 +48,7 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
     var yText=plot.append("g")
         .attr("class",media+"yAxis")
         .attr("transform",function(){
-            return "translate("+margin.left+",0)";  
+            return "translate("+margin.left+","+margin.top+")";  
         })
         .call(yAxis);
 
@@ -59,12 +59,16 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
     //identify 0 line if there is one
     var originValue = 0;
     console.log(yHighlight)
-    var origin = plot.selectAll(".tick").filter(function(d, i) {
+    var origin = plot.selectAll(".tick")
+        .filter(function(d, i) {
             return d==originValue || d==yHighlight;
         }).classed(media+"origin",true);
 
     var graph = plot.append("g")
-            .attr("id",media+"slope");
+            .attr("id",media+"slope")
+            .attr("transform",function(){
+            return "translate(0,"+margin.top+")";  
+        });
 
     var slopes = graph.selectAll("g")
         .data(data)
