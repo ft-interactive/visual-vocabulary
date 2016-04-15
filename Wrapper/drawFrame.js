@@ -10,6 +10,7 @@ function drawFrame(styles, media,titley,suby) {
     }
     //Creats a new empty css stylesheet dynamically
     var stylesheet = document.createElement('style');
+    stylesheet.id=media+"styles"
     stylesheet.type = 'text/css';
     //Places in the string built above to create the styles
     stylesheet.innerHTML = HTML

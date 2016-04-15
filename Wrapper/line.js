@@ -1,12 +1,9 @@
-function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight){
+function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight,lineSmoothing, logScale, logScaleStart){
 
-	//graph options
-    var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
-    var logScale=false;
-    var logScaleStart=1000;
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height
-
+    
+    console.log(subtitleYoffset)
 
     // return the series names from the first row of the spreadsheet
     var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
@@ -130,7 +127,6 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight){
 
     //identify 0 line if there is one
     var originValue = 0;
-    console.log(yHighlight)
     var origin = plot.selectAll(".tick").filter(function(d, i) {
             return d==originValue || d==yHighlight;
         }).classed(media+"origin",true);
@@ -163,7 +159,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight){
     }
 
     //create a legend first
-    var legendyOffset=0
+    var legendyOffset=10
     var legend = plot.append("g")
         .attr("id",media+"legend")
         .on("mouseover",pointer)
@@ -184,7 +180,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight){
             return media+"t"+i
         })
         .attr("x",25)
-        .attr("y",10)
+        .attr("y",legendyOffset)
         .attr("class",media+"subtitle")
         .text(function(d){
             return d;
@@ -208,7 +204,9 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight){
             legendyOffset=legendyOffset+gWidth;
             return "translate("+(legendyOffset)+",0)";  
         }
-        else {return "translate(0,"+(i*15)+")"};
+        else {
+            var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
+            return "translate(0,"+(i*gHeight)+")"};
     })
 
     function pointer() {
