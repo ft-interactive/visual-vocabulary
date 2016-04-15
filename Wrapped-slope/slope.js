@@ -43,10 +43,13 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
         .scale(yScale)
         .orient("right")
         .ticks(5)
-        .tickSize(w)
+        .tickSize(w-margin.right-margin.left)
 
     var yText=plot.append("g")
-        .attr("class",media+"yAxis") 
+        .attr("class",media+"yAxis")
+        .attr("transform",function(){
+            return "translate("+margin.left+",0)";  
+        })
         .call(yAxis);
 
     yText.selectAll("text")
