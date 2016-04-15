@@ -83,24 +83,52 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
         .attr("y2",function(d){return yScale(d.val2)})
 
     //create dots if requested
-        if (showDots)   {
-            slopes.append("circle")
-                .attr("class",media+"circles")
-                .attr("fill",function(d,i){
-                    return colours[0];  
-                })
-                .attr("r",3)
-                .attr("cx",margin.left)
-                .attr("cy",function(d){return yScale(d.val1)});
-            slopes.append("circle")
-                .attr("class",media+"circles")
-                .attr("fill",function(d,i){
-                    return colours[0];  
-                })
-                .attr("r",3)
-                .attr("cx",w-margin.right)
-                .attr("cy",function(d){return yScale(d.val2)});
-        }
+    if (showDots)   {
+        slopes.append("circle")
+            .attr("class",media+"circles")
+            .attr("fill",function(d,i){
+                return colours[0];  
+            })
+            .attr("r",3)
+            .attr("cx",margin.left)
+            .attr("cy",function(d){return yScale(d.val1)});
+        slopes.append("circle")
+            .attr("class",media+"circles")
+            .attr("fill",function(d,i){
+                return colours[0];  
+            })
+            .attr("r",3)
+            .attr("cx",w-margin.right)
+            .attr("cy",function(d){return yScale(d.val2)});
+    }
+
+    //create labels if needed
+    if (showLabels) {
+        slopes.append("text")
+            .attr("class",media+"subtitle")
+            .attr("x",margin.left-7)
+            .attr("text-anchor","end")
+            .attr("y",function(d){return yScale(d.val1)+5})
+            .text(function(d){
+            if (showValues){
+            return d.name+" "+d.val1;
+            }   else    {
+            return d.name;
+            }
+        });
+        slopes.append("text")
+            .attr("class",media+"subtitle")
+            .attr("x",w-margin.right+7)
+            .attr("text-anchor","start")
+            .attr("y",function(d){return yScale(d.val2)+5})
+            .text(function(d){
+        if (showValues){
+            return d.val2+" "+d.name;
+            }   else    {
+            return d.name;
+            }
+        });
+    }
 
 
     
