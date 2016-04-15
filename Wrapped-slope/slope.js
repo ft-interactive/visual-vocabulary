@@ -74,10 +74,30 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
         .attr("stroke",function(d,i){
                 return colours[0];  
             })
-        .attr("x1",0)
-        .attr("x2",w)
+        .attr("x1",margin.left)
+        .attr("x2",w-margin.right)
         .attr("y1",function(d){return yScale(d.val1)})
         .attr("y2",function(d){return yScale(d.val2)})
+
+    //create dots if requested
+        if (showDots)   {
+            slopes.append("circle")
+                .attr("class",media+"circles")
+                .attr("fill",function(d,i){
+                    return colours[0];  
+                })
+                .attr("r",3)
+                .attr("cx",margin.left)
+                .attr("cy",function(d){return yScale(d.val1)});
+            slopes.append("circle")
+                .attr("class",media+"circles")
+                .attr("fill",function(d,i){
+                    return colours[0];  
+                })
+                .attr("r",3)
+                .attr("cx",w-margin.right)
+                .attr("cy",function(d){return yScale(d.val2)});
+        }
 
 
     

@@ -24,7 +24,7 @@
         var showDots=true;
         var showLabels=true;
         var showValues=true;
-        var yAxisHighlight=100
+        var yAxisHighlight=0
 
         //Use the frames array to set unique values for each media type of frame
         var frames=[
@@ -79,7 +79,7 @@
                 var media = frames[i].name;
                 var legend=frames[i].legend;
                 slopeChart(data, stylename, media, chartpadding,legend, yAxisHighlight,startZero, showDots, showLabels, showValues);
-            }   
+            }
         })//end data load
         
         function mmToPx(mm){
