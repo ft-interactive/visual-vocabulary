@@ -31,7 +31,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight,lineSmoo
 
     //calculate range of y axis series data
     var min=0;
-    var max=5;
+    var max=4;
     data.forEach(function(d,i){
         seriesNames.forEach(function(e){
             if (d[e]){
