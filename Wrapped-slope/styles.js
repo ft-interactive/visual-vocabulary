@@ -4,6 +4,7 @@ var styleprint = {classes:
 {class:"chartholder{fill: none}"},
 {class:"title{font-size:12px; fill: #000000; font-weight: 600;}"},
 {class:"subtitle{fill:#000000; font-size: 9.6px;}"},
+{class:"label{fill:#000000; font-size: 9.6px;font-weight: 500;}"},
 {class:"source{fill: #000000; font-size: 7.2px;}"},
 {class:"logo{fill: #dacfc5;}"},
 {class:"hat{fill:none; stroke-width:1.0px; stroke:#22190f;}"},
@@ -14,7 +15,7 @@ var styleprint = {classes:
 {class:"yAxis line{fill:none; stroke-width:0.3px; stroke:#22190f;}"},
 {class:"yAxis text{fill:#000000; font-size: 9.6px; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
 {class:"origin line{fill:none; stroke-width:0.6px;}"},
-{class:"lines{fill:none; stroke-width:2.0px;stroke-linecap: round;}"}
+{class:"lines{fill:none; stroke-width:1.0px;stroke-linecap: round;}"}
 ],
 titleOffset:10,
 subOffset:15,
@@ -23,10 +24,11 @@ linecolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
 }
 
 var styleweb = {classes:
-[{class:"background{fill: #fff1e0}"},
-{class:"chartholder{fill: #ffffff;}"},
+[{class:"background{fill: none;}"},
+{class:"chartholder{fill: none;}"},
 {class:"title{font-size:21px; fill: #3b3d3b; font-weight: 100;}"},
 {class:"subtitle{font-size:14px; fill: #6b6e68; font-weight: 100;}"},
+{class:"label{font-size:14px; fill: #6b6e68; font-weight: 400;}"},
 {class:"source{fill: #6b6e68; font-size: 11.5px; font-weight: 100;}"},
 {class:"logo{fill: #dacfc5;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
@@ -36,7 +38,7 @@ var styleweb = {classes:
 {class:"yAxis line{fill:none; stroke-width: 1.0px; stroke:#c3bcb0; stroke-dasharray:1,2}"},
 {class:"yAxis text{fill:#6b6e68; font-size: 14.0px; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
 {class:"origin line{fill:none; stroke:#9ba497; stroke-width: 1px;stroke-dasharray:1,0}"},
-{class:"lines{fill:none; stroke-width: 2.5px; stroke-linecap: round;}"}
+{class:"lines{fill:none; stroke-width: 1.5px; stroke-linecap: round;}"}
 ],
 titleOffset:21,
 subOffset:20,
@@ -48,7 +50,8 @@ var stylesoc = {classes:
 [{class:"background{fill: #212121;}"},
 {class:"chartholder{fill: none;}"},
 {class:"title{font-size: 18px; fill: #ffffff; opacity: 0.95; font-weight: 500;}"},
-{class:"subtitle{font-size: 16px; fill: #ffffff; opacity: 0.70; font-weight: 100; line-height: 18px;}"},
+{class:"subtitle{font-size: 16px; fill: #ffffff; opacity: 0.70; font-weight: 100;}"},
+{class:"label{font-size: 16px; fill: #ffffff; opacity: 0.70; font-weight: 100;}"},
 {class:"source{font-size: 12px; fill: #ffffff; opacity: 0.50;}"},
 {class:"logo{fill: #ffffff;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
@@ -58,7 +61,7 @@ var stylesoc = {classes:
 {class:"yAxis line{fill:none; stroke-width: 1.0px;stroke-dasharray:1,4; opacity: 0.38; stroke:#ffffff;}"},
 {class:"yAxis text{font-size: 14px; fill: #ffffff; opacity: 0.70; font-weight: 100; line-height: 18px; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
 {class:"origin line{fill:none; stroke:#ffffff; stroke-width: 1.0px; opacity: 0.5; stroke-dasharray:1,0}"},
-{class:"lines{fill:none; stroke-width: 2.5px;  stroke-linecap: round;}"}
+{class:"lines{fill:none; stroke-width: 1.5px;  stroke-linecap: round;}"}
 ],
 titleOffset:36,
 subOffset:20,
@@ -71,6 +74,7 @@ var stylevid = {classes:
 {class:"chartholder{fill: none;}"},
 {class:"title{font-size: 68px; fill: #ffffff; font-weight: 600;}"},
 {class:"subtitle{font-size: 48; fill: #000000; font-weight: 600;}"},
+{class:"label{font-size: 48; fill: #000000; font-weight: 600;}"},
 {class:"source{font-size: 44; fill: #000000; font-weight: 600;}"},
 {class:"logo{fill: #ffffff;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
@@ -80,7 +84,7 @@ var stylevid = {classes:
 {class:"yAxis line{fill:none; stroke-width: 5.0px; stroke:#ffffff;}"},
 {class:"yAxis text{font-size: 48; fill: #000000; font-weight: 600;font-feature-settings: 'tnum' 1; text-anchor: end;}"},
 {class:"origin line{fill:none; stroke:#ffffff; stroke-width: 5.0px;stroke-dasharray:1,0}"},
-{class:"lines{fill:none; stroke-width: 8.0px; stroke-linecap: round;}"}
+{class:"lines{fill:none; stroke-width: 5.0px; stroke-linecap: round;}"}
 ],
 titleOffset:68,
 subOffset:90,
