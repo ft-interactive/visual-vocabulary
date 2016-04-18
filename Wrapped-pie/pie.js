@@ -52,7 +52,8 @@ function pieChart(data, stylename, media, chartpadding,legAlign, innerRadious, o
         g.append("text")
         .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
         .attr("dy", ".35em")
-        .attr("class",media+"subtitle")
+        .attr("class", media+"labels")
+        .style("text-anchor", "middle")
         .text(function(d) { return d.data.category; });
       }
 
