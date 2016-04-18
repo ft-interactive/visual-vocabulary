@@ -1,4 +1,4 @@
-function pieChart(data,stylename,media,plotpadding,legAlign,yHighlight,lineSmoothing, logScale, logScaleStart,textOffset){
+function pieChart(data, stylename, media, chartpadding,legend, innerRadious, outerRadious, graphLabels){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -13,11 +13,40 @@ function pieChart(data,stylename,media,plotpadding,legAlign,yHighlight,lineSmoot
     //Get the width,height and the marginins unique to this plot
     var w=plot.node().getBBox().width;
     var h=plot.node().getBBox().height;
-    var margin=plotpadding.filter(function(d){
+    radius = Math.min(w, h)/2;
+    var margin=chartpadding.filter(function(d){
         return (d.name === media);
       });
     margin=margin[0].margin[0]
     var colours=stylename.fillcolours;
+
+    var arc = d3.svg.arc()
+    .outerRadius(radius - 10)
+    .innerRadius(0);
+
+    var labelArc = d3.svg.arc()
+        .outerRadius(radius-40)
+        .innerRadius(radius-40);
+
+    var pie = d3.layout.pie()
+        .sort(null)
+        .value(function(d) { return d.value; });
+
+    var svg = plot.append("svg")
+        .attr("width", w)
+        .attr("height", h)
+         .append("g")
+        .attr("transform", "translate(" + (w / 2) + "," + (h / 2)+")");
+
+    var g = svg.selectAll(".arc")
+        .data(pie(data))
+        .enter().append("g")
+        .attr("class", "arc");
+
+    g.append("path")
+      .attr("d", arc)
+      .style("fill", "#000000");
+
 
 
 
