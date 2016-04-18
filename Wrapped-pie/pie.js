@@ -48,14 +48,13 @@ function pieChart(data, stylename, media, chartpadding,legAlign, innerRadious, o
       .attr("d", arc)
       .style("fill", function(d,i){return colours[i]})
 
-    g.append("text")
-      .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
-      .attr("dy", ".35em")
-      .attr("class",media+"subtitle")
-      .text(function(d) { return d.data.category; });
-
-
-
+    if (graphLabels) {
+        g.append("text")
+        .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
+        .attr("dy", ".35em")
+        .attr("class",media+"subtitle")
+        .text(function(d) { return d.data.category; });
+      }
 
 
     // //create a legend first
