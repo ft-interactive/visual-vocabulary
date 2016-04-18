@@ -14,12 +14,13 @@ var styleprint = {classes:
 {class:"yAxis line{fill:none; stroke-width:0.3px; stroke:#22190f;}"},
 {class:"yAxis text{fill:#000000; font-size: 9.6px; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
 {class:"origin line{fill:none; stroke-width:0.6px;}"},
-{class:"lines{fill:none; stroke-width:2.0px;stroke-linecap: round;}"}
+{class:"lines{fill:none; stroke-width:2.0px;stroke-linecap: round;}"},
 ],
 titleOffset:10,
 subOffset:15,
 legendyOffset:0,
-linecolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
+linecolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"],
+fillcolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
 }
 
 var styleweb = {classes:
@@ -41,7 +42,8 @@ var styleweb = {classes:
 titleOffset:21,
 subOffset:20,
 legendyOffset:0,
-linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
+linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"],
+fillcolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 }
 
 var stylesoc = {classes:
@@ -63,7 +65,8 @@ var stylesoc = {classes:
 titleOffset:36,
 subOffset:30,
 legendyOffset:0,
-linecolours:["#CC4759","#00B5B5","#E6B522","#437099","#FF8C8B","#CBFF7E","#8A8A8A"]
+linecolours:["#CC4759","#00B5B5","#E6B522","#437099","#FF8C8B","#CBFF7E","#8A8A8A"],
+fillcolours:["#CC4759","#00B5B5","#E6B522","#437099","#FF8C8B","#CBFF7E","#8A8A8A"]
 }
 var stylevid = {classes:
 [{class:"background{fill: #dfd0bd;}"},
@@ -85,7 +88,8 @@ var stylevid = {classes:
 titleOffset:68,
 subOffset:90,
 legendyOffset:15,
-linecolours:["#b34b41","#5a8caf","#9baa6e","#eda45e","#9c5f87","#486ba0"]
+linecolours:["#b34b41","#5a8caf","#9baa6e","#eda45e","#9c5f87","#486ba0"],
+fillcolours:["#b34b41","#5a8caf","#9baa6e","#eda45e","#9c5f87","#486ba0"]
 }
 
 
