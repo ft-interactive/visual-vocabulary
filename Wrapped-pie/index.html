@@ -20,10 +20,8 @@
         var subtitle = "$ per barrel, then a load more words just to see what happens on a long subhead";//comment out subtitle assignment if not needed
         var source = "FT graphic Bob Haslett|Another line in here|Source: PwC";
         //graph options
-        var yAxisHighlight=100;
-        var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
-        var logScale=false;
-        var logScaleStart=1000;
+        var innerRadious=0;
+        var outerRadious=40;
 
         //Use the frames array to set unique values for each media type of frame
         var frames=[
@@ -98,7 +96,7 @@
                 var media = frames[i].name;
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
-                pieChart(data, stylename, media, chartpadding,legend, yAxisHighlight, lineSmoothing, logScale, logScaleStart, subYoffset);
+                pieChart(data, stylename, media, chartpadding,legend);
             }
         })//end data load
         
