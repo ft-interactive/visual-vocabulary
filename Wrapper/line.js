@@ -1,9 +1,7 @@
-function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight,lineSmoothing, logScale, logScaleStart){
+function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight,lineSmoothing, logScale, logScaleStart,textOffset){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
-    var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height
-    
-    console.log(subtitleYoffset)
+    var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
     // return the series names from the first row of the spreadsheet
     var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
@@ -159,7 +157,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight,lineSmoo
     }
 
     //create a legend first
-    var legendyOffset=10
+    var legendyOffset=0
     var legend = plot.append("g")
         .attr("id",media+"legend")
         .on("mouseover",pointer)
@@ -180,7 +178,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight,lineSmoo
             return media+"t"+i
         })
         .attr("x",25)
-        .attr("y",legendyOffset)
+        .attr("y",0)
         .attr("class",media+"subtitle")
         .text(function(d){
             return d;
@@ -191,22 +189,23 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight,lineSmoo
         })
         .attr("x1",0)
         .attr("x2",20)
-        .attr("y1",5)
-        .attr("y2",5)
+        .attr("y1",-(textOffset/2)+(textOffset/3))
+        .attr("y2",-(textOffset/2)+(textOffset/3))
         .attr("class",media+"lines")
 
     legend.attr("transform",function(d,i){
         if (legAlign=='hori') {
+            var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
             if (i>0) {
-                var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15 
+                var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
             }
             else {gWidth=0};
             legendyOffset=legendyOffset+gWidth;
-            return "translate("+(legendyOffset)+",0)";  
+            return "translate("+(legendyOffset)+","+(gHeigt)+")";  
         }
         else {
             var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
-            return "translate(0,"+(i*gHeight)+")"};
+            return "translate(0,"+((i*textOffset)+textOffset/2)+")"};
     })
 
     function pointer() {

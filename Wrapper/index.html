@@ -28,7 +28,7 @@
         //Use the frames array to set unique values for each media type of frame
         var frames=[
         {name:"print",width:53.5,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert"},
-        {name:"web",width:600,height:422,units:'px',margins:[{top:10,right:40,bottom:5,left:10}],stylesheet:styleweb,legend:"vert"},
+        {name:"web",width:600,height:422,units:'px',margins:[{top:10,right:40,bottom:5,left:10}],stylesheet:styleweb,legend:"hori"},
         {name:"social",width:560,height:750,units:'px',margins:[{top:50,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert"},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori"}
         ]
@@ -97,7 +97,8 @@
                 var stylename=frames[i].stylesheet;
                 var media = frames[i].name;
                 var legend=frames[i].legend;
-                lineChart(data, stylename, media, chartpadding,legend, yAxisHighlight, lineSmoothing, logScale, logScaleStart);
+                var subYoffset=stylename.subOffset
+                lineChart(data, stylename, media, chartpadding,legend, yAxisHighlight, lineSmoothing, logScale, logScaleStart, subYoffset);
             }
         })//end data load
         
