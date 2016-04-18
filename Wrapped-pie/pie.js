@@ -45,7 +45,9 @@ function pieChart(data, stylename, media, chartpadding,legend, innerRadious, out
 
     g.append("path")
       .attr("d", arc)
-      .style("fill", "#000000");
+      .style("fill", function(d,i){
+                return colours[i];  
+            })
 
 
 
