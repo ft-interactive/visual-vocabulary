@@ -120,22 +120,34 @@ function bubbleChart(data, stylename, media, plotpadding,legend, smallCircle, la
         .style("fill", function(d,i){return colours[cats.indexOf(d.cat)]})
         .on("mouseover",pointer)
         .on("click",function(d){
-            d3.select(this).attr("class",media+"circlehighlight")
-            dots.append("text")
-                .datum(d)
-                .attr("x",function(d){
-                return xScale(d.x);
-                })
-                .attr("y",function(d){
-                return yScale(d.y)-circleScale(d.size)-3;
-                })
-                .text(function(d){
-                    return d.name
-                })
-                .attr("class",media+"label")
-                .on("mouseover",pointer)
+            var elClass = d3.select(this).attr("class")
+            console.log(elClass)
+            if (elClass==media+"circle") {
+                d3.select(this).attr("class",media+"circlehighlight")
+                dots.append("text")
+                    .datum(d)
+                    .attr('id',function(d){
+                        return media+d.name
+                    })
+                    .attr("x",function(d){
+                    return xScale(d.x);
+                    })
+                    .attr("y",function(d){
+                    return yScale(d.y)-circleScale(d.size)-3;
+                    })
+                    .text(function(d){
+                        return d.name
+                    })
+                    .attr("class",media+"label")
+                    .on("mouseover",pointer)
             var drag = d3.behavior.drag().on("drag", moveLabel);
-            d3.selectAll("."+media+"label").call(drag);    
+            d3.selectAll("."+media+"label").call(drag);
+            }
+            else{var el=d3.select(this)
+                el.attr("class",media+"circle")
+                var textEl=d3.select("#"+media+d.name)
+                textEl.remove()
+            }
         })
 
         //create text labels for those that need it
@@ -155,6 +167,9 @@ function bubbleChart(data, stylename, media, plotpadding,legend, smallCircle, la
                 return yScale(d.y)-circleScale(d.size)-3;
             })
             .attr("class",media+"label")
+            .attr('id',function(d){
+                        return media+d.name
+                    })
             .text(function(d){
                 return d.name
             })
@@ -167,8 +182,8 @@ function bubbleChart(data, stylename, media, plotpadding,legend, smallCircle, la
     }
 
     function moveLabel() {
-        var dX = d3.event.x; -350// subtract cx
-        var dY = d3.event.y; -350// subtract cy
+        var dX = d3.event.x-(w/3);// subtract cx
+        var dY = d3.event.y-(h/2);// subtract cy
         d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");
 
     }
