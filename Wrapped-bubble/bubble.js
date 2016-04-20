@@ -1,4 +1,4 @@
-function bubbleChart(data, stylename, media, plotpadding,legend, smallCircle, largeCircle){
+function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, largeCircle, textOffset){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -45,6 +45,8 @@ function bubbleChart(data, stylename, media, plotpadding,legend, smallCircle, la
         .key(function(d){return d.cat})
         .entries(data)
         .map(function(d){return d.key});
+
+    console.log(cats)
 
     //scales
     var xScale=d3.scale.linear()
@@ -121,7 +123,6 @@ function bubbleChart(data, stylename, media, plotpadding,legend, smallCircle, la
         .on("mouseover",pointer)
         .on("click",function(d){
             var elClass = d3.select(this).attr("class")
-            console.log(elClass)
             if (elClass==media+"circle") {
                 d3.select(this).attr("class",media+"circlehighlight")
                 dots.append("text")
@@ -177,6 +178,63 @@ function bubbleChart(data, stylename, media, plotpadding,legend, smallCircle, la
     var drag = d3.behavior.drag().on("drag", moveLabel);
     d3.selectAll("."+media+"label").call(drag);
 
+    //create a legend first
+    var legendyOffset=0
+    var legend = plot.append("g")
+        .attr("id",media+"legend")
+        .on("mouseover",pointer)
+        .selectAll("g")
+        .data(cats)
+        .enter()
+        .append("g")
+        .attr ("id",function(d,i){
+            return media+"l"+i
+        })
+
+    var drag = d3.behavior.drag().on("drag", moveLegend);
+    d3.select("#"+media+"legend").call(drag);
+        
+    legend.append("text")
+
+        .attr("id",function(d,i){
+            return media+"t"+i
+        })
+        .attr("x",textOffset/2-textOffset/5+5)
+        .attr("y",textOffset/5)
+        .attr("class",media+"subtitle")
+        .text(function(d){
+            return d;
+        })
+
+    legend.append("circle")
+        .attr("cx",0)
+        .attr("cy",0)
+        .attr("r",textOffset/2-textOffset/5)
+        .attr("width",20)
+        .attr("height",textOffset)
+        .style("fill", function(d,i){return colours[i]})
+
+    legend.attr("transform",function(d,i){
+        if (legAlign=='hori') {
+            var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
+            if (i>0) {
+                var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
+            }
+            else {gWidth=0};
+            legendyOffset=legendyOffset+gWidth;
+            return "translate("+(legendyOffset)+","+(gHeigt)+")";  
+        }
+        else {
+            var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
+            return "translate(0,"+((i*textOffset+margin.top)+textOffset/2)+")"};
+    })
+
+
+
+
+
+
+
     function pointer() {
         this.style.cursor='pointer'
     }
@@ -185,7 +243,12 @@ function bubbleChart(data, stylename, media, plotpadding,legend, smallCircle, la
         var dX = d3.event.x-(w/3);// subtract cx
         var dY = d3.event.y-(h/2);// subtract cy
         d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");
+    }
 
+    function moveLegend() {
+        var dX = d3.event.x-(w/3);// subtract cx
+        var dY = d3.event.y-(h/2);// subtract cy
+        d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");
     }
 
 
