@@ -182,7 +182,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
             return media+"t"+i
         })
         .attr("x",yOffset+yOffset/2)
-        .attr("y",0)
+        .attr("y",yOffset/2)
         .attr("class",media+"subtitle")
         .text(function(d){
             return d;
@@ -193,8 +193,8 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         })
         .attr("x1",0)
         .attr("x2",yOffset)
-        .attr("y1",-yOffset/4)
-        .attr("y2",-yOffset/4)
+        .attr("y1",yOffset/4)
+        .attr("y2",yOffset/4)
         .attr("class",media+"lines")
 
     legend.attr("transform",function(d,i){
@@ -205,11 +205,10 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
             }
             else {gWidth=0};
             legendyOffset=legendyOffset+gWidth;
-            return "translate("+(legendyOffset)+","+(gHeigt)+")";  
+            return "translate("+(legendyOffset)+","+(gHeigt/2)+")";  
         }
         else {
-            var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
-            return "translate(0,"+((i*yOffset)+yOffset/2)+")"};
+            return "translate(0,"+((i*yOffset))+")"};
     })
 
     function pointer() {
