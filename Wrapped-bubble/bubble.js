@@ -46,8 +46,6 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
         .entries(data)
         .map(function(d){return d.key});
 
-    console.log(cats)
-
     //scales
     var xScale=d3.scale.linear()
         .domain(xExtent)
@@ -128,7 +126,7 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
                 dots.append("text")
                     .datum(d)
                     .attr('id',function(d){
-                        return media+d.name
+                        return (media+d.name).replace(/\s/g, '');
                     })
                     .attr("x",function(d){
                     return xScale(d.x);
@@ -146,7 +144,7 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
             }
             else{var el=d3.select(this)
                 el.attr("class",media+"circle")
-                var textEl=d3.select("#"+media+d.name)
+                var textEl=d3.select(("#"+media+d.name).replace(/\s/g, ''))
                 textEl.remove()
             }
         })
@@ -169,8 +167,8 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
             })
             .attr("class",media+"label")
             .attr('id',function(d){
-                        return media+d.name
-                    })
+                return (media+d.name).replace(/\s/g, '');
+            })
             .text(function(d){
                 return d.name
             })
