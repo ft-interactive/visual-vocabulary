@@ -1,4 +1,4 @@
-function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight,lineSmoothing, logScale, logScaleStart,textOffset){
+function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -9,6 +9,10 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight,lineSmoo
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
     var plot=d3.select("#"+media+"plot")
+
+    var yOffset=d3.select("#"+media+"Subtitle").style("font-size");
+    yOffset=Number(yOffset.replace(/[^\d.-]/g, ''));
+    console.log(yOffset)
     
     //Get the width,height and the marginins unique to this plot
     var w=plot.node().getBBox().width;
@@ -109,7 +113,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight,lineSmoo
     .call(xAxis);
 
     ytext.selectAll("text")
-    .attr("dy", -4)
+    .attr("y", -yOffset/2)
     .style("text-anchor", "end")
 
 
@@ -156,57 +160,57 @@ function lineChart(data,stylename,media,plotpadding,legAlign,yHighlight,lineSmoo
             .attr("cy",function(d){return yScale(d.val)});
     }
 
-    //create a legend first
-    var legendyOffset=0
-    var legend = plot.append("g")
-        .attr("id",media+"legend")
-        .on("mouseover",pointer)
-        .selectAll("g")
-        .data(seriesNames)
-        .enter()
-        .append("g")
-        .attr ("id",function(d,i){
-            return media+"l"+i
-        })
+    // //create a legend first
+    // var legendyOffset=0
+    // var legend = plot.append("g")
+    //     .attr("id",media+"legend")
+    //     .on("mouseover",pointer)
+    //     .selectAll("g")
+    //     .data(seriesNames)
+    //     .enter()
+    //     .append("g")
+    //     .attr ("id",function(d,i){
+    //         return media+"l"+i
+    //     })
 
-    var drag = d3.behavior.drag().on("drag", moveLegend);
-    d3.select("#"+media+"legend").call(drag);
+    // var drag = d3.behavior.drag().on("drag", moveLegend);
+    // d3.select("#"+media+"legend").call(drag);
         
-    legend.append("text")
+    // legend.append("text")
 
-        .attr("id",function(d,i){
-            return media+"t"+i
-        })
-        .attr("x",25)
-        .attr("y",0)
-        .attr("class",media+"subtitle")
-        .text(function(d){
-            return d;
-        })
-    legend.append("line")
-        .attr("stroke",function(d,i){
-            return colours[i];  
-        })
-        .attr("x1",0)
-        .attr("x2",20)
-        .attr("y1",-(textOffset/2)+(textOffset/3))
-        .attr("y2",-(textOffset/2)+(textOffset/3))
-        .attr("class",media+"lines")
+    //     .attr("id",function(d,i){
+    //         return media+"t"+i
+    //     })
+    //     .attr("x",25)
+    //     .attr("y",0)
+    //     .attr("class",media+"subtitle")
+    //     .text(function(d){
+    //         return d;
+    //     })
+    // legend.append("line")
+    //     .attr("stroke",function(d,i){
+    //         return colours[i];  
+    //     })
+    //     .attr("x1",0)
+    //     .attr("x2",20)
+    //     .attr("y1",-(textOffset/2)+(textOffset/3))
+    //     .attr("y2",-(textOffset/2)+(textOffset/3))
+    //     .attr("class",media+"lines")
 
-    legend.attr("transform",function(d,i){
-        if (legAlign=='hori') {
-            var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
-            if (i>0) {
-                var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
-            }
-            else {gWidth=0};
-            legendyOffset=legendyOffset+gWidth;
-            return "translate("+(legendyOffset)+","+(gHeigt)+")";  
-        }
-        else {
-            var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
-            return "translate(0,"+((i*textOffset)+textOffset/2)+")"};
-    })
+    // legend.attr("transform",function(d,i){
+    //     if (legAlign=='hori') {
+    //         var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
+    //         if (i>0) {
+    //             var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
+    //         }
+    //         else {gWidth=0};
+    //         legendyOffset=legendyOffset+gWidth;
+    //         return "translate("+(legendyOffset)+","+(gHeigt)+")";  
+    //     }
+    //     else {
+    //         var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
+    //         return "translate(0,"+((i*textOffset)+textOffset/2)+")"};
+    // })
 
     function pointer() {
         this.style.cursor='pointer'

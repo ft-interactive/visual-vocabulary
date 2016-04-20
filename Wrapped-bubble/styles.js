@@ -16,7 +16,8 @@ var styleprint = {classes:
 {class:"yAxis text{fill:#000000; font-size: 9.6px; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
 {class:"origin line{fill:none; stroke-width:0.6px;}"},
 {class:"circle{fill-opacity:0.6; stroke-width: 0.0px}"},
-{class:"circlehighlight{fill-opacity:0.5; stroke-width: 1.0px; stroke:#000000;}"}
+{class:"circlehighlight{fill-opacity:0.5; stroke-width: 1.0px; stroke:#000000;}"},
+
 ],
 titleOffset:10,
 subOffset:15,
@@ -27,9 +28,9 @@ fillcolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
 var styleweb = {classes:
 [{class:"background{fill: none}"},
 {class:"chartholder{fill: none;}"},
-{class:"title{font-size:21px; fill: #3b3d3b; font-weight: 100;}"},
-{class:"subtitle{font-size:14px; fill: #6b6e68; font-weight: 100;}"},
-{class:"source{fill: #6b6e68; font-size: 11.5px; font-weight: 100;}"},
+{class:"title{font-size:21px; fill: #3b3d3b; font-weight: 300;}"},
+{class:"subtitle{font-size:14px; fill: #6b6e68; font-weight: 300;}"},
+{class:"source{fill: #6b6e68; font-size: 11.5px; font-weight: 300;}"},
 {class:"logo{fill: #dacfc5;}"},
 {class:"label{font-size:14px; fill: #6b6e68; font-weight: 100; text-anchor: middle;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
@@ -40,7 +41,7 @@ var styleweb = {classes:
 {class:"yAxis text{fill:#6b6e68; font-size: 14.0px; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
 {class:"origin line{fill:none; stroke:#9ba497; stroke-width: 1px;stroke-dasharray:1,0}"},
 {class:"circle{fill-opacity:0.5; stroke-width: 0.0px}"},
-{class:"circlehighlight{fill-opacity:0.5; stroke-width: 1.0px; stroke:#000000;}"}
+{class:"circlehighlight{fill-opacity:0.5; stroke-width: 1.0px; stroke:#000000;}"},
 ],
 titleOffset:21,
 subOffset:20,
@@ -64,7 +65,7 @@ var stylesoc = {classes:
 {class:"yAxis text{font-size: 28px; fill: #ffffff; opacity: 0.50; font-weight: 100; line-height: 28px; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
 {class:"origin line{fill:none; stroke:#ffffff; stroke-width: 2.0px; opacity: 0.5; stroke-dasharray:1,0}"},
 {class:"circle{fill-opacity:0.5; stroke-width: 0.0px}"},
-{class:"circlehighlight{fill-opacity:0.5; stroke-width: 2.0px; stroke:#ffffff;}"}
+{class:"circlehighlight{fill-opacity:0.5; stroke-width: 2.0px; stroke:#ffffff;}"},
 ],
 titleOffset:36,
 subOffset:30,
@@ -87,8 +88,8 @@ var stylevid = {classes:
 {class:"yAxis line{fill:none; stroke-width: 5.0px; stroke:#ffffff;}"},
 {class:"yAxis text{font-size: 48; fill: #000000; font-weight: 600;font-feature-settings: 'tnum' 1; text-anchor: end;}"},
 {class:"origin line{fill:none; stroke:#ffffff; stroke-width: 5.0px;stroke-dasharray:1,0}"},
-{class:"circle{fill-opacity:0.5; stroke-width: 0.0px}"},
-{class:"circlehighlight{fill-opacity:0.5; stroke-width: 1.0px; stroke:#000000;}"}
+{class:"circle{fill-opacity:1.0; stroke-width: 0.0px}"},
+{class:"circlehighlight{fill-opacity:0.5; stroke-width: 1.0px; stroke:#000000;}"},
 ],
 titleOffset:68,
 subOffset:90,

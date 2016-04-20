@@ -1,4 +1,4 @@
-function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, largeCircle, textOffset){
+function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, largeCircle, textOffset, yHighlight){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -6,6 +6,10 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
    //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
     var plot=d3.select("#"+media+"plot")
+
+    var test=d3.select("#"+media+"Subtitle").style("font-size");
+    test.replace(/\D/g,'')
+    console.log(test)
     
     //Get the width,height and the marginins unique to this plot
     var w=plot.node().getBBox().width;
@@ -36,9 +40,9 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
     })
 
     //comment these lines out to accept d3 default values
-    xExtent[0]=0;//set just one custom scale value - e.g. start the x axis at zero
-    xExtent[1]=90000;
-    yExtent=[0,75];//set both values like this
+    xExtent=[0,12];//set just one custom scale value - e.g. start the x axis at zero
+    //xExtent[1]=90000;
+    yExtent=[-5,10];//set both values like this
 
     //determine categories
     var cats = d3.nest()
@@ -66,7 +70,7 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
     var xAxis = d3.svg.axis()
         .scale(xScale)
         .orient("bottom")
-        .ticks(4);
+        .ticks(5);
     plot.append("g")
         .attr("transform","translate(0,"+(h-margin.bottom)+")")
         .attr("class",media+"xAxis")
@@ -90,6 +94,12 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
     .attr("transform","translate("+margin.left+",0)")
         .attr("class",media+"yAxis")
         .call(yAxis)
+
+    //identify 0 line if there is one
+    var originValue = 0;
+    var origin = plot.selectAll(".tick").filter(function(d, i) {
+            return d==originValue || d==yHighlight;
+        }).classed(media+"origin",true);
 
     //now create the actual data dots
     var dots = plot.append("g")
@@ -135,7 +145,7 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
                     return yScale(d.y)-circleScale(d.size)-3;
                     })
                     .text(function(d){
-                        return d.name
+                        return d.name+' '+d.size
                     })
                     .attr("class",media+"label")
                     .on("mouseover",pointer)
@@ -170,7 +180,7 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
                 return (media+d.name).replace(/\s/g, '');
             })
             .text(function(d){
-                return d.name
+                return d.name+' '+d.size
             })
 
     var drag = d3.behavior.drag().on("drag", moveLabel);
