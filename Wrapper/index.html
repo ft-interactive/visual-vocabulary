@@ -24,6 +24,10 @@
         var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
         var logScale=false;
         var logScaleStart=1000;
+        var markers=false;//show circle markers
+        var numTicksy = 5;//rough number of ticks for y axis
+        var numTicksx = 10;//rough number of ticks for x axis
+        var ticks//=[0.2,0.3];//option to force tick values for online
 
         //Use the frames array to set unique values for each media type of frame
         var frames=[
@@ -98,10 +102,11 @@
                 var media = frames[i].name;
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
-                lineChart(data, stylename, media, chartpadding,legend, lineSmoothing, logScale, logScaleStart,yAxisHighlight);
+                lineChart(data, stylename, media, chartpadding,legend, lineSmoothing, logScale, logScaleStart,yAxisHighlight,markers, numTicksy, numTicksx, ticks);
             }
         })//end data load
-        
+
+
         function mmToPx(mm){
             var px = mm*2.83464480558843;
             return px;
