@@ -13,7 +13,7 @@
     <script>
         
         //datafile
-        var dataURL = "bubbles.csv"
+        var dataURL = "changeme.csv"
         
         //titles, footnotes
         var title = "Do buy for me Argentina";
@@ -27,6 +27,7 @@
         //Use the frames array to set unique values for each media type of frame
         var frames=[
         {name:"print",width:53.4,height:83,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert"},
+        //{name:"datawatch",width:47.48,height:50.45,units:'mm',margins:[{top:0,right:0,bottom:0, left:0}],stylesheet:styleprint,legend:"vert"},
         {name:"web",width:600,height:422,units:'px',margins:[{top:10,right:40,bottom:5,left:10}],stylesheet:styleweb,legend:"hori"},
         {name:"social",width:560,height:750,units:'px',margins:[{top:50,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert"},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori"}
@@ -35,6 +36,7 @@
         //sets the padding inside the chart area
         var chartpadding=[
         {name:"print",margin:[{top:10, right:10, bottom:15, left:10}]},
+        {name:"datawatch",margin:[{top:10, right:10, bottom:15, left:15}]},
         {name:"web",margin:[{top:20, right:20, bottom:20, left:15}]},
         {name:"social",margin:[{top:23, right:17, bottom:50, left:31}]},
         {name:"video",margin:[{top:55, right:35,bottom:68, left:42}]}
