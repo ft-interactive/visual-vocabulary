@@ -6,7 +6,7 @@ function drawFrame(styles, media,titley,suby) {
     //class to make it unique to the chart type, such as web or print
     var HTML="";
     for(var i = 0; i < styles.length; i++){
-        HTML=HTML+("."+media+styles[i].class)
+        HTML=HTML+("\n."+media+styles[i].class)
     }
     //Creats a new empty css stylesheet dynamically
     var stylesheet = document.createElement('style');
