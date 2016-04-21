@@ -48,26 +48,26 @@ linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 
 var stylesoc = {classes:
 [{class:"background{fill: #212121;}"},
-{class:"chartholder{fill: none;}"},
-{class:"title{font-size: 18px; fill: #ffffff; opacity: 0.95; font-weight: 500;}"},
-{class:"subtitle{font-size: 16px; fill: #ffffff; opacity: 0.70; font-weight: 100;}"},
-{class:"label{font-size: 16px; fill: #ffffff; opacity: 0.70; font-weight: 100;}"},
-{class:"source{font-size: 12px; fill: #ffffff; opacity: 0.50;}"},
-{class:"logo{fill: #ffffff;}"},
+{class:"chartholder{fill: #4d4d4f;}"},
+{class:"title{font-size: 38px; fill: #ffffff; opacity: 0.95; font-weight: 400;}"},
+{class:"subtitle{font-size: 28px; fill: #ffffff; opacity: 0.70; font-weight: 100; line-height: 30px;}"},
+{class:"source{font-size: 25px; fill: #ffffff; opacity: 0.50; font-weight: 100;}"},
+{class:"logo{fill: #ffffff; opacity: 0.38;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
-{class:"xAxis line{fill:none; stroke:#ffffff; stroke-width: 1.0px; opacity: 0.5;}"},
-{class:"xAxis text{font-size: 14px; fill: #ffffff; opacity: 0.70; font-weight: 100; line-height: 18px;}"},
+{class:"xAxis line{fill:none; stroke:#ffffff; stroke-width: 2.0px; opacity: 0.5;}"},
+{class:"xAxis text{font-size: 28px; fill: #ffffff; opacity: 0.50; font-weight: 100; line-height: 18px;}"},
 {class:"yAxis{fill:none; stroke: none;}"},
-{class:"yAxis line{fill:none; stroke-width: 1.0px;stroke-dasharray:1,4; opacity: 0.38; stroke:#ffffff;}"},
-{class:"yAxis text{font-size: 14px; fill: #ffffff; opacity: 0.70; font-weight: 100; line-height: 18px; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
-{class:"origin line{fill:none; stroke:#ffffff; stroke-width: 1.0px; opacity: 0.5; stroke-dasharray:1,0}"},
-{class:"lines{fill:none; stroke-width: 1.5px;  stroke-linecap: round;}"}
+{class:"yAxis line{fill:none; stroke-width: 2.0px; stroke-dasharray:2,8; opacity: 0.38; stroke:#ffffff;}"},
+{class:"yAxis text{font-size: 28px; fill: #ffffff; opacity: 0.50; font-weight: 100; line-height: 28px; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
+{class:"origin line{fill:none; stroke:#ffffff; stroke-width: 2.0px; opacity: 0.5; stroke-dasharray:1,0}"},
+{class:"lines{fill:none; stroke-width: 5px;  stroke-linecap: round;}"}
 ],
 titleOffset:36,
-subOffset:20,
+subOffset:30,
 legendyOffset:0,
 linecolours:["#CC4759","#00B5B5","#E6B522","#437099","#FF8C8B","#CBFF7E","#8A8A8A"]
 }
+
 var stylevid = {classes:
 [{class:"background{fill: #dfd0bd;}"},
 {class:"titleframe{fill: #757575;}"},
