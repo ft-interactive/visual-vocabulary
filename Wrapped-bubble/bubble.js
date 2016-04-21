@@ -130,8 +130,9 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
         .style("fill", function(d,i){return colours[cats.indexOf(d.cat)]})
         .on("mouseover",pointer)
         .on("click",function(d){
-            var elClass = d3.select(this).attr("class")
-            if (elClass==media+"circle") {
+            var elClass = d3.select(this)
+            if (elClass.attr("class")==media+"circle") {
+                elClass.moveToFront()
                 d3.select(this).attr("class",media+"circlehighlight")
                 dots.append("text")
                     .datum(d)
@@ -237,11 +238,11 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
             return "translate(0,"+((i*textOffset+margin.top)+textOffset/2)+")"};
     })
 
-
-
-
-
-
+    d3.selection.prototype.moveToFront = function() { 
+                return this.each(function() { 
+                this.parentNode.appendChild(this); 
+                }); 
+    };
 
     function pointer() {
         this.style.cursor='pointer'
