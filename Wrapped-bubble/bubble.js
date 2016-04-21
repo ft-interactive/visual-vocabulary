@@ -40,9 +40,9 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
     })
 
     //comment these lines out to accept d3 default values
-    xExtent=[0,12];//set just one custom scale value - e.g. start the x axis at zero
+    xExtent=[0,90000];//set just one custom scale value - e.g. start the x axis at zero
     //xExtent[1]=90000;
-    yExtent=[-5,10];//set both values like this
+    yExtent=[0,70];//set both values like this
 
     //determine categories
     var cats = d3.nest()
