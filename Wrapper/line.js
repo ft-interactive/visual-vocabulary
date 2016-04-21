@@ -1,4 +1,4 @@
-function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight){
+function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, ticks){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -21,10 +21,6 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
       });
     margin=margin[0].margin[0]
     var colours=stylename.linecolours;
-    var markers=false;//show circle markers
-    var numTicksy = 5;//rough number of ticks for y axis
-    var numTicksx = 10;//rough number of ticks for x axis
-    var ticks//=[0.2,0.3];//option to force tick values for online
 
     //calculate range of time series
     var xDomain = d3.extent(data, function(d) {return d.date;});
