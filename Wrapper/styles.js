@@ -63,7 +63,8 @@ var stylesoc = {classes:
 titleOffset:36,
 subOffset:30,
 legendyOffset:0,
-linecolours:["#CC4759","#00B5B5","#E6B522","#437099","#FF8C8B","#CBFF7E","#8A8A8A"]
+linecolours:["#EB3F50","#00D9CA","#BF9413","#1F5E99","#A7FF59","#FF9B96","#81838F"]
+//linecolours:["#CC4759","#00B5B5","#E6B522","#437099","#FF8C8B","#CBFF7E","#8A8A8A"]
 }
 var stylevid = {classes:
 [{class:"background{fill: #dfd0bd;}"},
