@@ -48,10 +48,12 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     var bandNames = d3.keys(data[0]).filter(function(key) { return key !== "cat"; });
+    console.log(bandNames)
 
     data.forEach(function(d) {
         d.bands = bandNames.map(function(name) { return {name: name, value: +d[name]}; });
     });
+    console.log(data)
 
     x0.domain(data.map(function(d) { return d.cat; }));
     x1.domain(bandNames).rangeRoundBands([0, x0.rangeBand()]);
@@ -94,55 +96,55 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
           .style("fill", function(d,i) { return colours[i] });
 
     // //create a legend first
-    // var legendyOffset=0
-    // var legend = plot.append("g")
-    //     .attr("id",media+"legend")
-    //     .on("mouseover",pointer)
-    //     .selectAll("g")
-    //     .data(seriesNames)
-    //     .enter()
-    //     .append("g")
-    //     .attr ("id",function(d,i){
-    //         return media+"l"+i
-    //     })
+    var legendyOffset=0
+    var legend = plot.append("g")
+        .attr("id",media+"legend")
+        .on("mouseover",pointer)
+        .selectAll("g")
+        .data(bandNames)
+        .enter()
+        .append("g")
+        .attr ("id",function(d,i){
+            return media+"l"+i
+        })
 
-    // var drag = d3.behavior.drag().on("drag", moveLegend);
-    // d3.select("#"+media+"legend").call(drag);
+    var drag = d3.behavior.drag().on("drag", moveLegend);
+    d3.select("#"+media+"legend").call(drag);
         
-    // legend.append("text")
+    legend.append("text")
 
-    //     .attr("id",function(d,i){
-    //         return media+"t"+i
-    //     })
-    //     .attr("x",yOffset+yOffset/2)
-    //     .attr("y",yOffset/2)
-    //     .attr("class",media+"subtitle")
-    //     .text(function(d){
-    //         return d;
-    //     })
-    // legend.append("line")
-    //     .attr("stroke",function(d,i){
-    //         return colours[i];  
-    //     })
-    //     .attr("x1",0)
-    //     .attr("x2",yOffset)
-    //     .attr("y1",yOffset/4)
-    //     .attr("y2",yOffset/4)
-    //     .attr("class",media+"lines")
+        .attr("id",function(d,i){
+            return media+"t"+i
+        })
+        .attr("x",yOffset+yOffset/2)
+        .attr("y",yOffset/2)
+        .attr("class",media+"subtitle")
+        .text(function(d){
+            return d;
+        })
+    legend.append("line")
+        .attr("stroke",function(d,i){
+            return colours[i];  
+        })
+        .attr("x1",0)
+        .attr("x2",yOffset)
+        .attr("y1",yOffset/4)
+        .attr("y2",yOffset/4)
+        .attr("class",media+"lines")
 
-    // legend.attr("transform",function(d,i){
-    //     if (legAlign=='hori') {
-    //         var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
-    //         if (i>0) {
-    //             var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+yOffset; 
-    //         }
-    //         else {gWidth=0};
-    //         legendyOffset=legendyOffset+gWidth;
-    //         return "translate("+(legendyOffset)+","+(gHeigt/2)+")";  
-    //     }
-    //     else {
-    //         return "translate(0,"+((i*yOffset))+")"};
-    // })
+    legend.attr("transform",function(d,i){
+        if (legAlign=='hori') {
+            var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
+            if (i>0) {
+                var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+yOffset; 
+            }
+            else {gWidth=0};
+            legendyOffset=legendyOffset+gWidth;
+            return "translate("+(legendyOffset)+","+(gHeigt/2)+")";  
+        }
+        else {
+            return "translate(0,"+((i*yOffset))+")"};
+    })
 
     function pointer() {
         this.style.cursor='pointer'
