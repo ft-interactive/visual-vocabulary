@@ -97,7 +97,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     .attr("class",media+"yAxis")
     .attr("transform",function(){
         if (yLabel=="right"){
-            return "translate("+margin.left+","+margin.top+")"
+            return "translate("+(margin.left)+","+margin.top+")"
         }
         else {return "translate("+(plotWidth+margin.left)+","+margin.top+")"}
         })
