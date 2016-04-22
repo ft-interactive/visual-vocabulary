@@ -31,15 +31,15 @@
 
         //Use the frames array to set unique values for each media type of frame
         var frames=[
-        {name:"print",width:53.5,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert"},
-        {name:"web",width:600,height:422,units:'px',margins:[{top:10,right:40,bottom:5,left:10}],stylesheet:styleweb,legend:"hori"},
-        {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert"},
-        //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori"}
+        {name:"print",width:53.5,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert",yLabel:"right"},
+        {name:"web",width:600,height:422,units:'px',margins:[{top:10,right:40,bottom:5,left:10}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
+        {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
+        //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
         ]
         
         //sets the padding inside the chart area
         var chartpadding=[
-        {name:"print",margin:[{top:10, right:10, bottom:15, left:7}]},
+        {name:"print",margin:[{top:10, right:10, bottom:15, left:0}]},
         {name:"web",margin:[{top:30, right:15, bottom:20, left:0}]},
         {name:"social",margin:[{top:35, right:17, bottom:55, left:0}]},
         {name:"video",margin:[{top:55, right:35,bottom:68, left:42}]}
@@ -102,7 +102,8 @@
                 var media = frames[i].name;
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
-                lineChart(data, stylename, media, chartpadding,legend, lineSmoothing, logScale, logScaleStart,yAxisHighlight,markers, numTicksy, numTicksx, ticks);
+                var yLabel=frames[i].yLabel
+                lineChart(data, stylename, media, chartpadding,legend, lineSmoothing, logScale, logScaleStart,yAxisHighlight,markers, numTicksy, numTicksx, ticks,yLabel);
             }
         })//end data load
 

@@ -203,7 +203,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
             return "translate("+(legendyOffset)+","+(gHeigt/2)+")";  
         }
         else {
-            return "translate(0,"+((i*yOffset+(margin.top/2)))+")"};
+            return "translate(0,"+((i*yOffset))+")"};
     })
 
     function pointer() {
