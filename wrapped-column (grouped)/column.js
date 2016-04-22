@@ -23,12 +23,12 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     var colours=stylename.linecolours;
 
     var x0 = d3.scale.ordinal()
-    .rangeRoundBands([0, w], .1);
+    .rangeRoundBands([0, w-margin.left-margin.right], .1);
 
     var x1 = d3.scale.ordinal();
 
     var y = d3.scale.linear()
-        .range([h, 0]);
+        .range([h-margin.top-margin.bottom, 0]);
 
     var xAxis = d3.svg.axis()
         .scale(x0)
@@ -37,7 +37,9 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
 
     var yAxis = d3.svg.axis()
         .scale(y)
+        .tickSize(w-margin.left)
         .orient("right")
+        .tickFormat(d3.format(".2s"));
 
     var svg = plot.append("svg")
         .attr("width", w + margin.left + margin.right)
@@ -48,21 +50,48 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     var bandNames = d3.keys(data[0]).filter(function(key) { return key !== "cat"; });
 
     data.forEach(function(d) {
-        d.values = bandNames.map(function(name) { return {name: name, value: +d[name]}; });
+        d.bands = bandNames.map(function(name) { return {name: name, value: +d[name]}; });
     });
 
     x0.domain(data.map(function(d) { return d.cat; }));
     x1.domain(bandNames).rangeRoundBands([0, x0.rangeBand()]);
-    y.domain([0, d3.max(data, function(d) { return d3.max(d.values, function(d) { return d.value; }); })]);
+    y.domain([0, d3.max(data, function(d) { return d3.max(d.bands, function(d) { return d.value; }); })]);
     
-    svg.append("g")
+    var xtext=svg.append("g")
         .attr("class",media+"xAxis")
         .attr("transform", "translate(0," + (h-margin.bottom-margin.top) + ")")
         .call(xAxis);
 
-    svg.append("g")
+    var ytext=svg.append("g")
         .attr("class",media+"yAxis")
         .call(yAxis)
+
+    //identify 0 line if there is one
+    var originValue = 0;
+    var origin = plot.selectAll(".tick").filter(function(d, i) {
+            return d==originValue || d==yHighlight;
+        }).classed(media+"origin",true);
+
+    ytext.selectAll("text")
+        .attr("y", -yOffset/2)
+        .style("text-anchor", "end")
+
+    var category = svg.selectAll("."+media+"category")
+        .data(data)
+        .enter().append("g")
+        .attr("class", media+"category")
+        .attr("transform", function(d) { return "translate(" + x0(d.cat) + ",0)"; });
+
+    category.selectAll("rect")
+        .data(function(d) { return d.bands; })
+        .enter().append("rect")
+          .attr("width", x1.rangeBand())
+          .attr("x", function(d) { return x1(d.name); })
+          .attr("y", function(d) { 
+            console.log(y(d.value))
+            return y(d.value); })
+          .attr("height", function(d) { return h - y(d.value)-margin.bottom-margin.top; })
+          .style("fill", function(d,i) { return colours[i] });
 
     // //create a legend first
     // var legendyOffset=0
