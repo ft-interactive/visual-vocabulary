@@ -65,11 +65,13 @@ function drawFrame(styles, media,titley,suby) {
             .attr("dy",0)
             .call(wrap,width - (margin.left + margin.right),margin.left);
         
+        var subYOffset = d3.select("#"+media+"header").node().getBBox().height;
+        
         header.append("text")
             .attr("id",media+"Subtitle")
             .attr("class", media+"subtitle")
             .attr("x", margin.left)
-            .attr("y", subtitleYoffset+titleYoffset+margin.top)
+            .attr("y", subYOffset+subtitleYoffset+titleYoffset+margin.top)
             .text(subtitle)
             .attr("dy",0)
             .call(wrap,width - (margin.left + margin.right),margin.left);

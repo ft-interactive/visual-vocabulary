@@ -17,7 +17,7 @@ var styleprint = {classes:
 {class:"lines{fill:none; stroke-width:2.0px;stroke-linecap: round;}"}
 ],
 titleOffset:10,
-subOffset:15,
+subOffset:0,
 legendyOffset:0,
 linecolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
 }
@@ -39,14 +39,14 @@ var styleweb = {classes:
 {class:"lines{fill:none; stroke-width: 2.5px; stroke-linecap: round;}"}
 ],
 titleOffset:21,
-subOffset:20,
+subOffset:0,
 legendyOffset:0,
 linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 }
 
 var stylesoc = {classes:
 [{class:"background{fill: #212121;}"},
-{class:"chartholder{fill: #4d4d4f;}"},
+{class:"chartholder{fill: #212121;}"},
 {class:"title{font-size: 38px; fill: #ffffff; opacity: 0.95; font-weight: 400;}"},
 {class:"subtitle{font-size: 28px; fill: #ffffff; opacity: 0.70; font-weight: 100; line-height: 30px;}"},
 {class:"source{font-size: 25px; fill: #ffffff; opacity: 0.50; font-weight: 100;}"},
@@ -61,7 +61,7 @@ var stylesoc = {classes:
 {class:"lines{fill:none; stroke-width: 5px;  stroke-linecap: round;}"}
 ],
 titleOffset:36,
-subOffset:30,
+subOffset:0,
 legendyOffset:0,
 linecolours:["#EB3F50","#00D9CA","#BF9413","#1F5E99","#A7FF59","#FF9B96","#81838F"]
 //linecolours:["#CC4759","#00B5B5","#E6B522","#437099","#FF8C8B","#CBFF7E","#8A8A8A"]
@@ -84,7 +84,7 @@ var stylevid = {classes:
 {class:"lines{fill:none; stroke-width: 8.0px; stroke-linecap: round;}"}
 ],
 titleOffset:68,
-subOffset:90,
+subOffset:0,
 legendyOffset:15,
 linecolours:["#b34b41","#5a8caf","#9baa6e","#eda45e","#9c5f87","#486ba0"]
 }

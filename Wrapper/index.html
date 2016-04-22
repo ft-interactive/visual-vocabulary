@@ -16,11 +16,11 @@
         var dataURL = "2lines.csv"
         
         //titles, footnotes
-        var title = "European IPO market";
+        var title = "European IPO market some more tecxt in";
         var subtitle = "$ per barrel, then a load more words just to see what happens on a long subhead";//comment out subtitle assignment if not needed
-        var source = "FT graphic Bob Haslett|Another line in here|Source: PwC";
+        var source = "FT graphic Bob Haslett|Source: PwC";
         //graph options
-        var yAxisHighlight=100;
+        var yAxisHighlight=0;
         var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
         var logScale=false;
         var logScaleStart=1000;
@@ -33,7 +33,7 @@
         var frames=[
         {name:"print",width:53.5,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert"},
         {name:"web",width:600,height:422,units:'px',margins:[{top:10,right:40,bottom:5,left:10}],stylesheet:styleweb,legend:"hori"},
-        {name:"social",width:560,height:750,units:'px',margins:[{top:50,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert"},
+        {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert"},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori"}
         ]
         
@@ -41,7 +41,7 @@
         var chartpadding=[
         {name:"print",margin:[{top:10, right:10, bottom:15, left:7}]},
         {name:"web",margin:[{top:30, right:15, bottom:20, left:0}]},
-        {name:"social",margin:[{top:23, right:17, bottom:40, left:0}]},
+        {name:"social",margin:[{top:35, right:17, bottom:55, left:0}]},
         {name:"video",margin:[{top:55, right:35,bottom:68, left:42}]}
         ]
         
