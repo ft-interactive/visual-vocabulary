@@ -62,7 +62,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     var plotHeight = h-(margin.top+margin.bottom);
     var xScale = d3.time.scale()
         .domain(xDomain)
-        .range([margin.left,plotWidth])
+        .range([0,plotWidth])
 
     var yScale;
         if (logScale) {
@@ -85,7 +85,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         .scale(yScale)
         .ticks(numTicksy)
         .tickValues(ticks)
-        .tickSize(w-margin.left)
+        .tickSize(plotWidth)
         .orient(yLabel)
 
     if (logScale){
@@ -99,14 +99,14 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         if (yLabel=="right"){
             return "translate("+margin.left+","+margin.top+")"
         }
-        else {return "translate("+(w)+","+margin.top+")"}
+        else {return "translate("+(plotWidth+margin.left)+","+margin.top+")"}
         })
     .call(yAxis);
 
     var xtext=plot.append("g")
     .attr("class",media+"xAxis")
     .attr("transform",function(){
-        return "translate(0,"+(h-margin.bottom)+")"
+        return "translate("+(margin.left)+","+(h-margin.bottom)+")"
         })
     .call(xAxis);
 
@@ -117,12 +117,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         }
         else {return 0}
         })
-    .style("text-anchor", function(){
-        if (yLabel=="right") {
-            return "end"
-        }
-        else {return "start"}
-    })
+    .style("text-anchor", "end")
 
 
     //create a line function that can convert data[] into x and y points
