@@ -1,4 +1,4 @@
-function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, ticks){
+function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, ticks,yLabel){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -86,7 +86,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         .ticks(numTicksy)
         .tickValues(ticks)
         .tickSize(w-margin.left)
-        .orient("right")
+        .orient(yLabel)
 
     if (logScale){
         yAxis.tickFormat(function (d) {
@@ -96,7 +96,10 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     var ytext=plot.append("g")
     .attr("class",media+"yAxis")
     .attr("transform",function(){
-        return "translate("+margin.left+","+margin.top+")"
+        if (yLabel=="right"){
+            return "translate("+margin.left+","+margin.top+")"
+        }
+        else {return "translate("+(w)+","+margin.top+")"}
         })
     .call(yAxis);
 
@@ -108,8 +111,18 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     .call(xAxis);
 
     ytext.selectAll("text")
-    .attr("y", -yOffset/2)
-    .style("text-anchor", "end")
+    .attr("y", function(){
+        if (yLabel=="right") {
+            return -yOffset/2
+        }
+        else {return 0}
+        })
+    .style("text-anchor", function(){
+        if (yLabel=="right") {
+            return "end"
+        }
+        else {return "start"}
+    })
 
 
     //create a line function that can convert data[] into x and y points
