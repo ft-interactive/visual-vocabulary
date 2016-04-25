@@ -40,8 +40,11 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     .orient(yAlign)
     .ticks(10);
 
-    xScale.domain(data.map(function(d) { return d.x; }));
-    yScale.domain([0, d3.max(data, function(d) { return d.y; })]);
+
+    xScale.domain(data.map(function(d) { return d.cat;}));
+
+    var max=d3.max(data, function(d,i) { return +d.value;});
+    yScale.domain([0, max]);
 
     var xLabels=plot.append("g")
       .attr("class", media+"xAxis")
@@ -61,11 +64,12 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     plot.selectAll(".bar")
       .data(data)
     .enter().append("rect")
-      .style("fill", "#c2e4a3")
-      .attr("x", function(d) { return xScale(d.x); })
+      .style("fill", function () {return colours[0]})
+      .attr("x", function(d) { return xScale(d.cat); })
       .attr("width", xScale.rangeBand())
-      .attr("y", function(d) { return yScale(d.y); })
-      .attr("height", function(d) { return h-margin.bottom - yScale(d.y); });
+      .attr("y", function(d) { return yScale(d.value); })
+      .attr("height", function(d) { return plotHeight - yScale(d.value); })
+      .attr("transform", "translate("+(margin.left)+"," + (margin.top) + ")");
 
 
 
