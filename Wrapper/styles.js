@@ -3,7 +3,7 @@ var styleprint = {classes:
 [{class:"background{fill: none}"},
 {class:"chartholder{fill: #fff1e0}"},
 {class:"title{font-size:12px; fill: #000000; font-weight: 600;}"},
-{class:"subtitle{fill:#000000; font-size: 9.6px;font-weight: 300;}"},
+{class:"subtitle{fill:#000000; font-size: 9.6px;}"},
 {class:"source{fill: #000000; font-size: 7.2px;}"},
 {class:"logo{fill: #dacfc5;}"},
 {class:"hat{fill:none; stroke-width:1.0px; stroke:#22190f;}"},
