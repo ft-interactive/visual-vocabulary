@@ -1,4 +1,4 @@
-function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, ticks){
+function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, ticks, yLabel){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -76,6 +76,8 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
 			.range([plotHeight,0])
 			.nice();
 		}
+    var ticksize=colculateTicksize(yLabel)
+
 	var xAxis = d3.svg.axis()
         .scale(xScale)
         .ticks(numTicksx)
@@ -85,7 +87,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         .scale(yScale)
         .ticks(numTicksy)
         .tickValues(ticks)
-        .tickSize(w-margin.left)
+        .tickSize(ticksize)
         .orient("right")
 
     if (logScale){
@@ -205,6 +207,13 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         else {
             return "translate(0,"+((i*yOffset+(margin.top/2)))+")"};
     })
+
+    function colculateTicksize(yLabel) {
+        if (yLabel="left") {
+            return w-margin.right
+        }
+        else {w.margin.left}
+    }
 
     function pointer() {
         this.style.cursor='pointer'
