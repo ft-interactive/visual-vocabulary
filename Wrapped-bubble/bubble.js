@@ -7,9 +7,8 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
     var frame=d3.select("#"+media+"chart")
     var plot=d3.select("#"+media+"plot")
 
-    var test=d3.select("#"+media+"Subtitle").style("font-size");
-    test.replace(/\D/g,'')
-    console.log(test)
+    var yOffset=d3.select("#"+media+"Subtitle").style("font-size");
+    yOffset=Number(yOffset.replace(/[^\d.-]/g, ''));
     
     //Get the width,height and the marginins unique to this plot
     var w=plot.node().getBBox().width;
@@ -40,9 +39,9 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
     })
 
     //comment these lines out to accept d3 default values
-    xExtent=[0,12];//set just one custom scale value - e.g. start the x axis at zero
+    //xExtent=[0,90000];//set just one custom scale value - e.g. start the x axis at zero
     //xExtent[1]=90000;
-    yExtent=[-5,10];//set both values like this
+    //yExtent=[0,70];//set both values like this
 
     //determine categories
     var cats = d3.nest()
@@ -70,6 +69,7 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
     var xAxis = d3.svg.axis()
         .scale(xScale)
         .orient("bottom")
+        .tickSize(yOffset/2)
         .ticks(5);
     plot.append("g")
         .attr("transform","translate(0,"+(h-margin.bottom)+")")
@@ -130,8 +130,9 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
         .style("fill", function(d,i){return colours[cats.indexOf(d.cat)]})
         .on("mouseover",pointer)
         .on("click",function(d){
-            var elClass = d3.select(this).attr("class")
-            if (elClass==media+"circle") {
+            var elClass = d3.select(this)
+            if (elClass.attr("class")==media+"circle") {
+                elClass.moveToFront()
                 d3.select(this).attr("class",media+"circlehighlight")
                 dots.append("text")
                     .datum(d)
@@ -237,11 +238,11 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
             return "translate(0,"+((i*textOffset+margin.top)+textOffset/2)+")"};
     })
 
-
-
-
-
-
+    d3.selection.prototype.moveToFront = function() { 
+                return this.each(function() { 
+                this.parentNode.appendChild(this); 
+                }); 
+    };
 
     function pointer() {
         this.style.cursor='pointer'

@@ -78,7 +78,6 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
 		}
 	var xAxis = d3.svg.axis()
         .scale(xScale)
-        .tickSize(margin.bottom/3)
         .ticks(numTicksx)
         .tickSize(yOffset/2)
         .orient("bottom");
@@ -204,7 +203,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
             return "translate("+(legendyOffset)+","+(gHeigt/2)+")";  
         }
         else {
-            return "translate(0,"+((i*yOffset))+")"};
+            return "translate(0,"+((i*yOffset+(margin.top/2)))+")"};
     })
 
     function pointer() {
