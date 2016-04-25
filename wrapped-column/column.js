@@ -43,8 +43,8 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
 
     xScale.domain(data.map(function(d) { return d.cat;}));
 
-    var max=d3.max(data, function(d,i) { return +d.value;});
-    yScale.domain([0, max]);
+    //var max=d3.max(data, function(d,i) { return +d.value;});
+    yScale.domain([0, d3.max(data, function(d,i) { return +d.value;})]);
 
     var xLabels=plot.append("g")
       .attr("class", media+"xAxis")
