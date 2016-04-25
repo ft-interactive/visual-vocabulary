@@ -158,7 +158,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
             .append("circle")
             .attr("r",3)
             .attr("cx",function(d){return xScale(d.date)})
-            .attr("cy",function(d){return yScale(d.val)});
+            .attr("cy",function(d){return yScale(d.val)+margin.top});
     }
 
     // //create a legend first
