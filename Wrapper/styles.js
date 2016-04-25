@@ -25,9 +25,9 @@ linecolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
 var styleweb = {classes:
 [{class:"background{fill: none}"},
 {class:"chartholder{fill: none;}"},
-{class:"title{font-size:21px; fill: #3b3d3b; font-weight: 100;}"},
-{class:"subtitle{font-size:14px; fill: #6b6e68; font-weight: 100;}"},
-{class:"source{fill: #6b6e68; font-size: 11.5px; font-weight: 100;}"},
+{class:"title{font-size:21px; fill: #3b3d3b;}"},
+{class:"subtitle{font-size:14px; fill: #6b6e68;}"},
+{class:"source{fill: #6b6e68; font-size: 11.5px;}"},
 {class:"logo{fill: #dacfc5;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
 {class:"xAxis line{fill:none; stroke-width: 1.0px; stroke:#c3bcb0;}"},
