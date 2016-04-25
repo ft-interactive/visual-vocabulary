@@ -65,11 +65,13 @@ function drawFrame(styles, media,titley,suby) {
             .attr("dy",0)
             .call(wrap,width - (margin.left + margin.right),margin.left);
         
+        var subYOffset = d3.select("#"+media+"header").node().getBBox().height;
+        
         header.append("text")
             .attr("id",media+"Subtitle")
             .attr("class", media+"subtitle")
             .attr("x", margin.left)
-            .attr("y", subtitleYoffset+titleYoffset+margin.top)
+            .attr("y", subYOffset+subtitleYoffset+titleYoffset+margin.top)
             .text(subtitle)
             .attr("dy",0)
             .call(wrap,width - (margin.left + margin.right),margin.left);
@@ -78,7 +80,7 @@ function drawFrame(styles, media,titley,suby) {
         if(media=="print") {
             header.append("path")
             .attr("class",media+"hat")
-            .attr("d","M 0.5,"+(titleYoffset+margin.top)+" L1,0.5 "+(width-0.5)+",0 "+(width-1)+","+(titleYoffset+margin.top))
+            .attr("d","M 0.5,"+(titleYoffset+margin.top)+" L0.5,0.5 "+(width-0.5)+",0.5 "+(width-0.5)+","+(titleYoffset+margin.top))
             chart.append("path")
             .attr("class",media+"hat")
             .attr("d","M 0.5,"+(height-0.5)+" L"+(width-0.5)+","+(height-0.5)+"")
