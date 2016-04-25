@@ -88,7 +88,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         .ticks(numTicksy)
         .tickValues(ticks)
         .tickSize(ticksize)
-        .orient("right")
+        .orient(yLabel)
 
     if (logScale){
         yAxis.tickFormat(function (d) {
@@ -98,7 +98,10 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     var ytext=plot.append("g")
     .attr("class",media+"yAxis")
     .attr("transform",function(){
-        return "translate("+margin.left+","+margin.top+")"
+        if (yLabel=="right"){
+            return "translate("+(margin.left)+","+margin.top+")"
+        }
+        else return "translate("+(ticksize+margin.left)+","+margin.top+")"
         })
     .call(yAxis);
 
@@ -109,10 +112,11 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         })
     .call(xAxis);
 
-    ytext.selectAll("text")
-    .attr("y", -yOffset/2)
-    .style("text-anchor", "end")
-
+    if (yLabel=="right") {
+        ytext.selectAll("text")
+            .attr("y", -yOffset/2)
+            .style("text-anchor", "end")
+    }
 
     //create a line function that can convert data[] into x and y points
     var lineData= d3.svg.line()
@@ -209,10 +213,10 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     })
 
     function colculateTicksize(yLabel) {
-        if (yLabel="left") {
-            return w-margin.right
+        if (yLabel=="right") {
+            return w-margin.left
         }
-        else {w.margin.left}
+        else {return w-margin.right-margin.left}
     }
 
     function pointer() {

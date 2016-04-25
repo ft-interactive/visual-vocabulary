@@ -26,13 +26,13 @@
         var logScaleStart=1000;
         var markers=false;//show circle markers
         var numTicksy = 5;//rough number of ticks for y axis
-        var numTicksx = 10;//rough number of ticks for x axis
+        var numTicksx = 5;//rough number of ticks for x axis
         var ticks//=[0.2,0.3];//option to force tick values for online
 
         //Use the frames array to set unique values for each media type of frame
         var frames=[
         {name:"print",width:53.5,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert",yLabel:"right"},
-        {name:"web",width:600,height:422,units:'px',margins:[{top:10,right:40,bottom:5,left:10}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
+        {name:"web",width:600,height:422,units:'px',margins:[{top:10,right:40,bottom:5,left:30}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
         {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
         ]
@@ -40,8 +40,8 @@
         //sets the padding inside the chart area
         var chartpadding=[
         {name:"print",margin:[{top:10, right:10, bottom:15, left:0}]},
-        {name:"web",margin:[{top:30, right:15, bottom:20, left:0}]},
-        {name:"social",margin:[{top:35, right:17, bottom:55, left:0}]},
+        {name:"web",margin:[{top:30, right:30, bottom:20, left:30}]},
+        {name:"social",margin:[{top:35, right:00, bottom:55, left:20}]},
         {name:"video",margin:[{top:55, right:35,bottom:68, left:42}]}
         ]
         
