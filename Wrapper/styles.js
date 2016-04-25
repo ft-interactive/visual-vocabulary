@@ -1,7 +1,7 @@
 
 var styleprint = {classes:
 [{class:"background{fill: none}"},
-{class:"chartholder{fill: none}"},
+{class:"chartholder{fill: #none}"},
 {class:"title{font-size:12px; fill: #000000; font-weight: 600;}"},
 {class:"subtitle{fill:#000000; font-size: 9.6px;}"},
 {class:"source{fill: #000000; font-size: 7.2px;}"},
