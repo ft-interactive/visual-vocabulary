@@ -113,6 +113,8 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     .call(xAxis);
 
     if (yLabel=="right") {
+        // var test=ytext.selectAll("text")
+        // console.log(test.node().getBBox().width)
         ytext.selectAll("text")
             .attr("y", -yOffset/2)
             .style("text-anchor", "end")
