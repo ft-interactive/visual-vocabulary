@@ -10,14 +10,14 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
 
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
-    var chart=d3.select("#"+media+"plot")
+    var plot=d3.select("#"+media+"plot")
 
     var yOffset=d3.select("#"+media+"Subtitle").style("font-size");
     yOffset=Number(yOffset.replace(/[^\d.-]/g, ''));
     
     //Get the width,height and the marginins unique to this chart
-    var w=chart.node().getBBox().width;
-    var h=chart.node().getBBox().height;
+    var w=plot.node().getBBox().width;
+    var h=plot.node().getBBox().height;
     var margin=plotpadding.filter(function(d){
         return (d.name === media);
       });
@@ -87,7 +87,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
             return yScale.tickFormat(1,d3.format(",d"))(d)
         })   
     }
-    var yLabel=chart.append("g")
+    var yLabel=plot.append("g")
     .attr("class",media+"yAxis")
     .call(yAxis);
 
@@ -108,15 +108,14 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
 
     //identify 0 line if there is one
     var originValue = 0;
-    var origin = chart.selectAll(".tick").filter(function(d, i) {
+    var origin = plot.selectAll(".tick").filter(function(d, i) {
             return d==originValue || d==yHighlight;
         }).classed(media+"origin",true);
 
-    plotWidth=plotWidth-yLabelOffset
 
     var xScale = d3.time.scale()
         .domain(xDomain)
-        .range([0,plotWidth])
+        .range([0,(plotWidth-yLabelOffset)])
 
     var xAxis = d3.svg.axis()
         .scale(xScale)
@@ -124,7 +123,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         .tickSize(yOffset/2)
         .orient("bottom");
 
-     var xLabel=chart.append("g")
+     var xLabel=plot.append("g")
         .attr("class",media+"xAxis")
         .attr("transform",function(){
             if(yAlign=="right") {
@@ -135,29 +134,30 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         .call(xAxis);
 
     //create a line function that can convert data[] into x and y points
-    // var lineData= d3.svg.line()
-    //     .x(function(d,i) { 
-    //         return xScale(d.date)+margin.left; 
-    //     })
-    //     .y(function(d) { 
-    //         return yScale(d.val)+margin.top; 
-    //     })
-    //     .interpolate(lineSmoothing)
+    var lineData= d3.svg.line()
+        .x(function(d,i) { 
+            return xScale(d.date); 
+        })
+        .y(function(d) { 
+            return yScale(d.val); 
+        })
+        .interpolate(lineSmoothing)
 
 
-    // var lines = plot.append("g").attr("id","series").selectAll("g")
-    //         .data(plotArrays)
-    //         .enter()
-    //         .append("g")
-    //         .attr("id",function(d,i){
-    //             return seriesNames[i];  
-    //         })
-    //     lines.append("path")
-    //         .attr("class",media+"lines")
-    //         .attr("stroke",function(d,i){
-    //             return colours[i];  
-    //         })
-    //         .attr('d', function(d){ return lineData(d); });
+    var lines = plot.append("g").attr("id","series").selectAll("g")
+            .data(plotArrays)
+            .enter()
+            .append("g")
+            .attr("id",function(d,i){
+                return seriesNames[i];  
+            })
+        lines.append("path")
+            .attr("class",media+"lines")
+            .attr("stroke",function(d,i){
+                return colours[i];  
+            })
+            .attr('d', function(d){ return lineData(d); })
+            .attr("transform", "translate("+(margin.left)+"," + (0) + ")");;
 
 
     // //if needed, create markers
