@@ -1,5 +1,5 @@
 
-function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, ticks, yLabel){
+function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, yLabel){
 
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
@@ -102,7 +102,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         if (yLabel=="right"){
             return "translate("+(margin.left)+","+margin.top+")"
         }
-        else return "translate("+(ticksize+margin.left)+","+margin.top+")"
+        else return "translate("+(margin.left)+","+margin.top+")"
         })
     .call(yAxis);
 
