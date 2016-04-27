@@ -46,11 +46,7 @@ linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 
 var stylesoc = {classes:
 [{class:"background{fill: #212121;}"},
-<<<<<<< HEAD
-{class:"chartholder{fill: #636466;}"},
-=======
 {class:"chartholder{fill: none;}"},
->>>>>>> master
 {class:"title{font-size: 38px; fill: #ffffff; opacity: 0.95; font-weight: 400;}"},
 {class:"subtitle{font-size: 28px; fill: #ffffff; opacity: 0.70; font-weight: 100; line-height: 30px;}"},
 {class:"source{font-size: 25px; fill: #ffffff; opacity: 0.50; font-weight: 100;}"},
