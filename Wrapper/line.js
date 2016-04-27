@@ -31,7 +31,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     var yDomain;
 
     //calculate range of y axis series data
-    var min=5;
+    var min=4.5;
     var max=7;
     data.forEach(function(d,i){
         seriesNames.forEach(function(e){
@@ -42,6 +42,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         });			
     });
     yDomain=[min,max];
+    console.log(yDomain)
 
     //create a separate array for each series, filtering out records of each  series for which there are no data
     var plotArrays = [];
@@ -173,7 +174,13 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
             .append("circle")
             .attr("r",3)
             .attr("cx",function(d){return xScale(d.date)})
-            .attr("cy",function(d){return yScale(d.val)+margin.top});
+            .attr("cy",function(d){return yScale(d.val)})
+            .attr("transform",function(){
+                if(yAlign=="right") {
+                    return "translate("+(margin.left)+","+(margin.top)+")"
+                }
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
+            });
     }
 
     // //create a legend first
