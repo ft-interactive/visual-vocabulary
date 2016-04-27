@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, ticks,yLabel){
+=======
+function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, ticks, yLabel){
+>>>>>>> master
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -76,6 +80,8 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
 			.range([plotHeight,0])
 			.nice();
 		}
+    var ticksize=colculateTicksize(yLabel)
+
 	var xAxis = d3.svg.axis()
         .scale(xScale)
         .ticks(numTicksx)
@@ -85,7 +91,11 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         .scale(yScale)
         .ticks(numTicksy)
         .tickValues(ticks)
+<<<<<<< HEAD
         .tickSize(plotWidth)
+=======
+        .tickSize(ticksize)
+>>>>>>> master
         .orient(yLabel)
 
     if (logScale){
@@ -99,7 +109,11 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         if (yLabel=="right"){
             return "translate("+(margin.left)+","+margin.top+")"
         }
+<<<<<<< HEAD
         else {return "translate("+(plotWidth+margin.left)+","+margin.top+")"}
+=======
+        else return "translate("+(ticksize+margin.left)+","+margin.top+")"
+>>>>>>> master
         })
     .call(yAxis);
 
@@ -110,6 +124,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         })
     .call(xAxis);
 
+<<<<<<< HEAD
     ytext.selectAll("text")
     .attr("y", function(){
         if (yLabel=="right") {
@@ -119,6 +134,15 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         })
     .style("text-anchor", "end")
 
+=======
+    if (yLabel=="right") {
+        // var test=ytext.selectAll("text")
+        // console.log(test.node().getBBox().width)
+        ytext.selectAll("text")
+            .attr("y", -yOffset/2)
+            .style("text-anchor", "end")
+    }
+>>>>>>> master
 
     //create a line function that can convert data[] into x and y points
     var lineData= d3.svg.line()
@@ -160,7 +184,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
             .append("circle")
             .attr("r",3)
             .attr("cx",function(d){return xScale(d.date)})
-            .attr("cy",function(d){return yScale(d.val)});
+            .attr("cy",function(d){return yScale(d.val)+margin.top});
     }
 
     // //create a legend first
@@ -213,6 +237,13 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         else {
             return "translate(0,"+((i*yOffset+(margin.top/2)))+")"};
     })
+
+    function colculateTicksize(yLabel) {
+        if (yLabel=="right") {
+            return w-margin.left
+        }
+        else {return w-margin.right-margin.left}
+    }
 
     function pointer() {
         this.style.cursor='pointer'
