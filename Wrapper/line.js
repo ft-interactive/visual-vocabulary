@@ -10,15 +10,14 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
 
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
-    var plot=d3.select("#"+media+"plot")
+    var chart=d3.select("#"+media+"plot")
 
     var yOffset=d3.select("#"+media+"Subtitle").style("font-size");
     yOffset=Number(yOffset.replace(/[^\d.-]/g, ''));
     
-    //Get the width,height and the marginins unique to this plot
-    var w=plot.node().getBBox().width;
-    var h=plot.node().getBBox().height;
-    console.log(w,h)
+    //Get the width,height and the marginins unique to this chart
+    var w=chart.node().getBBox().width;
+    var h=chart.node().getBBox().height;
     var margin=plotpadding.filter(function(d){
         return (d.name === media);
       });
@@ -63,9 +62,6 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     });
 
     //Scales
-    var xScale = d3.time.scale()
-        .domain(xDomain)
-        .range([0,plotWidth])
 
     var yScale;
         if (logScale) {
@@ -80,12 +76,6 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
 			.nice();
 		}
 
-	var xAxis = d3.svg.axis()
-        .scale(xScale)
-        .ticks(numTicksx)
-        .tickSize(yOffset/2)
-        .orient("bottom");
-
     var yAxis = d3.svg.axis()
         .scale(yScale)
         .ticks(numTicksy)
@@ -97,30 +87,52 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
             return yScale.tickFormat(1,d3.format(",d"))(d)
         })   
     }
-    var yLabel=plot.append("g")
+    var yLabel=chart.append("g")
     .attr("class",media+"yAxis")
     .call(yAxis);
 
-    var xLabel=plot.append("g")
-    .attr("class",media+"xAxis")
-    .attr("transform",function(){
-        return "translate("+(margin.left)+","+(h-margin.bottom)+")"
-        })
-    .call(xAxis);
-
     //calculate what the ticksize should be now that the text for the labels has been drawn
     var yLabelOffset=yLabel.node().getBBox().width
-    var ticksize=colculateTicksize(yAlign, yLabelOffset);
-    console.log(ticksize);
+    console.log("offset= ",yLabelOffset)
+    var yticksize=colculateTicksize(yAlign, yLabelOffset);
+    console.log(yticksize);
 
-    yLabel.call(yAxis.tickSize(ticksize))
-    // yLabel
-    //     .attr("transform",function(){
-    //         if (yAlign=="right"){
-    //             return "translate("+(margin.left)+","+margin.top+")"
-    //         }
-    //         else return "translate("+(w-margin.right)+","+margin.top+")"
-    //         })
+    yLabel.call(yAxis.tickSize(yticksize))
+    yLabel
+        .attr("transform",function(){
+            if (yAlign=="right"){
+                return "translate("+(margin.left)+","+margin.top+")"
+            }
+            else return "translate("+(w-margin.right)+","+margin.top+")"
+            })
+
+    //identify 0 line if there is one
+    var originValue = 0;
+    var origin = chart.selectAll(".tick").filter(function(d, i) {
+            return d==originValue || d==yHighlight;
+        }).classed(media+"origin",true);
+
+    plotWidth=plotWidth-yLabelOffset
+
+    var xScale = d3.time.scale()
+        .domain(xDomain)
+        .range([0,plotWidth])
+
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .ticks(numTicksx)
+        .tickSize(yOffset/2)
+        .orient("bottom");
+
+     var xLabel=chart.append("g")
+        .attr("class",media+"xAxis")
+        .attr("transform",function(){
+            if(yAlign=="right") {
+                return "translate("+(margin.left)+","+(h-margin.bottom)+")"
+            }
+             else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"}
+            })
+        .call(xAxis);
 
     //create a line function that can convert data[] into x and y points
     // var lineData= d3.svg.line()
@@ -132,11 +144,6 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     //     })
     //     .interpolate(lineSmoothing)
 
-    // //identify 0 line if there is one
-    // var originValue = 0;
-    // var origin = plot.selectAll(".tick").filter(function(d, i) {
-    //         return d==originValue || d==yHighlight;
-    //     }).classed(media+"origin",true);
 
     // var lines = plot.append("g").attr("id","series").selectAll("g")
     //         .data(plotArrays)
@@ -217,7 +224,6 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     // })
 
     function colculateTicksize(align, offset) {
-        console.log(align, offset);
         if (align=="right") {
             return w-margin.left-offset
         }
