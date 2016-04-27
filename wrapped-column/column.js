@@ -7,7 +7,7 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
 
     //Select the plot space in the frame from which to take measurements
-    var frame=d3.select("#"+media+"chart")
+    var chart=d3.select("#"+media+"chart")
     var plot=d3.select("#"+media+"plot")
 
     var yOffset=d3.select("#"+media+"Subtitle").style("font-size");
@@ -24,32 +24,15 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     var plotWidth=w-margin.left-margin.right
     var plotHeight=h-margin.top-margin.bottom
 
-    var xScale = d3.scale.ordinal()
-    .rangeRoundBands([0, plotWidth], .1);
-
     var yScale = d3.scale.linear()
     .range([plotHeight, 0]);
-
-    var xAxis = d3.svg.axis()
-    .scale(xScale)
-    .orient("bottom");
-
-    var yAxis = d3.svg.axis()
-    .scale(yScale)
-    .tickSize(w)
-    .orient(yAlign)
-    .ticks(10);
-
-
-    xScale.domain(data.map(function(d) { return d.cat;}));
 
     //var max=d3.max(data, function(d,i) { return +d.value;});
     yScale.domain([0, d3.max(data, function(d,i) { return +d.value;})]);
 
-    var xLabels=plot.append("g")
-      .attr("class", media+"xAxis")
-      .attr("transform", "translate("+(margin.left)+"," + (h-margin.bottom) + ")")
-      .call(xAxis);
+    var yAxis = d3.svg.axis()
+    .scale(yScale)
+    .orient(yAlign);
 
     var yLabel=plot.append("g")
       .attr("class", media+"yAxis")
@@ -61,6 +44,42 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
       })
       .call(yAxis)
 
+    //calculate what the ticksize should be now that the text for the labels has been drawn
+    var yLabelOffset=yLabel.node().getBBox().width
+    console.log("offset= ",yLabelOffset)
+    var yticksize=colculateTicksize(yAlign, yLabelOffset);
+    console.log(yticksize);
+
+    yLabel.call(yAxis.tickSize(yticksize))
+    yLabel
+        .attr("transform",function(){
+            if (yAlign=="right"){
+                return "translate("+(margin.left)+","+margin.top+")"
+            }
+            else return "translate("+(w-margin.right)+","+margin.top+")"
+            })
+
+    //identify 0 line if there is one
+    var originValue = 0;
+    var origin = plot.selectAll(".tick").filter(function(d, i) {
+            return d==originValue || d==yHighlight;
+        }).classed(media+"origin",true);
+
+    var xScale = d3.scale.ordinal()
+    .rangeRoundBands([0, plotWidth], .1);
+
+    var xAxis = d3.svg.axis()
+    .scale(xScale)
+    .orient("bottom");
+
+
+    xScale.domain(data.map(function(d) { return d.cat;}));
+
+    var xLabels=plot.append("g")
+      .attr("class", media+"xAxis")
+      .attr("transform", "translate("+(margin.left)+"," + (h-margin.bottom) + ")")
+      .call(xAxis);
+
     plot.selectAll(".bar")
       .data(data)
     .enter().append("rect")
@@ -69,8 +88,12 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
       .attr("width", xScale.rangeBand())
       .attr("y", function(d) { return yScale(d.value); })
       .attr("height", function(d) { return plotHeight - yScale(d.value); })
-      .attr("transform", "translate("+(margin.left)+"," + (margin.top) + ")");
-
+      .attr("transform",function(){
+            if(yAlign=="right") {
+                return "translate("+(margin.left)+","+(margin.top)+")"
+            }
+             else {return "translate("+(margin.left)+","+(margin.top)+")"}
+        })
 
 
 
@@ -126,6 +149,14 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     //     else {
     //         return "translate(0,"+((i*yOffset))+")"};
     // })
+
+
+    function colculateTicksize(align, offset) {
+        if (align=="right") {
+            return w-margin.left-offset
+        }
+        else {return w-margin.right-offset}
+    }
 
 
     function pointer() {
