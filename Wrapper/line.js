@@ -123,98 +123,98 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     }
 
     //create a line function that can convert data[] into x and y points
-    var lineData= d3.svg.line()
-        .x(function(d,i) { 
-            return xScale(d.date)+margin.left; 
-        })
-        .y(function(d) { 
-            return yScale(d.val)+margin.top; 
-        })
-        .interpolate(lineSmoothing)
+    // var lineData= d3.svg.line()
+    //     .x(function(d,i) { 
+    //         return xScale(d.date)+margin.left; 
+    //     })
+    //     .y(function(d) { 
+    //         return yScale(d.val)+margin.top; 
+    //     })
+    //     .interpolate(lineSmoothing)
 
-    //identify 0 line if there is one
-    var originValue = 0;
-    var origin = plot.selectAll(".tick").filter(function(d, i) {
-            return d==originValue || d==yHighlight;
-        }).classed(media+"origin",true);
+    // //identify 0 line if there is one
+    // var originValue = 0;
+    // var origin = plot.selectAll(".tick").filter(function(d, i) {
+    //         return d==originValue || d==yHighlight;
+    //     }).classed(media+"origin",true);
 
-    var lines = plot.append("g").attr("id","series").selectAll("g")
-            .data(plotArrays)
-            .enter()
-            .append("g")
-            .attr("id",function(d,i){
-                return seriesNames[i];  
-            })
-        lines.append("path")
-            .attr("class",media+"lines")
-            .attr("stroke",function(d,i){
-                return colours[i];  
-            })
-            .attr('d', function(d){ return lineData(d); });
+    // var lines = plot.append("g").attr("id","series").selectAll("g")
+    //         .data(plotArrays)
+    //         .enter()
+    //         .append("g")
+    //         .attr("id",function(d,i){
+    //             return seriesNames[i];  
+    //         })
+    //     lines.append("path")
+    //         .attr("class",media+"lines")
+    //         .attr("stroke",function(d,i){
+    //             return colours[i];  
+    //         })
+    //         .attr('d', function(d){ return lineData(d); });
 
 
-    //if needed, create markers
-    if (markers){
-        lines.append("g").attr("fill",function(d,i){return colours[i]})
-            .selectAll("circle")
-            .data(function(d){return d;})
-            .enter()
-            .append("circle")
-            .attr("r",3)
-            .attr("cx",function(d){return xScale(d.date)})
-            .attr("cy",function(d){return yScale(d.val)+margin.top});
-    }
+    // //if needed, create markers
+    // if (markers){
+    //     lines.append("g").attr("fill",function(d,i){return colours[i]})
+    //         .selectAll("circle")
+    //         .data(function(d){return d;})
+    //         .enter()
+    //         .append("circle")
+    //         .attr("r",3)
+    //         .attr("cx",function(d){return xScale(d.date)})
+    //         .attr("cy",function(d){return yScale(d.val)+margin.top});
+    // }
 
-    // //create a legend first
-    var legendyOffset=0
-    var legend = plot.append("g")
-        .attr("id",media+"legend")
-        .on("mouseover",pointer)
-        .selectAll("g")
-        .data(seriesNames)
-        .enter()
-        .append("g")
-        .attr ("id",function(d,i){
-            return media+"l"+i
-        })
+    // // //create a legend first
+    // var legendyOffset=0
+    // var legend = plot.append("g")
+    //     .attr("id",media+"legend")
+    //     .on("mouseover",pointer)
+    //     .selectAll("g")
+    //     .data(seriesNames)
+    //     .enter()
+    //     .append("g")
+    //     .attr ("id",function(d,i){
+    //         return media+"l"+i
+    //     })
 
-    var drag = d3.behavior.drag().on("drag", moveLegend);
-    d3.select("#"+media+"legend").call(drag);
+    // var drag = d3.behavior.drag().on("drag", moveLegend);
+    // d3.select("#"+media+"legend").call(drag);
         
-    legend.append("text")
+    // legend.append("text")
 
-        .attr("id",function(d,i){
-            return media+"t"+i
-        })
-        .attr("x",yOffset+yOffset/2)
-        .attr("y",yOffset/2)
-        .attr("class",media+"subtitle")
-        .text(function(d){
-            return d;
-        })
-    legend.append("line")
-        .attr("stroke",function(d,i){
-            return colours[i];  
-        })
-        .attr("x1",0)
-        .attr("x2",yOffset)
-        .attr("y1",yOffset/4)
-        .attr("y2",yOffset/4)
-        .attr("class",media+"lines")
+    //     .attr("id",function(d,i){
+    //         return media+"t"+i
+    //     })
+    //     .attr("x",yOffset+yOffset/2)
+    //     .attr("y",yOffset/2)
+    //     .attr("class",media+"subtitle")
+    //     .text(function(d){
+    //         return d;
+    //     })
+    // legend.append("line")
+    //     .attr("stroke",function(d,i){
+    //         return colours[i];  
+    //     })
+    //     .attr("x1",0)
+    //     .attr("x2",yOffset)
+    //     .attr("y1",yOffset/4)
+    //     .attr("y2",yOffset/4)
+    //     .attr("class",media+"lines")
 
-    legend.attr("transform",function(d,i){
-        if (legAlign=='hori') {
-            var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
-            if (i>0) {
-                var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+yOffset; 
-            }
-            else {gWidth=0};
-            legendyOffset=legendyOffset+gWidth;
-            return "translate("+(legendyOffset)+","+(gHeigt/2)+")";  
-        }
-        else {
-            return "translate(0,"+((i*yOffset+(margin.top/2)))+")"};
-    })
+    // legend.attr("transform",function(d,i){
+    //     if (legAlign=='hori') {
+    //         var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
+    //         if (i>0) {
+    //             var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+yOffset; 
+    //         }
+    //         else {gWidth=0};
+    //         legendyOffset=legendyOffset+gWidth;
+    //         return "translate("+(legendyOffset)+","+(gHeigt/2)+")";  
+    //     }
+    //     else {
+    //         return "translate(0,"+((i*yOffset+(margin.top/2)))+")"};
+    // })
 
     function colculateTicksize(yLabel) {
         if (yLabel=="right") {
