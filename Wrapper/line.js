@@ -7,7 +7,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
 
     // return the series names from the first row of the spreadsheet
     var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
-
+    console.log("series",seriesNames)
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
     var plot=d3.select("#"+media+"plot")
@@ -31,8 +31,8 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     var yDomain;
 
     //calculate range of y axis series data
-    var min=0;
-    var max=4;
+    var min=5;
+    var max=7;
     data.forEach(function(d,i){
         seriesNames.forEach(function(e){
             if (d[e]){
@@ -159,9 +159,9 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
             .attr('d', function(d){ return lineData(d); })
             .attr("transform",function(){
                 if(yAlign=="right") {
-                    return "translate("+(margin.left)+",0)"
+                    return "translate("+(margin.left)+","+(margin.top)+")"
                 }
-                 else {return "translate("+(margin.left+yLabelOffset)+",0)"}
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
             })
 
     //if needed, create markers
