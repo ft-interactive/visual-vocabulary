@@ -1,4 +1,6 @@
+
 function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, ticks, yLabel){
+
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -62,7 +64,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     var plotHeight = h-(margin.top+margin.bottom);
     var xScale = d3.time.scale()
         .domain(xDomain)
-        .range([margin.left,plotWidth])
+        .range([0,plotWidth])
 
     var yScale;
         if (logScale) {
@@ -87,7 +89,6 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         .scale(yScale)
         .ticks(numTicksy)
         .tickValues(ticks)
-        .tickSize(ticksize)
         .orient(yLabel)
 
     if (logScale){
@@ -108,7 +109,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     var xtext=plot.append("g")
     .attr("class",media+"xAxis")
     .attr("transform",function(){
-        return "translate(0,"+(h-margin.bottom)+")"
+        return "translate("+(margin.left)+","+(h-margin.bottom)+")"
         })
     .call(xAxis);
 
