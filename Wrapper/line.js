@@ -23,6 +23,8 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
       });
     margin=margin[0].margin[0]
     var colours=stylename.linecolours;
+    var plotWidth = w-(margin.left+margin.right);
+    var plotHeight = h-(margin.top+margin.bottom);
 
     //calculate range of time series
     var xDomain = d3.extent(data, function(d) {return d.date;});
@@ -60,8 +62,6 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     });
 
     //Scales
-    var plotWidth = w-(margin.left+margin.right);
-    var plotHeight = h-(margin.top+margin.bottom);
     var xScale = d3.time.scale()
         .domain(xDomain)
         .range([0,plotWidth])
@@ -89,6 +89,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         .scale(yScale)
         .ticks(numTicksy)
         .tickValues(ticks)
+        .tickSize(ticksize)
         .orient(yLabel)
 
     if (logScale){
@@ -102,7 +103,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         if (yLabel=="right"){
             return "translate("+(margin.left)+","+margin.top+")"
         }
-        else return "translate("+(margin.left)+","+margin.top+")"
+        else return "translate("+(w-margin.left)+","+margin.top+")"
         })
     .call(yAxis);
 
@@ -124,7 +125,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     //create a line function that can convert data[] into x and y points
     var lineData= d3.svg.line()
         .x(function(d,i) { 
-            return xScale(d.date); 
+            return xScale(d.date)+margin.left; 
         })
         .y(function(d) { 
             return yScale(d.val)+margin.top; 
