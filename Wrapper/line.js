@@ -157,8 +157,12 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
                 return colours[i];  
             })
             .attr('d', function(d){ return lineData(d); })
-            .attr("transform", "translate("+(margin.left)+"," + (0) + ")");;
-
+            .attr("transform",function(){
+                if(yAlign=="right") {
+                    return "translate("+(margin.left)+",0)"
+                }
+                 else {return "translate("+(margin.left+yLabelOffset)+",0)"}
+            })
 
     // //if needed, create markers
     // if (markers){
