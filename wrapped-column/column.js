@@ -106,10 +106,6 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
              else {return "translate("+(margin.left)+","+(margin.top)+")"}
         })
 
-    var seriesNames = color.domain
-
-
-
     //create a legend first
     var legendyOffset=0
     var legend = plot.append("g")
@@ -135,7 +131,7 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
         .attr("y",0)
         .attr("class",media+"subtitle")
         .text(function(d){
-            return "Some text";
+            return d;
         })
 
     legend.append("rect")
@@ -143,7 +139,7 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
         .attr("y",-yOffset+yOffset/3)
         .attr("width",(yOffset/100)*85)
         .attr("height",(yOffset/100)*70)
-        .style("fill", function(d,i){return "#FFF1e0"})
+        .style("fill", function(d,i){return color(d)})
 
     legend.attr("transform",function(d,i){
         if (legAlign=='hori') {

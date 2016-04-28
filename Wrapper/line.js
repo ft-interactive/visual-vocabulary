@@ -31,8 +31,8 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     var yDomain;
 
     //calculate range of y axis series data
-    var min=900000;
-    var max=1500000;
+    var min=0;
+    var max=0;
     data.forEach(function(d,i){
         seriesNames.forEach(function(e){
             if (d[e]){
@@ -172,7 +172,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
             .data(function(d){return d;})
             .enter()
             .append("circle")
-            .attr("r",3)
+            .attr("r",yOffset/4)
             .attr("cx",function(d){return xScale(d.date)})
             .attr("cy",function(d){return yScale(d.val)})
             .attr("transform",function(){
