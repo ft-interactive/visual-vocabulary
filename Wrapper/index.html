@@ -16,11 +16,11 @@
         var dataURL = "data.csv"
         
         //titles, footnotes
-        var title = "Italy: annual change in employment by age";
-        var subtitle = "people (‘000)";//comment out subtitle assignment if not needed
-        var source = "Source: ISTAT   FT graphic Bob Haslett";
+        var title = "To come";
+        var subtitle = "Index";//comment out subtitle assignment if not needed
+        var source = "Source: Thomson Reuters Datastream   FT graphic";
         //graph options
-        var yAxisHighlight=-600;
+        var yAxisHighlight=0;
         var lineSmoothing="linear";//choose 'linear' for an unsmoothed line 'monotone' for smooth
         var logScale=false;
         var logScaleStart=1000;
@@ -79,7 +79,7 @@
             //date formatter, matching the format of the incoming csv...
             //var parseDate = d3.time.format("%Y %b").parse;
             //var parseDate = d3.time.format("%Y").parse;//just full year
-            var parseDate = d3.time.format("%Y").parse;
+            var parseDate = d3.time.format("%d-%b-%y").parse;
             /*
             some common formatting parsers....
             d3.time.format("%Y %b") 1986 Jan
