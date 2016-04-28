@@ -3,14 +3,12 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
-    console.log(data)
     var seriesNames=[]
     for(i = 0; i< data.length; i++){    
         if(seriesNames.indexOf(data[i].party) === -1){
             seriesNames.push(data[i].party);        
         }        
     }
-    console.log("series",seriesNames)
 
     //Select the plot space in the frame from which to take measurements
     var chart=d3.select("#"+media+"chart")
@@ -57,9 +55,7 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
 
     //calculate what the ticksize should be now that the text for the labels has been drawn
     var yLabelOffset=yLabel.node().getBBox().width
-    console.log("offset= ",yLabelOffset)
     var yticksize=colculateTicksize(yAlign, yLabelOffset);
-    console.log(yticksize);
 
     yLabel.call(yAxis.tickSize(yticksize))
     yLabel
