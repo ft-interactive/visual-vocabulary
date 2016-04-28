@@ -41,16 +41,11 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
 
     var yAxis = d3.svg.axis()
     .scale(yScale)
-    .orient(yAlign);
+    .orient(yAlign)
+    .ticks(numTicksy);
 
     var yLabel=plot.append("g")
       .attr("class", media+"yAxis")
-      .attr("transform", function() {
-        if (yAlign=="right") {
-            return "translate(0,"+(margin.top)+")"
-        }
-        else {return "translate("+(w)+","+(margin.top)+")" }
-      })
       .call(yAxis)
 
     //calculate what the ticksize should be now that the text for the labels has been drawn
@@ -123,7 +118,7 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
         .attr("id",function(d,i){
             return media+"t"+i
         })
-        .attr("x",yOffset+yOffset/2)
+        .attr("x",yOffset+yOffset/5)
         .attr("y",0)
         .attr("class",media+"subtitle")
         .text(function(d){
