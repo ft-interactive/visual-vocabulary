@@ -31,8 +31,8 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     var yDomain;
 
     //calculate range of y axis series data
-    var min=4.5;
-    var max=7;
+    var min=900000;
+    var max=1500000;
     data.forEach(function(d,i){
         seriesNames.forEach(function(e){
             if (d[e]){
@@ -231,7 +231,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
             return "translate("+(legendyOffset)+","+(gHeigt/2)+")";  
         }
         else {
-            return "translate(0,"+((i*yOffset+(margin.top/2)))+")"};
+            return "translate(0,"+((i*yOffset))+")"};
     })
 
     function colculateTicksize(align, offset) {

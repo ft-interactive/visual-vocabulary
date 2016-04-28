@@ -16,31 +16,31 @@
         var dataURL = "data.csv"
         
         //titles, footnotes
-        var title = "European IPO market some more tecxt in";
-        var subtitle = "$ per barrel, then a load more words just to see what happens on a long subhead";//comment out subtitle assignment if not needed
-        var source = "FT graphic Bob Haslett|Source: PwC";
+        var title = "Italy's unemployment rate";
+        var subtitle = "%";//comment out subtitle assignment if not needed
+        var source = "FT graphic Bob Haslett|Source: ISTAT";
         //graph options
-        var yAxisHighlight=4.5;
+        var yAxisHighlight=900000;
         var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
         var logScale=false;
         var logScaleStart=1000;
         var markers=false;//show circle markers
-        var numTicksy = 4;//rough number of ticks for y axis
-        var numTicksx = 6;//rough number of ticks for x axis
+        var numTicksy = 6;//rough number of ticks for y axis
+        var numTicksx = 8;//rough number of ticks for x axis
         var ticks//=[0.2,0.3];//option to force tick values for online
 
         //Use the frames array to set unique values for each media type of frame
         var frames=[
         {name:"print",width:53.5,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert",yLabel:"right"},
-        {name:"web",width:600,height:422,units:'px',margins:[{top:10,right:60,bottom:5,left:30}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
+        {name:"web",width:600,height:422,units:'px',margins:[{top:10,right:38,bottom:5,left:30}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
         {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
         ]
         
         //sets the padding inside the chart area
         var chartpadding=[
-        {name:"print",margin:[{top:5, right:00, bottom:15   , left:0}]},
-        {name:"web",margin:[{top:7, right:10, bottom:20, left:10}]},
+        {name:"print",margin:[{top:30, right:00, bottom:15   , left:0}]},
+        {name:"web",margin:[{top:7, right:10, bottom:20, left:0}]},
         {name:"social",margin:[{top:10, right:20, bottom:38, left:12}]},
         {name:"video",margin:[{top:55, right:35,bottom:68, left:42}]}
         ]
