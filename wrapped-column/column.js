@@ -87,6 +87,7 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
       .style("fill", function (d) {
             return colours(d.group)
         })
+      .attr("class",media+"bars")
       .attr("x", function(d) { return xScale(d.cat); })
       .attr("width", xScale.rangeBand())
       .attr("y", function(d) { return yScale(d.value); })
@@ -97,57 +98,73 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
             }
              else {return "translate("+(margin.left)+","+(margin.top)+")"}
         })
-      .on("mouseover",pointer);
+      .on("mouseover",pointer)
+      .on("click",function(d){
+            var elClass = d3.select(this)
+            if (elClass.attr("class")==media+"bars") {
+                d3.select(this).attr("class",media+"barshighlight");
+                console.log(colours.range()[0])
+                d3.select(this).style("fill",colours.range()[1])
+            }
+            else{var el=d3.select(this)
+                el.attr("class",media+"bars");
+                d3.select(this).style("fill",colours.range()[0])
+            }
+        });
 
     //create a legend first
-    var legendyOffset=0
-    var legend = plot.append("g")
-        .attr("id",media+"legend")
-        .on("mouseover",pointer)
-        .selectAll("g")
-        .data(groupNames)
-        .enter()
-        .append("g")
-        .attr ("id",function(d,i){
-            return media+"l"+i
-        })
+    console.log(groupNames[0])
+    if (groupNames[0]!="-") {
+        var legendyOffset=0
+        var legend = plot.append("g")
+            .attr("id",media+"legend")
+            .on("mouseover",pointer)
+            .selectAll("g")
+            .data(groupNames)
+            .enter()
+            .append("g")
+            .attr ("id",function(d,i){
+                return media+"l"+i
+            })
 
-    var drag = d3.behavior.drag().on("drag", moveLegend);
-    d3.select("#"+media+"legend").call(drag);
-        
-    legend.append("text")
+        var drag = d3.behavior.drag().on("drag", moveLegend);
+        d3.select("#"+media+"legend").call(drag);
+            
+        legend.append("text")
 
-        .attr("id",function(d,i){
-            return media+"t"+i
-        })
-        .attr("x",yOffset+yOffset/5)
-        .attr("y",0)
-        .attr("class",media+"subtitle")
-        .text(function(d){
-            return d;
-        })
+            .attr("id",function(d,i){
+                return media+"t"+i
+            })
+            .attr("x",yOffset+yOffset/5)
+            .attr("y",0)
+            .attr("class",media+"subtitle")
+            .text(function(d){
+                return d;
+            })
 
-    legend.append("rect")
-        .attr("x",0)
-        .attr("y",-yOffset+yOffset/3)
-        .attr("width",(yOffset/100)*85)
-        .attr("height",(yOffset/100)*70)
-        .style("fill", function(d,i){return colours(d)})
+        legend.append("rect")
+            .attr("x",0)
+            .attr("y",-yOffset+yOffset/3)
+            .attr("width",(yOffset/100)*85)
+            .attr("height",(yOffset/100)*70)
+            .style("fill", function(d,i){return colours(d)})
 
-    legend.attr("transform",function(d,i){
-        if (legAlign=='hori') {
-            var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
-            if (i>0) {
-                var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
+        legend.attr("transform",function(d,i){
+            if (legAlign=='hori') {
+                var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
+                if (i>0) {
+                    var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
+                }
+                else {gWidth=0};
+                legendyOffset=legendyOffset+gWidth;
+                return "translate("+(legendyOffset)+","+(gHeigt)+")";  
             }
-            else {gWidth=0};
-            legendyOffset=legendyOffset+gWidth;
-            return "translate("+(legendyOffset)+","+(gHeigt)+")";  
-        }
-        else {
-            var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
-            return "translate(0,"+((i*yOffset)+yOffset/2)+")"};
-    })
+            else {
+                var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
+                return "translate(0,"+((i*yOffset)+yOffset/2)+")"};
+        })
+    }
+    
 
     
     function colculateTicksize(align, offset) {
