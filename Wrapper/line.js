@@ -1,5 +1,5 @@
 
-function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, yAlign){
+function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, yAlign, ticks){
 
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
@@ -78,7 +78,6 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     var yAxis = d3.svg.axis()
         .scale(yScale)
         .ticks(numTicksy)
-        .tickValues(ticks)
         .orient(yAlign)
 
     if (logScale){
@@ -120,6 +119,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
 
     var xAxis = d3.svg.axis()
         .scale(xScale)
+        .tickValues(ticks)
         .ticks(numTicksx)
         .tickSize(yOffset/2)
         .orient("bottom");

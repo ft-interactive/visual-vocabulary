@@ -117,6 +117,7 @@
         if (int=="years") {
             var intervales= d3.time.year.range(new Date(xDomain[0]), new Date(xDomain[1]));
             intervales.unshift(xDomain[0])
+            ticks=intervales
             console.log(intervales)
         }
         if (int=="months") {
