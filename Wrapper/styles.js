@@ -49,7 +49,7 @@ var stylesoc = {classes:
 {class:"chartholder{fill: #636466;}"},
 {class:"title{font-size: 38px; fill: #ffffff; opacity: 0.95; font-weight: 400;}"},
 {class:"subtitle{font-size: 28px; fill: #ffffff; opacity: 0.70; font-weight: 100; line-height: 30px;}"},
-{class:"source{font-size: 25px; fill: #ffffff; opacity: 0.50; font-weight: 100;}"},
+{class:"source{font-size: 25px; fill: #ffffff; opacity: 0.50; font-weight: 100; line-height: 30px;}"},
 {class:"logo{fill: #ffffff; opacity: 0.38;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
 {class:"xAxis line{fill:none; stroke:#ffffff; stroke-width: 2.0px; opacity: 0.5;}"},
