@@ -7,7 +7,6 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
 
     // return the series names from the first row of the spreadsheet
     var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
-    console.log("series",seriesNames)
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
     var plot=d3.select("#"+media+"plot")
@@ -26,8 +25,8 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
 
-    //calculate range of time series
-    var xDomain = d3.extent(data, function(d) {return d.date;});
+    //calculate range of time series 
+   var xDomain = d3.extent(data, function(d) {return d.date;});
     var yDomain;
 
     //calculate range of y axis series data
@@ -42,7 +41,6 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         });			
     });
     yDomain=[min,max];
-    console.log(yDomain)
 
     //create a separate array for each series, filtering out records of each  series for which there are no data
     var plotArrays = [];
@@ -92,11 +90,14 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     .attr("class",media+"yAxis")
     .call(yAxis);
 
+    //calculate the tick on the xAxis
+
+
     //calculate what the ticksize should be now that the text for the labels has been drawn
     var yLabelOffset=yLabel.node().getBBox().width
-    console.log("offset= ",yLabelOffset)
+    //console.log("offset= ",yLabelOffset)
     var yticksize=colculateTicksize(yAlign, yLabelOffset);
-    console.log(yticksize);
+    //console.log(yticksize);
 
     yLabel.call(yAxis.tickSize(yticksize))
     yLabel
@@ -112,7 +113,6 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     var origin = plot.selectAll(".tick").filter(function(d, i) {
             return d==originValue || d==yHighlight;
         }).classed(media+"origin",true);
-
 
     var xScale = d3.time.scale()
         .domain(xDomain)
@@ -182,6 +182,8 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
                  else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
             });
     }
+
+    d3.selectAll(".domain").remove()
 
     // //create a legend first
     var legendyOffset=0

@@ -26,9 +26,9 @@
         var logScale=false;
         var logScaleStart=1000;
         var markers=false;//show circle markers
-        // THIS DOESNT WORK YETvar interval="years"//"years","days" or months
         var numTicksy = 6;//rough number of ticks for y axis
-        var numTicksx = 30;//rough number of ticks for x axis
+        var numTicksx = 10;//rough number of ticks for x axis
+        var interval="years";//days, months or years
         var ticks//=[0.2,0.3];//option to force tick values for online
 
         //Use the frames array to set unique values for each media type of frame
@@ -98,6 +98,7 @@
             data.forEach(function(d) {
                 d.date=parseDate(d.date);
             });
+            calculateTicks(data,interval)
 
             for (var i=0;i<frames.length;i++){
                 var stylename=frames[i].stylesheet;
@@ -109,6 +110,27 @@
             }
         })//end data load
 
+        function calculateTicks(data,int) {
+        console.log("intercal ", int)
+        var xDomain = d3.extent(data, function(d) {return d.date;});
+        console.log("domain ",xDomain)
+        if (int=="years") {
+            var intervales= d3.time.year.range(new Date(xDomain[0]), new Date(xDomain[1]));
+            intervales.unshift(xDomain[0])
+            console.log(intervales)
+        }
+        if (int=="months") {
+            var intervales= d3.time.months(new Date(xDomain[0]), new Date(xDomain[1]));
+            intervales.unshift(xDomain[0])
+            console.log(intervales)
+        }
+        if (int=="days") {
+            var intervales= d3.time.days(new Date(xDomain[0]), new Date(xDomain[1]));
+            intervales.unshift(xDomain[0])
+            console.log(intervales)
+        }
+
+    }
 
         function mmToPx(mm){
             var px = mm*2.83464480558843;
