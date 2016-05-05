@@ -80,6 +80,26 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
             return d==originValue || d==yHighlight;
         }).classed(media+"origin",true);
 
+    plot.selectAll("."+media+"bar")
+    .data(data)
+    .enter()
+        .append("g")
+        .attr("id", function(d) {return d.cat})
+        .attr("transform",function(){
+                return "translate("+(margin.left+yLabelOffset)+","+margin.top+")"
+            })
+        .call(function(parent){
+            parent.append('rect')
+                .style("fill", function (d) {
+                    return colours(d.group)
+                })
+                .attr("class",media+"bars")
+                .attr("x", 0)
+                .attr("width", function(d) {return xScale(d.value) })
+                .attr("y", function(d) { return yScale(d.cat); })
+                .attr("height", function(d) {  return yScale.rangeBand() })
+        })
+
 
     
 
