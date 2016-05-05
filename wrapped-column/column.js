@@ -67,7 +67,7 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
         }).classed(media+"origin",true);
 
     var xScale = d3.scale.ordinal()
-    .rangeRoundBands([0, plotWidth], .3);
+    .rangeRoundBands([0, plotWidth],.3);
 
     var xAxis = d3.svg.axis()
     .scale(xScale)
@@ -113,8 +113,9 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
                 })
             parent.append("text")
                 .attr("class", media+"label")
+                .style("text-anchor","middle")
                 .text(function(d) {return d.value;})
-                .attr("x", function(d) { return xScale(d.cat)})
+                .attr("x", function(d) { return xScale(d.cat)+(xScale.rangeBand()/2)})
                 .attr("y", function(d) { return yScale(d.value)+yOffset+yOffset/2});
                     });
 
