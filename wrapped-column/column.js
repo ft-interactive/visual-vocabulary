@@ -1,4 +1,4 @@
-function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, yAlign){
+function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, yAlign, markers){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -111,13 +111,15 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
                         d3.select(this).style("fill",colours.range()[0])
                     }
                 })
-            parent.append("text")
+            if (markers) {
+                parent.append("text")
                 .attr("class", media+"label")
                 .style("text-anchor","middle")
                 .text(function(d) {return d.value;})
                 .attr("x", function(d) { return xScale(d.cat)+(xScale.rangeBand()/2)})
                 .attr("y", function(d) { return yScale(d.value)+yOffset+yOffset/2});
-                    });
+            }
+        });
 
     //create a legend first
     console.log(groupNames[0])
