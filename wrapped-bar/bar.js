@@ -75,6 +75,11 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
       .attr("transform", "translate("+(margin.left)+"," + (margin.top) + ")")
       .call(xAxis);
 
+    var originValue = 0;
+    var origin = plot.selectAll(".tick").filter(function(d, i) {
+            return d==originValue || d==yHighlight;
+        }).classed(media+"origin",true);
+
 
     
 
