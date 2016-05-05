@@ -1,4 +1,4 @@
-function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, yAlign, markers){
+function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, markers){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -32,15 +32,13 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     var plotWidth=w-margin.left-margin.right
     var plotHeight=h-margin.top-margin.bottom
 
-    var yScale = d3.scale.linear()
-        .range([plotHeight, 0]);
-
-    //var max=d3.max(data, function(d,i) { return +d.value;});
-    yScale.domain([0, d3.max(data, function(d,i) { return +d.value;})]);
+    var yScale = d3.scale.ordinal()
+    .rangeRoundBands([0, plotHeight],.3)
+    .domain(data.map(function(d) { return d.cat;}));
 
     var yAxis = d3.svg.axis()
     .scale(yScale)
-    .orient(yAlign)
+    .orient("left")
     .ticks(numTicksy);
 
     var yLabel=plot.append("g")
@@ -49,15 +47,12 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
 
     //calculate what the ticksize should be now that the text for the labels has been drawn
     var yLabelOffset=yLabel.node().getBBox().width
-    var yticksize=colculateTicksize(yAlign, yLabelOffset);
+    //var yticksize=colculateTicksize(yAlign, yLabelOffset);
 
-    yLabel.call(yAxis.tickSize(yticksize))
+    //yLabel.call(yAxis.tickSize(yticksize))
     yLabel
         .attr("transform",function(){
-            if (yAlign=="right"){
-                return "translate("+(margin.left)+","+margin.top+")"
-            }
-            else return "translate("+(w-margin.right)+","+margin.top+")"
+                return "translate("+(margin.left+yLabelOffset)+","+margin.top+")"
             })
 
     //identify 0 line if there is one
@@ -66,60 +61,21 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
             return d==originValue || d==yHighlight;
         }).classed(media+"origin",true);
 
-    var xScale = d3.scale.ordinal()
-    .rangeRoundBands([0, plotWidth],.3);
+    var xScale = d3.scale.linear()
+        .range([0, plotWidth])
+        .domain([0, d3.max(data, function(d,i) { return +d.value;})]);
 
     var xAxis = d3.svg.axis()
     .scale(xScale)
     .orient("bottom");
-
-
-    xScale.domain(data.map(function(d) { return d.cat;}));
 
     var xLabels=plot.append("g")
       .attr("class", media+"xAxis")
       .attr("transform", "translate("+(margin.left)+"," + (h-margin.bottom) + ")")
       .call(xAxis);
 
-    plot.selectAll("."+media+"bar")
-    .data(data)
-    .enter()
-        .append("g")
-        .attr("transform",function(){
-                return "translate("+(margin.left)+","+margin.top+")"
-            })
-        .call(function(parent){
-            parent.append('rect')
-                .style("fill", function (d) {
-                    return colours(d.group)
-                })
-                .attr("class",media+"bars")
-                .attr("x", function(d) { return xScale(d.cat); })
-                .attr("width", xScale.rangeBand())
-                .attr("y", function(d) { return yScale(d.value); })
-                .attr("height", function(d) { return plotHeight - yScale(d.value); })
-                .on("mouseover",pointer)
-                .on("click",function(d){
-                    var elClass = d3.select(this)
-                    if (elClass.attr("class")==media+"bars") {
-                        d3.select(this).attr("class",media+"barshighlight");
-                        console.log(colours.range()[0])
-                        d3.select(this).style("fill",colours.range()[7])
-                    }
-                    else{var el=d3.select(this)
-                        el.attr("class",media+"bars");
-                        d3.select(this).style("fill",colours.range()[0])
-                    }
-                })
-            if (markers) {
-                parent.append("text")
-                .attr("class", media+"label")
-                .style("text-anchor","middle")
-                .text(function(d) {return d.value;})
-                .attr("x", function(d) { return xScale(d.cat)+(xScale.rangeBand()/2)})
-                .attr("y", function(d) { return yScale(d.value)+yOffset+yOffset/2});
-            }
-        });
+
+    
 
     //create a legend first
     console.log(groupNames[0])
