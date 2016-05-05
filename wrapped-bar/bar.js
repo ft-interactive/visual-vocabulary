@@ -39,7 +39,8 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
     var yAxis = d3.svg.axis()
     .scale(yScale)
     .orient("left")
-    .ticks(numTicksy);
+    .ticks(numTicksy)
+    .tickSize(0);
 
     var yLabel=plot.append("g")
       .attr("class", media+"yAxis")
@@ -47,7 +48,6 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
 
     //calculate what the ticksize should be now that the text for the labels has been drawn
     var yLabelOffset=yLabel.node().getBBox().width
-    //var yticksize=colculateTicksize(yAlign, yLabelOffset);
 
     //yLabel.call(yAxis.tickSize(yticksize))
     yLabel
@@ -62,16 +62,17 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
         }).classed(media+"origin",true);
 
     var xScale = d3.scale.linear()
-        .range([0, plotWidth])
+        .range([yLabelOffset, plotWidth])
         .domain([0, d3.max(data, function(d,i) { return +d.value;})]);
 
     var xAxis = d3.svg.axis()
     .scale(xScale)
+    .tickSize(plotHeight)
     .orient("bottom");
 
     var xLabels=plot.append("g")
       .attr("class", media+"xAxis")
-      .attr("transform", "translate("+(margin.left)+"," + (h-margin.bottom) + ")")
+      .attr("transform", "translate("+(margin.left)+"," + (margin.top) + ")")
       .call(xAxis);
 
 
