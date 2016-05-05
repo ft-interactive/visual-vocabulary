@@ -111,27 +111,30 @@
         })//end data load
 
         function calculateTicks(data,int) {
-        console.log("intercal ", int)
-        var xDomain = d3.extent(data, function(d) {return d.date;});
-        console.log("domain ",xDomain)
-        if (int=="years") {
-            var intervales= d3.time.year.range(new Date(xDomain[0]), new Date(xDomain[1]));
-            intervales.unshift(xDomain[0])
-            ticks=intervales
-            console.log(intervales)
-        }
-        if (int=="months") {
-            var intervales= d3.time.months(new Date(xDomain[0]), new Date(xDomain[1]));
-            intervales.unshift(xDomain[0])
-            console.log(intervales)
-        }
-        if (int=="days") {
-            var intervales= d3.time.days(new Date(xDomain[0]), new Date(xDomain[1]));
-            intervales.unshift(xDomain[0])
-            console.log(intervales)
-        }
+            console.log("intercal ", int)
+            var xDomain = d3.extent(data, function(d) {return d.date;});
+            console.log("domain ",xDomain)
+            if (int=="years") {
+                var intervales= d3.time.year.range(new Date(xDomain[0]), new Date(xDomain[1]));
+                intervales.unshift(xDomain[0])
+                ticks=intervales
+                console.log(intervales)
+            }
+            if (int=="months") {
+                var intervales= d3.time.months(new Date(xDomain[0]), new Date(xDomain[1]));
+                intervales.unshift(xDomain[0])
+                console.log(intervales)
+            }
+            if (int=="days") {
+                var intervales= d3.time.days(new Date(xDomain[0]), new Date(xDomain[1]));
+                intervales.unshift(xDomain[0])
+                console.log(intervales)
+            }
+            tickDistance = (intervales[intervales.length - 1]) - (intervales[intervales.length - 2]);
+            console.log(tickDistance)
 
-    }
+
+        }
 
         function mmToPx(mm){
             var px = mm*2.83464480558843;

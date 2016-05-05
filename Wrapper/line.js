@@ -89,7 +89,8 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     .attr("class",media+"yAxis")
     .call(yAxis);
 
-    //calculate the tick on the xAxis
+    //work out number of ticks
+
 
 
     //calculate what the ticksize should be now that the text for the labels has been drawn

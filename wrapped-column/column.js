@@ -67,7 +67,7 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
         }).classed(media+"origin",true);
 
     var xScale = d3.scale.ordinal()
-    .rangeRoundBands([0, plotWidth], .1);
+    .rangeRoundBands([0, plotWidth], .3);
 
     var xAxis = d3.svg.axis()
     .scale(xScale)
@@ -81,36 +81,42 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
       .attr("transform", "translate("+(margin.left)+"," + (h-margin.bottom) + ")")
       .call(xAxis);
 
-    plot.selectAll(".bar")
-      .data(data)
-    .enter().append("rect")
-      .style("fill", function (d) {
-            return colours(d.group)
-        })
-      .attr("class",media+"bars")
-      .attr("x", function(d) { return xScale(d.cat); })
-      .attr("width", xScale.rangeBand())
-      .attr("y", function(d) { return yScale(d.value); })
-      .attr("height", function(d) { return plotHeight - yScale(d.value); })
-      .attr("transform",function(){
-            if(yAlign=="right") {
-                return "translate("+(margin.left)+","+(margin.top)+")"
-            }
-             else {return "translate("+(margin.left)+","+(margin.top)+")"}
-        })
-      .on("mouseover",pointer)
-      .on("click",function(d){
-            var elClass = d3.select(this)
-            if (elClass.attr("class")==media+"bars") {
-                d3.select(this).attr("class",media+"barshighlight");
-                console.log(colours.range()[0])
-                d3.select(this).style("fill",colours.range()[1])
-            }
-            else{var el=d3.select(this)
-                el.attr("class",media+"bars");
-                d3.select(this).style("fill",colours.range()[0])
-            }
-        });
+    plot.selectAll("."+media+"bar")
+    .data(data)
+    .enter()
+        .append("g")
+        .attr("transform",function(){
+                return "translate("+(margin.left)+","+margin.top+")"
+            })
+        .call(function(parent){
+            parent.append('rect')
+                .style("fill", function (d) {
+                    return colours(d.group)
+                })
+                .attr("class",media+"bars")
+                .attr("x", function(d) { return xScale(d.cat); })
+                .attr("width", xScale.rangeBand())
+                .attr("y", function(d) { return yScale(d.value); })
+                .attr("height", function(d) { return plotHeight - yScale(d.value); })
+                .on("mouseover",pointer)
+                .on("click",function(d){
+                    var elClass = d3.select(this)
+                    if (elClass.attr("class")==media+"bars") {
+                        d3.select(this).attr("class",media+"barshighlight");
+                        console.log(colours.range()[0])
+                        d3.select(this).style("fill",colours.range()[7])
+                    }
+                    else{var el=d3.select(this)
+                        el.attr("class",media+"bars");
+                        d3.select(this).style("fill",colours.range()[0])
+                    }
+                })
+            parent.append("text")
+                .attr("class", media+"label")
+                .text(function(d) {return d.value;})
+                .attr("x", function(d) { return xScale(d.cat)})
+                .attr("y", function(d) { return yScale(d.value)+yOffset+yOffset/2});
+                    });
 
     //create a legend first
     console.log(groupNames[0])
