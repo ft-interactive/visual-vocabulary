@@ -145,17 +145,19 @@ function drawFrame(styles, media,titley,suby) {
             .attr("id",media+"Chart")
             .attr("width", width - (margin.left + margin.right))
             .attr("height", contentHeight)
+
+        var holder=p.append("div")
+        holder.append("button")
+        .attr("class","button")
+        .text("Save "+media+" SVG as PNG")
+        .attr("float", "left")
+        .on("click", savePNG);
         
-        var savePNG = document.createElement("input");
-        savePNG.type = "button";
-        savePNG.value = "Save "+media+" SVG as PNG";
-        savePNG.className+= "button";
-        savePNG.onclick = function(){
+        function savePNG(){
             console.log("Save "+media+"chart");
             saveSvgAsPng(document.getElementById(media+"chart"), media+"chart.png");
-
         }
-        document.body.appendChild(savePNG);          
+
         
     }
 
