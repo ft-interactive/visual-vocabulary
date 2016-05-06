@@ -1,5 +1,4 @@
 function circlesTimelineChart(data,stylename,media,plotpadding,legAlign,yHighlight){
-
 	//graph options
     var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
@@ -113,6 +112,7 @@ function circlesTimelineChart(data,stylename,media,plotpadding,legAlign,yHighlig
             .data(function(d){ return d.values; })
             .enter()
         .append('circle')
+            .attr("id",(function(d){ return d.date+d.value; }))
             .attr({
                 'cy':0,
                 'cx':function(d) {

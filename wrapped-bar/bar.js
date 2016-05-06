@@ -79,12 +79,13 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
     .data(data)
     .enter()
         .append("g")
-        .attr("id", function(d) {return d.cat +" "+d.value})
+        .attr("id", function(d) {return d.cat +"-"+d.value})
         .attr("transform",function(){
                 return "translate("+(margin.left+yLabelOffset)+","+margin.top+")"
             })
         .call(function(parent){
             parent.append('rect')
+                .attr("id", function(d) {return d.cat +"-"+d.value})
                 .style("fill", function (d) {
                     return colours(d.group)
                 })

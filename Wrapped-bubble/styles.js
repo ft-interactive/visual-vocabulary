@@ -20,7 +20,7 @@ var styleprint = {classes:
 
 ],
 titleOffset:10,
-subOffset:15,
+subOffset:0,
 legendyOffset:0,
 fillcolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
 }
@@ -44,7 +44,7 @@ var styleweb = {classes:
 {class:"circlehighlight{fill-opacity:0.5; stroke-width: 1.0px; stroke:#000000;}"},
 ],
 titleOffset:21,
-subOffset:20,
+subOffset:0,
 legendyOffset:0,
 fillcolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 }
@@ -68,7 +68,7 @@ var stylesoc = {classes:
 {class:"circlehighlight{fill-opacity:0.5; stroke-width: 2.0px; stroke:#ffffff;}"},
 ],
 titleOffset:36,
-subOffset:30,
+subOffset:0,
 legendyOffset:0,
 fillcolours:["#CC4759","#00B5B5","#E6B522","#437099","#FF8C8B","#CBFF7E","#8A8A8A"]
 }
@@ -92,7 +92,7 @@ var stylevid = {classes:
 {class:"circlehighlight{fill-opacity:0.5; stroke-width: 1.0px; stroke:#000000;}"},
 ],
 titleOffset:68,
-subOffset:90,
+subOffset:0,
 legendyOffset:15,
 fillcolours:["#b34b41","#5a8caf","#9baa6e","#eda45e","#9c5f87","#486ba0"]
 }

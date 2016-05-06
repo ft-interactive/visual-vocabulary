@@ -40,9 +40,10 @@ function pieChart(data, stylename, media, chartpadding,legAlign, innerRadious, o
 
     var g = svg.selectAll(".arc")
         .data(pie(data))
-        .enter().append("g")
+        .enter()
+        .append("g")
         .attr("class", "arc")
-        .attr("id", function(d) { return d.data.category; });
+        .attr("id", function(d) { return d.data.category+"-"+d.data.value; });
 
     g.append("path")
       .attr("d", arc)

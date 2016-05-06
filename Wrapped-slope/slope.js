@@ -74,7 +74,7 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
         .data(data)
         .enter()
         .append("g")
-        .attr("id",function(d){return media+d.name})
+        .attr("id",function(d){return d.val1+"-"+d.name+"-"+d.val2})
 
     slopes.append("line")
         .attr("class",media+"lines")

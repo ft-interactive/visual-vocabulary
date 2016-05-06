@@ -85,6 +85,7 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     .data(data)
     .enter()
         .append("g")
+        .attr("id",function(d) { return d.cat+"-"+d.value; })
         .attr("transform",function(){
                 return "translate("+(margin.left)+","+margin.top+")"
             })
@@ -93,6 +94,7 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
                 .style("fill", function (d) {
                     return colours(d.group)
                 })
+                .attr("id",function(d) { return d.cat+"-"+d.value; })
                 .attr("class",media+"bars")
                 .attr("x", function(d) { return xScale(d.cat); })
                 .attr("width", xScale.rangeBand())
