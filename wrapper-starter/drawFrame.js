@@ -149,15 +149,14 @@ function drawFrame(styles, media,titley,suby) {
         var holder=p.append("div")
         holder.append("button")
         .attr("class","button")
-        .text("Save "+media+" SVG as PNG")
+        .text("Save "+media+" as PNG")
         .attr("float", "left")
         .on("click", savePNG);
-        
+
         function savePNG(){
             console.log("Save "+media+"chart");
             saveSvgAsPng(document.getElementById(media+"chart"), media+"chart.png");
         }
-
         
     }
 
