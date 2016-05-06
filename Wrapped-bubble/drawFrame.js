@@ -1,5 +1,6 @@
 'use strict';
 
+
 function drawFrame(styles, media,titley,suby) {
     //build a string from the styles variable held on styles.js
     //Note that the media variable is placed at the begining of each
@@ -144,9 +145,21 @@ function drawFrame(styles, media,titley,suby) {
             .attr("id",media+"Chart")
             .attr("width", width - (margin.left + margin.right))
             .attr("height", contentHeight)
-            
+
+        var holder=p.append("div")
+        holder.append("button")
+        .attr("class","button")
+        .text("Save "+media+" as PNG")
+        .attr("float", "left")
+        .on("click", savePNG);
+
+        function savePNG(){
+            console.log("Save "+media+"chart");
+            saveSvgAsPng(document.getElementById(media+"chart"), media+"chart.png");
+        }
         
     }
+
 
     frame.width = function (n) {
 		if (!n) return width;
@@ -193,7 +206,6 @@ function drawFrame(styles, media,titley,suby) {
 return frame;
     
 }
-
 
 //wrap text function adapted from Mike Bostock
 function wrap(text, width,x) {

@@ -55,10 +55,11 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
         .attr("transform",function(){
                 return "translate("+(margin.left+yLabelOffset)+","+margin.top+")"
             })
-
+    var min=d3.min(data, function(d) { return +d.value;})
+    console.log(min)
     var xScale = d3.scale.linear()
         .range([yLabelOffset, plotWidth])
-        .domain([0, d3.max(data, function(d) { return +d.value;})]);
+        .domain([min, d3.max(data, function(d) { return +d.value;})]);
 
     var xAxis = d3.svg.axis()
     .scale(xScale)
@@ -90,8 +91,8 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
                     return colours(d.group)
                 })
                 .attr("class",media+"bars")
-                .attr("x", 0)
-                .attr("width", function(d) {return xScale(+d.value)-yLabelOffset})
+                .attr("x", function(d) { return xScale(Math.min(0, d.value))-yLabelOffset; })
+                .attr("width", function(d) { return Math.abs(xScale(d.value) - xScale(0)); })
                 .attr("y", function(d) { return yScale(d.cat); })
                 .attr("height", function(d) {  return yScale.rangeBand() })
                 .on("mouseover",pointer)
