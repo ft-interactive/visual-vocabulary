@@ -30,7 +30,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
 
     plot.append("rect")
         .attr("x",margin.left)
-        .attr("y",margin.left)
+        .attr("y",margin.top)
         .attr("width",plotWidth)
         .attr("height",plotHeight)
         .attr("fill",colours[0])
