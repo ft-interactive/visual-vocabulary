@@ -1,5 +1,6 @@
 'use strict';
 
+
 function drawFrame(styles, media,titley,suby) {
     //build a string from the styles variable held on styles.js
     //Note that the media variable is placed at the begining of each
@@ -148,8 +149,11 @@ function drawFrame(styles, media,titley,suby) {
         var savePNG = document.createElement("input");
         savePNG.type = "button";
         savePNG.value = "Save "+media+" SVG as PNG";
+        savePNG.className+= "button";
         savePNG.onclick = function(){
             console.log("Save "+media+"chart");
+            saveSvgAsPng(document.getElementById(media+"chart"), media+"chart.png");
+
         }
         document.body.appendChild(savePNG);          
         
