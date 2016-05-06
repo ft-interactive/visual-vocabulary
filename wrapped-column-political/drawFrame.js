@@ -1,5 +1,6 @@
 'use strict';
 
+
 function drawFrame(styles, media,titley,suby) {
     //build a string from the styles variable held on styles.js
     //Note that the media variable is placed at the begining of each
@@ -115,7 +116,7 @@ function drawFrame(styles, media,titley,suby) {
         //logo 
         if(media=="web") {
             footer.append("g")
-            .attr("transform", "translate(" + (width - 36) + "," + (height - 16-margin.bottom) + ")")
+            .attr("transform", "translate(" + (width - 29) + "," + (height - 16) + ")")
             .attr("class", media+"logo")
             .append("path")
             .attr("d", "M0,16h7.6v-0.6c-0.5,0-0.9,0-1.2-0.1c-0.3,0-0.5-0.1-0.7-0.3c-0.2-0.1-0.3-0.3-0.4-0.6c-0.1-0.2-0.1-0.6-0.1-1V8.2h1.2c1.1,0,1.9,0.2,2.3,0.5c0.5,0.3,0.8,0.9,1,1.9h0.6V5H9.8C9.7,5.6,9.5,6,9.3,6.3c-0.2,0.3-0.5,0.5-1,0.6C7.9,7,7.3,7.1,6.5,7.1H5.3V2c0-0.3,0.1-0.5,0.2-0.7c0.1-0.1,0.3-0.2,0.7-0.2h2.4c0.8,0,1.4,0,1.9,0.1c0.5,0.1,0.9,0.2,1.2,0.4c0.3,0.2,0.6,0.4,0.7,0.7c0.2,0.3,0.3,0.7,0.5,1.1h0.7L13.4,0H0v0.6c0.4,0,0.8,0.1,1,0.1c0.2,0,0.4,0.1,0.6,0.3C1.8,1.1,1.9,1.3,2,1.5c0.1,0.2,0.1,0.6,0.1,1v10.9c0,0.4,0,0.8-0.1,1c-0.1,0.2-0.2,0.4-0.4,0.6c-0.2,0.1-0.4,0.2-0.6,0.3c-0.2,0-0.6,0.1-1,0.1V16z M14.2,3.5H15c0.3-0.9,0.6-1.5,1-1.8c0.4-0.4,1.1-0.5,1.9-0.5h2v12.3c0,0.4,0,0.8-0.1,1c-0.1,0.2-0.2,0.4-0.4,0.6c-0.2,0.1-0.4,0.2-0.7,0.3c-0.3,0-0.6,0.1-1.1,0.1V16h7.7v-0.6c-0.5,0-0.9,0-1.1-0.1c-0.3,0-0.5-0.1-0.7-0.3c-0.2-0.1-0.3-0.3-0.4-0.6c-0.1-0.2-0.1-0.6-0.1-1V1.2h2c0.8,0,1.5,0.2,1.9,0.5c0.4,0.4,0.8,1,1,1.8h0.8L28.5,0H14.6L14.2,3.5z");  
@@ -144,9 +145,21 @@ function drawFrame(styles, media,titley,suby) {
             .attr("id",media+"Chart")
             .attr("width", width - (margin.left + margin.right))
             .attr("height", contentHeight)
-            
+
+        var holder=p.append("div")
+        holder.append("button")
+        .attr("class","button")
+        .text("Save "+media+" as PNG")
+        .attr("float", "left")
+        .on("click", savePNG);
+
+        function savePNG(){
+            console.log("Save "+media+"chart");
+            saveSvgAsPng(document.getElementById(media+"chart"), media+"chart.png");
+        }
         
     }
+
 
     frame.width = function (n) {
 		if (!n) return width;
@@ -193,7 +206,6 @@ function drawFrame(styles, media,titley,suby) {
 return frame;
     
 }
-
 
 //wrap text function adapted from Mike Bostock
 function wrap(text, width,x) {

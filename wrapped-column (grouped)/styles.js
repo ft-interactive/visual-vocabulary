@@ -17,7 +17,7 @@ var styleprint = {classes:
 {class:"lines{fill:none; stroke-width:2.0px;stroke-linecap: round;}"}
 ],
 titleOffset:10,
-subOffset:15,
+subOffset:0,
 legendyOffset:0,
 linecolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
 }
@@ -39,7 +39,7 @@ var styleweb = {classes:
 {class:"lines{fill:none; stroke-width: 2.5px; stroke-linecap: round;}"}
 ],
 titleOffset:21,
-subOffset:20,
+subOffset:0,
 legendyOffset:0,
 linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 }
@@ -61,7 +61,7 @@ var stylesoc = {classes:
 {class:"lines{fill:none; stroke-width: 5px;  stroke-linecap: round;}"}
 ],
 titleOffset:36,
-subOffset:30,
+subOffset:0,
 legendyOffset:0,
 linecolours:["#EB3F50","#00D9CA","#BF9413","#1F5E99","#A7FF59","#FF9B96","#81838F"]
 //linecolours:["#CC4759","#00B5B5","#E6B522","#437099","#FF8C8B","#CBFF7E","#8A8A8A"]
