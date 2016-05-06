@@ -1,13 +1,13 @@
 
 var styleprint = {classes:
 [{class:"background{fill: none}"},
-{class:"chartholder{fill: #fff1e0}"},
+{class:"chartholder{fill: none}"},
 {class:"title{font-size:12px; fill: #000000; font-weight: 600;}"},
 {class:"subtitle{fill:#000000; font-size: 9.6px;}"},
-{class:"label{fill:#000000; font-size: 9.6px;}"},
+{class:"label{fill:#ffffff; font-size: 9.6px;font-weight: 600;font-feature-settings: 'tnum' 1;}"},
 {class:"source{fill: #000000; font-size: 7.2px;}"},
 {class:"logo{fill: #dacfc5;}"},
-{class:"hat{fill:none; stroke-width:0.6px; stroke:#22190f;}"},
+{class:"hat{fill:none; stroke-width:0.3px; stroke:#22190f;}"},
 {class:"xAxis{fill:none; stroke-width:0px; stroke:none;}"},
 {class:"xAxis line{fill:none; stroke-width:0.3px; stroke:#000000;}"},
 {class:"xAxis text{fill:#000000; font-size: 9.6px; font-feature-settings:'tnum' 1;}"},
@@ -27,10 +27,10 @@ fillcolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0","#ddb83
 
 var styleweb = {classes:
 [{class:"background{fill: none}"},
-{class:"chartholder{fill: #fff1e0;}"},
+{class:"chartholder{fill: none;}"},
 {class:"title{font-size:21px; fill: #3b3d3b; font-weight: 100;}"},
 {class:"subtitle{font-size:14px; fill: #6b6e68; font-weight: 100;}"},
-{class:"label{fill:#ffffff; font-size: 21px;font-weight: 400;}"},
+{class:"label{fill:#ffffff; font-size: 21px;font-weight: 400;font-feature-settings: 'tnum' 1;}"},
 {class:"source{fill: #6b6e68; font-size: 11.5px; font-weight: 100;}"},
 {class:"logo{fill: #dacfc5;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
@@ -55,7 +55,7 @@ var stylesoc = {classes:
 {class:"chartholder{fill: none}"},
 {class:"title{font-size: 38px; fill: #ffffff; opacity: 0.95; font-weight: 400;}"},
 {class:"subtitle{font-size: 28px; fill: #ffffff; opacity: 0.70; font-weight: 100; line-height: 30px;}"},
-{class:"label{fill:#000000; font-size: 48px;font-weight: 300;}"},
+{class:"label{font-size: 28px; fill: #ffffff; opacity: 0.70; font-weight: 100;font-feature-settings: 'tnum' 1;}"},
 {class:"source{font-size: 25px; fill: #ffffff; opacity: 0.50; font-weight: 100;}"},
 {class:"logo{fill: #ffffff; opacity: 0.38;}"},
 {class:"xAxis{fill:none; stroke: none;}"},

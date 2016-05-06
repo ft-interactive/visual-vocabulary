@@ -31,6 +31,7 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
 
     var plotWidth=w-margin.left-margin.right
     var plotHeight=h-margin.top-margin.bottom
+    var drag = d3.behavior.drag().on("drag", moveLegend);
 
     var yScale = d3.scale.ordinal()
     .rangeRoundBands([0, plotHeight],.3)
@@ -92,8 +93,28 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
                 .attr("width", function(d) {return xScale(+d.value)-yLabelOffset})
                 .attr("y", function(d) { return yScale(d.cat); })
                 .attr("height", function(d) {  return yScale.rangeBand() })
+                .on("mouseover",pointer)
+                .on("click",function(d){
+                    var elClass = d3.select(this)
+                    if (elClass.attr("class")==media+"bars") {
+                        d3.select(this).attr("class",media+"barshighlight");
+                        console.log(colours.range()[0])
+                        d3.select(this).style("fill",colours.range()[7])
+                    }
+                    else{var el=d3.select(this)
+                        el.attr("class",media+"bars");
+                        d3.select(this).style("fill",colours.range()[0])
+                    }
+                })
+                if (markers) {
+                parent.append("text")
+                .attr("class", media+"label")
+                .style("text-anchor","end")
+                .text(function(d) {return d3.format(".1f")(d.value);})
+                .attr("x", function(d) {return yOffset*2.5})
+                .attr("y", function(d) { return yScale(d.cat)+(yScale.rangeBand()-yOffset*.2    ); });
+            }
         })
-
 
     
 
@@ -112,7 +133,6 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
                 return media+"l"+i
             })
 
-        var drag = d3.behavior.drag().on("drag", moveLegend);
         d3.select("#"+media+"legend").call(drag);
             
         legend.append("text")

@@ -51,7 +51,7 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     var yLabelOffset=yLabel.node().getBBox().width
     var yticksize=colculateTicksize(yAlign, yLabelOffset);
 
-    //yLabel.call(yAxis.tickSize(yticksize))
+    yLabel.call(yAxis.tickSize(yticksize))
     yLabel
         .attr("transform",function(){
             if (yAlign=="right"){
