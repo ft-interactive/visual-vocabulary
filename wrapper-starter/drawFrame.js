@@ -144,9 +144,17 @@ function drawFrame(styles, media,titley,suby) {
             .attr("id",media+"Chart")
             .attr("width", width - (margin.left + margin.right))
             .attr("height", contentHeight)
-            
+        
+        var savePNG = document.createElement("input");
+        savePNG.type = "button";
+        savePNG.value = "Save "+media+" SVG as PNG";
+        savePNG.onclick = function(){
+            console.log("Save "+media+"chart");
+        }
+        document.body.appendChild(savePNG);          
         
     }
+
 
     frame.width = function (n) {
 		if (!n) return width;
@@ -193,7 +201,6 @@ function drawFrame(styles, media,titley,suby) {
 return frame;
     
 }
-
 
 //wrap text function adapted from Mike Bostock
 function wrap(text, width,x) {
