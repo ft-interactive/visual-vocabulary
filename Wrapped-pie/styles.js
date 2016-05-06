@@ -6,7 +6,7 @@ var styleprint = {classes:
 {class:"subtitle{fill:#000000; font-size: 9.6px;}"},
 {class:"source{fill: #000000; font-size: 7.2px;}"},
 {class:"logo{fill: #dacfc5;}"},
-{class:"hat{fill:none; stroke-width:1.0px; stroke:#22190f;}"},
+{class:"hat{fill:none; stroke-width:0.3px; stroke:#22190f;}"},
 {class:"labels{font-size:12px; fill: #000000; font-weight: 600;}"},
 ],
 titleOffset:10,
