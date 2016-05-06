@@ -24,8 +24,8 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
     
-    console.log(plotWidth,colours,plotHeight,data)
-    console.log(margin)
+    // console.log(plotWidth,colours,plotHeight,data)
+    // console.log(margin)
     //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
 
     plot.append("rect")
