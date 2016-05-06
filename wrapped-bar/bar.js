@@ -55,15 +55,9 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
                 return "translate("+(margin.left+yLabelOffset)+","+margin.top+")"
             })
 
-    //identify 0 line if there is one
-    var originValue = 0;
-    var origin = plot.selectAll(".tick").filter(function(d, i) {
-            return d==originValue || d==yHighlight;
-        }).classed(media+"origin",true);
-
     var xScale = d3.scale.linear()
         .range([yLabelOffset, plotWidth])
-        .domain([0, d3.max(data, function(d,i) { return +d.value;})]);
+        .domain([0, d3.max(data, function(d) { return +d.value;})]);
 
     var xAxis = d3.svg.axis()
     .scale(xScale)
@@ -84,7 +78,7 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
     .data(data)
     .enter()
         .append("g")
-        .attr("id", function(d) {return d.cat})
+        .attr("id", function(d) {return d.cat +" "+d.value})
         .attr("transform",function(){
                 return "translate("+(margin.left+yLabelOffset)+","+margin.top+")"
             })
@@ -95,7 +89,7 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
                 })
                 .attr("class",media+"bars")
                 .attr("x", 0)
-                .attr("width", function(d) {return xScale(d.value) })
+                .attr("width", function(d) {return xScale(+d.value)-yLabelOffset})
                 .attr("y", function(d) { return yScale(d.cat); })
                 .attr("height", function(d) {  return yScale.rangeBand() })
         })
