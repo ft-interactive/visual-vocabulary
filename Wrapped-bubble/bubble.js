@@ -1,4 +1,4 @@
-function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, largeCircle, textOffset, yHighlight,xLabel,yLabel){
+function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, largeCircle, textOffset, yHighlight,axisLabel,xLabel,yLabel){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -103,12 +103,21 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
             return d==originValue || d==yHighlight;
         }).classed(media+"origin",true);
 
-    plot.append("text")
-            .attr("class",media+"subtitle")
-            .attr("text-anchor", "end")
-            .attr("x", plotWidth)
-            .attr("y", plotHeight)
-            .text(xLabel);
+    if (axisLabel) {
+        plot.append("text")
+                .attr("class",media+"subtitle")
+                .attr("text-anchor", "end")
+                .attr("x", plotWidth)
+                .attr("y", plotHeight)
+                .text(xLabel);
+        plot.append("text")
+                .attr("class",media+"subtitle")
+                .attr("text-anchor", "start")
+                .attr("x", 0)
+                .attr("y", yOffset)
+                .text(yLabel);
+    }
+
 
     //now create the actual data dots
     var dots = plot.append("g")

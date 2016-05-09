@@ -24,6 +24,7 @@
         var smallCircle=100//smallest circle will be 0.01 of smallest graph dimension (width/height)
         var largeCircle=10//largest circle will be 0.1 of smallest graph dimension (width/height)
         var yAxisHighlight=-5;
+        var axisLabel=true;//True or false to label the axis or not
         var xLabel="x-label"//The label that is placed on the x Axix
         var yLabel="y-label"//The label that is placed on the y Axix
 
@@ -84,7 +85,7 @@
                 var media = frames[i].name;
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
-                bubbleChart(data, stylename, media, chartpadding,legend, smallCircle, largeCircle,subYoffset,yAxisHighlight,xLabel,yLabel);
+                bubbleChart(data, stylename, media, chartpadding,legend, smallCircle, largeCircle,subYoffset,yAxisHighlight,axisLabel,xLabel,yLabel);
             }
         })//end data load
         
