@@ -1,4 +1,4 @@
-function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, largeCircle, textOffset, yHighlight){
+function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, largeCircle, textOffset, yHighlight,axisLabel,xLabel,yLabel){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -17,6 +17,8 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
         return (d.name === media);
       });
     margin=margin[0].margin[0]
+    var plotWidth=w-margin.left-margin.right;
+    var plotHeight=h-margin.top-margin.bottom;
     var colours=stylename.fillcolours;
 
 
@@ -89,7 +91,7 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
         .scale(yScale)
         .orient("left")
         .tickSize(tickSize)
-        .ticks(4);
+        .ticks(6);
     plot.append("g")
     .attr("transform","translate("+margin.left+",0)")
         .attr("class",media+"yAxis")
@@ -100,6 +102,22 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
     var origin = plot.selectAll(".tick").filter(function(d, i) {
             return d==originValue || d==yHighlight;
         }).classed(media+"origin",true);
+
+    if (axisLabel) {
+        plot.append("text")
+                .attr("class",media+"subtitle")
+                .attr("text-anchor", "end")
+                .attr("x", plotWidth)
+                .attr("y", plotHeight)
+                .text(xLabel);
+        plot.append("text")
+                .attr("class",media+"subtitle")
+                .attr("text-anchor", "start")
+                .attr("x", 0)
+                .attr("y", yOffset)
+                .text(yLabel);
+    }
+
 
     //now create the actual data dots
     var dots = plot.append("g")
@@ -183,6 +201,7 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
             .text(function(d){
                 return d.name+' '+d.size
             })
+
 
     var drag = d3.behavior.drag().on("drag", moveLabel);
     d3.selectAll("."+media+"label").call(drag);
