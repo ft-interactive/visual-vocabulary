@@ -35,8 +35,11 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
 
+    var min=d3.min(data, function(d) { return +d.value;})
+    var max=d3.max(data, function(d) { return +d.value;})
+
     //var max=d3.max(data, function(d,i) { return +d.value;});
-    yScale.domain([0, d3.max(data, function(d,i) { return +d.value;})]);
+    yScale.domain([min, max]);
 
     var yAxis = d3.svg.axis()
     .scale(yScale)
@@ -73,8 +76,8 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     .scale(xScale)
     .orient("bottom");
 
-
     xScale.domain(data.map(function(d) { return d.cat;}));
+
 
     var xLabels=plot.append("g")
       .attr("class", media+"xAxis")
@@ -98,8 +101,8 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
                 .attr("class",media+"bars")
                 .attr("x", function(d) { return xScale(d.cat); })
                 .attr("width", xScale.rangeBand())
-                .attr("y", function(d) { return yScale(d.value); })
-                .attr("height", function(d) { return plotHeight - yScale(d.value); })
+                .attr("y", function(d) { return yScale(Math.max(0, d.value))})
+                .attr("height", function(d) {return (Math.abs(yScale(d.value) - yScale(0))); })
                 .on("mouseover",pointer)
                 .on("click",function(d){
                     var elClass = d3.select(this)
