@@ -188,55 +188,56 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
     d3.selectAll("."+media+"label").call(drag);
 
     //create a legend first
-    var legendyOffset=0
-    var legend = plot.append("g")
-        .attr("id",media+"legend")
-        .on("mouseover",pointer)
-        .selectAll("g")
-        .data(cats)
-        .enter()
-        .append("g")
-        .attr ("id",function(d,i){
-            return media+"l"+i
-        })
+    if (cats[0]!="") {
+        var legendyOffset=0
+        var legend = plot.append("g")
+            .attr("id",media+"legend")
+            .on("mouseover",pointer)
+            .selectAll("g")
+            .data(cats)
+            .enter()
+            .append("g")
+            .attr ("id",function(d,i){
+                return media+"l"+i
+            })
 
-    var drag = d3.behavior.drag().on("drag", moveLegend);
-    d3.select("#"+media+"legend").call(drag);
-        
-    legend.append("text")
+        var drag = d3.behavior.drag().on("drag", moveLegend);
+        d3.select("#"+media+"legend").call(drag);
+            
+        legend.append("text")
 
-        .attr("id",function(d,i){
-            return media+"t"+i
-        })
-        .attr("x",textOffset/2-textOffset/5+5)
-        .attr("y",textOffset/5)
-        .attr("class",media+"subtitle")
-        .text(function(d){
-            return d;
-        })
+            .attr("id",function(d,i){
+                return media+"t"+i
+            })
+            .attr("x",yOffset/2-yOffset/5+5)
+            .attr("y",yOffset/5)
+            .attr("class",media+"subtitle")
+            .text(function(d){
+                return d;
+            })
 
-    legend.append("circle")
-        .attr("cx",0)
-        .attr("cy",0)
-        .attr("r",textOffset/2-textOffset/5)
-        .attr("width",20)
-        .attr("height",textOffset)
-        .style("fill", function(d,i){return colours[i]})
+        legend.append("circle")
+            .attr("cx",0)
+            .attr("cy",0)
+            .attr("r",yOffset/2-yOffset/5)
+            .style("fill", function(d,i){return colours[i]})
 
-    legend.attr("transform",function(d,i){
-        if (legAlign=='hori') {
-            var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
-            if (i>0) {
-                var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
+        legend.attr("transform",function(d,i){
+            if (legAlign=='hori') {
+                var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
+                if (i>0) {
+                    var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
+                }
+                else {gWidth=0};
+                legendyOffset=legendyOffset+gWidth;
+                return "translate("+(legendyOffset)+","+(gHeigt)+")";  
             }
-            else {gWidth=0};
-            legendyOffset=legendyOffset+gWidth;
-            return "translate("+(legendyOffset)+","+(gHeigt)+")";  
-        }
-        else {
-            var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
-            return "translate(0,"+((i*textOffset+margin.top)+textOffset/2)+")"};
-    })
+            else {
+                var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
+                return "translate(0,"+((i*yOffset+margin.top)+yOffset/2)+")"};
+        })
+
+    }
 
     d3.selection.prototype.moveToFront = function() { 
                 return this.each(function() { 
