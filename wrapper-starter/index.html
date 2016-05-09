@@ -39,35 +39,9 @@
         {name:"social",margin:[{top:00, right:25, bottom:62, left:12}]},
         {name:"video",margin:[{top:55, right:35,bottom:68, left:42}]}
         ]
-        
-        /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
-        for (var i=0;i<frames.length;i++){
-            var stylename=frames[i].stylesheet;
-            var media = frames[i].name;
-            if(frames[i].units=="mm") {
-                framewidth = mmToPx(frames[i].width);
-                frameheight = mmToPx(frames[i].height);
-            }
-            else{
-                framewidth = frames[i].width;
-                frameheight = frames[i].height;
-            }
-            var framemargin = frames[i].margins[0];
-            var titleYoffset=stylename.titleOffset;
-            var subYoffset=stylename.subOffset
-            var frame = new drawFrame(stylename.classes,media,titleYoffset,subYoffset)
-                .width(framewidth)
-                .height(frameheight)
-                .margin(framemargin)
-                .title(title)
-                .source(source)
-            //optional elements
-            if (subtitle){
-                frame.subtitle(subtitle)
-            }
-            d3.select("body").call(frame)
-        }
-        
+        //Calls the functions that adds the balnk frames before loading the data 
+        drawFrames()
+        //Load the data
         d3.csv(dataURL,function(error, data){
             //date formatter, matching the format of the incoming csv...
             //var parseDate = d3.time.format("%d-%b-%y").parse;
@@ -88,6 +62,9 @@
                 d.date=parseDate(d.date);
             });*/
 
+
+         /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
+
             for (var i=0;i<frames.length;i++){
                 var stylename=frames[i].stylesheet;
                 var media = frames[i].name;
@@ -97,6 +74,35 @@
                 makeChart(data, stylename, media, chartpadding,legend, yLabel);
             }
         })//end data load
+
+        function drawFrames(){
+            for (var i=0;i<frames.length;i++){
+                var stylename=frames[i].stylesheet;
+                var media = frames[i].name;
+                if(frames[i].units=="mm") {
+                    framewidth = mmToPx(frames[i].width);
+                    frameheight = mmToPx(frames[i].height);
+                }
+                else{
+                    framewidth = frames[i].width;
+                    frameheight = frames[i].height;
+                }
+                var framemargin = frames[i].margins[0];
+                var titleYoffset=stylename.titleOffset;
+                var subYoffset=stylename.subOffset
+                var frame = new drawFrame(stylename.classes,media,titleYoffset,subYoffset)
+                    .width(framewidth)
+                    .height(frameheight)
+                    .margin(framemargin)
+                    .title(title)
+                    .source(source)
+                //optional elements
+                if (subtitle){
+                    frame.subtitle(subtitle)
+                }
+                d3.select("body").call(frame)
+            }
+        }
 
         function mmToPx(mm){
             var px = mm*2.83464480558843;
