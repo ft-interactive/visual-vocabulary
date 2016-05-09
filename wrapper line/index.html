@@ -48,37 +48,9 @@
         {name:"social",margin:[{top:00, right:25, bottom:62, left:12}]},
         {name:"video",margin:[{top:55, right:35,bottom:68, left:42}]}
         ]
-        
-        /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
-        for (var i=0;i<frames.length;i++){
-            var stylename=frames[i].stylesheet;
-            var media = frames[i].name;
-            if(frames[i].units=="mm") {
-                framewidth = mmToPx(frames[i].width);
-                frameheight = mmToPx(frames[i].height);
-            }
-            else{
-                framewidth = frames[i].width;
-                frameheight = frames[i].height;
-            }
-            var framemargin = frames[i].margins[0];
-            var titleYoffset=stylename.titleOffset;
-            var subYoffset=stylename.subOffset
-            var frame = new drawFrame(stylename.classes,media,titleYoffset,subYoffset)
-                .width(framewidth)
-                .height(frameheight)
-                .margin(framemargin)
-                .title(title)
-                .source(source)
-            //optional elements
-            if (subtitle){
-                frame.subtitle(subtitle)
-            }
-            d3.select("body").call(frame)
-            //drawFrame
-
-        }
-        
+        //Add blank frames
+        drawFrames()
+        //Load Data
         d3.csv(dataURL,function(error, data){
             //date formatter, matching the format of the incoming csv...
             //var parseDate = d3.time.format("%Y %b").parse;
@@ -100,6 +72,7 @@
             data.forEach(function(d) {
                 d.date=parseDate(d.date);
             });
+        //YOU SHOULD'NT HAVE TO DO MUCH AFTER THIS
             calculateTicks(data,interval)
 
             for (var i=0;i<frames.length;i++){
@@ -111,6 +84,35 @@
                 lineChart(data, stylename, media, chartpadding,legend, lineSmoothing, logScale, logScaleStart, yAxisHighlight, markers, numTicksy, numTicksx, yLabel);
             }
         })//end data load
+
+        function drawFrames(){
+            for (var i=0;i<frames.length;i++){
+                var stylename=frames[i].stylesheet;
+                var media = frames[i].name;
+                if(frames[i].units=="mm") {
+                    framewidth = mmToPx(frames[i].width);
+                    frameheight = mmToPx(frames[i].height);
+                }
+                else{
+                    framewidth = frames[i].width;
+                    frameheight = frames[i].height;
+                }
+                var framemargin = frames[i].margins[0];
+                var titleYoffset=stylename.titleOffset;
+                var subYoffset=stylename.subOffset
+                var frame = new drawFrame(stylename.classes,media,titleYoffset,subYoffset)
+                    .width(framewidth)
+                    .height(frameheight)
+                    .margin(framemargin)
+                    .title(title)
+                    .source(source)
+                //optional elements
+                if (subtitle){
+                    frame.subtitle(subtitle)
+                }
+                d3.select("body").call(frame)
+            }
+        }
 
         function calculateTicks(data,int) {
             console.log("intercal ", int)
