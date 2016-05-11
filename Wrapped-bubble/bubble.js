@@ -109,14 +109,14 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
         plot.append("text")
                 .attr("class",media+"subtitle")
                 .attr("text-anchor", "end")
-                .attr("x", plotWidth)
-                .attr("y", plotHeight)
+                .attr("x", plotWidth+margin.left)
+                .attr("y", plotHeight+margin.top-(yOffset/4))
                 .text(xLabel);
         plot.append("text")
                 .attr("class",media+"subtitle")
                 .attr("text-anchor", "start")
                 .attr("x", 0)
-                .attr("y", yOffset)
+                .attr("y", margin.top)
                 .text(yLabel);
     }
 
