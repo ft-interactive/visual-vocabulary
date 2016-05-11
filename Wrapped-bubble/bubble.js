@@ -271,14 +271,15 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
     }
 
     function moveLabel() {
-        var dX = d3.event.x-(w/3);// subtract cx
-        var dY = d3.event.y-(h/2);// subtract cy
+        var dX = d3.event.x;// subtract cx
+        var dY = d3.event.y;// subtract cy
         d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");
     }
 
     function moveLegend() {
-        var dX = d3.event.x-(w/3);// subtract cx
-        var dY = d3.event.y-(h/2);// subtract cy
+        console.log(this.getBBox().width)
+        var dX = d3.event.x-(this.getBBox().width/2);// subtract cx
+        var dY = d3.event.y-(this.getBBox().height);// subtract cy
         d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");
     }
 
