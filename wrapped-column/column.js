@@ -122,7 +122,15 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
                 .style("text-anchor","middle")
                 .text(function(d) {return d.value;})
                 .attr("x", function(d) { return xScale(d.cat)+(xScale.rangeBand()/2)})
-                .attr("y", function(d) { return yScale(d.value)+yOffset+yOffset/2});
+                .attr("y", function(d) {
+                    if(d.value>0) {
+                        console.log("greater",d.value)
+                        return yScale(d.value)+yOffset+yOffset/2
+                    }
+                    else {
+                        console.log("less", d.value)
+                        return yScale(d.value)-yOffset/2}
+                });
             }
         });
 
