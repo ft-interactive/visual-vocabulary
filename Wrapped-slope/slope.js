@@ -7,7 +7,6 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height
 
-
     // return the series names from the first row of the spreadsheet
 
     var groupNames = d3.nest()
