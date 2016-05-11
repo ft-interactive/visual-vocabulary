@@ -96,7 +96,7 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             .attr("fill",function(d,i){
                 return colours[0];  
             })
-            .attr("r",yOffset/2.5)
+            .attr("r",yOffset/3)
             .attr("cx",margin.left)
             .attr("cy",function(d){return yScale(d.val1)});
         slopes.append("circle")
@@ -104,7 +104,7 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             .attr("fill",function(d,i){
                 return colours[0];  
             })
-            .attr("r",yOffset/2.5)
+            .attr("r",yOffset/3)
             .attr("cx",w-margin.right)
             .attr("cy",function(d){return yScale(d.val2)});
     }
@@ -140,18 +140,21 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
     }
 
     //column headings
-    plot.append("text")
-        .attr("x",margin.left)
-        .attr("y",margin.top)
-        .attr("class",media+"label")
-        .attr("text-anchor","end")
-        .text(col1);
-
-    plot.append("text")
-        .attr("x",w-margin.right)
-        .attr("y",margin.top)
-        .attr("class",media+"label")
-        .text(col2);
+    if (showLabelLeft) {
+        plot.append("text")
+            .attr("x",margin.left)
+            .attr("y",margin.top)
+            .attr("class",media+"label")
+            .attr("text-anchor","end")
+            .text(col1);
+    }
+    if (showLabelRight) {   
+        plot.append("text")
+            .attr("x",w-margin.right)
+            .attr("y",margin.top)
+            .attr("class",media+"label")
+            .text(col2);
+    }
 
 
     
