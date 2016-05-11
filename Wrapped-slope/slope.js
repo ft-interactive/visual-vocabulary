@@ -80,6 +80,7 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
         .call(yAxis);
 
     yText.selectAll("text")
+    .attr("dx",-yOffset/1.8)
     .attr("dy", -4)
     .style("text-anchor", "end")
 
