@@ -24,7 +24,15 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
     var yOffset=d3.select("#"+media+"Subtitle").style("font-size");
     yOffset=Number(yOffset.replace(/[^\d.-]/g, ''));
 
-    margin=margin[0].margin[0]
+    margin=margin[0].margin[0];
+    console.log(margin)
+    if(!showLabelLeft){
+        margin.left=0
+    }
+    if(!showLabelRight){
+        margin.right=0
+    }
+    console.log("margin.left",margin.left)
     var colours=stylename.linecolours;
     
     //workout dimensions of data
@@ -46,7 +54,7 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
         .scale(yScale)
         .orient("right")
         .ticks(5)
-        .tickSize(w-margin.right-margin.left)
+        .tickSize(w-margin.left-margin.right)
 
     var yText=plot.append("g")
         .attr("class",media+"yAxis")
@@ -61,7 +69,7 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
 
     //identify 0 line if there is one
     var originValue = 0;
-    console.log(yHighlight)
+    //console.log(yHighlight)
     var origin = plot.selectAll(".tick")
         .filter(function(d, i) {
             return d==originValue || d==yHighlight;
