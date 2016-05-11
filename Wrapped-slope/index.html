@@ -25,7 +25,8 @@
         var col2="Pay and productivity"
         var startZero=true;
         var showDots=true;
-        var showLabels=true;
+        var showLabelLeft=false;
+        var showLabelRight=true;
         var showValues=true;
         var yAxisHighlight=0
 
@@ -40,10 +41,10 @@
         
         //sets the padding inside the chart area
         var chartpadding=[
-        {name:"print",margin:[{top:10,right:80,bottom:15, left:65}]},
-        {name:"web",margin:[{top:10,right:115,bottom:20, left:94}]},
-        {name:"social",margin:[{top:0,right:130,bottom:20, left:110}]},
-        {name:"video",margin:[{top:55,right:35,bottom:68, left:42}]}
+        {name:"print",margin:[{top:10,right:80,bottom:15, left:0}]},
+        {name:"web",margin:[{top:15,right:115,bottom:20, left:0}]},
+        {name:"social",margin:[{top:0,right:130,bottom:20, left:0}]},
+        {name:"video",margin:[{top:55,right:35,bottom:68, left:0}]}
         ]
         
         /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
@@ -82,7 +83,7 @@
                 var stylename=frames[i].stylesheet;
                 var media = frames[i].name;
                 var legend=frames[i].legend;
-                slopeChart(data, stylename, media, chartpadding,legend, yAxisHighlight,startZero, showDots, showLabels, showValues, col1, col2);
+                slopeChart(data, stylename, media, chartpadding,legend, yAxisHighlight,startZero, showDots, showLabelLeft,showLabelRight, showValues, col1, col2);
             }
         })//end data load
         

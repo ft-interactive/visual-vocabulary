@@ -1,4 +1,4 @@
-function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZero, showDots, showLabels, showValuesvar, col1, col2){
+function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZero, showDots, showLabelLeft,showLabelRigHt, showValuesvar, col1, col2){
 
 	//graph options
     var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
@@ -21,12 +21,15 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
     var margin=plotpadding.filter(function(d){
         return (d.name === media);
       });
+    var yOffset=d3.select("#"+media+"Subtitle").style("font-size");
+    yOffset=Number(yOffset.replace(/[^\d.-]/g, ''));
+
     margin=margin[0].margin[0]
     var colours=stylename.linecolours;
     
     //workout dimensions of data
-        var maxVal = Math.max(d3.max(data, function(d){return parseFloat(d.val1);}),d3.max(data, function(d){return parseFloat(d.val2);}));
-        var minVal = Math.min(d3.min(data, function(d){return parseFloat(d.val1);}),d3.min(data, function(d){return parseFloat(d.val2);}));
+    var maxVal = Math.max(d3.max(data, function(d){return parseFloat(d.val1);}),d3.max(data, function(d){return parseFloat(d.val2);}));
+    var minVal = Math.min(d3.min(data, function(d){return parseFloat(d.val1);}),d3.min(data, function(d){return parseFloat(d.val2);}));
 
     //anchor to zero if needed
     if (startZero==true){
@@ -93,7 +96,7 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             .attr("fill",function(d,i){
                 return colours[0];  
             })
-            .attr("r",3)
+            .attr("r",yOffset/2.5)
             .attr("cx",margin.left)
             .attr("cy",function(d){return yScale(d.val1)});
         slopes.append("circle")
@@ -101,13 +104,13 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             .attr("fill",function(d,i){
                 return colours[0];  
             })
-            .attr("r",3)
+            .attr("r",yOffset/2.5)
             .attr("cx",w-margin.right)
             .attr("cy",function(d){return yScale(d.val2)});
     }
 
     //create labels if needed
-    if (showLabels) {
+    if (showLabelLeft) {
         slopes.append("text")
             .attr("class",media+"subtitle")
             .attr("x",margin.left-7)
@@ -120,6 +123,8 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             return d.name;
             }
         });
+    };
+    if (showLabelRight) {
         slopes.append("text")
             .attr("class",media+"subtitle")
             .attr("x",w-margin.right+7)
