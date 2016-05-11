@@ -7,9 +7,24 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height
 
-
     // return the series names from the first row of the spreadsheet
-    var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
+
+    var groupNames = d3.nest()
+        .key(function(d){return d.group})
+        .entries(data)
+        .map(function(d){return d.key});
+    for(var i = groupNames.length - 1; i >= 0; i--) {
+        if(groupNames[i] == "") {
+           groupNames.splice(i, 1);
+        }
+    }
+
+    d3.selection.prototype.moveToFront = function() {
+        return this.each(function(){
+        this.parentNode.appendChild(this);
+        });
+    }
+
 
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
@@ -25,15 +40,16 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
     yOffset=Number(yOffset.replace(/[^\d.-]/g, ''));
 
     margin=margin[0].margin[0];
-    console.log(margin)
     if(!showLabelLeft){
         margin.left=0
     }
     if(!showLabelRight){
         margin.right=0
     }
-    console.log("margin.left",margin.left)
-    var colours=stylename.linecolours;
+    //var colours=stylename.fillcolours;
+    var colours= d3.scale.ordinal()
+      .domain(groupNames)
+      .range(stylename.linecolours);
     
     //workout dimensions of data
     var maxVal = Math.max(d3.max(data, function(d){return parseFloat(d.val1);}),d3.max(data, function(d){return parseFloat(d.val2);}));
@@ -88,31 +104,58 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
         .attr("id",function(d){return d.val1+"-"+d.name+"-"+d.val2})
 
     slopes.append("line")
-        .attr("class",media+"lines")
+        .attr("class",function(d,i){
+            if(d.label=="yes"){
+                return media+"linesHighlight"
+            }
+            else {return media+"lines"}
+            })
         .attr("stroke",function(d,i){
-                return colours[0];  
+            if(d.label=="yes"){
+                return colours(d.group);
+            }
+            else {return "#8A8A8A"}
             })
         .attr("x1",margin.left)
         .attr("x2",w-margin.right)
         .attr("y1",function(d){return yScale(d.val1)})
         .attr("y2",function(d){return yScale(d.val2)})
 
+    var el=d3.selectAll(".linesHighlight")
+    el.moveToFront()
+
     //create dots if requested
     if (showDots)   {
         slopes.append("circle")
-            .attr("class",media+"circles")
-            .attr("fill",function(d,i){
-                return colours[0];  
+            .attr("class",function(d,i){
+                if(d.label=="yes"){
+                    return media+"circlesHighlight"
+                }
+                else {return media+"circles"}
             })
-            .attr("r",yOffset/3)
+            .attr("fill",function(d,i){
+                if(d.label=="yes"){
+                    return colours(d.group);
+                }
+                else {return "#8A8A8A"}
+                })
+            .attr("r",yOffset/3.2)
             .attr("cx",margin.left)
             .attr("cy",function(d){return yScale(d.val1)});
         slopes.append("circle")
-            .attr("class",media+"circles")
-            .attr("fill",function(d,i){
-                return colours[0];  
+            .attr("class",function(d,i){
+                if(d.label=="yes"){
+                    return media+"circlesHighlight"
+                }
+                else {return media+"circles"}
             })
-            .attr("r",yOffset/3)
+            .attr("fill",function(d,i){
+                if(d.label=="yes"){
+                    return colours(d.group);
+                }
+                else {return "#8A8A8A"}  
+            })
+            .attr("r",yOffset/3.2)
             .attr("cx",w-margin.right)
             .attr("cy",function(d){return yScale(d.val2)});
     }
@@ -125,11 +168,9 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             .attr("text-anchor","end")
             .attr("y",function(d){return yScale(d.val1)+5})
             .text(function(d){
-            if (showValues){
-            return d.name+" "+d.val1;
-            }   else    {
-            return d.name;
-            }
+                if (d.label=="yes"){
+                return d.name+" "+d.val1;
+                }
         });
     };
     if (showLabelRight) {
@@ -139,11 +180,9 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             .attr("text-anchor","start")
             .attr("y",function(d){return yScale(d.val2)+5})
             .text(function(d){
-        if (showValues){
-            return d.val2+" "+d.name;
-            }   else    {
-            return d.name;
-            }
+                if (d.label=="yes"){
+                    return d.val2+" "+d.name;
+                    }
         });
     }
 
@@ -163,7 +202,5 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             .attr("class",media+"label")
             .text(col2);
     }
-
-
     
 }
