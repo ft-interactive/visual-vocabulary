@@ -1,4 +1,4 @@
-function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, largeCircle, textOffset, yHighlight,axisLabel,xLabel,yLabel){
+function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, largeCircle, textOffset, yHighlight,axisLabel,xLabel,yLabel,xmin,ymin){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -33,9 +33,11 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
     var xExtent = d3.extent(data,function(d){
         return d.x;
     })
+    xExtent[0]=Math.min(xmin,xExtent[0])
     var yExtent = d3.extent(data,function(d){
         return d.y;
     })
+    yExtent[0]=Math.min(xmin,yExtent[0])
     var sizeExtent = d3.extent(data,function(d){
         return d.size;
     })
@@ -107,14 +109,14 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
         plot.append("text")
                 .attr("class",media+"subtitle")
                 .attr("text-anchor", "end")
-                .attr("x", plotWidth)
-                .attr("y", plotHeight)
+                .attr("x", plotWidth+margin.left)
+                .attr("y", plotHeight+margin.top-(yOffset/4))
                 .text(xLabel);
         plot.append("text")
                 .attr("class",media+"subtitle")
                 .attr("text-anchor", "start")
                 .attr("x", 0)
-                .attr("y", yOffset)
+                .attr("y", margin.top)
                 .text(yLabel);
     }
 
@@ -269,14 +271,15 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
     }
 
     function moveLabel() {
-        var dX = d3.event.x-(w/3);// subtract cx
-        var dY = d3.event.y-(h/2);// subtract cy
+        var dX = d3.event.x;// subtract cx
+        var dY = d3.event.y;// subtract cy
         d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");
     }
 
     function moveLegend() {
-        var dX = d3.event.x-(w/3);// subtract cx
-        var dY = d3.event.y-(h/2);// subtract cy
+        console.log(this.getBBox().width)
+        var dX = d3.event.x-(this.getBBox().width/2);// subtract cx
+        var dY = d3.event.y-(this.getBBox().height);// subtract cy
         d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");
     }
 
