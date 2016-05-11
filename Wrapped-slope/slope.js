@@ -187,20 +187,23 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
     }
 
     //column headings
-    if (showLabelLeft) {
-        plot.append("text")
-            .attr("x",margin.left)
-            .attr("y",margin.top)
-            .attr("class",media+"label")
-            .attr("text-anchor","end")
-            .text(col1);
-    }
-    if (showLabelRight) {   
-        plot.append("text")
-            .attr("x",w-margin.right)
-            .attr("y",margin.top)
-            .attr("class",media+"label")
-            .text(col2);
-    }
+    plot.append("text")
+        .attr("x",margin.left)
+        .attr("y",margin.top)
+        .attr("class",media+"label")
+        .attr("text-anchor",function(){
+            if (showLabelLeft) {
+                return "end"
+            }
+            else {return "start"}
+        })
+        .text(col1);
+  
+    plot.append("text")
+        .attr("x",w-margin.right)
+        .attr("y",margin.top)
+        .attr("class",media+"label")
+        .text(col2);
+
     
 }
