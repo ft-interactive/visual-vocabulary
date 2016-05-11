@@ -103,14 +103,14 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
         .enter()
         .append("g")
         .attr("id",function(d){return d.val1+"-"+d.name+"-"+d.val2})
-
-    slopes.append("line")
         .attr("class",function(d,i){
             if(d.label=="yes"){
                 return media+"linesHighlight"
             }
             else {return media+"lines"}
             })
+
+    slopes.append("line")
         .attr("stroke",function(d,i){
             if(d.label=="yes"){
                 return colours(d.group);
@@ -122,18 +122,12 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
         .attr("y1",function(d){return yScale(d.val1)})
         .attr("y2",function(d){return yScale(d.val2)})
 
-    var el=d3.selectAll(".linesHighlight")
+    var el=d3.selectAll("."+media+"linesHighlight")
     el.moveToFront()
 
     //create dots if requested
     if (showDots)   {
         slopes.append("circle")
-            .attr("class",function(d,i){
-                if(d.label=="yes"){
-                    return media+"circlesHighlight"
-                }
-                else {return media+"circles"}
-            })
             .attr("fill",function(d,i){
                 if(d.label=="yes"){
                     return colours(d.group);
@@ -144,12 +138,6 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             .attr("cx",margin.left)
             .attr("cy",function(d){return yScale(d.val1)});
         slopes.append("circle")
-            .attr("class",function(d,i){
-                if(d.label=="yes"){
-                    return media+"circlesHighlight"
-                }
-                else {return media+"circles"}
-            })
             .attr("fill",function(d,i){
                 if(d.label=="yes"){
                     return colours(d.group);
@@ -160,6 +148,8 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             .attr("cx",w-margin.right)
             .attr("cy",function(d){return yScale(d.val2)});
     }
+    var el=d3.selectAll("."+media+"circlesHighlight")
+    el.moveToFront()
 
     //create labels if needed
     if (showLabelLeft) {

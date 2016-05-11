@@ -15,7 +15,7 @@ var styleprint = {classes:
 {class:"yAxis line{fill:none; stroke-width:0.3px; stroke:#22190f;}"},
 {class:"yAxis text{fill:#000000; font-size: 9.6px; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
 {class:"origin line{fill:none; stroke-width:0.6px;}"},
-{class:"lines{fill:none; opacity:0.38; stroke-width:0.7px;stroke-linecap: round;}"},
+{class:"lines{fill:none; opacity:0.2; stroke-width:0.7px;stroke-linecap: round;}"},
 {class:"linesHighlight{fill:none; stroke-width:.8px;stroke-linecap: round;}"},
 {class:"circles{opacity: .38}"},
 {class:"circlesHighlight{opacity: 1.0}"}
@@ -23,7 +23,7 @@ var styleprint = {classes:
 titleOffset:10,
 subOffset:0,
 legendyOffset:0,
-linecolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0","#8A8A8A"]
+linecolours:["#ad1c21","#ddb831","#006a93","#55a2c7","#ad1c21","#486ba0","#8A8A8A"]
 }
 
 var styleweb = {classes:
