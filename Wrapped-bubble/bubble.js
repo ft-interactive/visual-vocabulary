@@ -33,9 +33,11 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
     var xExtent = d3.extent(data,function(d){
         return d.x;
     })
+    xExtent[0]=Math.min(xmin,xExtent[0])
     var yExtent = d3.extent(data,function(d){
         return d.y;
     })
+    yExtent[0]=Math.min(xmin,yExtent[0])
     var sizeExtent = d3.extent(data,function(d){
         return d.size;
     })
