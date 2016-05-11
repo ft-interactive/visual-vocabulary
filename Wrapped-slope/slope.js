@@ -19,6 +19,12 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
         }
     }
 
+    d3.selection.prototype.moveToFront = function() {
+        return this.each(function(){
+        this.parentNode.appendChild(this);
+        });
+    }
+
 
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
@@ -116,6 +122,7 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
         .attr("y2",function(d){return yScale(d.val2)})
 
     var el=d3.selectAll(".linesHighlight")
+    el.moveToFront()
 
     //create dots if requested
     if (showDots)   {
@@ -195,7 +202,5 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             .attr("class",media+"label")
             .text(col2);
     }
-
-
     
 }
