@@ -9,7 +9,12 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
 
 
     // return the series names from the first row of the spreadsheet
-    var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
+    var groupNames=[]
+        for(i = 0; i< data.length; i++){    
+            if(groupNames.indexOf(data[i].group) === -1){
+                groupNames.push(data[i].group);        
+            }        
+        }
 
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
@@ -25,15 +30,16 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
     yOffset=Number(yOffset.replace(/[^\d.-]/g, ''));
 
     margin=margin[0].margin[0];
-    console.log(margin)
     if(!showLabelLeft){
         margin.left=0
     }
     if(!showLabelRight){
         margin.right=0
     }
-    console.log("margin.left",margin.left)
-    var colours=stylename.linecolours;
+    var colours= d3.scale.ordinal()
+      .domain(groupNames)
+      .range(stylename.linecolours);
+    console.log(colours)
     
     //workout dimensions of data
     var maxVal = Math.max(d3.max(data, function(d){return parseFloat(d.val1);}),d3.max(data, function(d){return parseFloat(d.val2);}));
@@ -96,14 +102,16 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             })
         .attr("stroke",function(d,i){
             if(d.label=="yes"){
-                return colours[0];
+                return colours(d.group);
             }
-            else {return colours[6]}
+            else {return "#8A8A8A"}
             })
         .attr("x1",margin.left)
         .attr("x2",w-margin.right)
         .attr("y1",function(d){return yScale(d.val1)})
         .attr("y2",function(d){return yScale(d.val2)})
+
+    var el=d3.selectAll(".linesHighlight")
 
     //create dots if requested
     if (showDots)   {
@@ -116,9 +124,9 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             })
             .attr("fill",function(d,i){
                 if(d.label=="yes"){
-                    return colours[0];
+                    return colours(d.group);
                 }
-                else {return colours[6]}
+                else {return "#8A8A8A"}
                 })
             .attr("r",yOffset/3.2)
             .attr("cx",margin.left)
@@ -132,9 +140,9 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             })
             .attr("fill",function(d,i){
                 if(d.label=="yes"){
-                    return colours[0];
+                    return colours(d.group);
                 }
-                else {return colours[6]}  
+                else {return "#8A8A8A"}  
             })
             .attr("r",yOffset/3.2)
             .attr("cx",w-margin.right)
