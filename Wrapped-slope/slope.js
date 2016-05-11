@@ -88,9 +88,17 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
         .attr("id",function(d){return d.val1+"-"+d.name+"-"+d.val2})
 
     slopes.append("line")
-        .attr("class",media+"lines")
+        .attr("class",function(d,i){
+            if(d.label=="yes"){
+                return media+"linesHighlight"
+            }
+            else {return media+"lines"}
+            })
         .attr("stroke",function(d,i){
-                return colours[0];  
+            if(d.label=="yes"){
+                return colours[0];
+            }
+            else {return colours[6]}
             })
         .attr("x1",margin.left)
         .attr("x2",w-margin.right)
@@ -100,19 +108,35 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
     //create dots if requested
     if (showDots)   {
         slopes.append("circle")
-            .attr("class",media+"circles")
-            .attr("fill",function(d,i){
-                return colours[0];  
+            .attr("class",function(d,i){
+                if(d.label=="yes"){
+                    return media+"circlesHighlight"
+                }
+                else {return media+"circles"}
             })
-            .attr("r",yOffset/3)
+            .attr("fill",function(d,i){
+                if(d.label=="yes"){
+                    return colours[0];
+                }
+                else {return colours[6]}
+                })
+            .attr("r",yOffset/3.2)
             .attr("cx",margin.left)
             .attr("cy",function(d){return yScale(d.val1)});
         slopes.append("circle")
-            .attr("class",media+"circles")
-            .attr("fill",function(d,i){
-                return colours[0];  
+            .attr("class",function(d,i){
+                if(d.label=="yes"){
+                    return media+"circlesHighlight"
+                }
+                else {return media+"circles"}
             })
-            .attr("r",yOffset/3)
+            .attr("fill",function(d,i){
+                if(d.label=="yes"){
+                    return colours[0];
+                }
+                else {return colours[6]}  
+            })
+            .attr("r",yOffset/3.2)
             .attr("cx",w-margin.right)
             .attr("cy",function(d){return yScale(d.val2)});
     }
@@ -125,11 +149,9 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             .attr("text-anchor","end")
             .attr("y",function(d){return yScale(d.val1)+5})
             .text(function(d){
-            if (showValues){
-            return d.name+" "+d.val1;
-            }   else    {
-            return d.name;
-            }
+                if (d.label=="yes"){
+                return d.name+" "+d.val1;
+                }
         });
     };
     if (showLabelRight) {
@@ -139,11 +161,9 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             .attr("text-anchor","start")
             .attr("y",function(d){return yScale(d.val2)+5})
             .text(function(d){
-        if (showValues){
-            return d.val2+" "+d.name;
-            }   else    {
-            return d.name;
-            }
+                if (d.label=="yes"){
+                    return d.val2+" "+d.name;
+                    }
         });
     }
 
