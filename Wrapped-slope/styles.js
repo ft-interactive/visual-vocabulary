@@ -23,7 +23,7 @@ var styleprint = {classes:
 titleOffset:10,
 subOffset:0,
 legendyOffset:0,
-linecolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0","#8A8A8A",]
+linecolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0","#8A8A8A"]
 }
 
 var styleweb = {classes:

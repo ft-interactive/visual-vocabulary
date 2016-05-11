@@ -9,12 +9,17 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
 
 
     // return the series names from the first row of the spreadsheet
-    var groupNames=[]
-        for(i = 0; i< data.length; i++){    
-            if(groupNames.indexOf(data[i].group) === -1){
-                groupNames.push(data[i].group);        
-            }        
+
+    var groupNames = d3.nest()
+        .key(function(d){return d.group})
+        .entries(data)
+        .map(function(d){return d.key});
+    for(var i = groupNames.length - 1; i >= 0; i--) {
+        if(groupNames[i] == "") {
+           groupNames.splice(i, 1);
         }
+    }
+
 
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
@@ -36,10 +41,10 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
     if(!showLabelRight){
         margin.right=0
     }
+    //var colours=stylename.fillcolours;
     var colours= d3.scale.ordinal()
       .domain(groupNames)
       .range(stylename.linecolours);
-    console.log(colours)
     
     //workout dimensions of data
     var maxVal = Math.max(d3.max(data, function(d){return parseFloat(d.val1);}),d3.max(data, function(d){return parseFloat(d.val2);}));
