@@ -67,7 +67,8 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     var originValue = 0;
     var origin = plot.selectAll(".tick").filter(function(d, i) {
             return d==originValue || d==yHighlight;
-        }).classed(media+"origin",true);
+        })
+    .classed(media+"origin",true);
 
     var xScale = d3.scale.ordinal()
     .rangeRoundBands([0, plotWidth],.3);
@@ -124,18 +125,23 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
                 .attr("x", function(d) { return xScale(d.cat)+(xScale.rangeBand()/2)})
                 .attr("y", function(d) {
                     if(d.value>0) {
-                        console.log("greater",d.value)
                         return yScale(d.value)+yOffset+yOffset/2
                     }
                     else {
-                        console.log("less", d.value)
                         return yScale(d.value)-yOffset/2}
                 });
+                console.log(originValue, yHighlight)
+                var clear = yLabel.selectAll(".tick").filter(function(d, i) {
+                    console.log(d)
+                    return d==originValue || d==yHighlight;
+                })
+                console.log("clear",clear)
+                //clear.remove()
             }
         });
 
     //create a legend first
-    console.log(groupNames[0])
+    //console.log(groupNames[0])
     if (groupNames[0]!="-") {
         var legendyOffset=0
         var legend = plot.append("g")
