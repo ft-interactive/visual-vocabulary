@@ -204,6 +204,12 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
         .attr("x",w-margin.right)
         .attr("y",margin.top)
         .attr("class",media+"label")
+        .attr("text-anchor",function(){
+            if (showLabelRight) {
+                return "start"
+            }
+            else {return "end"}
+        })
         .text(col2);
 
     
