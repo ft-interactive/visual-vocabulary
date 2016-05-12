@@ -130,13 +130,13 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
                     else {
                         return yScale(d.value)-yOffset/2}
                 });
-                console.log(originValue, yHighlight)
+                console.log("values", originValue, yHighlight)
                 var clear = yLabel.selectAll(".tick").filter(function(d, i) {
                     console.log(d)
-                    return d==originValue || d==yHighlight;
+                    return d!=originValue
                 })
                 console.log("clear",clear)
-                //clear.remove()
+                clear.remove()
             }
         });
 
