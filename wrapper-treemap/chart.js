@@ -54,6 +54,14 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
         .data(treeData)
         .enter()//adds a g for each item of data
         .append("g")
+            .on("click",function(d){
+                        var el = d3.select(this);
+                        var label=el.select('text')
+                        if (label.text()=="") {
+                            label.text(function(d){return d.item +" "+d.value;})
+                        }
+                        else label.text(function(d){return ""})
+                    })
             .attr("id",function(d){if(d.children){
                 return d.key+" "+d.value
                 }
@@ -80,9 +88,10 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
                     //if theis is a smaller rect within a group then returans a colour depending on the group name as defined on the colour scale at the top
                     else {return colours(d.group)}
                 })
+                .on("mouseover",pointer)
 
             parent.append('text')//adds a text beox and put the 'item' value in it and the 'value' value
-                .attr("class", media+"subtitle")
+                .attr("class", media+"label")
                 .attr("x",5 )
                 .attr("y",yOffset)
                 .text(function(d){
@@ -90,6 +99,11 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
                         return d.item +" "+d.value;
                     }
                 })
+
+            function pointer() {
+                this.style.cursor='pointer'
+            };
+
         })
 
 
@@ -101,6 +115,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
             .key(function (d) { return d.group})
             .entries(data)
     };
+
 }
     
 
