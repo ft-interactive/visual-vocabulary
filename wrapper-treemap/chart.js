@@ -30,10 +30,66 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     // console.log(margin)
     //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
     var dataset=nest(data);
-    console.log(dataset)
+    console.log(dataset);
+
+    var treemap = d3.layout.treemap()//defines a potential treemap to be drawn
+        .size([plotWidth, plotHeight])//sets the width and height as defined abouve
+        .sticky(true)
+        .sort(function(a, b) { return a.value - b.value; })//Sorts biggest rects to the left
+        .value(function(d) { 
+            return d.value; })//gets the value for the group rect
+        .children(function(d){
+            return d.values;//gets the value for each smaller item rect within the group rect
+        });
+    var treeData = treemap(dataset);//tells the treemap what data to use, In this case the variable dataset that has been passed into the function as 'data'
 
 
-    
+    var tree=plot.append('svg')//appends an svg group item for each group in the dataset
+        .attr({
+            transform: 'translate(' + margin.left + ',' + margin.top + ')'//positions the svg
+        });
+
+    var node = tree
+        .selectAll(".node")//selects all the potential rect with the node class
+        .data(treeData)
+        .enter()//adds a g for each item of data
+        .append("g")
+            .attr("id",function(d){if(d.children){
+                return d.key+" "+d.value
+                }
+                else {return d.group+" "+d.item+" "+d.value}
+            })
+            .attr({
+                "class": media+"node",//assigns class name node
+                transform: function(d){ 
+                    return 'translate('+d.x+','+(d.y)+')'//works out their position
+                }
+            })
+        .call(function(parent){//adds a rectangle into the g element and define height widht etc
+            parent.append('rect')
+                .attr("x",0-7)
+                .attr("y",0-12)
+                .attr("width",function(d){ return d.dx })
+                .attr("height",function(d){ return d.dy })
+                .style("stroke", "white")
+                .style("fill",function(d){
+                    //before defining the fill style checks to see if this is a group rect that has smaller rect in it. if so then it has a colour of none as it would be drawn over the small rect and you would not be able to see them
+                    if(d.children){
+                        return "none"
+                    }
+                    //if theis is a smaller rect within a group then returans a colour depending on the group name as defined on the colour scale at the top
+                    else {return colours(d.group)}
+                })
+
+            parent.append('text')//adds a text beox and put the 'item' value in it and the 'value' value
+                .attr("class", media+"subtitle")
+                .text(function(d){
+                    return d.item +" "+d.value;
+                })
+        })
+
+
+
     function nest(data) {
     return {
         "key":"Groups", 
