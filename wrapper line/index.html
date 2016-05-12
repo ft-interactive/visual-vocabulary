@@ -12,6 +12,7 @@
     <script src="d3.min.js"></script>
     <script src="drawFrame.js"></script>
     <script src="line.js"></script>
+    <script src="saveSvgAsPng.js"></script>
     <script>
         
         //datafile
@@ -29,14 +30,14 @@
         var logScaleStart=1000;
         var markers=false;//show circle markers
         var numTicksy = 6;//rough number of ticks for y axis
-        var numTicksx = 10;//rough number of ticks for x axis
+        var numTicksx = 20;//rough number of ticks for x axis
         var interval="years";//days, months or years
         var ticks//=[0.2,0.3];//option to force tick values for online
 
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
         var frames=[
-        {name:"print",width:53.5,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert",yLabel:"right"},
+        {name:"print",width:229.34,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert",yLabel:"right"},
         {name:"web",width:600,height:422,units:'px',margins:[{top:0,right:28,bottom:5,left:00}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
         {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
@@ -56,7 +57,7 @@
             //date formatter, matching the format of the incoming csv...
             //var parseDate = d3.time.format("%Y %b").parse;
             //var parseDate = d3.time.format("%Y").parse;//just full year
-            var parseDate = d3.time.format("%d-%b-%y").parse;
+            var parseDate = d3.time.format("%Y").parse;
             /*
             some common formatting parsers....
             d3.time.format("%Y %b") 1986 Jan
