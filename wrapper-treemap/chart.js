@@ -103,20 +103,80 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
             function pointer() {
                 this.style.cursor='pointer'
             };
+        });//End of call function
 
+    //create a legend first
+    var legdata=dataset.children.filter(function(el){return el.key});
+    legdata.sort(function(a, b) { return b.value - a.value; })
+
+    var legendyOffset=0
+    var legend = plot.append("g")
+        .attr("id",media+"legend")
+        .on("mouseover",pointer)
+        .selectAll("g")
+        .data(legdata)
+        .enter()
+        .append("g")
+        .attr ("id",function(d,i){
+            return media+"l"+i
         })
 
+    var drag = d3.behavior.drag().on("drag", moveLegend);
+    d3.select("#"+media+"legend").call(drag);
+        
+    legend.append("text")
 
+        .attr("id",function(d,i){
+            return media+"t"+i
+        })
+        .attr("x",25)
+        .attr("y",0)
+        .attr("class",media+"subtitle")
+        .text(function(d){
+            return d.key;
+        })
 
-    function nest(data) {
-    return {
-        "key":"Groups", 
-        "values":d3.nest()
-            .key(function (d) { return d.group})
-            .entries(data)
+    legend.append("rect")
+        .attr("x",0)
+        .attr("y",-yOffset/1.4)
+        .attr("width",15)
+        .attr("height",yOffset/1.4)
+        .style("fill", function(d,i){return colours(d.key)})
+
+    legend.attr("transform",function(d,i){
+        if (legAlign=='hori') {
+            var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
+            if (i>0) {
+                var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
+            }
+            else {gWidth=0};
+            legendyOffset=legendyOffset+gWidth;
+            return "translate("+(legendyOffset)+","+(gHeigt)+")";  
+        }
+        else {
+            var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
+            return "translate(0,"+((i*yOffset)+yOffset/2)+")"};
+    })
+
+    function pointer() {
+        this.style.cursor='pointer'
     };
 
-}
+    function moveLegend() {
+        console.log(this.getBBox().width)
+        var dX = d3.event.x-(this.getBBox().width/2);// subtract cx
+        var dY = d3.event.y-(this.getBBox().height);// subtract cy
+        d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");
+    }
+
+    function nest(data) {
+        return {
+            "key":"Groups", 
+            "values":d3.nest()
+                .key(function (d) { return d.group})
+                .entries(data)
+        };
+    }
     
 
 }
