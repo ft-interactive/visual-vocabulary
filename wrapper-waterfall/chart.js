@@ -31,11 +31,51 @@ function makeChart(data, stylename, media, chartpadding,legend, yAlign,yHighligh
     var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
 
-    var min=d3.min(data, function(d) { return +d.value;})
-    var max=d3.max(data, function(d) { return +d.value;})
+    var groups = d3.keys(data[0]).filter(function(key) {
+        return key !== "group";
+    })
 
-    //var max=d3.max(data, function(d,i) { return +d.value;});
-    yScale.domain([0, 300]);
+
+    var xScale0 = d3.scale.ordinal()
+    .rangeRoundBands([0, plotWidth], 0, .3);
+
+    var xScale1 = d3.scale.ordinal();
+
+    var xAxis = d3.svg.axis()
+    .scale(xScale0)
+    .orient("bottom");
+     data.forEach(function(d) {
+        //first calculate the starting height for each group
+        total = 0
+        totals = {}
+        for (var i=0; i<groups.length; i++) {
+          if (i == 3) {
+            total = total - +d[groups[i]];
+            totals[groups[i]] = total;
+          }
+          else {
+            totals[groups[i]] = total;
+            total += +d[groups[i]];
+          }
+        }
+        //then map category name, value, and starting height to each observation
+        d.formatted = groups.map(function(group) {
+          return {
+            name: group,
+            value: +d[group],
+            baseHeight: +totals[group]
+          };
+        });
+      });
+
+    xScale0.domain(data.map(function(d) { return d.group; }));
+    xScale1.domain(groups).rangeRoundBands([0, xScale0.rangeBand()]);
+    yScale.domain([0, d3.max(data, function(d) {
+        return d3.max(d.formatted, function(d) {
+            return d.value + d.baseHeight;
+        });
+    })]);
+
 
     var yAxis = d3.svg.axis()
     .scale(yScale)
@@ -64,6 +104,18 @@ function makeChart(data, stylename, media, chartpadding,legend, yAlign,yHighligh
             return d==originValue || d==yHighlight;
         })
     .classed(media+"origin",true);
+
+    var xLabel=plot.append("g")
+      .attr("class", media+"xAxis")
+      .attr("transform",function(){
+                return "translate("+(margin.left)+","+plotHeight+")"
+            })
+      .call(xAxis);
+
+
+
+
+
 
 
 
