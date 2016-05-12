@@ -66,7 +66,6 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
                 }
             })
         .call(function(parent){//adds a rectangle into the g element and define height widht etc
-            console.log(parent)
             parent.append('rect')
                 .attr("x",0)
                 .attr("y",0)
@@ -81,14 +80,16 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
                     //if theis is a smaller rect within a group then returans a colour depending on the group name as defined on the colour scale at the top
                     else {return colours(d.group)}
                 })
-            if(parent.label=="yes"){
-                parent.append('text')//adds a text beox and put the 'item' value in it and the 'value' value
-                .attr("class", media+"subtitle")
-                .text(function(d){
-                    return d.item +" "+d.value;
-                })
-            }
 
+            parent.append('text')//adds a text beox and put the 'item' value in it and the 'value' value
+                .attr("class", media+"subtitle")
+                .attr("x",5 )
+                .attr("y",yOffset)
+                .text(function(d){
+                    if (d.label=="yes"){
+                        return d.item +" "+d.value;
+                    }
+                })
         })
 
 
