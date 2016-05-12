@@ -1,4 +1,4 @@
-function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZero, showDots, showLabelLeft,showLabelRigHt, showValuesvar, col1, col2){
+function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZero, showDots, showLabelLeft,showLabelRigHt, col1, col2){
 
 	//graph options
     var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line

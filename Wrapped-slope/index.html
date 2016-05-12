@@ -25,10 +25,9 @@
         var col1="1999"
         var col2="2014"
         var startZero=false;
-        var showDots=true;
+        var showDots=false;
         var showLabelLeft=false;
         var showLabelRight=true;
-        var showValues=true;
         var yAxisHighlight=0
 
         //Use the frames array to set unique values for each media type of frame
@@ -84,7 +83,7 @@
                 var stylename=frames[i].stylesheet;
                 var media = frames[i].name;
                 var legend=frames[i].legend;
-                slopeChart(data, stylename, media, chartpadding,legend, yAxisHighlight,startZero, showDots, showLabelLeft,showLabelRight, showValues, col1, col2);
+                slopeChart(data, stylename, media, chartpadding,legend, yAxisHighlight,startZero, showDots, showLabelLeft,showLabelRight, col1, col2);
             }
         })//end data load
         
