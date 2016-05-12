@@ -77,7 +77,8 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     .scale(xScale)
     .orient("bottom");
 
-    xScale.domain(data.map(function(d) { return d.cat;}));
+    xScale0.domain(data.map(function(d) { return d.group; }));
+    xScale1.domain(categories).rangeRoundBands([0, xScale0.rangeBand()]);
 
 
     var xLabels=plot.append("g")
