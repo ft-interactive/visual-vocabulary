@@ -44,9 +44,9 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     var treeData = treemap(dataset);//tells the treemap what data to use, In this case the variable dataset that has been passed into the function as 'data'
 
 
-    var tree=plot.append('svg')//appends an svg group item for each group in the dataset
+    var tree=plot.append('g')//appends an svg group item for each group in the dataset
         .attr({
-            transform: 'translate(' + margin.left + ',' + margin.top + ')'//positions the svg
+            transform: 'translate(' + (margin.left) + ',' + margin.top + ')'//positions the svg
         });
 
     var node = tree
@@ -66,9 +66,10 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
                 }
             })
         .call(function(parent){//adds a rectangle into the g element and define height widht etc
+            console.log(parent)
             parent.append('rect')
-                .attr("x",0-7)
-                .attr("y",0-12)
+                .attr("x",0)
+                .attr("y",0)
                 .attr("width",function(d){ return d.dx })
                 .attr("height",function(d){ return d.dy })
                 .style("stroke", "white")
@@ -80,12 +81,14 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
                     //if theis is a smaller rect within a group then returans a colour depending on the group name as defined on the colour scale at the top
                     else {return colours(d.group)}
                 })
-
-            parent.append('text')//adds a text beox and put the 'item' value in it and the 'value' value
+            if(parent.label=="yes"){
+                parent.append('text')//adds a text beox and put the 'item' value in it and the 'value' value
                 .attr("class", media+"subtitle")
                 .text(function(d){
                     return d.item +" "+d.value;
                 })
+            }
+
         })
 
 
