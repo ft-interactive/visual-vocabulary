@@ -131,7 +131,6 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
                         return yScale(d.value)-yOffset/2}
                 });
                 var clear = yLabel.selectAll(".tick").filter(function(d, i) {
-                    console.log(d)
                     return d!=originValue
                 })
                 clear.remove()

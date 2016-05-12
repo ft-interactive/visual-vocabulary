@@ -56,7 +56,6 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
                 return "translate("+(margin.left+yLabelOffset)+","+margin.top+")"
             })
     var min=d3.min(data, function(d) { return +d.value;})
-    console.log(min)
     var xScale = d3.scale.linear()
         .range([yLabelOffset, plotWidth])
         .domain([min, d3.max(data, function(d) { return +d.value;})]);
@@ -100,7 +99,6 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
                     var elClass = d3.select(this)
                     if (elClass.attr("class")==media+"bars") {
                         d3.select(this).attr("class",media+"barshighlight");
-                        console.log(colours.range()[0])
                         d3.select(this).style("fill",colours.range()[7])
                     }
                     else{var el=d3.select(this)
@@ -113,15 +111,19 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
                 .attr("class", media+"label")
                 .style("text-anchor","end")
                 .text(function(d) {return d3.format(".1f")(d.value);})
-                .attr("x", function(d) {return yOffset*2.5})
+                .attr("x", xScale(0)-yLabelOffset/4)
                 .attr("y", function(d) { return yScale(d.cat)+(yScale.rangeBand()-yOffset*.2    ); });
+
+                var clear = xLabels.selectAll(".tick").filter(function(d, i) {
+                    return d!=originValue
+                })
+                clear.remove()
             }
         })
 
     
 
-    //create a legend first
-    console.log(groupNames[0])
+    //create a legend first 
     if (groupNames[0]!="-") {
         var legendyOffset=0
         var legend = plot.append("g")

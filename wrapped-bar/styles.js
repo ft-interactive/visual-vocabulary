@@ -30,7 +30,7 @@ var styleweb = {classes:
 {class:"chartholder{fill: none;}"},
 {class:"title{font-size:21px; fill: #3b3d3b; font-weight: 100;}"},
 {class:"subtitle{font-size:14px; fill: #6b6e68; font-weight: 100;}"},
-{class:"label{fill:#ffffff; font-size: 21px;font-weight: 400;font-feature-settings: 'tnum' 1;}"},
+{class:"label{fill:#ffffff; font-size: 18px;font-weight: 400;font-feature-settings: 'tnum' 1;}"},
 {class:"source{fill: #6b6e68; font-size: 11.5px; font-weight: 100;}"},
 {class:"logo{fill: #dacfc5;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
