@@ -1,7 +1,7 @@
 
 var styleprint = {classes:
 [{class:"background{fill: none}"},
-{class:"chartholder{fill: #fff1e0}"},
+{class:"chartholder{fill: None}"},
 {class:"title{font-size:12px; fill: #000000; font-weight: 600;}"},
 {class:"subtitle{fill:#000000; font-size: 9.6px;}"},
 {class:"label{fill:#000000; font-size: 9.6px;}"},
@@ -25,7 +25,7 @@ fillcolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
 
 var styleweb = {classes:
 [{class:"background{fill: none}"},
-{class:"chartholder{fill: #fff1e0;}"},
+{class:"chartholder{fill: none;}"},
 {class:"title{font-size:21px; fill: #3b3d3b;}"},
 {class:"subtitle{font-size:14px; fill: #6b6e68;}"},
 {class:"label{font-size:14px; fill: #ffffff;}"},
@@ -48,7 +48,7 @@ fillcolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 
 var stylesoc = {classes:
 [{class:"background{fill: #212121;}"},
-{class:"chartholder{fill: #6b6e68;}"},
+{class:"chartholder{fill: none;}"},
 {class:"title{font-size: 38px; fill: #ffffff; opacity: 0.9; font-weight: 500;}"},
 {class:"subtitle{font-size: 28px; fill: #ffffff; opacity: 0.70; font-weight: 100; line-height: 30px;}"},
 {class:"label{font-size: 28px; fill: #ffffff; opacity: 0.70; font-weight: 100; line-height: 30px;}"},
