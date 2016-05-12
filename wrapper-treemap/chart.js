@@ -20,20 +20,28 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
         return (d.name === media);
       });
     margin=margin[0].margin[0]
-    var colours=stylename.linecolours;
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
+
+    var colours = d3.scale.ordinal()
+      .range(stylename.fillcolours);
     
     // console.log(plotWidth,colours,plotHeight,data)
     // console.log(margin)
     //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
+    var dataset=nest(data);
+    console.log(dataset)
 
-    plot.append("rect")
-        .attr("x",margin.left)
-        .attr("y",margin.top)
-        .attr("width",plotWidth)
-        .attr("height",plotHeight)
-        .attr("fill",colours[0])
+
+    
+    function nest(data) {
+    return {
+        "key":"Groups", 
+        "values":d3.nest()
+            .key(function (d) { return d.group})
+            .entries(data)
+    };
+}
     
 
 }
