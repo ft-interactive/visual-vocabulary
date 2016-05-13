@@ -1,4 +1,4 @@
-function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, yAlign, markers){
+function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, yAlign, markers){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -31,6 +31,50 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
 
     var plotWidth=w-margin.left-margin.right
     var plotHeight=h-margin.top-margin.bottom
+    //Work out xdomain
+    console.log(data)
+    var xMin=0;
+    var xMax=0  
+
+    function extents(value) {
+        console.log("value=",value)
+        var last;   
+        return last == undefined ? 
+            [0, value] : 
+            [last - value, last = last - value + Math.abs(value)]
+   
+    }
+
+    var cumulative = extents();
+
+    function group(value) {
+        return value < 0 ? 'negative' : 'positive';
+    }
+
+    var plotData=data.map(function(d) {
+        var extent = extents(d.value);
+        return {
+            cat:d.cat,
+            value:  d.value,
+            start: extent[0],
+            end: extent[1],
+            group: group(d.value)
+        }
+    })
+
+    plotData.push({
+        cat: 'total',
+        value:100,
+        start: 0,
+        end: d3.sum(data, function(d){
+            return d.value
+        }),
+        group: null,
+        value: 0
+    })
+
+    console.log("transformed data", plotData)
+    console.log("xDomain",xMin,xMax)
 
     var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
