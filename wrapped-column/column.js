@@ -77,6 +77,8 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     .scale(xScale)
     .orient("bottom");
 
+    xScale.domain(data.map(function(d) { return d.cat;}));
+
 
     var xLabels=plot.append("g")
       .attr("class", media+"xAxis")
