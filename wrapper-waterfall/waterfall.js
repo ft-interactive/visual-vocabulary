@@ -62,7 +62,7 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
     }
 
     var plotData=data.map(function(d) {
-        xMin=Math.min(0,xMin);
+        xMin=Math.min(cumulative,xMin);
         xMax=Math.max(cumulative,xMax);
 
         console.log(d.cat,"/////////////////////////")
