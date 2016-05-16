@@ -62,6 +62,9 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
     }
 
     var plotData=data.map(function(d) {
+        xMin=Math.min(0,xMin);
+        xMax=Math.max(cumulative,xMax);
+
         console.log(d.cat,"/////////////////////////")
         var extent = extents(cumulative,+d.value);
         cumulative=extent[1];
@@ -78,7 +81,7 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
 
         return {
             cat:d.cat,
-            value:  +d.value,
+            value: +d.value,
             start: extent[0],
             end: extent[1],
             group: group(d.value)
@@ -87,13 +90,12 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
 
     plotData.push({
         cat: 'total',
-        value:100,
+        value:4,
         start: 0,
         end: d3.sum(data, function(d){
             return d.value
         }),
-        group: null,
-        value: 0
+        group: null
     })
 
     console.log("transformed data", plotData)
@@ -153,7 +155,7 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
       .call(xAxis);
 
     plot.selectAll("."+media+"bar")
-    .data(data)
+    .data(plotData)
     .enter()
         .append("g")
         .attr("id",function(d) { return d.cat+"-"+d.value; })
