@@ -191,10 +191,10 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
                 .attr("x", function(d) { return xScale(d.cat)+(xScale.rangeBand()/2)})
                 .attr("y", function(d) {
                     if(d.value>0) {
-                        return yScale(d.value)+yOffset+yOffset/2
+                        return yScale(d.start)-(yScale(d.start)-yScale(d.end))+yOffset+yOffset/2
                     }
                     else {
-                        return yScale(d.value)-yOffset/2}
+                        return yScale(d.start)-yOffset/2}
                 });
                 var clear = yLabel.selectAll(".tick").filter(function(d, i) {
                     return d!=originValue
