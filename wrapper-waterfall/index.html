@@ -23,21 +23,21 @@
         var subtitle = "$bn";//comment out subtitle assignment if not needed
         var source = "Source: Bloomberg    FT graphic";
         //graph options
-        var yAxisHighlight=-4;
+        var yAxisHighlight=-7;
         var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
         var logScale=false;
         var logScaleStart=1000;
         var markers=false;//show numbers on bars
-        var numTicksy = 7;//rough number of ticks for y axis
+        var numTicksy = 20;//rough number of ticks for y axis
         var numTicksx = 0;//rough number of ticks for x axis
         var ticks//=[0.2,0.3];//option to force tick values for online
 
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
         var frames=[
-        //{name:"print",width:112,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"hori",yLabel:"right"},
+        {name:"print",width:112,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"hori",yLabel:"right"},
         {name:"web",width:600,height:422,units:'px',margins:[{top:10,right:38,bottom:7,left:10}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
-        //{name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
+        {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
         ]
         

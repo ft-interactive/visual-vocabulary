@@ -62,6 +62,9 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
     }
 
     var plotData=data.map(function(d) {
+        xMin=Math.min(cumulative,xMin);
+        xMax=Math.max(cumulative,xMax);
+
         console.log(d.cat,"/////////////////////////")
         var extent = extents(cumulative,+d.value);
         cumulative=extent[1];
@@ -78,7 +81,7 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
 
         return {
             cat:d.cat,
-            value:  +d.value,
+            value: +d.value,
             start: extent[0],
             end: extent[1],
             group: group(d.value)
@@ -87,13 +90,12 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
 
     plotData.push({
         cat: 'total',
-        value:100,
+        value:4,
         start: 0,
         end: d3.sum(data, function(d){
             return d.value
         }),
-        group: null,
-        value: 0
+        group: null
     })
 
     console.log("transformed data", plotData)
@@ -102,11 +104,8 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
     var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
 
-    var min=d3.min(data, function(d) { return +d.value;})
-    var max=d3.max(data, function(d) { return +d.value;})
-
     //var max=d3.max(data, function(d,i) { return +d.value;});
-    yScale.domain([min, max]);
+    yScale.domain([xMin, xMax]);
 
     var yAxis = d3.svg.axis()
     .scale(yScale)
@@ -144,7 +143,7 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
     .scale(xScale)
     .orient("bottom");
 
-    xScale.domain(data.map(function(d) { return d.cat;}));
+    xScale.domain(plotData.map(function(d) { return d.cat;}));
 
 
     var xLabels=plot.append("g")
@@ -153,7 +152,7 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
       .call(xAxis);
 
     plot.selectAll("."+media+"bar")
-    .data(data)
+    .data(plotData)
     .enter()
         .append("g")
         .attr("id",function(d) { return d.cat+"-"+d.value; })
@@ -169,8 +168,8 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
                 .attr("class",media+"bars")
                 .attr("x", function(d) { return xScale(d.cat); })
                 .attr("width", xScale.rangeBand())
-                .attr("y", function(d) { return yScale(Math.max(0, d.value))})
-                .attr("height", function(d) {return (Math.abs(yScale(d.value) - yScale(0))); })
+                .attr("y", function(d) { return yScale(d.start)-(yScale(d.start)-yScale(d.end))})
+                .attr("height", function(d){return yScale(d.start)-yScale(d.end); })
                 .on("mouseover",pointer)
                 .on("click",function(d){
                     var elClass = d3.select(this)
@@ -184,6 +183,11 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
                         d3.select(this).style("fill",colours.range()[0])
                     }
                 })
+            
+            parent.append("path")
+            .attr("class",media+"barlinks")
+            .attr(function (d){"d","M 0.5,"+( yScale(d.start)-(yScale(d.start)-yScale(d.end)))+" L"+(100)+","+( yScale(d.start)-(yScale(d.start)-yScale(d.end)))+""})
+
             if (markers) {
                 parent.append("text")
                 .attr("class", media+"label")
@@ -192,10 +196,10 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
                 .attr("x", function(d) { return xScale(d.cat)+(xScale.rangeBand()/2)})
                 .attr("y", function(d) {
                     if(d.value>0) {
-                        return yScale(d.value)+yOffset+yOffset/2
+                        return yScale(d.start)-(yScale(d.start)-yScale(d.end))+yOffset+yOffset/2
                     }
                     else {
-                        return yScale(d.value)-yOffset/2}
+                        return yScale(d.start)-yOffset/2}
                 });
                 var clear = yLabel.selectAll(".tick").filter(function(d, i) {
                     return d!=originValue
