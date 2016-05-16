@@ -34,28 +34,51 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
     //Work out xdomain
     console.log(data)
     var xMin=0;
-    var xMax=0  
+    var xMax=0
 
-    function extents(value) {
-        console.log("value=",value)
-        var last;   
-        return last == undefined ? 
-            [0, value] : 
-            [last - value, last = last - value + Math.abs(value)]
-   
+     var cumulative =0;
+
+    function extents(last,value) {
+        console.log("last=",last,"value=",value)
+        console.log("cumulative in function",cumulative)
+        if (last==0){
+            return [0,value]
+        }
+        else {
+            if (value>0){
+                console.log("last+value",last+value)
+                return [last, cumulative+value]
+            } 
+            else {
+                console.log("last",last)
+                console.log(Math.abs(value))
+                return [last+(value), last +(value)+Math.abs(value)]}    
+        }
     }
 
-    var cumulative = extents();
 
     function group(value) {
         return value < 0 ? 'negative' : 'positive';
     }
 
     var plotData=data.map(function(d) {
-        var extent = extents(d.value);
+        console.log(d.cat,"/////////////////////////")
+        var extent = extents(cumulative,+d.value);
+        cumulative=extent[1];
+        console.log("extent=",extent)
+        console.log(d.value)
+        if(d.value<0){
+            console.log("<")
+            cumulative=extent[0];
+        }
+        else {
+            console.log(">")
+            cumulative=extent[1]};
+        console.log("cumulative",cumulative)
+
         return {
             cat:d.cat,
-            value:  d.value,
+            value:  +d.value,
             start: extent[0],
             end: extent[1],
             group: group(d.value)
