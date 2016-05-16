@@ -183,6 +183,11 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
                         d3.select(this).style("fill",colours.range()[0])
                     }
                 })
+            
+            parent.append("path")
+            .attr("class",media+"barlinks")
+            .attr(function (d){"d","M 0.5,"+( yScale(d.start)-(yScale(d.start)-yScale(d.end)))+" L"+(100)+","+( yScale(d.start)-(yScale(d.start)-yScale(d.end)))+""})
+
             if (markers) {
                 parent.append("text")
                 .attr("class", media+"label")

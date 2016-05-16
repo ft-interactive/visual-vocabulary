@@ -15,6 +15,7 @@ var styleprint = {classes:
 {class:"yAxis line{fill:none; stroke-width:0.3px; stroke:#22190f;}"},
 {class:"yAxis text{fill:#000000; font-size: 9.6px; font-feature-settings: 'tnum' 1;}"},
 {class:"origin line{fill:none; stroke-width:0.6px;}"},
+{class:"barlinks line{fill:none; stroke-width:3.0px; stroke:#000000;}"},
 {class:"lines{fill:none; stroke-width:2.0px;stroke-linecap: round;}"},
 {class:"bars{fill-opacity:1.0; stroke-width: 0.0px}"},
 {class:"barshighlight{fill-opacity:1.0;}"}
@@ -40,6 +41,7 @@ var styleweb = {classes:
 {class:"yAxis line{fill:none; stroke-width: 1.0px; stroke:#c3bcb0; stroke-dasharray:1,2}"},
 {class:"yAxis text{fill:#6b6e68; font-size: 14.0px; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
 {class:"origin line{fill:none; stroke:#9ba497; stroke-width: 1px;stroke-dasharray:1,0}"},
+{class:"barlinks line{fill:none; stroke-width:3.0px; stroke:#000000;}"},
 {class:"lines{fill:none; stroke-width: 2.5px; stroke-linecap: round;}"},
 {class:"bars{fill-opacity:1.0; stroke-width: 0.0px}"},
 {class:"barshighlight{fill-opacity:1.0;}"}
@@ -65,6 +67,7 @@ var stylesoc = {classes:
 {class:"yAxis line{fill:none; stroke-width: 2.0px; stroke-dasharray:2,8; opacity: 0.38; stroke:#ffffff;}"},
 {class:"yAxis text{font-size: 28px; fill: #ffffff; opacity: 0.50; font-weight: 100; line-height: 28px; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
 {class:"origin line{fill:none; stroke:#ffffff; stroke-width: 2.0px; opacity: 0.5; stroke-dasharray:1,0}"},
+{class:"barlinks line{fill:none; stroke-width:3.0px; stroke:#000000;}"},
 {class:"lines{fill:none; stroke-width: 5px;  stroke-linecap: round;}"},
 {class:"bars{fill-opacity:1.0; stroke-width: 0.0px}"},
 {class:"barshighlight{fill-opacity:1.0;}"},
