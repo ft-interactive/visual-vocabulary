@@ -95,7 +95,7 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
     })
 
     plotData.push({
-        cat: 'total',
+        cat: 'Total',
         value:cumulative,
         start: 0,
         end: d3.sum(data, function(d){
@@ -190,7 +190,7 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
                     }
                 })
              
-             parent.filter(function(d) { return d.cat != "total" })
+             parent.filter(function(d,i) {return d.cat != "Total" && i<(plotData.length-2)})
              .append("line")
                 .attr("class", media+"connectors")
                 .attr("x1", function(d,i) {return xScale(d.cat)})
