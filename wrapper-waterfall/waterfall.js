@@ -90,7 +90,7 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
 
     plotData.push({
         cat: 'total',
-        value:4,
+        value:cumulative,
         start: 0,
         end: d3.sum(data, function(d){
             return d.value
@@ -184,13 +184,23 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
                     }
                 })
              
-             parent.filter(function(d) { return d.class != "total" })
+             parent.filter(function(d) { return d.cat != "total" })
              .append("line")
                 .attr("class", media+"barlinks")
-                .attr("x1", function(d,i) {return (i+1)* xScale.rangeBand()})
-                .attr("y1", function(d) { return yScale(d.start) } )
-                .attr("x2", function(d,i) {return (i+3)* xScale.rangeBand()})
-                .attr("y2", function(d) { return yScale(d.start) } )
+                .attr("x1", function(d,i) {return xScale(d.cat)+(xScale.rangeBand()/2)})
+                .attr("y1", function(d) { 
+                    if(d.value>0){
+                        return yScale(d.end)
+                    }
+                    else {return yScale(d.start)}
+                })
+                .attr("x2", function(d,i) {return xScale(d.cat)+(xScale.rangeBand()*2)})
+                .attr("y2", function(d) { 
+                    if(d.value>0){
+                        return yScale(d.end)
+                    }
+                    else {return yScale(d.start)}
+                })
 
             
             // parent.append("path")
