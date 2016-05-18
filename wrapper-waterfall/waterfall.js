@@ -183,15 +183,24 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
                         d3.select(this).style("fill",colours.range()[0])
                     }
                 })
+             
+             parent.filter(function(d) { return d.class != "total" })
+             .append("line")
+                .attr("class", media+"barlinks")
+                .attr("x1", function(d,i) {return (i+1)* xScale.rangeBand()})
+                .attr("y1", function(d) { return yScale(d.start) } )
+                .attr("x2", function(d,i) {return (i+3)* xScale.rangeBand()})
+                .attr("y2", function(d) { return yScale(d.start) } )
+
             
-            parent.append("path")
-                .attr("class",media+"barlinks")
-                .attr("d",function (d){
-                    if(d.start==0){
-                        return "M"+(xScale(d.cat))+","+(yScale(d.end))+"L"+((xScale(d.cat))+30)+","+(yScale(d.end))
-                    }
-                    else {return "M"+(xScale(d.cat))+","+(yScale(d.start))+"L"+((xScale(d.cat))+30)+","+(yScale(d.start))}
-                })
+            // parent.append("path")
+            //     .attr("class",media+"barlinks")
+            //     .attr("d",function (d){
+            //         if(d.start==0){
+            //             return "M"+(xScale(d.cat))+","+(yScale(d.end))+"L"+(1/xScale.rangeBand())+","+(yScale(d.end))
+            //         }
+            //         else {return "M"+(xScale(d.cat))+","+(yScale(d.start))+"L"+(1*xScale.rangeBand())+","+(yScale(d.start))}
+            //     })
 
             if (markers) {
                 parent.append("text")
