@@ -10,6 +10,12 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
         }        
     }
 
+    d3.selection.prototype.moveToFront = function() {
+        return this.each(function(){
+        this.parentNode.appendChild(this);
+        });
+    }
+
     //Select the plot space in the frame from which to take measurements
     var chart=d3.select("#"+media+"chart")
     var plot=d3.select("#"+media+"plot")
@@ -186,21 +192,24 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
              
              parent.filter(function(d) { return d.cat != "total" })
              .append("line")
-                .attr("class", media+"barlinks")
-                .attr("x1", function(d,i) {return xScale(d.cat)+(xScale.rangeBand()/2)})
+                .attr("class", media+"connectors")
+                .attr("x1", function(d,i) {return xScale(d.cat)})
                 .attr("y1", function(d) { 
                     if(d.value>0){
                         return yScale(d.end)
                     }
                     else {return yScale(d.start)}
                 })
-                .attr("x2", function(d,i) {return xScale(d.cat)+(xScale.rangeBand()*2)})
+                .attr("x2", function(d,i) {return xScale(d.cat)+(xScale.rangeBand()*2.4)})
                 .attr("y2", function(d) { 
                     if(d.value>0){
                         return yScale(d.end)
                     }
                     else {return yScale(d.start)}
                 })
+
+            var el=d3.selectAll("."+media+"connectors")
+            el.moveToFront()
 
             
             // parent.append("path")
@@ -306,9 +315,6 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
         d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");
 
     }
-
-
-
 
 
 }
