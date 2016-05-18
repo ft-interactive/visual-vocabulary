@@ -15,7 +15,7 @@ var styleprint = {classes:
 {class:"yAxis line{fill:none; stroke-width:0.3px; stroke:#22190f;}"},
 {class:"yAxis text{fill:#000000; font-size: 9.6px; font-feature-settings: 'tnum' 1;}"},
 {class:"origin line{fill:none; stroke-width:0.6px;}"},
-{class:"barlinks line{fill:none; stroke-width:3.0px; stroke:#000000;}"},
+{class:"barlinks{fill:none; stroke-width:3.0px; stroke:#000000;}"},
 {class:"lines{fill:none; stroke-width:2.0px;stroke-linecap: round;}"},
 {class:"bars{fill-opacity:1.0; stroke-width: 0.0px}"},
 {class:"barshighlight{fill-opacity:1.0;}"}

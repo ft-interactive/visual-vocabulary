@@ -185,8 +185,13 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
                 })
             
             parent.append("path")
-            .attr("class",media+"barlinks")
-            .attr(function (d){"d","M 0.5,"+( yScale(d.start)-(yScale(d.start)-yScale(d.end)))+" L"+(100)+","+( yScale(d.start)-(yScale(d.start)-yScale(d.end)))+""})
+                .attr("class",media+"barlinks")
+                .attr("d",function (d){
+                    if(d.start==0){
+                        return "M"+(xScale(d.cat))+","+(yScale(d.end))+"L"+((xScale(d.cat))+30)+","+(yScale(d.end))
+                    }
+                    else {return "M"+(xScale(d.cat))+","+(yScale(d.start))+"L"+((xScale(d.cat))+30)+","+(yScale(d.start))}
+                })
 
             if (markers) {
                 parent.append("text")
@@ -206,6 +211,7 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
                 })
                 clear.remove()
             }
+
         });
 
     //create a legend first
