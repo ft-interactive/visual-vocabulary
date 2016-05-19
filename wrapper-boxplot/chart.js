@@ -28,20 +28,27 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
 
     var values = {};
     for (i = 0; i < seriesNames.length; i++) {
-        values[seriesNames[i]]=data.map(function(d){return d[seriesNames[i]]})
+        values[seriesNames[i]]=data.map(function(d){return +d[seriesNames[i]]})
     }
-
-    console.log("values",values)
-
 
     var dataset=seriesNames.map(function(d){
         return {
             cat: d,
             values: values[d],
-            quartiles: null,
-            mode: null
+            q1: d3.quantile(values[d], .25),
+            median: d3.quantile(values[d], .5),
+            q3: d3.quantile(values[d], .5),
+            min: d3.min(values[d]),
+            max: d3.max(values[d]),
         }
     })
+
+    function calcIQR(values) {
+        console.log(values)
+        var q1=d3.quantile(values, .25)
+        console.log(q1)
+
+    }
 
 
 
