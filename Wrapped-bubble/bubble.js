@@ -1,4 +1,4 @@
-function bubbleChart(data, stylename, media, plotpadding,yAlign, smallCircle, largeCircle, textOffset, yHighlight,axisLabel,xLabel,yLabel,xmin,ymin){
+function bubbleChart(data, stylename, media, chartpadding,legend, smallCircle, largeCircle,subYoffset,yAxisHighlight,axisLabel,xLabel,yLabel,xmin,ymin,yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -13,7 +13,7 @@ function bubbleChart(data, stylename, media, plotpadding,yAlign, smallCircle, la
     //Get the width,height and the marginins unique to this plot
     var w=plot.node().getBBox().width;
     var h=plot.node().getBBox().height;
-    var margin=plotpadding.filter(function(d){
+    var margin=chartpadding.filter(function(d){
         return (d.name === media);
       });
     margin=margin[0].margin[0]
@@ -71,11 +71,32 @@ function bubbleChart(data, stylename, media, plotpadding,yAlign, smallCircle, la
 
     var yAxis = d3.svg.axis()
         .scale(yScale)
-        .orient("left")
+        .orient(yAlign)
 
     var yLabel=plot.append("g")
     .attr("class",media+"yAxis")
     .call(yAxis);
+
+    //calculate what the ticksize should be now that the text for the labels has been drawn
+    var yLabelOffset=yLabel.node().getBBox().width
+    //console.log("offset= ",yLabelOffset)
+    var yticksize=colculateTicksize(yAlign, yLabelOffset);
+    //console.log(yticksize);
+
+    yLabel.call(yAxis.tickSize(yticksize))
+    yLabel
+        .attr("transform",function(){
+            if (yAlign=="right"){
+                return "translate("+(margin.left)+","+margin.top+")"
+            }
+            else return "translate("+(w-margin.right)+","+margin.top+")"
+            })
+        
+    //identify 0 line if there is one
+    var originValue = 0;
+    var origin = plot.selectAll(".tick").filter(function(d, i) {
+            return d==originValue || d==yAxisHighlight;
+        }).classed(media+"origin",true);
 
 
     // //x axis
@@ -259,6 +280,13 @@ function bubbleChart(data, stylename, media, plotpadding,yAlign, smallCircle, la
     //     })
 
     //}
+
+    function colculateTicksize(align, offset) {
+        if (align=="right") {
+            return w-margin.left-offset
+        }
+        else {return w-margin.right-offset}
+    }
 
     d3.selection.prototype.moveToFront = function() { 
                 return this.each(function() { 
