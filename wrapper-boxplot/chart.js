@@ -35,7 +35,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numTicksy,y
 
     var plotData=seriesNames.map(function(d){
         yMin=Math.min(yMin,d3.min(values[d]))
-        yMax=Math.min(yMax,d3.max(values[d]))
+        yMax=Math.max(yMax,d3.max(values[d]))
         return {
             cat: d,
             values: values[d],
@@ -48,6 +48,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numTicksy,y
     })
 
     console.log("plotData",plotData)
+    console.log("yMin",yMin,"yMax",yMax)
 
     var yScale = d3.scale.linear()
         .range([plotHeight, 0])
@@ -95,6 +96,38 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numTicksy,y
       .attr("class", media+"xAxis")
       .attr("transform", "translate("+(margin.left)+"," + (h-margin.bottom) + ")")
       .call(xAxis);
+
+    plot.selectAll("."+media+"bar")
+    .data(plotData)
+    .enter()
+        .append("g")
+        .attr("id",function(d) { return d.cat+"-"+d.value; })
+        .attr("transform",function(){
+                return "translate("+(margin.left)+","+margin.top+")"
+            })
+        .call(function(parent){
+
+        ///Put on the whiskers
+        parent.append("line")
+            .attr("class", media+"whiskers")
+            .attr("x1", function(d,i) {return xScale(d.cat)})
+            .attr("y1", function(d) { return yScale(d.min)})
+            .attr("x2", function(d,i) {return xScale(d.cat)+(xScale.rangeBand())})
+            .attr("y2", function(d) { return yScale(d.min)})
+        parent.append("line")
+            .attr("class", media+"whiskers")
+            .attr("x1", function(d,i) {return xScale(d.cat)})
+            .attr("y1", function(d) { return yScale(d.max)})
+            .attr("x2", function(d,i) {return xScale(d.cat)+(xScale.rangeBand())})
+            .attr("y2", function(d) { return yScale(d.max)})
+        
+
+
+
+
+        })
+        
+
 
 
 

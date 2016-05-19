@@ -14,6 +14,7 @@ var styleprint = {classes:
 {class:"yAxis line{fill:none; stroke-width:0.3px; stroke:#22190f;}"},
 {class:"yAxis text{fill:#000000; font-size: 9.6px; font-feature-settings: 'tnum' 1;}"},
 {class:"origin line{fill:none; stroke-width:0.6px;}"},
+{class:"whiskers{fill:none; stroke-width:1.0px;stroke:#22190f;}"},
 {class:"lines{fill:none; stroke-width:2.0px;stroke-linecap: round;}"}
 ],
 titleOffset:10,
@@ -36,6 +37,7 @@ var styleweb = {classes:
 {class:"yAxis line{fill:none; stroke-width: 1.0px; stroke:#c3bcb0; stroke-dasharray:1,2}"},
 {class:"yAxis text{fill:#6b6e68; font-size: 14.0px; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
 {class:"origin line{fill:none; stroke:#9ba497; stroke-width: 1px;stroke-dasharray:1,0}"},
+{class:"whiskers{fill:none; stroke-width:1.0px;stroke:#22190f;}"},
 {class:"lines{fill:none; stroke-width: 2.5px; stroke-linecap: round;}"}
 ],
 titleOffset:21,
