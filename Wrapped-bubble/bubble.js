@@ -54,9 +54,7 @@ function bubbleChart(data, stylename, media, chartpadding,legend, smallCircle, l
         .map(function(d){return d.key});
 
     //scales
-    var xScale=d3.scale.linear()
-        .domain(xExtent)
-        .range([margin.left,w-(margin.right)]);
+
     var yScale=d3.scale.linear()
         .domain(yExtent)
         .range([plotHeight,0])
@@ -91,40 +89,32 @@ function bubbleChart(data, stylename, media, chartpadding,legend, smallCircle, l
             }
             else return "translate("+(w-margin.right)+","+margin.top+")"
             })
-        
+
     //identify 0 line if there is one
     var originValue = 0;
     var origin = plot.selectAll(".tick").filter(function(d, i) {
             return d==originValue || d==yAxisHighlight;
         }).classed(media+"origin",true);
 
+    var xScale = d3.scale.linear()
+        .domain(xExtent)
+        .range([0,(plotWidth-yLabelOffset)])
+    console.log(xExtent)
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .tickSize(yOffset/2)
+        .orient("bottom");
 
-    // //x axis
-    // var xAxis = d3.svg.axis()
-    //     .scale(xScale)
-    //     .orient("bottom")
-    //     .tickSize(yOffset/2)
-    //     .ticks(5);
-    // plot.append("g")
-    //     .attr("transform","translate(0,"+(h-margin.bottom)+")")
-    //     .attr("class",media+"xAxis")
-    //     .call(xAxis)
+     var xLabel=plot.append("g")
+        .attr("class",media+"xAxis")
+        .attr("transform",function(){
+            if(yAlign=="right") {
+                return "translate("+(margin.left)+","+(h-margin.bottom)+")"
+            }
+             else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"}
+            })
+        .call(xAxis);
 
-    // //calculate ticksize
-    // var tickSize;
-    // if (media=="soc"){
-    //     tickSize=10;
-    // }   else    {
-    //     tickSize=-(w-(margin.right+margin.left)+10);
-    // }
-
-
-
-    // //identify 0 line if there is one
-    // var originValue = 0;
-    // var origin = plot.selectAll(".tick").filter(function(d, i) {
-    //         return d==originValue || d==yHighlight;
-    //     }).classed(media+"origin",true);
 
     // if (axisLabel) {
     //     plot.append("text")
