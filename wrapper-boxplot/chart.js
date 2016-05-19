@@ -1,5 +1,5 @@
 
-function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numTicksy){
+function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numTicksy,yHighlight){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -33,7 +33,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numTicksy){
         values[seriesNames[i]]=data.map(function(d){return +d[seriesNames[i]]})
     }
 
-    var dataset=seriesNames.map(function(d){
+    var plotData=seriesNames.map(function(d){
         yMin=Math.min(yMin,d3.min(values[d]))
         yMax=Math.min(yMax,d3.max(values[d]))
         return {
@@ -47,7 +47,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numTicksy){
         }
     })
 
-    console.log("dataset",dataset)
+    console.log("plotData",plotData)
 
     var yScale = d3.scale.linear()
         .range([plotHeight, 0])
@@ -74,6 +74,28 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numTicksy){
             }
             else return "translate("+(w-margin.right)+","+margin.top+")"
             })
+
+    //identify 0 line if there is one
+    var originValue = 0;
+    var origin = plot.selectAll(".tick").filter(function(d, i) {
+            return d==originValue || d==yHighlight;
+        })
+    .classed(media+"origin",true);
+
+    var xScale = d3.scale.ordinal()
+    .rangeRoundBands([0, plotWidth],.3);
+
+    var xAxis = d3.svg.axis()
+    .scale(xScale)
+    .tickSize(yOffset/2)
+    .orient("bottom");
+
+    xScale.domain(plotData.map(function(d) { return d.cat;}));
+    var xLabels=plot.append("g")
+      .attr("class", media+"xAxis")
+      .attr("transform", "translate("+(margin.left)+"," + (h-margin.bottom) + ")")
+      .call(xAxis);
+
 
 
 
