@@ -1,5 +1,5 @@
 
-function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
+function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numTicksy){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -25,6 +25,8 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     var plotHeight = h-(margin.top+margin.bottom);
 
     console.log("loaded data",data)
+    var yMin=d3.min(d3.values(data[0]));
+    var yMax=d3.max(d3.values(data[0]));
 
     var values = {};
     for (i = 0; i < seriesNames.length; i++) {
@@ -32,6 +34,8 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     }
 
     var dataset=seriesNames.map(function(d){
+        yMin=Math.min(yMin,d3.min(values[d]))
+        yMax=Math.min(yMax,d3.max(values[d]))
         return {
             cat: d,
             values: values[d],
@@ -43,19 +47,45 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
         }
     })
 
-    function calcIQR(values) {
-        console.log(values)
-        var q1=d3.quantile(values, .25)
-        console.log(q1)
+    console.log("dataset",dataset)
 
+    var yScale = d3.scale.linear()
+        .range([plotHeight, 0])
+        .domain([yMin, yMax]);
+
+    var yAxis = d3.svg.axis()
+    .scale(yScale)
+    .orient(yAlign)
+    .ticks(numTicksy);
+
+    var yLabel=plot.append("g")
+      .attr("class", media+"yAxis")
+      .call(yAxis)
+
+    //calculate what the ticksize should be now that the text for the labels has been drawn
+    var yLabelOffset=yLabel.node().getBBox().width
+    var yticksize=colculateTicksize(yAlign, yLabelOffset);
+
+    yLabel.call(yAxis.tickSize(yticksize))
+    yLabel
+        .attr("transform",function(){
+            if (yAlign=="right"){
+                return "translate("+(margin.left)+","+margin.top+")"
+            }
+            else return "translate("+(w-margin.right)+","+margin.top+")"
+            })
+
+
+
+
+
+    function colculateTicksize(align, offset) {
+        if (align=="right") {
+            return w-margin.left-offset
+        }
+        else {return w-margin.right-offset}
     }
 
-
-
-    
-
-
-    console.log("dataset",dataset)
 
     
 
