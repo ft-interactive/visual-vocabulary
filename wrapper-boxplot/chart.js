@@ -23,17 +23,33 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     var colours=stylename.linecolours;
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
-    
-    // console.log(plotWidth,colours,plotHeight,data)
-    // console.log(margin)
-    //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
 
-    plot.append("rect")
-        .attr("x",margin.left)
-        .attr("y",margin.top)
-        .attr("width",plotWidth)
-        .attr("height",plotHeight)
-        .attr("fill",colours[0])
+    console.log("loaded data",data)
+
+    var values = {};
+    for (i = 0; i < seriesNames.length; i++) {
+        values[seriesNames[i]]=data.map(function(d){return d[seriesNames[i]]})
+    }
+
+    console.log("values",values)
+
+
+    var dataset=seriesNames.map(function(d){
+        return {
+            cat: d,
+            values: values[d],
+            quartiles: null,
+            mode: null
+        }
+    })
+
+
+
+    
+
+
+    console.log("dataset",dataset)
+
     
 
 }
