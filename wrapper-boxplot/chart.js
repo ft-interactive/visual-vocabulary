@@ -20,7 +20,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numTicksy,y
         return (d.name === media);
       });
     margin=margin[0].margin[0]
-    var colours=stylename.linecolours;
+    var colours=stylename.fillcolours;
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
 
@@ -34,14 +34,18 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numTicksy,y
     }
 
     var plotData=seriesNames.map(function(d){
-        yMin=Math.min(yMin,d3.min(values[d]))
-        yMax=Math.max(yMax,d3.max(values[d]))
+        values[d] = values[d].sort(function(a, b) { 
+            return parseFloat(a) - parseFloat(b); 
+        });
+        yMin=Math.min(yMin,d3.min(values[d]));
+        yMax=Math.max(yMax,d3.max(values[d]));
+
         return {
             cat: d,
             values: values[d],
             q1: d3.quantile(values[d], .25),
             median: d3.quantile(values[d], .5),
-            q3: d3.quantile(values[d], .5),
+            q3: d3.quantile(values[d], .75),
             min: d3.min(values[d]),
             max: d3.max(values[d]),
         }
@@ -84,7 +88,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numTicksy,y
     .classed(media+"origin",true);
 
     var xScale = d3.scale.ordinal()
-    .rangeRoundBands([0, plotWidth],.3);
+    .rangeRoundBands([0, plotWidth],.6);
 
     var xAxis = d3.svg.axis()
     .scale(xScale)
@@ -126,7 +130,20 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numTicksy,y
             .attr("y1", function(d) { return yScale(d.min)})
             .attr("x2", function(d,i) {return xScale(d.cat)+(xScale.rangeBand()/2)})
             .attr("y2", function(d) { return yScale(d.max)})
-        
+        parent.append('rect')
+                .style("fill", function (d) {return colours[0]})
+                .attr("id",function(d) { return d.cat;})
+                .attr("class",media+"bars")
+                .attr("x", function(d) { return xScale(d.cat); })
+                .attr("width", xScale.rangeBand())
+                .attr("y", function(d) { return yScale(d.q1)-(yScale(d.q1)-yScale(d.q3))})
+                .attr("height", function(d){return yScale(d.q1)-yScale(d.q3); })
+        parent.append("line")
+            .attr("class", media+"whiskers")
+            .attr("x1", function(d,i) {return xScale(d.cat)})
+            .attr("y1", function(d) { return yScale(d.median)})
+            .attr("x2", function(d,i) {return xScale(d.cat)+(xScale.rangeBand())})
+            .attr("y2", function(d) { return yScale(d.median)})
 
 
 
