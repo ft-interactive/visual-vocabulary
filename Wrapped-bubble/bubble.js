@@ -122,7 +122,7 @@ function bubbleChart(data, stylename, media, chartpadding,legend, smallCircle, l
                 .attr("class",media+"subtitle")
                 .attr("text-anchor", "start")
                 .attr("x", 0)
-                .attr("y", margin.top)
+                .attr("y", margin.top-yOffset/2)
                 .text(yaxisLabel);
     }
 

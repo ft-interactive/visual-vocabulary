@@ -1,12 +1,12 @@
 
 var styleprint = {classes:
 [{class:"background{fill: none}"},
-{class:"chartholder{fill: #fff1e0}"},
+{class:"chartholder{fill: none}"},
 {class:"title{font-size:12px; fill: #000000; font-weight: 600;}"},
 {class:"subtitle{fill:#000000; font-size: 9.6px;}"},
 {class:"source{fill: #000000; font-size: 7.2px;}"},
 {class:"logo{fill: #dacfc5;}"},
-{class:"label{font-size: 9.6px; fill: #000000; font-weight: 100; text-anchor: middle;}"},
+{class:"label{font-size: 9.6px; fill: #000000; font-weight: 400; text-anchor: middle;}"},
 {class:"hat{fill:none; stroke-width:0.3px; stroke:#22190f;}"},
 {class:"xAxis{fill:none; stroke-width:0px; stroke:none;}"},
 {class:"xAxis line{fill:none; stroke-width:.3px; stroke:#000000;}"},
@@ -27,7 +27,7 @@ fillcolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
 
 var styleweb = {classes:
 [{class:"background{fill: none}"},
-{class:"chartholder{fill: #fff1e0;}"},
+{class:"chartholder{fill: none;}"},
 {class:"title{font-size:21px; fill: #3b3d3b; font-weight: 300;}"},
 {class:"subtitle{font-size:14px; fill: #6b6e68; font-weight: 300;}"},
 {class:"source{fill: #6b6e68; font-size: 11.5px; font-weight: 300;}"},
@@ -51,7 +51,7 @@ fillcolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 
 var stylesoc = {classes:
 [{class:"background{fill: #212121;}"},
-{class:"chartholder{fill: #6b6e68;}"},
+{class:"chartholder{fill: none;}"},
 {class:"title{font-size: 38px; fill: #ffffff; opacity: 0.95; font-weight: 400;}"},
 {class:"subtitle{font-size: 28px; fill: #ffffff; opacity: 0.70; font-weight: 100; line-height: 30px;}"},
 {class:"source{font-size: 25px; fill: #ffffff; opacity: 0.50; font-weight: 100;}"},
@@ -74,7 +74,7 @@ fillcolours:["#CC4759","#00B5B5","#E6B522","#437099","#FF8C8B","#CBFF7E","#8A8A8
 }
 var stylevid = {classes:
 [{class:"background{fill: #dfd0bd;}"},
-{class:"titleframe{fill: #757575;}"},
+{class:"titleframe{fill: none;}"},
 {class:"chartholder{fill: none;}"},
 {class:"title{font-size: 68px; fill: #ffffff; font-weight: 600;}"},
 {class:"subtitle{font-size: 48; fill: #000000; font-weight: 600;}"},
