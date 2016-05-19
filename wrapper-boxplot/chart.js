@@ -120,6 +120,12 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numTicksy,y
             .attr("y1", function(d) { return yScale(d.max)})
             .attr("x2", function(d,i) {return xScale(d.cat)+(xScale.rangeBand())})
             .attr("y2", function(d) { return yScale(d.max)})
+        parent.append("line")
+            .attr("class", media+"whiskers")
+            .attr("x1", function(d,i) {return xScale(d.cat)+(xScale.rangeBand()/2)})
+            .attr("y1", function(d) { return yScale(d.min)})
+            .attr("x2", function(d,i) {return xScale(d.cat)+(xScale.rangeBand()/2)})
+            .attr("y2", function(d) { return yScale(d.max)})
         
 
 
