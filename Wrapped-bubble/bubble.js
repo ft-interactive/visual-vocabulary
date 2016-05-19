@@ -1,4 +1,4 @@
-function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, largeCircle, textOffset, yHighlight,axisLabel,xLabel,yLabel,xmin,ymin){
+function bubbleChart(data, stylename, media, plotpadding,yAlign, smallCircle, largeCircle, textOffset, yHighlight,axisLabel,xLabel,yLabel,xmin,ymin){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -59,7 +59,7 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
         .range([margin.left,w-(margin.right)]);
     var yScale=d3.scale.linear()
         .domain(yExtent)
-        .range([h-margin.bottom,margin.top])
+        .range([plotHeight,0])
 
     //analyse stage space to determine appropriate sizes for circles
     var minDimension = Math.min(h,w)
@@ -69,196 +69,196 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
         .domain(sizeExtent)
         .range([minCircleRadius,maxCircleRadius]);
 
-    //x axis
-    var xAxis = d3.svg.axis()
-        .scale(xScale)
-        .orient("bottom")
-        .tickSize(yOffset/2)
-        .ticks(5);
-    plot.append("g")
-        .attr("transform","translate(0,"+(h-margin.bottom)+")")
-        .attr("class",media+"xAxis")
-        .call(xAxis)
-
-    //calculate ticksize
-    var tickSize;
-    if (media=="soc"){
-        tickSize=10;
-    }   else    {
-        tickSize=-(w-(margin.right+margin.left)+10);
-    }
-
-    //y axis
     var yAxis = d3.svg.axis()
         .scale(yScale)
         .orient("left")
-        .tickSize(tickSize)
-        .ticks(6);
-    plot.append("g")
-    .attr("transform","translate("+margin.left+",0)")
-        .attr("class",media+"yAxis")
-        .call(yAxis)
 
-    //identify 0 line if there is one
-    var originValue = 0;
-    var origin = plot.selectAll(".tick").filter(function(d, i) {
-            return d==originValue || d==yHighlight;
-        }).classed(media+"origin",true);
-
-    if (axisLabel) {
-        plot.append("text")
-                .attr("class",media+"subtitle")
-                .attr("text-anchor", "end")
-                .attr("x", plotWidth+margin.left)
-                .attr("y", plotHeight+margin.top-(yOffset/4))
-                .text(xLabel);
-        plot.append("text")
-                .attr("class",media+"subtitle")
-                .attr("text-anchor", "start")
-                .attr("x", 0)
-                .attr("y", margin.top)
-                .text(yLabel);
-    }
+    var yLabel=plot.append("g")
+    .attr("class",media+"yAxis")
+    .call(yAxis);
 
 
-    //now create the actual data dots
-    var dots = plot.append("g")
-        .attr("id",media+"bubbles")
+    // //x axis
+    // var xAxis = d3.svg.axis()
+    //     .scale(xScale)
+    //     .orient("bottom")
+    //     .tickSize(yOffset/2)
+    //     .ticks(5);
+    // plot.append("g")
+    //     .attr("transform","translate(0,"+(h-margin.bottom)+")")
+    //     .attr("class",media+"xAxis")
+    //     .call(xAxis)
 
-    dots.selectAll("circle")
-        .data(data)
-        .enter()
-        .append("circle")
-        .attr("id",function(d){
-            return d.name;
-        })
-        .attr("class",function(d,i){
-            if(d.label=="yes"){
-                return media+"circlehighlight"
-            }
-            else {return media+"circle"}
-        })
-        .attr("cx",function(d){
-            return xScale(d.x);
-        })
-        .attr("cy",function(d){
-            return yScale(d.y);
-        })
-        .attr("r",function(d,i){
-            return circleScale(d.size)
-        })
-        .style("fill", function(d,i){return colours[cats.indexOf(d.cat)]})
-        .on("mouseover",pointer)
-        .on("click",function(d){
-            var elClass = d3.select(this)
-            if (elClass.attr("class")==media+"circle") {
-                elClass.moveToFront()
-                d3.select(this).attr("class",media+"circlehighlight")
-                dots.append("text")
-                    .datum(d)
-                    .attr('id',function(d){
-                        return (media+d.name).replace(/\s/g, '');
-                    })
-                    .attr("x",function(d){
-                    return xScale(d.x);
-                    })
-                    .attr("y",function(d){
-                    return yScale(d.y)-circleScale(d.size)-3;
-                    })
-                    .text(function(d){
-                        return d.name+' '+d.size
-                    })
-                    .attr("class",media+"label")
-                    .on("mouseover",pointer)
-            var drag = d3.behavior.drag().on("drag", moveLabel);
-            d3.selectAll("."+media+"label").call(drag);
-            }
-            else{var el=d3.select(this)
-                el.attr("class",media+"circle")
-                var textEl=d3.select(("#"+media+d.name).replace(/\s/g, ''))
-                textEl.remove()
-            }
-        })
-
-        //create text labels for those that need it
-        dots.selectAll("text")
-            .data(function(){
-                return data.filter(function(e){
-                    return e.label=="yes"
-                })
-            })
-            .enter()
-            .append("text")
-            .on("mouseover",pointer)
-            .attr("x",function(d){
-                return xScale(d.x);
-            })
-            .attr("y",function(d){
-                return yScale(d.y)-circleScale(d.size)-3;
-            })
-            .attr("class",media+"label")
-            .attr('id',function(d){
-                return (media+d.name).replace(/\s/g, '');
-            })
-            .text(function(d){
-                return d.name+' '+d.size
-            })
+    // //calculate ticksize
+    // var tickSize;
+    // if (media=="soc"){
+    //     tickSize=10;
+    // }   else    {
+    //     tickSize=-(w-(margin.right+margin.left)+10);
+    // }
 
 
-    var drag = d3.behavior.drag().on("drag", moveLabel);
-    d3.selectAll("."+media+"label").call(drag);
 
-    //create a legend first
-    if (cats[0]!="") {
-        var legendyOffset=0
-        var legend = plot.append("g")
-            .attr("id",media+"legend")
-            .on("mouseover",pointer)
-            .selectAll("g")
-            .data(cats)
-            .enter()
-            .append("g")
-            .attr ("id",function(d,i){
-                return media+"l"+i
-            })
+    // //identify 0 line if there is one
+    // var originValue = 0;
+    // var origin = plot.selectAll(".tick").filter(function(d, i) {
+    //         return d==originValue || d==yHighlight;
+    //     }).classed(media+"origin",true);
 
-        var drag = d3.behavior.drag().on("drag", moveLegend);
-        d3.select("#"+media+"legend").call(drag);
+    // if (axisLabel) {
+    //     plot.append("text")
+    //             .attr("class",media+"subtitle")
+    //             .attr("text-anchor", "end")
+    //             .attr("x", plotWidth+margin.left)
+    //             .attr("y", plotHeight+margin.top-(yOffset/4))
+    //             .text(xLabel);
+    //     plot.append("text")
+    //             .attr("class",media+"subtitle")
+    //             .attr("text-anchor", "start")
+    //             .attr("x", 0)
+    //             .attr("y", margin.top)
+    //             .text(yLabel);
+    // }
+
+
+    // //now create the actual data dots
+    // var dots = plot.append("g")
+    //     .attr("id",media+"bubbles")
+
+    // dots.selectAll("circle")
+    //     .data(data)
+    //     .enter()
+    //     .append("circle")
+    //     .attr("id",function(d){
+    //         return d.name;
+    //     })
+    //     .attr("class",function(d,i){
+    //         if(d.label=="yes"){
+    //             return media+"circlehighlight"
+    //         }
+    //         else {return media+"circle"}
+    //     })
+    //     .attr("cx",function(d){
+    //         return xScale(d.x);
+    //     })
+    //     .attr("cy",function(d){
+    //         return yScale(d.y);
+    //     })
+    //     .attr("r",function(d,i){
+    //         return circleScale(d.size)
+    //     })
+    //     .style("fill", function(d,i){return colours[cats.indexOf(d.cat)]})
+    //     .on("mouseover",pointer)
+    //     .on("click",function(d){
+    //         var elClass = d3.select(this)
+    //         if (elClass.attr("class")==media+"circle") {
+    //             elClass.moveToFront()
+    //             d3.select(this).attr("class",media+"circlehighlight")
+    //             dots.append("text")
+    //                 .datum(d)
+    //                 .attr('id',function(d){
+    //                     return (media+d.name).replace(/\s/g, '');
+    //                 })
+    //                 .attr("x",function(d){
+    //                 return xScale(d.x);
+    //                 })
+    //                 .attr("y",function(d){
+    //                 return yScale(d.y)-circleScale(d.size)-3;
+    //                 })
+    //                 .text(function(d){
+    //                     return d.name+' '+d.size
+    //                 })
+    //                 .attr("class",media+"label")
+    //                 .on("mouseover",pointer)
+    //         var drag = d3.behavior.drag().on("drag", moveLabel);
+    //         d3.selectAll("."+media+"label").call(drag);
+    //         }
+    //         else{var el=d3.select(this)
+    //             el.attr("class",media+"circle")
+    //             var textEl=d3.select(("#"+media+d.name).replace(/\s/g, ''))
+    //             textEl.remove()
+    //         }
+    //     })
+
+    //     //create text labels for those that need it
+    //     dots.selectAll("text")
+    //         .data(function(){
+    //             return data.filter(function(e){
+    //                 return e.label=="yes"
+    //             })
+    //         })
+    //         .enter()
+    //         .append("text")
+    //         .on("mouseover",pointer)
+    //         .attr("x",function(d){
+    //             return xScale(d.x);
+    //         })
+    //         .attr("y",function(d){
+    //             return yScale(d.y)-circleScale(d.size)-3;
+    //         })
+    //         .attr("class",media+"label")
+    //         .attr('id',function(d){
+    //             return (media+d.name).replace(/\s/g, '');
+    //         })
+    //         .text(function(d){
+    //             return d.name+' '+d.size
+    //         })
+
+
+    // var drag = d3.behavior.drag().on("drag", moveLabel);
+    // d3.selectAll("."+media+"label").call(drag);
+
+    // //create a legend first
+    // if (cats[0]!="") {
+    //     var legendyOffset=0
+    //     var legend = plot.append("g")
+    //         .attr("id",media+"legend")
+    //         .on("mouseover",pointer)
+    //         .selectAll("g")
+    //         .data(cats)
+    //         .enter()
+    //         .append("g")
+    //         .attr ("id",function(d,i){
+    //             return media+"l"+i
+    //         })
+
+    //     var drag = d3.behavior.drag().on("drag", moveLegend);
+    //     d3.select("#"+media+"legend").call(drag);
             
-        legend.append("text")
+    //     legend.append("text")
 
-            .attr("id",function(d,i){
-                return media+"t"+i
-            })
-            .attr("x",yOffset/2-yOffset/5+5)
-            .attr("y",yOffset/5)
-            .attr("class",media+"subtitle")
-            .text(function(d){
-                return d;
-            })
+    //         .attr("id",function(d,i){
+    //             return media+"t"+i
+    //         })
+    //         .attr("x",yOffset/2-yOffset/5+5)
+    //         .attr("y",yOffset/5)
+    //         .attr("class",media+"subtitle")
+    //         .text(function(d){
+    //             return d;
+    //         })
 
-        legend.append("circle")
-            .attr("cx",0)
-            .attr("cy",0)
-            .attr("r",yOffset/2-yOffset/5)
-            .style("fill", function(d,i){return colours[i]})
+    //     legend.append("circle")
+    //         .attr("cx",0)
+    //         .attr("cy",0)
+    //         .attr("r",yOffset/2-yOffset/5)
+    //         .style("fill", function(d,i){return colours[i]})
 
-        legend.attr("transform",function(d,i){
-            if (legAlign=='hori') {
-                var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
-                if (i>0) {
-                    var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
-                }
-                else {gWidth=0};
-                legendyOffset=legendyOffset+gWidth;
-                return "translate("+(legendyOffset)+","+(gHeigt)+")";  
-            }
-            else {
-                var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
-                return "translate(0,"+((i*yOffset+margin.top)+yOffset/2)+")"};
-        })
+    //     legend.attr("transform",function(d,i){
+    //         if (legAlign=='hori') {
+    //             var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
+    //             if (i>0) {
+    //                 var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
+    //             }
+    //             else {gWidth=0};
+    //             legendyOffset=legendyOffset+gWidth;
+    //             return "translate("+(legendyOffset)+","+(gHeigt)+")";  
+    //         }
+    //         else {
+    //             var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
+    //             return "translate(0,"+((i*yOffset+margin.top)+yOffset/2)+")"};
+    //     })
 
-    }
+    //}
 
     d3.selection.prototype.moveToFront = function() { 
                 return this.each(function() { 
