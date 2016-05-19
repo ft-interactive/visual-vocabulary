@@ -48,7 +48,7 @@ linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 
 var stylesoc = {classes:
 [{class:"background{fill: #212121;}"},
-{class:"chartholder{fill: #6b6e68;}"},
+{class:"chartholder{fill: none}"},
 {class:"title{font-size: 38px; fill: #ffffff; opacity: 0.9; font-weight: 500;}"},
 {class:"subtitle{font-size: 28px; fill: #ffffff; opacity: 0.70; font-weight: 100; line-height: 30px;}"},
 {class:"source{font-size: 25px; fill: #ffffff; opacity: 0.50; font-weight: 100; line-height: 30px;}"},
@@ -60,6 +60,7 @@ var stylesoc = {classes:
 {class:"yAxis line{fill:none; stroke-width: 2.0px; stroke-dasharray:2,8; opacity: 0.38; stroke:#ffffff;}"},
 {class:"yAxis text{font-size: 28px; fill: #ffffff; opacity: 0.50; font-weight: 100; line-height: 28px; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
 {class:"origin line{fill:none; stroke:#ffffff; stroke-width: 2.0px; opacity: 0.5; stroke-dasharray:1,0}"},
+{class:"whiskers{fill:none; stroke-width:2.0px;stroke:#ffffff; opacity: 0.5}"},
 {class:"lines{fill:none; stroke-width: 5px;  stroke-linecap: round;}"}
 ],
 titleOffset:36,
