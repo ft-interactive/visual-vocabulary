@@ -6,7 +6,7 @@ var styleprint = {classes:
 {class:"subtitle{fill:#000000; font-size: 9.6px;}"},
 {class:"source{fill: #000000; font-size: 7.2px;}"},
 {class:"logo{fill: #dacfc5;}"},
-{class:"label{font-size: 9.6px; fill: #000000; font-weight: 100; text-anchor: middle;}"},
+{class:"label{font-size: 9.6px; fill: #000000; font-weight: 400; text-anchor: middle;}"},
 {class:"hat{fill:none; stroke-width:0.3px; stroke:#22190f;}"},
 {class:"xAxis{fill:none; stroke-width:0px; stroke:none;}"},
 {class:"xAxis line{fill:none; stroke-width:.3px; stroke:#000000;}"},
@@ -74,7 +74,7 @@ fillcolours:["#CC4759","#00B5B5","#E6B522","#437099","#FF8C8B","#CBFF7E","#8A8A8
 }
 var stylevid = {classes:
 [{class:"background{fill: #dfd0bd;}"},
-{class:"titleframe{fill: #757575;}"},
+{class:"titleframe{fill: none;}"},
 {class:"chartholder{fill: none;}"},
 {class:"title{font-size: 68px; fill: #ffffff; font-weight: 600;}"},
 {class:"subtitle{font-size: 48; fill: #000000; font-weight: 600;}"},

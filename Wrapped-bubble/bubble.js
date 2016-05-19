@@ -1,4 +1,4 @@
-function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, largeCircle, textOffset, yHighlight,axisLabel,xLabel,yLabel,xmin,ymin){
+function bubbleChart(data, stylename, media, chartpadding,legend, smallCircle, largeCircle,subYoffset,yAxisHighlight,axisLabel,xaxisLabel,yaxisLabel,xmin,ymin,yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -13,7 +13,7 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
     //Get the width,height and the marginins unique to this plot
     var w=plot.node().getBBox().width;
     var h=plot.node().getBBox().height;
-    var margin=plotpadding.filter(function(d){
+    var margin=chartpadding.filter(function(d){
         return (d.name === media);
       });
     margin=margin[0].margin[0]
@@ -37,7 +37,7 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
     var yExtent = d3.extent(data,function(d){
         return d.y;
     })
-    yExtent[0]=Math.min(xmin,yExtent[0])
+    yExtent[0]=Math.min(ymin,yExtent[0])
     var sizeExtent = d3.extent(data,function(d){
         return d.size;
     })
@@ -54,12 +54,10 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
         .map(function(d){return d.key});
 
     //scales
-    var xScale=d3.scale.linear()
-        .domain(xExtent)
-        .range([margin.left,w-(margin.right)]);
+
     var yScale=d3.scale.linear()
         .domain(yExtent)
-        .range([h-margin.bottom,margin.top])
+        .range([plotHeight,0])
 
     //analyse stage space to determine appropriate sizes for circles
     var minDimension = Math.min(h,w)
@@ -69,41 +67,49 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
         .domain(sizeExtent)
         .range([minCircleRadius,maxCircleRadius]);
 
-    //x axis
-    var xAxis = d3.svg.axis()
-        .scale(xScale)
-        .orient("bottom")
-        .tickSize(yOffset/2)
-        .ticks(5);
-    plot.append("g")
-        .attr("transform","translate(0,"+(h-margin.bottom)+")")
-        .attr("class",media+"xAxis")
-        .call(xAxis)
-
-    //calculate ticksize
-    var tickSize;
-    if (media=="soc"){
-        tickSize=10;
-    }   else    {
-        tickSize=-(w-(margin.right+margin.left)+10);
-    }
-
-    //y axis
     var yAxis = d3.svg.axis()
         .scale(yScale)
         .orient("left")
-        .tickSize(tickSize)
-        .ticks(6);
-    plot.append("g")
-    .attr("transform","translate("+margin.left+",0)")
-        .attr("class",media+"yAxis")
-        .call(yAxis)
+
+    var yLabel=plot.append("g")
+    .attr("class",media+"yAxis")
+    .call(yAxis);
+
+    //calculate what the ticksize should be now that the text for the labels has been drawn
+    var yLabelOffset=yLabel.node().getBBox().width
+    //console.log("offset= ",yLabelOffset)
+    var yticksize=colculateTicksize(yAlign, yLabelOffset);
+    //console.log(yticksize);
+
+    yLabel.call(yAxis.tickSize(yticksize))
+    yLabel
+        .attr("transform",function(){
+                return "translate("+(w-margin.right)+","+margin.top+")"
+            })
 
     //identify 0 line if there is one
     var originValue = 0;
     var origin = plot.selectAll(".tick").filter(function(d, i) {
-            return d==originValue || d==yHighlight;
+            return d==originValue || d==yAxisHighlight;
         }).classed(media+"origin",true);
+
+    var xScale = d3.scale.linear()
+        .domain(xExtent)
+        .range([0,(plotWidth-yLabelOffset)])
+    console.log(xExtent)
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .tickSize(yOffset/2)
+        .orient("bottom");
+
+     var xLabel=plot.append("g")
+        .attr("class",media+"xAxis")
+        .attr("transform",function(){
+            return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"
+        })
+        .call(xAxis);
+
+    console.log(xLabel,yLabel)
 
     if (axisLabel) {
         plot.append("text")
@@ -111,13 +117,13 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
                 .attr("text-anchor", "end")
                 .attr("x", plotWidth+margin.left)
                 .attr("y", plotHeight+margin.top-(yOffset/4))
-                .text(xLabel);
+                .text(xaxisLabel);
         plot.append("text")
                 .attr("class",media+"subtitle")
                 .attr("text-anchor", "start")
                 .attr("x", 0)
-                .attr("y", margin.top)
-                .text(yLabel);
+                .attr("y", margin.top-yOffset/2)
+                .text(yaxisLabel);
     }
 
 
@@ -139,10 +145,10 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
             else {return media+"circle"}
         })
         .attr("cx",function(d){
-            return xScale(d.x);
+            return xScale(d.x)+(margin.left+yLabelOffset)
         })
         .attr("cy",function(d){
-            return yScale(d.y);
+            return yScale(d.y)+(margin.top);
         })
         .attr("r",function(d,i){
             return circleScale(d.size)
@@ -160,10 +166,10 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
                         return (media+d.name).replace(/\s/g, '');
                     })
                     .attr("x",function(d){
-                    return xScale(d.x);
+                    return xScale(d.x)+(margin.left+yLabelOffset);
                     })
                     .attr("y",function(d){
-                    return yScale(d.y)-circleScale(d.size)-3;
+                    return yScale(d.y)-circleScale(d.size)-3+(margin.top);
                     })
                     .text(function(d){
                         return d.name+' '+d.size
@@ -191,10 +197,10 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
             .append("text")
             .on("mouseover",pointer)
             .attr("x",function(d){
-                return xScale(d.x);
+                return xScale(d.x)+(margin.left+yLabelOffset);
             })
             .attr("y",function(d){
-                return yScale(d.y)-circleScale(d.size)-3;
+                return yScale(d.y)-circleScale(d.size)-3+(margin.top);
             })
             .attr("class",media+"label")
             .attr('id',function(d){
@@ -258,6 +264,13 @@ function bubbleChart(data, stylename, media, plotpadding,legAlign, smallCircle, 
                 return "translate(0,"+((i*yOffset+margin.top)+yOffset/2)+")"};
         })
 
+    }
+
+    function colculateTicksize(align, offset) {
+        if (align=="right") {
+            return w-margin.left-offset
+        }
+        else {return w-margin.right-offset}
     }
 
     d3.selection.prototype.moveToFront = function() { 
