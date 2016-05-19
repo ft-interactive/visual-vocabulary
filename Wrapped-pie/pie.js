@@ -1,4 +1,4 @@
-function pieChart(data, stylename, media, chartpadding,legAlign, innerRadious, outerRadious, graphLabels, textOffset){
+function pieChart(data, stylename, media, chartpadding,legAlign, innerRadious, graphLabels, textOffset){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -18,11 +18,12 @@ function pieChart(data, stylename, media, chartpadding,legAlign, innerRadious, o
         return (d.name === media);
       });
     margin=margin[0].margin[0]
-    var colours=stylename.fillcolours;
+    var colours= d3.scale.ordinal()
+      .range(stylename.fillcolours);
 
     var arc = d3.svg.arc()
     .outerRadius(radius - 10)
-    .innerRadius(0);
+    .innerRadius((radius-10)/100*innerRadious);
 
     var labelArc = d3.svg.arc()
         .outerRadius(radius-40)
@@ -46,8 +47,22 @@ function pieChart(data, stylename, media, chartpadding,legAlign, innerRadious, o
         .attr("id", function(d) { return d.data.category+"-"+d.data.value; });
 
     g.append("path")
-      .attr("d", arc)
-      .style("fill", function(d,i){return colours[i]})
+        .attr("class", media+"arc")
+        .on("mouseover", pointer)
+        .on("click",function(d){
+                    console.log("click")
+                    var elClass = d3.select(this)
+                    if (elClass.attr("class")==media+"arc") {
+                        d3.select(this).attr("class",media+"archighlight");
+                        d3.select(this).style("fill",colours.range()[1])
+                    }
+                    else{var el=d3.select(this)
+                        el.attr("class",media+"arc");
+                        d3.select(this).style("fill",colours.range()[0])
+                    }
+                })
+        .attr("d", arc)
+        .style("fill", function(d,i){return colours.range()[0]})
 
     if (graphLabels) {
         g.append("text")
@@ -59,55 +74,6 @@ function pieChart(data, stylename, media, chartpadding,legAlign, innerRadious, o
       }
 
 
-    // //create a legend first
-    var legendyOffset=0
-    var legend = plot.append("g")
-        .attr("id",media+"legend")
-        .on("mouseover",pointer)
-        .selectAll("g")
-        .data(data)
-        .enter()
-        .append("g")
-        .attr ("id",function(d,i){
-            return media+"l"+i
-        })
-
-    var drag = d3.behavior.drag().on("drag", moveLegend);
-    d3.select("#"+media+"legend").call(drag);
-        
-    legend.append("text")
-
-        .attr("id",function(d,i){
-            return media+"t"+i
-        })
-        .attr("x",25)
-        .attr("y",0)
-        .attr("class",media+"subtitle")
-        .text(function(d){
-            return d.category;
-        })
-
-    legend.append("rect")
-        .attr("x",0)
-        .attr("y",-textOffset+textOffset/3)
-        .attr("width",20)
-        .attr("height",textOffset)
-        .style("fill", function(d,i){return colours[i]})
-
-    legend.attr("transform",function(d,i){
-        if (legAlign=='hori') {
-            var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
-            if (i>0) {
-                var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
-            }
-            else {gWidth=0};
-            legendyOffset=legendyOffset+gWidth;
-            return "translate("+(legendyOffset)+","+(gHeigt)+")";  
-        }
-        else {
-            var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
-            return "translate(0,"+((i*textOffset)+textOffset/2)+")"};
-    })
 
     function pointer() {
         this.style.cursor='pointer'

@@ -1,4 +1,4 @@
-function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, yAlign, markers){
+function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, yAlign, markers){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -8,6 +8,12 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
         if(groupNames.indexOf(data[i].group) === -1){
             groupNames.push(data[i].group);        
         }        
+    }
+
+    d3.selection.prototype.moveToFront = function() {
+        return this.each(function(){
+        this.parentNode.appendChild(this);
+        });
     }
 
     //Select the plot space in the frame from which to take measurements
@@ -31,15 +37,81 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
 
     var plotWidth=w-margin.left-margin.right
     var plotHeight=h-margin.top-margin.bottom
+    //Work out xdomain
+    console.log(data)
+    var xMin=0;
+    var xMax=0
+
+     var cumulative =0;
+
+    function extents(last,value) {
+        console.log("last=",last,"value=",value)
+        console.log("cumulative in function",cumulative)
+        if (last==0){
+            return [0,value]
+        }
+        else {
+            if (value>0){
+                console.log("last+value",last+value)
+                return [last, cumulative+value]
+            } 
+            else {
+                console.log("last",last)
+                console.log(Math.abs(value))
+                return [last+(value), last +(value)+Math.abs(value)]}    
+        }
+    }
+
+
+    function group(value) {
+        return value < 0 ? 'negative' : 'positive';
+    }
+
+    var plotData=data.map(function(d) {
+        xMin=Math.min(cumulative,xMin);
+        xMax=Math.max(cumulative,xMax);
+
+        console.log(d.cat,"/////////////////////////")
+        var extent = extents(cumulative,+d.value);
+        cumulative=extent[1];
+        console.log("extent=",extent)
+        console.log(d.value)
+        if(d.value<0){
+            console.log("<")
+            cumulative=extent[0];
+        }
+        else {
+            console.log(">")
+            cumulative=extent[1]};
+        console.log("cumulative",cumulative)
+
+        return {
+            cat:d.cat,
+            value: +d.value,
+            start: extent[0],
+            end: extent[1],
+            group: group(d.value)
+        }
+    })
+
+    plotData.push({
+        cat: 'Total',
+        value:cumulative,
+        start: 0,
+        end: d3.sum(data, function(d){
+            return d.value
+        }),
+        group: null
+    })
+
+    console.log("transformed data", plotData)
+    console.log("xDomain",xMin,xMax)
 
     var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
 
-    var min=d3.min(data, function(d) { return +d.value;})
-    var max=d3.max(data, function(d) { return +d.value;})
-
     //var max=d3.max(data, function(d,i) { return +d.value;});
-    yScale.domain([min, max]);
+    yScale.domain([xMin, xMax]);
 
     var yAxis = d3.svg.axis()
     .scale(yScale)
@@ -77,7 +149,7 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     .scale(xScale)
     .orient("bottom");
 
-    xScale.domain(data.map(function(d) { return d.cat;}));
+    xScale.domain(plotData.map(function(d) { return d.cat;}));
 
 
     var xLabels=plot.append("g")
@@ -86,7 +158,7 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
       .call(xAxis);
 
     plot.selectAll("."+media+"bar")
-    .data(data)
+    .data(plotData)
     .enter()
         .append("g")
         .attr("id",function(d) { return d.cat+"-"+d.value; })
@@ -102,8 +174,8 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
                 .attr("class",media+"bars")
                 .attr("x", function(d) { return xScale(d.cat); })
                 .attr("width", xScale.rangeBand())
-                .attr("y", function(d) { return yScale(Math.max(0, d.value))})
-                .attr("height", function(d) {return (Math.abs(yScale(d.value) - yScale(0))); })
+                .attr("y", function(d) { return yScale(d.start)-(yScale(d.start)-yScale(d.end))})
+                .attr("height", function(d){return yScale(d.start)-yScale(d.end); })
                 .on("mouseover",pointer)
                 .on("click",function(d){
                     var elClass = d3.select(this)
@@ -117,6 +189,38 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
                         d3.select(this).style("fill",colours.range()[0])
                     }
                 })
+             
+             parent.filter(function(d,i) {return d.cat != "Total" && i<(plotData.length-2)})
+             .append("line")
+                .attr("class", media+"connectors")
+                .attr("x1", function(d,i) {return xScale(d.cat)})
+                .attr("y1", function(d) { 
+                    if(d.value>0){
+                        return yScale(d.end)
+                    }
+                    else {return yScale(d.start)}
+                })
+                .attr("x2", function(d,i) {return xScale(d.cat)+(xScale.rangeBand()*2.4)})
+                .attr("y2", function(d) { 
+                    if(d.value>0){
+                        return yScale(d.end)
+                    }
+                    else {return yScale(d.start)}
+                })
+
+            var el=d3.selectAll("."+media+"connectors")
+            el.moveToFront()
+
+            
+            // parent.append("path")
+            //     .attr("class",media+"barlinks")
+            //     .attr("d",function (d){
+            //         if(d.start==0){
+            //             return "M"+(xScale(d.cat))+","+(yScale(d.end))+"L"+(1/xScale.rangeBand())+","+(yScale(d.end))
+            //         }
+            //         else {return "M"+(xScale(d.cat))+","+(yScale(d.start))+"L"+(1*xScale.rangeBand())+","+(yScale(d.start))}
+            //     })
+
             if (markers) {
                 parent.append("text")
                 .attr("class", media+"label")
@@ -125,16 +229,17 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
                 .attr("x", function(d) { return xScale(d.cat)+(xScale.rangeBand()/2)})
                 .attr("y", function(d) {
                     if(d.value>0) {
-                        return yScale(d.value)+yOffset+yOffset/2
+                        return yScale(d.start)-(yScale(d.start)-yScale(d.end))+yOffset+yOffset/2
                     }
                     else {
-                        return yScale(d.value)-yOffset/2}
+                        return yScale(d.start)-yOffset/2}
                 });
                 var clear = yLabel.selectAll(".tick").filter(function(d, i) {
                     return d!=originValue
                 })
                 clear.remove()
             }
+
         });
 
     //create a legend first
@@ -210,9 +315,6 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
         d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");
 
     }
-
-
-
 
 
 }
