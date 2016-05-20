@@ -51,13 +51,30 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     .data(plotData)
     .enter()
         .append("g")
-        .attr("transform",function(){return "translate("+(margin.left)+","+(margin.top)+")"})
         .attr("id",function(d) {return d.key})
 
     calendar.append("text")
     .attr("class", media+"subtitle")
     .attr("y",yOffset)
     .text(function(d) {return d.key})
+
+    var rects = calendar.append('g')
+            .attr('id','alldays')
+            .selectAll('.day')
+            .data(function(d) { return d3.time.days(new Date(parseInt(d.key), 0, 1), new Date(parseInt(d.key) + 1, 0, 1)); })
+            .enter().append('rect')
+            .attr('id',function(d) {
+                return '_'+format(d);
+                //return toolDate(d.date)+':\n'+d.value+' dead or missing';
+            })
+            .attr('class', media+'day')
+            .attr('width', cellSize)
+            .attr('height', cellSize)
+            .attr('x', function(d) {
+                return (d3.time.weekOfYear(d) * cellSize);
+            })
+            .attr('y', function(d) { return (d.getDay() * cellSize); })
+            .datum(format);
     
 
 }
