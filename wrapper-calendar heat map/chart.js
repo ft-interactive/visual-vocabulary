@@ -20,20 +20,44 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
         return (d.name === media);
       });
     margin=margin[0].margin[0]
-    var colours=stylename.linecolours;
+
+
+
+    var colours = d3.scale.linear()
+    .range(["white", stylename.fillcolours[0]])
+    .domain([0, 1]);
+
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
-    
-    // console.log(plotWidth,colours,plotHeight,data)
-    // console.log(margin)
-    //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
+    var cellSize = 17; // cell size
 
-    plot.append("rect")
-        .attr("x",margin.left)
-        .attr("y",margin.top)
-        .attr("width",plotWidth)
-        .attr("height",plotHeight)
-        .attr("fill",colours[0])
+    
+    var xDomain = d3.extent(data, function(d) {return d.date;});
+    var startYear=xDomain[0].getFullYear();
+    var endYear=xDomain[1].getFullYear();
+
+    var percent = d3.format(".1%");
+    var format = d3.time.format("%Y-%m-%d");
+    var toolDate = d3.time.format("%d/%b/%y");
+
+
+    var plotData=d3.nest()
+        .key(function(d){return d.date.getFullYear();})
+        .entries(data)
+    
+    console.log(plotData)
+
+    var calendar = plot.selectAll("g")
+    .data(plotData)
+    .enter()
+        .append("g")
+        .attr("transform",function(){return "translate("+(margin.left)+","+(margin.top)+")"})
+        .attr("id",function(d) {return d.key})
+
+    calendar.append("text")
+    .attr("class", media+"subtitle")
+    .attr("y",yOffset)
+    .text(function(d) {return d.key})
     
 
 }
