@@ -44,12 +44,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
 
     var values = {};
     for (i = 0; i < data.length; i++) {
-        values=data.map(function(d){
-            return{
-                date: new Date(d.date),
-                value: d.value
-            }
-        })
+        values=data.map(function(d){return new Date(d.date)})
     }
 
     var plotData=d3.nest()
@@ -82,21 +77,22 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
             })
             .attr('id','alldays')
             .selectAll('.day')
-            .data(plotData.dates)
+            .data(function(d) { 
+                return d3.time.days(new Date(parseInt(d.key), 0, 1), new Date(parseInt(d.key) + 1, 0, 1)); })
             .enter().append('rect')
             .attr('id',function(d) {
-                return '_'+format(d.date);
+                return '_'+format(d);
                 //return toolDate(d.date)+':\n'+d.value+' dead or missing';
             })
             .attr('class', media+'day')
             .attr('width', cellSize)
             .attr('height', cellSize)
             .attr('x', function(d) {
-                return (d3.time.weekOfYear(d.date) * cellSize);
+                return (d3.time.weekOfYear(d) * cellSize);
             })
-            .attr('y', function(d) { return (d.date.getDay() * cellSize); })
+            .attr('y', function(d) { return (d.getDay() * cellSize); })
 
-            //.datum(format);
+            .datum(format);
 
 
     })
