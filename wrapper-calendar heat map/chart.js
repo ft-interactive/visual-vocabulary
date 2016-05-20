@@ -40,11 +40,22 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     var format = d3.time.format("%Y-%m-%d");
     var toolDate = d3.time.format("%d/%b/%y");
 
+    //console.log(data)
+
+    var values = {};
+    for (i = 0; i < seriesNames.length; i++) {
+        values[seriesNames[i]]=data.map(function(d){return +d[seriesNames[i]]})
+    }
 
     var plotData=d3.nest()
         .key(function(d){return d.date.getFullYear();})
         .entries(data)
-    
+
+    plotData.map(function(d){
+        return{values:values}
+    })
+
+    console.log(values)
     console.log(plotData)
 
     var calendar = plot.selectAll("g")
@@ -68,7 +79,9 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
             })
             .attr('id','alldays')
             .selectAll('.day')
-            .data(function(d) { return d3.time.days(new Date(parseInt(d.key), 0, 1), new Date(parseInt(d.key) + 1, 0, 1)); })
+            .data(function(d) { 
+                console.log("range", d.values[0].date)
+                return d3.time.days(new Date(parseInt(d.key), 0, 1), new Date(parseInt(d.key) + 1, 0, 1)); })
             .enter().append('rect')
             .attr('id',function(d) {
                 return '_'+format(d);
