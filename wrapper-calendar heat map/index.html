@@ -1,0 +1,115 @@
+<html>
+<head>
+    <title>Frames for FT graphics</title>
+    <script type="text/javascript" src="styles.js"></script>
+    <link rel="stylesheet" type="text/css" href="./frameGlobalStyles.css">
+</head>
+<body>
+    <style>
+        text{font-family:metric}
+    </style>
+    <script src="d3.min.js"></script>
+    <script src="drawFrame.js"></script>
+    <script src="chart.js"></script>
+    <script src="saveSvgAsPng.js"></script>
+    <script>
+        
+        //datafile
+        var dataURL = "data.csv"
+        
+        //titles, footnotes
+        var title = "Brazilian policy rate";
+        var subtitle = "Selic rate %";//comment out subtitle assignment if not needed
+        var source = "Thomson Reuters Datastream";
+
+        //put custom graph options here
+
+        //Use the frames array to set unique values for each media type of frame
+        // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
+        var frames=[
+        {name:"print",width:53.5,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert",yLabel:"right"},
+        {name:"web",width:600,height:422,units:'px',margins:[{top:0,right:29,bottom:5,left:00}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
+        {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
+        //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
+        ]
+        
+        //sets the padding inside the chart area
+        var chartpadding=[
+        {name:"print",margin:[{top:0, right:0, bottom:15, left:10}]},
+        {name:"web",margin:[{top:20, right:10, bottom:20, left:10}]},
+        {name:"social",margin:[{top:00, right:25, bottom:62, left:12}]},
+        {name:"video",margin:[{top:55, right:35,bottom:68, left:42}]}
+        ]
+        //Calls the functions that adds the balnk frames before loading the data 
+        drawFrames()
+        //Load the data
+        d3.csv(dataURL,function(error, data){
+            //date formatter, matching the format of the incoming csv...
+            //var parseDate = d3.time.format("%d-%b-%y").parse;
+            /*
+            some common formatting parsers....
+            d3.time.format("%Y %b") 1986 Jan
+            d3.time.format("%d-%b-%y")  28-Jan-86
+            d3.time.format("%Y-%m-%d")  1986-01-28
+            d3.time.format("%m/%d/%Y")  01/28/1986
+            d3.time.format("%H:%M") 11:39
+            d3.time.format("%H:%M %p")  11:39 AM
+            d3.time.format("%B %d") January 28
+            d3.time.format("%d %b") 28 Jan
+             */
+
+            //parse the data if needed
+            /*data.forEach(function(d) {
+                d.date=parseDate(d.date);
+            });*/
+
+
+         /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
+
+            for (var i=0;i<frames.length;i++){
+                var stylename=frames[i].stylesheet;
+                var media = frames[i].name;
+                var legend=frames[i].legend;
+                var subYoffset=stylename.subOffset
+                var yLabel=frames[i].yLabel
+                makeChart(data, stylename, media, chartpadding,legend, yLabel);
+            }
+        })//end data load
+
+        function drawFrames(){
+            for (var i=0;i<frames.length;i++){
+                var stylename=frames[i].stylesheet;
+                var media = frames[i].name;
+                if(frames[i].units=="mm") {
+                    framewidth = mmToPx(frames[i].width);
+                    frameheight = mmToPx(frames[i].height);
+                }
+                else{
+                    framewidth = frames[i].width;
+                    frameheight = frames[i].height;
+                }
+                var framemargin = frames[i].margins[0];
+                var titleYoffset=stylename.titleOffset;
+                var subYoffset=stylename.subOffset
+                var frame = new drawFrame(stylename.classes,media,titleYoffset,subYoffset)
+                    .width(framewidth)
+                    .height(frameheight)
+                    .margin(framemargin)
+                    .title(title)
+                    .source(source)
+                //optional elements
+                if (subtitle){
+                    frame.subtitle(subtitle)
+                }
+                d3.select("body").call(frame)
+            }
+        }
+
+        function mmToPx(mm){
+            var px = mm*2.83464480558843;
+            return px;
+        }
+            
+    </script>
+</body>
+</html>
