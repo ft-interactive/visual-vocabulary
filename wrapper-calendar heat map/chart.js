@@ -52,19 +52,19 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     .enter()
         .append("g")
         .attr("id",function(d) {return d.key})
+        .attr("transform",function(d,i){
+                 return "translate("+(0)+","+i*(cellSize*7+yOffset*2)+")"
+            })
     .call(function(parent){
 
         parent.append("text")
             .attr("class", media+"subtitle")
             .attr("y",yOffset)
             .text(function(d) {return d.key})
-            .attr("transform",function(d,i){
-                 return "translate("+(0)+","+i*(cellSize*7+yOffset)+")"
-            })
 
         var rects = parent.append('g')
-            .attr("transform",function(d,i){
-                 return "translate("+(0)+","+i*(cellSize*7+yOffset)+")"
+        .attr("transform",function(d,i){
+                 return "translate("+(0)+","+yOffset*1.5+")"
             })
             .attr('id','alldays')
             .selectAll('.day')
