@@ -43,19 +43,22 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     //console.log(data)
 
     var values = {};
-    for (i = 0; i < seriesNames.length; i++) {
-        values[seriesNames[i]]=data.map(function(d){return +d[seriesNames[i]]})
+    for (i = 0; i < data.length; i++) {
+        values=data.map(function(d){
+            return{
+                date: new Date(d.date),
+                value: d.value
+            }
+        })
     }
 
     var plotData=d3.nest()
         .key(function(d){return d.date.getFullYear();})
         .entries(data)
 
-    plotData.map(function(d){
-        return{values:values}
-    })
+    plotData.dates=values
 
-    console.log(values)
+    //console.log(values)
     console.log(plotData)
 
     var calendar = plot.selectAll("g")
@@ -79,23 +82,21 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
             })
             .attr('id','alldays')
             .selectAll('.day')
-            .data(function(d) { 
-                console.log("range", d.values[0].date)
-                return d3.time.days(new Date(parseInt(d.key), 0, 1), new Date(parseInt(d.key) + 1, 0, 1)); })
+            .data(plotData.dates)
             .enter().append('rect')
             .attr('id',function(d) {
-                return '_'+format(d);
+                return '_'+format(d.date);
                 //return toolDate(d.date)+':\n'+d.value+' dead or missing';
             })
             .attr('class', media+'day')
             .attr('width', cellSize)
             .attr('height', cellSize)
             .attr('x', function(d) {
-                return (d3.time.weekOfYear(d) * cellSize);
+                return (d3.time.weekOfYear(d.date) * cellSize);
             })
-            .attr('y', function(d) { return (d.getDay() * cellSize); })
+            .attr('y', function(d) { return (d.date.getDay() * cellSize); })
 
-            .datum(format);
+            //.datum(format);
 
 
     })
