@@ -29,7 +29,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
 
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
-    var cellSize = 17; // cell size
+    var cellSize = plotWidth/53; // cell size
 
     
     var xDomain = d3.extent(data, function(d) {return d.date;});
@@ -52,13 +52,20 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     .enter()
         .append("g")
         .attr("id",function(d) {return d.key})
+    .call(function(parent){
 
-    calendar.append("text")
-    .attr("class", media+"subtitle")
-    .attr("y",yOffset)
-    .text(function(d) {return d.key})
+        parent.append("text")
+            .attr("class", media+"subtitle")
+            .attr("y",yOffset)
+            .text(function(d) {return d.key})
+            .attr("transform",function(d,i){
+                 return "translate("+(0)+","+i*(cellSize*7+yOffset)+")"
+            })
 
-    var rects = calendar.append('g')
+        var rects = parent.append('g')
+            .attr("transform",function(d,i){
+                 return "translate("+(0)+","+i*(cellSize*7+yOffset)+")"
+            })
             .attr('id','alldays')
             .selectAll('.day')
             .data(function(d) { return d3.time.days(new Date(parseInt(d.key), 0, 1), new Date(parseInt(d.key) + 1, 0, 1)); })
@@ -74,7 +81,12 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
                 return (d3.time.weekOfYear(d) * cellSize);
             })
             .attr('y', function(d) { return (d.getDay() * cellSize); })
+
             .datum(format);
+
+
+    })
+
     
 
 }
