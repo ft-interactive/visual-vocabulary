@@ -44,6 +44,8 @@
         drawFrames()
         //Load the data
         d3.csv(dataURL,function(error, data){
+            
+            
             //date formatter, matching the format of the incoming csv...
             //var parseDate = d3.time.format("%d-%b-%y").parse;
             /*
@@ -58,14 +60,19 @@
             d3.time.format("%d %b") 28 Jan
              */
 
+            var seriesNames = Object.keys(data[0]).filter(function(d){if (d!='name'){return d}});
+
             //parse the data if needed
-            /*data.forEach(function(d) {
-                d.date=parseDate(d.date);
-            });*/
+            var parseDate = d3.time.format("%Y");
+            data.forEach(function(d) {
+                    seriesNames.forEach(function(e,j){
+                        console.log(e)
+                        d[e]=parseDate.parse(d[e])
+                    })
+            });
 
 
          /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
-
             for (var i=0;i<frames.length;i++){
                 var stylename=frames[i].stylesheet;
                 var media = frames[i].name;
