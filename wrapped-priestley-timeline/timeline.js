@@ -38,8 +38,9 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
 
     //CHART OPTIONS
     //specify format of dates
-    var dotMode = false;
-    
+    var showRect = false;//extent shades
+    var showLine = true;//connecting line
+    var showDot = true;//marker dots
     
     //sort the data into date order of first column
     data.sort(function(a, b){
@@ -101,7 +102,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
         .attr("id","geometry")
         .attr("transform","translate("+margin.left+","+margin.top+")")
     
-    //row geometry
+    //work in rows of geometry
     var rowGroups = chart.append("g")
         .attr("id","chart_rows")
         .selectAll("g")
@@ -111,36 +112,59 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     
     rowGroups.each(function(d,i){
         //rectangles
-        for (k=0;k<seriesNames.length-1;k++){
-            d3.select(rowGroups[0][i]).append("rect")
-            .attr("x",function(d){
-                return xScale(d[seriesNames[k]])
-            })
-            .attr("y",function(d){
-                return yScale(d.name);
-            })
-            .attr("width",function(d){
-                
-                return xScale(d[seriesNames[k+1]])-xScale(d[seriesNames[k]])
-                
-            })
-            .attr("height",yScale.rangeBand)
-            .attr("fill",colours[k])
-            .attr("fill-opacity",0.8)
+        if (showRect){
+            for (k=0;k<seriesNames.length-1;k++){
+                d3.select(rowGroups[0][i]).append("rect")
+                .attr("x",function(d){
+                    return xScale(d[seriesNames[k]])
+                })
+                .attr("y",function(d){
+                    return yScale(d.name);
+                })
+                .attr("width",function(d){
+
+                    return xScale(d[seriesNames[k+1]])-xScale(d[seriesNames[k]])
+
+                })
+                .attr("height",yScale.rangeBand)
+                .attr("fill",colours[k])
+                .attr("fill-opacity",0.8)
+            }
         }
-        //circles
-        seriesNames.forEach(function(e,j){
-            d3.select(rowGroups[0][i]).append("circle")
-            .attr("cx",function(d){
-                return xScale(d[seriesNames[j]])
+        //connecting lines
+        if (showLine){
+                d3.select(rowGroups[0][i]).append("line")
+                .attr("x1",function(d){
+                    return xScale(d[seriesNames[0]])
+                })
+                .attr("x2",function(d){
+                    return xScale(d[seriesNames[seriesNames.length-1]])
+                })
+                .attr("y1",function(d){
+                    return yScale(d.name)+(yScale.rangeBand()/2);;
+                })
+                .attr("y2",function(d){
+                    return yScale(d.name)+(yScale.rangeBand()/2);;
+                })
+                .attr("stroke","#777")
+                .attr("stroke-width","2px")//should use class
+        }
+        //marker dots
+        if (showDot){
+            seriesNames.forEach(function(e,j){
+                d3.select(rowGroups[0][i]).append("circle")
+                .attr("cx",function(d){
+                    return xScale(d[seriesNames[j]])
+                })
+                .attr("cy",function(d){
+                    return yScale(d.name)+(yScale.rangeBand()/2);
+                })
+                .attr("r",yScale.rangeBand()/2)
+                .attr("fill",colours[j])
             })
-            .attr("cy",function(d){
-                return yScale(d.name)+(yScale.rangeBand()/2);
-            })
-            .attr("r",yScale.rangeBand()/2)
-            .attr("fill",colours[j])
-        })   
+        }
     })
+    
     //append chart labels
     chart.append("g")
         .attr("id","labels")
@@ -161,7 +185,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
             return yScale.rangeBand();
         })
 
-    
+    if (showDot||showRect){
     //key
     chart.append("g")
         .attr("id","key")
@@ -180,4 +204,23 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
         .attr("fill",function(d,i){
             return colours[i]
         })
+    
+    chart.append("g")
+        .attr("id","keylines")
+        .selectAll("line")
+        .data(seriesNames)
+        .enter()
+        .append("line")
+        .attr("y1",yScale.rangeBand()*.5)
+        .attr("y2",yScale.rangeBand())
+        .attr("x1",function(d){
+            return xScale(data[0][d])
+        })
+        .attr("x2",function(d){
+            return xScale(data[0][d])
+        })
+        .attr("stroke","#777")
+        .attr("stroke-width","1px")//should use class
+    }
+
 }

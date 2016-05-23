@@ -66,7 +66,6 @@
             var parseDate = d3.time.format("%Y");
             data.forEach(function(d) {
                     seriesNames.forEach(function(e,j){
-                        console.log(e)
                         d[e]=parseDate.parse(d[e])
                     })
             });
