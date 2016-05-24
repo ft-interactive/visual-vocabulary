@@ -38,34 +38,23 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
 
     //CHART OPTIONS
     //specify format of dates
-    var dateParser = d3.time.format("%Y");
-    var dotMode = false;
-    
-    var chartData = new Array();//create a copy of the data for this instance to avoid typing issues when the data object is repeatedly called for multiple frames
-    
-    //parse the data - into the 
-    data.forEach(function(d,i){
-        var obj = new Object()
-        obj.name = d.name
-        seriesNames.forEach(function(e,j){
-            obj[e]=dateParser.parse(d[e])
-        })
-        chartData.push(obj);
-    })
+    var showRect = false;//extent shades
+    var showLine = true;//connecting line
+    var showDot = true;//marker dots
     
     //sort the data into date order of first column
-    chartData.sort(function(a, b){
+    data.sort(function(a, b){
         return a[seriesNames[0]]-b[seriesNames[0]];
     });
 
     //identify date range of data
     //initialise dates to first date value
-    var minDate = chartData[0][seriesNames[0]]
-    var maxDate = chartData[0][seriesNames[0]]
+    var minDate = data[0][seriesNames[0]]
+    var maxDate = data[0][seriesNames[0]]
     
     //iterate through dates and compare min/max
     seriesNames.forEach(function(d,i){
-        chartData.forEach(function(e,j){
+        data.forEach(function(e,j){
             minDate = d3.min([minDate,e[d]])
             maxDate = d3.max([maxDate,e[d]])
         })  
@@ -80,7 +69,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     
     //y scale for country
     var yScale = d3.scale.ordinal()
-        .domain(chartData.map(function(d){
+        .domain(data.map(function(d){
             return d.name;
         }))
         .rangeRoundBands([0,plotHeight],0.5);
@@ -113,51 +102,74 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
         .attr("id","geometry")
         .attr("transform","translate("+margin.left+","+margin.top+")")
     
-    //row geometry
+    //work in rows of geometry
     var rowGroups = chart.append("g")
         .attr("id","chart_rows")
         .selectAll("g")
-        .data(chartData)
+        .data(data)
         .enter()
         .append("g")
     
     rowGroups.each(function(d,i){
         //rectangles
-        for (k=0;k<seriesNames.length-1;k++){
-            d3.select(rowGroups[0][i]).append("rect")
-            .attr("x",function(d){
-                return xScale(d[seriesNames[k]])
-            })
-            .attr("y",function(d){
-                return yScale(d.name);
-            })
-            .attr("width",function(d){
-                
-                return xScale(d[seriesNames[k+1]])-xScale(d[seriesNames[k]])
-                
-            })
-            .attr("height",yScale.rangeBand)
-            .attr("fill",colours[k])
-            .attr("fill-opacity",0.8)
+        if (showRect){
+            for (k=0;k<seriesNames.length-1;k++){
+                d3.select(rowGroups[0][i]).append("rect")
+                .attr("x",function(d){
+                    return xScale(d[seriesNames[k]])
+                })
+                .attr("y",function(d){
+                    return yScale(d.name);
+                })
+                .attr("width",function(d){
+
+                    return xScale(d[seriesNames[k+1]])-xScale(d[seriesNames[k]])
+
+                })
+                .attr("height",yScale.rangeBand)
+                .attr("fill",colours[k])
+                .attr("fill-opacity",0.8)
+            }
         }
-        //circles
-        seriesNames.forEach(function(e,j){
-            d3.select(rowGroups[0][i]).append("circle")
-            .attr("cx",function(d){
-                return xScale(d[seriesNames[j]])
+        //connecting lines
+        if (showLine){
+                d3.select(rowGroups[0][i]).append("line")
+                .attr("x1",function(d){
+                    return xScale(d[seriesNames[0]])
+                })
+                .attr("x2",function(d){
+                    return xScale(d[seriesNames[seriesNames.length-1]])
+                })
+                .attr("y1",function(d){
+                    return yScale(d.name)+(yScale.rangeBand()/2);;
+                })
+                .attr("y2",function(d){
+                    return yScale(d.name)+(yScale.rangeBand()/2);;
+                })
+                .attr("stroke","#777")
+                .attr("stroke-width","2px")//should use class
+        }
+        //marker dots
+        if (showDot){
+            seriesNames.forEach(function(e,j){
+                d3.select(rowGroups[0][i]).append("circle")
+                .attr("cx",function(d){
+                    return xScale(d[seriesNames[j]])
+                })
+                .attr("cy",function(d){
+                    return yScale(d.name)+(yScale.rangeBand()/2);
+                })
+                .attr("r",yScale.rangeBand()/2)
+                .attr("fill",colours[j])
             })
-            .attr("cy",function(d){
-                return yScale(d.name)+(yScale.rangeBand()/2);
-            })
-            .attr("r",yScale.rangeBand()/2)
-            .attr("fill",colours[j])
-        })   
+        }
     })
+    
     //append chart labels
     chart.append("g")
         .attr("id","labels")
         .selectAll("text")
-        .data(chartData)
+        .data(data)
         .enter()
         .append("text")
         .attr("class",media+"subtitle")
@@ -172,9 +184,8 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
         .attr("dy",function(d){
             return yScale.rangeBand();
         })
-    
-    
-    
+
+    if (showDot||showRect){
     //key
     chart.append("g")
         .attr("id","key")
@@ -187,10 +198,29 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
         })
         .attr("y",yScale.rangeBand()/2)
         .attr("x",function(d){
-            return xScale(chartData[0][d])
+            return xScale(data[0][d])
         })
         .attr("text-anchor","middle")
         .attr("fill",function(d,i){
             return colours[i]
         })
+    
+    chart.append("g")
+        .attr("id","keylines")
+        .selectAll("line")
+        .data(seriesNames)
+        .enter()
+        .append("line")
+        .attr("y1",yScale.rangeBand()*.5)
+        .attr("y2",yScale.rangeBand())
+        .attr("x1",function(d){
+            return xScale(data[0][d])
+        })
+        .attr("x2",function(d){
+            return xScale(data[0][d])
+        })
+        .attr("stroke","#777")
+        .attr("stroke-width","1px")//should use class
+    }
+
 }
