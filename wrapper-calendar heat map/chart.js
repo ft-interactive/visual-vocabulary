@@ -42,6 +42,8 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
 
     //console.log(data)
 
+    
+
     var values = {};
     for (i = 0; i < data.length; i++) {
         values=data.map(function(d){return new Date(d.date)})
