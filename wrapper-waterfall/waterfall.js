@@ -93,7 +93,7 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
         value:cumulative,
         start: 0,
         end: d3.sum(data, function(d){
-            return d.value
+            return d3.format(".2f")(d.value);
         }),
         group: null
     })
@@ -215,7 +215,7 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
                 parent.append("text")
                 .attr("class", media+"label")
                 .style("text-anchor","middle")
-                .text(function(d) {return d.value;})
+                .text(function(d) {return d3.format(".1f")(d.value);})
                 .attr("x", function(d) { return xScale(d.cat)+(xScale.rangeBand()/2)})
                 .attr("y", function(d) {
                     if(d.value>0) {
