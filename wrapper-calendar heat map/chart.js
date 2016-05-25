@@ -110,8 +110,8 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
             .attr('id',media+'monthOutlines')
             .selectAll('.month')
             .data(function(d) { 
-                return d3.time.months(new Date(parseInt(d.key), 0, 1),
-                                      new Date(parseInt(d.key) + 1, 0, 1)); 
+                return d3.time.months(new Date(parseInt(d.key)-1, 0, 1),
+                                      new Date(parseInt(d.key), 0, 1)); 
             })
             .enter().append('path')
             .attr('class', media+'month')
@@ -143,9 +143,6 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
             })
 
 
-
-
-
             //pure Bostock - compute and return monthly path data for any year
             function monthPath(t0) {
               var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
@@ -156,7 +153,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
                   + 'H' + w1 * cellSize + 'V' + (d1 + 1) * cellSize
                   + 'H' + (w1 + 1) * cellSize + 'V' + 0
                   + 'H' + (w0 + 1) * cellSize + 'Z';
-    }
+            }
 
 
     })
