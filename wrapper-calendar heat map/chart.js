@@ -19,13 +19,10 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     var margin=plotpadding.filter(function(d){
         return (d.name === media);
       });
-    console.log(data)
+
     margin=margin[0].margin[0]
     var maxVal=d3.max(data, function(d){return +d.value})
     var minVal=d3.min(data, function(d){return +d.value})
-    console.log("maxVal",maxVal)
-
-
 
     var colours = d3.scale.linear()
     .range(["white", stylename.fillcolours[0]])
@@ -33,7 +30,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
 
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
-    var cellSize = plotWidth/53; // cell size
+    var cellSize = plotWidth/54; // cell size
 
     
     var xDomain = d3.extent(data, function(d) {return d.date;});
@@ -60,7 +57,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     .data(plotData)
     .enter()
         .append("g")
-        .attr("id",function(d) {return d.key})
+        .attr("id",function(d) {return d.key+"-"+d.value})
         .attr("transform",function(d,i){
                  return "translate("+(0)+","+i*(cellSize*7+yOffset*2)+")"
             })
@@ -120,6 +117,30 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
             .attr('class', media+'month')
             .attr('transform','translate('+(margin.left)+','+(yOffset*1.5)+')')
             .attr('d', monthPath);
+
+            //retreive the bounding boxes of the outlines
+            var BB = new Array();
+            var mp = document.getElementById(media+'monthOutlines').childNodes;
+            for (var i=0;i<mp.length;i++){
+                BB.push(mp[i].getBBox());
+            }
+            var monthX = new Array();
+            BB.forEach(function(d,i){
+                boxCentre = d.width/2;
+                monthX.push(d.x+boxCentre);
+            })
+
+            //create centred month labels around the bounding box of each month path
+            //create day labels
+            var months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+            var monthLabels=parent.append('g').attr('id','monthLabels')
+            months.forEach(function(d,i)    {
+                monthLabels.append('text')
+                .attr('class',media+'subtitle')
+                .attr('x',monthX[i])
+                .attr('y',yOffset)
+                .text(d);
+            })
 
 
 
