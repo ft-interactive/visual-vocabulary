@@ -25,7 +25,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
 
     var colours = d3.scale.linear()
     .range(["white", stylename.fillcolours[0]])
-    .domain([0, 1]);
+    .domain([0, 10]);
 
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
@@ -40,18 +40,21 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     var format = d3.time.format("%Y-%m-%d");
     var toolDate = d3.time.format("%d/%b/%y");
 
-    //console.log(data)
+    console.log(data)
 
     
 
-    var values = {};
-    for (i = 0; i < data.length; i++) {
-        values=data.map(function(d){return new Date(d.date)})
-    }
+    // var values = {};
+    // for (i = 0; i < data.length; i++) {
+    //     values=data.map(function(d){return new Date(d.date)})
+    // }
+    // console.log("values",values)
 
     var plotData=d3.nest()
         .key(function(d){return d.date.getFullYear();})
         .entries(data)
+
+
 
 
     //console.log(values)
@@ -72,6 +75,18 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
             .attr("y",yOffset)
             .text(function(d) {return d.key})
 
+        //create day labels
+        var days = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+        var dayLabels=parent.append('g').attr('id','dayLabels')
+        days.forEach(function(d,i)    {
+            dayLabels.append('text')
+            .attr('class',media+'subtitle')
+            .attr('x',0)
+            .attr('y',function(d) { return yOffset*1.4+(i * cellSize); })
+            .attr('dy','0.9em')
+            .text(d);
+        })
+
         var rects = parent.append('g')
         .attr("transform",function(d,i){
                  return "translate("+(0)+","+yOffset*1.5+")"
@@ -91,7 +106,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
             .attr('width', cellSize)
             .attr('height', cellSize)
             .attr('x', function(d) {
-                return (d3.time.weekOfYear(d.date) * cellSize);
+                return (d3.time.weekOfYear(d.date) * cellSize+margin.left);
             })
             .attr('y', function(d) { return (d.date.getDay() * cellSize); })
             .style("fill",function(d) {return colours(d.value)})
