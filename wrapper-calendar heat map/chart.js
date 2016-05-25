@@ -137,7 +137,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
             months.forEach(function(d,i)    {
                 monthLabels.append('text')
                 .attr('class',media+'subtitle')
-                .attr('x',monthX[i])
+                .attr('x',monthX[i]+margin.left)
                 .attr('y',yOffset)
                 .text(d);
             })
