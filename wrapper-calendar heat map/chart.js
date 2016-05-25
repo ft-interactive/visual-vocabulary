@@ -19,13 +19,17 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     var margin=plotpadding.filter(function(d){
         return (d.name === media);
       });
+    console.log(data)
     margin=margin[0].margin[0]
+    var maxVal=d3.max(data, function(d){return +d.value})
+    var minVal=d3.min(data, function(d){return +d.value})
+    console.log("maxVal",maxVal)
 
 
 
     var colours = d3.scale.linear()
     .range(["white", stylename.fillcolours[0]])
-    .domain([0, 10]);
+    .domain([minVal, maxVal]);
 
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
