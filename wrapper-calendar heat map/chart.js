@@ -114,7 +114,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
             })
             .enter().append('path')
             .attr('class', media+'month')
-            .attr('transform','translate('+(margin.left)+','+cellSize*2+')')
+            .attr('transform','translate('+(margin.left)+','+(yOffset*1.5)+')')
             .attr('d', monthPath);
 
 
