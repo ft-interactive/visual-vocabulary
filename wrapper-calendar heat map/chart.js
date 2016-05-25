@@ -40,15 +40,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     var format = d3.time.format("%Y-%m-%d");
     var toolDate = d3.time.format("%d/%b/%y");
 
-    console.log(data)
-
-    
-
-    // var values = {};
-    // for (i = 0; i < data.length; i++) {
-    //     values=data.map(function(d){return new Date(d.date)})
-    // }
-    // console.log("values",values)
+    //console.log(data)
 
     var plotData=d3.nest()
         .key(function(d){return d.date.getFullYear();})
@@ -111,6 +103,35 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
             .attr('y', function(d) { return (d.date.getDay() * cellSize); })
             .style("fill",function(d) {return colours(d.value)})
             //.datum(format);
+
+            //add montly outlines for calendar
+            parent.append('g')
+            .attr('id',media+'monthOutlines')
+            .selectAll('.month')
+            .data(function(d) { 
+                return d3.time.months(new Date(parseInt(d.key), 0, 1),
+                                      new Date(parseInt(d.key) + 1, 0, 1)); 
+            })
+            .enter().append('path')
+            .attr('class', media+'month')
+            .attr('transform','translate('+(margin.left)+','+cellSize*2+')')
+            .attr('d', monthPath);
+
+
+
+
+
+            //pure Bostock - compute and return monthly path data for any year
+            function monthPath(t0) {
+              var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
+                  d0 = t0.getDay(), w0 = d3.time.weekOfYear(t0),
+                  d1 = t1.getDay(), w1 = d3.time.weekOfYear(t1);
+              return 'M' + (w0 + 1) * cellSize + ',' + d0 * cellSize
+                  + 'H' + w0 * cellSize + 'V' + 7 * cellSize
+                  + 'H' + w1 * cellSize + 'V' + (d1 + 1) * cellSize
+                  + 'H' + (w1 + 1) * cellSize + 'V' + 0
+                  + 'H' + (w0 + 1) * cellSize + 'Z';
+    }
 
 
     })

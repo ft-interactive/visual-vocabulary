@@ -15,7 +15,9 @@ var styleprint = {classes:
 {class:"yAxis text{fill:#000000; font-size: 9.6px;font-weight: 400; font-feature-settings: 'tnum' 1;}"},
 {class:"origin line{fill:none; stroke-width:0.6px;}"},
 {class:"lines{fill:none; stroke-width:2.0px;stroke-linecap: round;}"},
-{class:"day{fill:none; stroke: #ffffff; stroke-width:1.0px;stroke-linecap: round;}"}
+{class:"day{fill:none; stroke: #ffffff; stroke-width:1.0px;stroke-linecap: round;}"},
+{class:"month{fill:none; stroke: #000000; stroke-width:1.0px;stroke-linecap: round;}"}
+
 ],
 titleOffset:10,
 subOffset:0,
@@ -38,7 +40,9 @@ var styleweb = {classes:
 {class:"yAxis text{fill:#6b6e68; font-size: 14.0px; font-weight: 400;font-feature-settings: 'tnum' 1; text-anchor: end;}"},
 {class:"origin line{fill:none; stroke:#9ba497; stroke-width: 1px;stroke-dasharray:1,0}"},
 {class:"lines{fill:none; stroke-width: 2.5px; stroke-linecap: round;}"},
-{class:"day{fill:none;stroke: #fff1e0; stroke-width:1.0px;stroke-linecap: round;}"}
+{class:"day{fill:none;stroke: #fff1e0; stroke-width:1.0px;stroke-linecap: round;}"},
+{class:"month{fill:none;stroke: #000000; stroke-width:1.0px;stroke-linecap: round;}"}
+
 ],
 titleOffset:21,
 subOffset:0,
@@ -61,7 +65,9 @@ var stylesoc = {classes:
 {class:"yAxis text{font-size: 28px; fill: #ffffff; opacity: 0.50; font-weight: 400; line-height: 28px; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
 {class:"origin line{fill:none; stroke:#ffffff; stroke-width: 2.0px; opacity: 0.5; stroke-dasharray:1,0}"},
 {class:"lines{fill:none; stroke-width: 5px;  stroke-linecap: round;}"},
-{class:"day{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"}
+{class:"day{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"},
+{class:"month{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"}
+
 ],
 titleOffset:36,
 subOffset:0,
