@@ -38,26 +38,24 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
     var plotWidth=w-margin.left-margin.right
     var plotHeight=h-margin.top-margin.bottom
     //Work out xdomain
-    console.log(data)
+
     var xMin=0;
     var xMax=0
 
      var cumulative =0;
 
     function extents(last,value) {
-        console.log("last=",last,"value=",value)
-        console.log("cumulative in function",cumulative)
+
         if (last==0){
             return [0,value]
         }
         else {
             if (value>0){
-                console.log("last+value",last+value)
+
                 return [last, cumulative+value]
             } 
             else {
-                console.log("last",last)
-                console.log(Math.abs(value))
+
                 return [last+(value), last +(value)+Math.abs(value)]}    
         }
     }
@@ -71,19 +69,15 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
         xMin=Math.min(cumulative,xMin);
         xMax=Math.max(cumulative,xMax);
 
-        console.log(d.cat,"/////////////////////////")
+
         var extent = extents(cumulative,+d.value);
         cumulative=extent[1];
-        console.log("extent=",extent)
-        console.log(d.value)
+
         if(d.value<0){
-            console.log("<")
             cumulative=extent[0];
         }
         else {
-            console.log(">")
             cumulative=extent[1]};
-        console.log("cumulative",cumulative)
 
         return {
             cat:d.cat,
@@ -103,9 +97,6 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
         }),
         group: null
     })
-
-    console.log("transformed data", plotData)
-    console.log("xDomain",xMin,xMax)
 
     var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
@@ -181,7 +172,6 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
                     var elClass = d3.select(this)
                     if (elClass.attr("class")==media+"bars") {
                         d3.select(this).attr("class",media+"barshighlight");
-                        console.log(colours.range()[0])
                         d3.select(this).style("fill",colours.range()[7])
                     }
                     else{var el=d3.select(this)
@@ -243,7 +233,6 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
         });
 
     //create a legend first
-    //console.log(groupNames[0])
     if (groupNames[0]!="-") {
         var legendyOffset=0
         var legend = plot.append("g")
