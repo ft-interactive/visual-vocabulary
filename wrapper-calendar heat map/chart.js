@@ -41,17 +41,9 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     var format = d3.time.format("%Y-%m-%d");
     var toolDate = d3.time.format("%d/%b/%y");
 
-    //console.log(data)
-
     var plotData=d3.nest()
         .key(function(d){return d.date.getFullYear();})
         .entries(data)
-
-
-
-
-    //console.log(values)
-    console.log(plotData)
 
     var calendar = plot.selectAll("g")
     .data(plotData)
@@ -59,7 +51,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
         .append("g")
         .attr("id",function(d) {return d.key+"-"+d.value})
         .attr("transform",function(d,i){
-                 return "translate("+(0)+","+i*(cellSize*7+yOffset*2)+")"
+                 return "translate("+(0)+","+(i*(cellSize*7+yOffset*2)+margin.top)+")"
             })
     .call(function(parent){
 
@@ -132,7 +124,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
 
             //create centred month labels around the bounding box of each month path
             //create day labels
-            var months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+            var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             var monthLabels=parent.append('g').attr('id','monthLabels')
             months.forEach(function(d,i)    {
                 monthLabels.append('text')
@@ -141,6 +133,8 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
                 .attr('y',yOffset)
                 .text(d);
             })
+
+            // add min/max legend
 
 
             //pure Bostock - compute and return monthly path data for any year
@@ -155,9 +149,69 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
                   + 'H' + (w0 + 1) * cellSize + 'Z';
             }
 
+    })
+    var legData=[{val: minVal,text:"min value"},{val: maxVal, text: "max value"}]
 
+    //create a legend first
+    var legendyOffset=0
+    var legend = plot.append("g")
+        .attr("id",media+"legend")
+        .on("mouseover",pointer)
+        .selectAll("g")
+        .data(legData)
+        .enter()
+        .append("g")
+        .attr ("id",function(d,i){
+            return media+"l"+i
+        })
+
+    var drag = d3.behavior.drag().on("drag", moveLegend);
+    d3.select("#"+media+"legend").call(drag);
+        
+    legend.append("text")
+
+        .attr("id",function(d,i){
+            return media+"t"+i
+        })
+        .attr("x",yOffset+yOffset/5)
+        .attr("y",0)
+        .attr("class",media+"subtitle")
+        .text(function(d){
+            return d.text+" "+d.val;
+        })
+
+    legend.append("rect")
+        .attr("x",0)
+        .attr("y",-yOffset+yOffset/3)
+        .attr("width",(yOffset/100)*85)
+        .attr("height",(yOffset/100)*70)
+        .style("fill", function(d,i){return colours(d.val)})
+
+    legend.attr("transform",function(d,i){
+        if (legAlign=='hori') {
+            var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
+            if (i>0) {
+                var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
+            }
+            else {gWidth=0};
+            legendyOffset=legendyOffset+gWidth;
+            return "translate("+(legendyOffset)+","+(gHeigt)+")";  
+        }
+        else {
+            var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
+            return "translate(0,"+((i*yOffset)+yOffset/2)+")"};
     })
 
+    function pointer() {
+        this.style.cursor='pointer'
+    }
+
+    function moveLegend() {
+        var dX = d3.event.x; // subtract cx
+        var dY = d3.event.y; // subtract cy
+        d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");
+
+    }
     
 
 }
