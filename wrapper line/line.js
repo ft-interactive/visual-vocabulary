@@ -186,56 +186,62 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
 
     d3.selectAll(".domain").remove()
 
-    // //create a legend first
-    var legendyOffset=0
-    var legend = plot.append("g")
-        .attr("id",media+"legend")
-        .on("mouseover",pointer)
-        .selectAll("g")
-        .data(seriesNames)
-        .enter()
-        .append("g")
-        .attr ("id",function(d,i){
-            return media+"l"+i
-        })
+    console.log(seriesNames[0])
 
-    var drag = d3.behavior.drag().on("drag", moveLegend);
-    d3.select("#"+media+"legend").call(drag);
-        
-    legend.append("text")
+    if (seriesNames[0]!="x"){
+        // //create a legend first
+        var legendyOffset=0
+        var legend = plot.append("g")
+            .attr("id",media+"legend")
+            .on("mouseover",pointer)
+            .selectAll("g")
+            .data(seriesNames)
+            .enter()
+            .append("g")
+            .attr ("id",function(d,i){
+                return media+"l"+i
+            })
 
-        .attr("id",function(d,i){
-            return media+"t"+i
-        })
-        .attr("x",yOffset+yOffset/2)
-        .attr("y",yOffset/2)
-        .attr("class",media+"subtitle")
-        .text(function(d){
-            return d;
-        })
-    legend.append("line")
-        .attr("stroke",function(d,i){
-            return colours[i];  
-        })
-        .attr("x1",0)
-        .attr("x2",yOffset)
-        .attr("y1",yOffset/4)
-        .attr("y2",yOffset/4)
-        .attr("class",media+"lines")
+        var drag = d3.behavior.drag().on("drag", moveLegend);
+        d3.select("#"+media+"legend").call(drag);
+            
+        legend.append("text")
 
-    legend.attr("transform",function(d,i){
-        if (legAlign=='hori') {
-            var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
-            if (i>0) {
-                var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+yOffset; 
+            .attr("id",function(d,i){
+                return media+"t"+i
+            })
+            .attr("x",yOffset+yOffset/2)
+            .attr("y",yOffset/2)
+            .attr("class",media+"subtitle")
+            .text(function(d){
+                return d;
+            })
+        legend.append("line")
+            .attr("stroke",function(d,i){
+                return colours[i];  
+            })
+            .attr("x1",0)
+            .attr("x2",yOffset)
+            .attr("y1",yOffset/4)
+            .attr("y2",yOffset/4)
+            .attr("class",media+"lines")
+
+        legend.attr("transform",function(d,i){
+            if (legAlign=='hori') {
+                var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
+                if (i>0) {
+                    var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+yOffset; 
+                }
+                else {gWidth=0};
+                legendyOffset=legendyOffset+gWidth;
+                return "translate("+(legendyOffset)+","+(gHeigt/2)+")";  
             }
-            else {gWidth=0};
-            legendyOffset=legendyOffset+gWidth;
-            return "translate("+(legendyOffset)+","+(gHeigt/2)+")";  
-        }
-        else {
-            return "translate(0,"+((i*yOffset))+")"};
+            else {
+                return "translate(0,"+((i*yOffset))+")"};
     })
+
+    }
+    
 
     function colculateTicksize(align, offset) {
         if (align=="right") {
