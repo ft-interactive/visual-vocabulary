@@ -28,12 +28,6 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     // console.log(margin)
     //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
 
-    plot.append("rect")
-        .attr("x",margin.left)
-        .attr("y",margin.top)
-        .attr("width",plotWidth)
-        .attr("height",plotHeight)
-        .attr("fill",colours[0])
     
 
 }

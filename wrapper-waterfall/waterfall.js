@@ -39,7 +39,7 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
     var plotHeight=h-margin.top-margin.bottom
     //Work out xdomain
 
-    var xMin=0;
+    var xMin=-9;
     var xMax=0
 
      var cumulative =0;
