@@ -40,7 +40,7 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
     // Set the sankey diagram properties
     var sankey = d3.sankey(plotWidth)
         .nodeWidth(yOffset*0.7)
-        .nodePadding(yOffset)
+        .nodePadding(yOffset*1.5)
         .size([plotWidth, plotHeight]);
 
     var path = sankey.link();
@@ -126,8 +126,24 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
       .attr("width", sankey.nodeWidth())
       .style("fill", function(d) { 
           return colours(d.name)})
+
+    var numNodes=plotData.nodes.length/2;
+
     node.append("text")
         .attr("class",media+"subtitle")
+        .attr("y",-yOffset/4)
+        .attr("x",function (d){
+            if(d.x>plotWidth/2) {
+                return yOffset*.7
+            }
+            else {return 0}
+        })
+        .style("text-anchor", function (d){
+            if(d.x>plotWidth/2) {
+                return "end"
+            }
+            else {return "start"}
+        })
         .text(function (d) {return d.name})
 
 
