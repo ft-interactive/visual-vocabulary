@@ -20,7 +20,8 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
         return (d.name === media);
       });
     margin=margin[0].margin[0]
-    var colours=stylename.fillcolours;
+    var colours= d3.scale.ordinal()
+      .range(stylename.fillcolours);
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
     
@@ -124,7 +125,10 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
       .attr("height", function(d) { return d.dy; })
       .attr("width", sankey.nodeWidth())
       .style("fill", function(d) { 
-          return colours[0]})
+          return colours(d.name)})
+    node.append("text")
+        .attr("class",media+"subtitle")
+        .text(function (d) {return d.name})
 
 
 
