@@ -1,4 +1,4 @@
-d3.sankey = function() {
+d3.sankey = function(plotWidth) {
   var sankey = {},
       nodeWidth = 24,
       nodePadding = 8,
@@ -127,7 +127,7 @@ d3.sankey = function() {
 
     //
     moveSinksRight(x);
-    scaleNodeBreadths((width - nodeWidth) / (x - 1));
+    scaleNodeBreadths((plotWidth - nodeWidth) / (x - 1));
   }
 
   function moveSourcesRight() {

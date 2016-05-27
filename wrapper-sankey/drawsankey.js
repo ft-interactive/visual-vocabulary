@@ -37,7 +37,7 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
               "translate(" + margin.left + "," + margin.top + ")");
     
     // Set the sankey diagram properties
-    var sankey = d3.sankey()
+    var sankey = d3.sankey(plotWidth)
         .nodeWidth(36)
         .nodePadding(40)
         .size([plotWidth, plotHeight]);
@@ -64,14 +64,14 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
         .map(plotData.nodes));
 
     // loop through each link replacing the text with its index from node
-     plotData.links.forEach(function (d, i) {
-       plotData.links[i].source = plotData.nodes.indexOf(plotData.links[i].source);
-       plotData.links[i].target = plotData.nodes.indexOf(plotData.links[i].target);
-     });
+    plotData.links.forEach(function (d, i) {
+        plotData.links[i].source = plotData.nodes.indexOf(plotData.links[i].source);
+        plotData.links[i].target = plotData.nodes.indexOf(plotData.links[i].target);
+    });
 
-     //now loop through each nodes to make nodes an array of objects
-     // rather than an array of strings
-     plotData.nodes.forEach(function (d, i) {
+    //now loop through each nodes to make nodes an array of objects
+    // rather than an array of strings and remove serieNames as these are no longer needed
+    plotData.nodes.forEach(function (d, i) {
         if (isEven(i)){
             console.log("even")
             var chrts=seriesNames[0].length
@@ -82,9 +82,23 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
             d = d.slice(0, -chrts);
         }
         plotData.nodes[i] = { "name": d };
-     });
+    });
 
     console.log(plotData)
+
+    sankey
+    .nodes(plotData.nodes)
+    .links(plotData.links)
+    .layout(32);
+
+    // add in the links
+    var link = plot.append("g").selectAll(".link")
+        .data(plotData.links)
+    .enter().append("path")
+        .attr("class", media+"link")
+        .attr("d", path)
+        .style("stroke-width", function(d) { return Math.max(1, d.dy); })
+        .sort(function(a, b) { return b.dy - a.dy; });
 
 
     function isEven(n) {
