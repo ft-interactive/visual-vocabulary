@@ -146,6 +146,20 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
         })
         .text(function (d) {return d.name})
 
+        //Add column labels
+        plot.append("text")
+            .attr("class",media+"subtitle")
+            .attr("y",yOffset)
+            .attr("x",margin.left)
+            .text(seriesNames[0])
+
+        plot.append("text")
+            .attr("class",media+"subtitle")
+            .attr("y",yOffset)
+            .attr("x",plotWidth-margin.right)
+            .style("text-anchor", "end")
+            .text(seriesNames[1])
+
 
 
     function isEven(n) {
