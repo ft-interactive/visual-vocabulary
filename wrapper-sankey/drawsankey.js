@@ -20,7 +20,7 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
         return (d.name === media);
       });
     margin=margin[0].margin[0]
-    var colours=stylename.linecolours;
+    var colours=stylename.fillcolours;
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
     
@@ -38,8 +38,8 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
     
     // Set the sankey diagram properties
     var sankey = d3.sankey(plotWidth)
-        .nodeWidth(36)
-        .nodePadding(40)
+        .nodeWidth(yOffset*0.7)
+        .nodePadding(yOffset)
         .size([plotWidth, plotHeight]);
 
     var path = sankey.link();
@@ -92,13 +92,40 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
     .layout(32);
 
     // add in the links
-    var link = plot.append("g").selectAll(".link")
+    var link = plot.append("g").selectAll("."+media+"link")
         .data(plotData.links)
     .enter().append("path")
+        .attr("id",function(d) {
+            return d.source.name + " to " + 
+                d.target.name + "\n" + d.value;
+            })
+        .attr("transform", 
+              "translate(" + margin.left + "," + margin.top + ")")
         .attr("class", media+"link")
         .attr("d", path)
         .style("stroke-width", function(d) { return Math.max(1, d.dy); })
         .sort(function(a, b) { return b.dy - a.dy; });
+
+    // add in the nodes
+    var node = plot.append("g").selectAll("."+media+"node")
+        .data(plotData.nodes)
+    .enter().append("g")
+        .attr("class", media+"node")
+        .attr("transform", function(d) { 
+          return "translate(" + (d.x+margin.left)+ "," + (d.y+margin.top) + ")"; })
+    // .call(d3.behavior.drag()
+    //     .origin(function(d) { return d; })
+    //     .on("dragstart", function() { 
+    //       this.parentNode.appendChild(this); })
+    //     .on("drag", dragmove));
+
+    // add the rectangles for the nodes
+    node.append("rect")
+      .attr("height", function(d) { return d.dy; })
+      .attr("width", sankey.nodeWidth())
+      .style("fill", function(d) { 
+          return colours[0]})
+
 
 
     function isEven(n) {
