@@ -32,10 +32,6 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
     //code adapted from http://bl.ocks.org/d3noob/c9b90689c1438f57d649
     console.log("data", data)
     console.log("seriesNames", seriesNames)
-
-    plot.append("g")
-        .attr("transform", 
-              "translate(" + margin.left + "," + margin.top + ")");
     
     // Set the sankey diagram properties
     var sankey = d3.sankey(plotWidth)
