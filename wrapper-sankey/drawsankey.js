@@ -30,12 +30,17 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
     //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
 
     //code adapted from http://bl.ocks.org/d3noob/c9b90689c1438f57d649
+<<<<<<< HEAD
     // console.log("data", data)
     // console.log("seriesNames", seriesNames)
 
     plot.append("g")
         .attr("transform", 
               "translate(" + margin.left + "," + margin.top + ")");
+=======
+    console.log("data", data)
+    console.log("seriesNames", seriesNames)
+>>>>>>> origin/master
     
     // Set the sankey diagram properties
     var sankey = d3.sankey(plotWidth)
