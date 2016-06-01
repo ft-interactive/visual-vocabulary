@@ -30,8 +30,8 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
     //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
 
     //code adapted from http://bl.ocks.org/d3noob/c9b90689c1438f57d649
-    console.log("data", data)
-    console.log("seriesNames", seriesNames)
+    // console.log("data", data)
+    // console.log("seriesNames", seriesNames)
 
     plot.append("g")
         .attr("transform", 
@@ -113,17 +113,20 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
     .enter().append("g")
         .attr("class", media+"node")
         .attr("transform", function(d) { 
-          return "translate(" + (d.x+margin.left)+ "," + (d.y+margin.top) + ")"; })
-    // .call(d3.behavior.drag()
-    //     .origin(function(d) { return d; })
-    //     .on("dragstart", function() { 
-    //       this.parentNode.appendChild(this); })
-    //     .on("drag", dragmove));
+          return "translate(" + (d.x)+ "," + (d.y) + ")"; })
+    .call(d3.behavior.drag()
+        .origin(function(d) {
+            return d;})
+        .on("dragstart", function() { 
+            this.parentNode.appendChild(this); })
+        .on("drag", dragmove));
 
     // add the rectangles for the nodes
     node.append("rect")
       .attr("height", function(d) { return d.dy; })
       .attr("width", sankey.nodeWidth())
+      .attr("transform", 
+              "translate(" + margin.left + "," + margin.top + ")")
       .style("fill", function(d) { 
           return colours(d.name)})
 
@@ -138,6 +141,8 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
             }
             else {return 0}
         })
+        .attr("transform", 
+              "translate(" + margin.left + "," + margin.top + ")")
         .style("text-anchor", function (d){
             if(d.x>plotWidth/2) {
                 return "end"
@@ -160,6 +165,17 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
             .style("text-anchor", "end")
             .text(seriesNames[1])
 
+    
+    // the function for moving the nodes
+    function dragmove(d) {
+    d3.select(this)
+    .attr("transform", 
+        "translate(" + d.x + "," + (
+                d.y = Math.max(0, Math.min((plotHeight) - d.dy, d3.event.y))
+            ) + ")");
+    sankey.relayout();
+    link.attr("d", path);
+    }
 
 
     function isEven(n) {
