@@ -87,15 +87,20 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
 
     var xlabels=plot.append("g")
         .attr("class",media+"xAxis")
-        .attr("transform", "translate("+(margin.left)+"," + (h-margin.bottom) + ")")
+        .attr("transform",function(){
+            if(yAlign=="right") {
+                return "translate("+(margin.left)+","+(h-margin.bottom)+")"
+            }
+             else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"}
+            })
         .call(xAxis);
 
 
-    // var category = svg.selectAll("."+media+"category")
-    //     .data(data)
-    //     .enter().append("g")
-    //     .attr("class", media+"category")
-    //     .attr("transform", function(d) { return "translate(" + x0(d.cat) + ",0)"; });
+    var category = plot.selectAll("."+media+"category")
+        .data(data)
+        .enter().append("g")
+        .attr("class", media+"category")
+        .attr("transform", function(d) { return "translate(" + x0(d.cat) + ",0)"; });
 
     // category.selectAll("rect")
     //     .data(function(d) { return d.bands; })
