@@ -99,6 +99,38 @@ function xyHeatmap(data,stylename,media,plotpadding,legAlign,yAlign,breaks){
                 }   
             })
 
+    //create key
+    var legend = plot.append("g")
+        .attr("id","key")
+
+    legend.selectAll("rect")
+            .data(colours)
+            .enter()
+            .append("rect")
+            .attr("width",cellWidth)
+            .attr("height",cellHeight/1.4)
+            .attr("x",function(d,i){
+                return i*labelWidth;
+            })
+            .attr("fill",function(d){
+                return d;
+            });
+
+    legend.selectAll("text")
+            .data(breaks)
+            .enter()
+            .append("text")
+            .attr("class",media+"subtitle")
+            .attr("x",function(d,i){
+                return cellWidth+5+(i*labelWidth);
+            })
+            .attr("y","1em")
+            .text(function(d){
+                return "up to "+d;
+            });
+
+        
+
 
 
     
