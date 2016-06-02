@@ -1,7 +1,7 @@
 
 var styleprint = {classes:
 [{class:"background{fill: none}"},
-{class:"chartholder{fill: #fff1e0}"},
+{class:"chartholder{fill: none}"},
 {class:"title{font-size:12px; fill: #000000; font-weight: 600;}"},
 {class:"subtitle{fill:#000000; font-size: 9.6px;}"},
 {class:"source{fill: #000000; font-size: 7.2px;}"},
@@ -24,7 +24,7 @@ fillcolours:["#004d6d","#068cb5","#64a2c1","#c6d6cc","#d9e7ef"]
 
 var styleweb = {classes:
 [{class:"background{fill: none}"},
-{class:"chartholder{fill: #fff1e0;}"},
+{class:"chartholder{fill: none;}"},
 {class:"title{font-size:21px; fill: #3b3d3b;}"},
 {class:"subtitle{font-size:14px; fill: #6b6e68;}"},
 {class:"source{fill: #6b6e68; font-size: 11.5px;}"},
