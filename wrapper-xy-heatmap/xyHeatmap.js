@@ -30,10 +30,15 @@ function xyHeatmap(data,stylename,media,plotpadding,legAlign,yAlign){
         .entries(data);
 
     console.log(catData);
-
+    //Work out the height of each cell
     var cellHeight=plotHeight/catData.length
+    //Add a group for the labels
     var cats=plot.append("g")
-        .attr("id","catagories")
+        .attr("id","catLabels")
+        .attr("transform",function(d,i){
+            return "translate("+margin.left+","+(margin.top)+")";
+        });
+    //Add the labels
     var labels = cats.selectAll("g")
         .data(catData)
         .enter()
@@ -43,12 +48,42 @@ function xyHeatmap(data,stylename,media,plotpadding,legAlign,yAlign){
         })
         .attr("transform",function(d,i){
             return "translate("+margin.left+","+(margin.top+(cellHeight*i))+")";
-        });
-    
+        });  
     labels.append("text")
     .attr("class",media+"subtitle")
     .text(function(d){return d.key})
-    var cellWidth=(plotWidth-(d3.select("#catagories").node().getBBox().width))/catData[0].values.length
+    
+    //Work out the cell width of each cell now that the lables are added
+    var labelWidth=d3.select("#catLabels").node().getBBox().width
+    var cellWidth=(plotWidth-labelWidth)/catData[0].values.length
+    
+    //Noww add the groups for each set of rectangles
+    var squares=plot.append("g")
+        .attr("id","squares")
+    var groups = squares.selectAll("g")
+            .data(catData)
+            .enter()
+            .append("g")
+            .attr("id",function(d){
+                return "group"+d.key;  
+            })
+            .attr("transform",function(d,i){
+                return "translate("+(labelWidth+margin.left)+","+(margin.top+(i*cellHeight))+")";
+            });
+
+    var rects = groups.selectAll("rect")
+            .data(function(d){
+                return d.values;
+            })
+            .enter()
+            .append("rect")
+            .attr("width",cellWidth)
+            .attr("height",cellHeight)
+            .attr("y",0)
+            .attr("x",function(d,i){
+                return cellWidth*i;
+            })
+            .style("fill","#ffe3f1")
 
     
 
