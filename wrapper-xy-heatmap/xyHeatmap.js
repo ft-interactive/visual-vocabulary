@@ -34,7 +34,7 @@ function xyHeatmap(data,stylename,media,plotpadding,legAlign,yAlign,breaks){
     var cellHeight=plotHeight/catData.length
     //Add a group for the labels
     var cats=plot.append("g")
-        .attr("id","catLabels")
+        .attr("id",media+"catLabels")
         .attr("transform",function(d,i){
             return "translate("+margin.left+","+(margin.top)+")";
         });
@@ -54,7 +54,7 @@ function xyHeatmap(data,stylename,media,plotpadding,legAlign,yAlign,breaks){
     .text(function(d){return d.key})
     
     //Work out the cell width of each cell now that the lables are added
-    var labelWidth=25+d3.select("#catLabels").node().getBBox().width
+    var labelWidth=10+d3.select("#"+media+"catLabels").node().getBBox().width
     var cellWidth=(plotWidth-labelWidth)/catData[0].values.length
     
     //Noww add the groups for each set of rectangles

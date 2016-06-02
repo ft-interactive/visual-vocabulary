@@ -46,7 +46,7 @@ fillcolours:["#b46c81","#c28693","#d1a3a9","#e2c3c1","#fae9dd"]
 
 var stylesoc = {classes:
 [{class:"background{fill: #212121;}"},
-{class:"chartholder{fill: #6b6e68;}"},
+{class:"chartholder{fill: none;}"},
 {class:"title{font-size: 38px; fill: #ffffff; opacity: 0.9; font-weight: 500;}"},
 {class:"subtitle{font-size: 28px; fill: #ffffff; opacity: 0.70; font-weight: 100; line-height: 30px;}"},
 {class:"source{font-size: 25px; fill: #ffffff; opacity: 0.50; font-weight: 100; line-height: 30px;}"},
@@ -63,7 +63,7 @@ var stylesoc = {classes:
 titleOffset:36,
 subOffset:0,
 legendyOffset:0,
-fillcolours:["#004d6d","#068cb5","#64a2c1","#95bfc5","#c6d6cc"]
+fillcolours:["#CB4759","#D57175","#E09697","#EDBFC0","#FDEDF4"]
 }
 var stylevid = {classes:
 [{class:"background{fill: #dfd0bd;}"},
