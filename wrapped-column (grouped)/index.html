@@ -11,11 +11,11 @@
     </style>
     <script src="d3.min.js"></script>
     <script src="drawFrame.js"></script>
-    <script src="column.js"></script>
+    <script src="columnGroup.js"></script>
     <script>
         
         //datafile
-        var dataURL = "data.csv"
+        var dataURL = "groups.csv"
         
         //titles, footnotes
         var title = "European IPO market";
@@ -27,7 +27,7 @@
         var logScale=false;
         var logScaleStart=1000;
         var markers=true;//show circle markers
-        var numTicksy = 5;//rough number of ticks for y axis
+        var numTicksy = 14;//rough number of ticks for y axis
         var numTicksx = 10;//rough number of ticks for x axis
         var ticks//=[0.2,0.3];//option to force tick values for online
 
@@ -35,7 +35,7 @@
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
         var frames=[
         {name:"print",width:112,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"hori",yLabel:"right"},
-        {name:"web",width:600,height:422,units:'px',margins:[{top:10,right:38,bottom:7,left:10}],stylesheet:styleweb,legend:"hori",yLabel:"left"},
+        {name:"web",width:600,height:422,units:'px',margins:[{top:10,right:38,bottom:7,left:10}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
         {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
         ]
@@ -44,7 +44,7 @@
         var chartpadding=[
         {name:"print",margin:[{top:10, right:10, bottom:15, left:7}]},
         {name:"web",margin:[{top:10, right:15, bottom:20, left:0}]},
-        {name:"social",margin:[{top:0, right:60, bottom:40, left:0}]},
+        {name:"social",margin:[{top:0, right:0, bottom:40, left:0}]},
         {name:"video",margin:[{top:55, right:35,bottom:68, left:42}]}
         ]
         
