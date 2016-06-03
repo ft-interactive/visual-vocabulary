@@ -71,7 +71,7 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     .classed(media+"origin",true);
 
     var xScale = d3.scale.ordinal()
-    .rangeRoundBands([0, plotWidth],.3);
+    .rangeRoundBands([0, plotWidth-yLabelOffset],.3);
 
     var xAxis = d3.svg.axis()
     .scale(xScale)
@@ -82,8 +82,12 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
 
     var xLabels=plot.append("g")
       .attr("class", media+"xAxis")
-      .attr("transform", "translate("+(margin.left)+"," + (h-margin.bottom) + ")")
-      .call(xAxis);
+      .attr("transform",function(){
+                if(yAlign=="right") {
+                    return "translate("+(margin.left)+","+(h-margin.bottom)+")"
+                }
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"}
+            })      .call(xAxis);
 
     plot.selectAll("."+media+"bar")
     .data(data)
@@ -91,7 +95,10 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
         .append("g")
         .attr("id",function(d) { return d.cat+"-"+d.value; })
         .attr("transform",function(){
-                return "translate("+(margin.left)+","+margin.top+")"
+                if(yAlign=="right") {
+                    return "translate("+(margin.left)+","+(margin.top)+")"
+                }
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
             })
         .call(function(parent){
             parent.append('rect')
