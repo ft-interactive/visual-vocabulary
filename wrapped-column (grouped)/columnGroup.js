@@ -32,15 +32,11 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
     var plotData=data.map(function(d) {return d})
     console.log("plotData", plotData)
 
-    var bandNames = d3.keys(data[0]).filter(function(key) { return key !== "cat"; });
-    console.log(bandNames)
+    plotData.forEach(function(d) {
+        d.bands = seriesNames.map(function(name) { return {name: name, value: +d[name]}; });
+    });
+    console.log("plotData-bands", plotData)
 
-   
-    plotData = bandNames.map(function(d) { return {name: name, value: +d[name]}; });
-
-    console.log(plotData)
-
-    // console.log("plotData", plotData);
 
     // var min=Math.min(0,d3.min(data, function(d) { return d3.min(d.bands, function(d) { return d.value; })})); 
     // var max=d3.max(data, function(d) { return d3.max(d.bands, function(d) { return d.value; })}); 
