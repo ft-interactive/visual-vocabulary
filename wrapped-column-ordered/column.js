@@ -1,4 +1,4 @@
-function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, yAlign, markers){
+function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, yAlign, markers,sort){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -31,6 +31,8 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
 
     var plotWidth=w-margin.left-margin.right
     var plotHeight=h-margin.top-margin.bottom
+
+    data.sort(function(a, b) { return b.value - a.value; })//Sorts biggest rects to the left
 
     var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
