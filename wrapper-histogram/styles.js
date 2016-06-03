@@ -1,7 +1,7 @@
 
 var styleprint = {classes:
 [{class:"background{fill: none}"},
-{class:"chartholder{fill: #fff1e0}"},
+{class:"chartholder{fill: none}"},
 {class:"title{font-size:12px; fill: #000000; font-weight: 600;}"},
 {class:"subtitle{fill:#000000; font-size: 9.6px;}"},
 {class:"source{fill: #000000; font-size: 7.2px;}"},
@@ -14,7 +14,7 @@ var styleprint = {classes:
 {class:"yAxis line{fill:none; stroke-width:0.3px; stroke:#22190f;}"},
 {class:"yAxis text{fill:#000000; font-size: 9.6px; font-feature-settings: 'tnum' 1;}"},
 {class:"origin line{fill:none; stroke-width:0.6px;}"},
-{class:"bin{stroke-width:1.0px;stroke:#ffffff;}"}
+{class:"bin{stroke-width:0.7px;stroke:#ffffff;}"}
 ],
 titleOffset:10,
 subOffset:0,
@@ -23,8 +23,8 @@ fillcolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
 }
 
 var styleweb = {classes:
-[{class:"background{fill: #fff1e0}"},
-{class:"chartholder{fill: #ffffff;}"},
+[{class:"background{fill: none}"},
+{class:"chartholder{fill: none;}"},
 {class:"title{font-size:21px; fill: #3b3d3b;}"},
 {class:"subtitle{font-size:14px; fill: #6b6e68;}"},
 {class:"source{fill: #6b6e68; font-size: 11.5px;}"},
@@ -36,7 +36,7 @@ var styleweb = {classes:
 {class:"yAxis line{fill:none; stroke-width: 1.0px; stroke:#c3bcb0; stroke-dasharray:1,2}"},
 {class:"yAxis text{fill:#6b6e68; font-size: 14.0px; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
 {class:"origin line{fill:none; stroke:#9ba497; stroke-width: 1px;stroke-dasharray:1,0}"},
-{class:"bin{stroke-width:1.0px;stroke:#fff1e0;}"}
+{class:"bin{stroke-width:0.7px;stroke:#fff1e0;}"}
 ],
 titleOffset:21,
 subOffset:0,
@@ -46,7 +46,7 @@ fillcolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 
 var stylesoc = {classes:
 [{class:"background{fill: #212121;}"},
-{class:"chartholder{fill: #6b6e68;}"},
+{class:"chartholder{fill: none;}"},
 {class:"title{font-size: 38px; fill: #ffffff; opacity: 0.9; font-weight: 500;}"},
 {class:"subtitle{font-size: 28px; fill: #ffffff; opacity: 0.70; font-weight: 100; line-height: 30px;}"},
 {class:"source{font-size: 25px; fill: #ffffff; opacity: 0.50; font-weight: 100; line-height: 30px;}"},
@@ -58,7 +58,7 @@ var stylesoc = {classes:
 {class:"yAxis line{fill:none; stroke-width: 2.0px; stroke-dasharray:2,8; opacity: 0.38; stroke:#ffffff;}"},
 {class:"yAxis text{font-size: 28px; fill: #ffffff; opacity: 0.50; font-weight: 100; line-height: 28px; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
 {class:"origin line{fill:none; stroke:#ffffff; stroke-width: 2.0px; opacity: 0.5; stroke-dasharray:1,0}"},
-{class:"bin{stroke-width:1.0px;stroke:#ffffff;}"}
+{class:"bin{stroke-width:0.7px;stroke:#ffffff;}"}
 ],
 titleOffset:36,
 subOffset:0,

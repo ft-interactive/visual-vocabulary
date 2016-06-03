@@ -27,7 +27,7 @@ function makeHistogram(data,stylename,media,plotpadding,legAlign,yAlign,numTicks
     // console.log(plotWidth,colours,plotHeight,data)
     // console.log(margin)
     //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
-
+    // based on https://bl.ocks.org/mbostock/1624660
 
     var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
