@@ -32,8 +32,11 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
     var plotWidth=w-margin.left-margin.right
     var plotHeight=h-margin.top-margin.bottom
 
-    data.sort(function(a, b) { return b.value - a.value; })//Sorts biggest rects to the left
-
+    if (sort=="descending") {
+        data.sort(function(a, b) { return b.value - a.value; })//Sorts biggest rects to the left
+    }
+    else {data.sort(function(a, b) { return a.value - b.value; })//Sorts biggest rects to the left
+}
     var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
 
@@ -198,7 +201,6 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
                 return "translate(0,"+((i*yOffset)+yOffset/2)+")"};
         })
     }
-    
 
     
     function colculateTicksize(align, offset) {

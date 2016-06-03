@@ -147,6 +147,7 @@ function drawFrame(styles, media,titley,suby) {
             .attr("height", contentHeight)
 
         var holder=p.append("div")
+        .attr("id",media+"buttonHolder")
         holder.append("button")
         .attr("class","button")
         .text("Save "+media+" as PNG")
