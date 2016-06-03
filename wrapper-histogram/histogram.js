@@ -20,7 +20,7 @@ function makeHistogram(data,stylename,media,plotpadding,legAlign,yAlign,numTicks
         return (d.name === media);
       });
     margin=margin[0].margin[0]
-    var colours=stylename.linecolours;
+    var colours=stylename.fillcolours;
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
     
@@ -28,8 +28,6 @@ function makeHistogram(data,stylename,media,plotpadding,legAlign,yAlign,numTicks
     // console.log(margin)
     //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
 
-    var xScale = d3.scale.linear()
-        .range([0, plotWidth]);
 
     var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
@@ -52,7 +50,7 @@ function makeHistogram(data,stylename,media,plotpadding,legAlign,yAlign,numTicks
     plotData.shift();
 
     // Set the scale domain.
-    xScale.domain([0, d3.max(plotData.map(function(d) { return d.offset + d.width; }))]);
+    var xDomain=[0, d3.max(plotData.map(function(d) { return d.offset + d.width; }))];
     yScale.domain([0, d3.max(plotData.map(function(d) { return d.height; }))]);
 
     console.log(plotData);
@@ -86,6 +84,41 @@ function makeHistogram(data,stylename,media,plotpadding,legAlign,yAlign,numTicks
             return d==originValue || d==yHighlight;
         }).classed(media+"origin",true);
 
+    var xScale = d3.scale.linear()
+        .domain(xDomain)
+        .range([0,(plotWidth-yLabelOffset)])
+
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .ticks(numTicksx)
+        .tickSize(yOffset/2)
+        .orient("bottom");
+
+    var xLabel=plot.append("g")
+        .attr("class",media+"xAxis")
+        .attr("transform",function(){
+            if(yAlign=="right") {
+                return "translate("+(margin.left)+","+(h-margin.bottom)+")"
+            }
+             else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"}
+            })
+        .call(xAxis);
+
+    plot.selectAll("."+media+"bin")
+      .data(plotData)
+    .enter().append("rect")
+        .attr("transform",function(){
+                    if(yAlign=="right") {
+                        return "translate("+(margin.left)+","+(margin.top)+")"
+                    }
+                     else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
+                })
+        .attr("class", media+"bin")
+        .attr("x", function(d) { return xScale(d.offset); })
+        .attr("width", function(d) { return xScale(d.width) - 1; })
+        .attr("y", function(d) { return yScale(d.height); })
+        .attr("height", function(d) { return plotHeight - yScale(d.height); })
+        .style("fill",colours[0])
 
 
 

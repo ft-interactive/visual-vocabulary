@@ -129,9 +129,9 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         .attr("class",media+"xAxis")
         .attr("transform",function(){
             if(yAlign=="right") {
-                return "translate("+(margin.left)+","+(h-margin.bottom)+")"
+                return "translate("+(margin.left)+","+(plotHeight)+")"
             }
-             else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"}
+             else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight)+")"}
             })
         .call(xAxis);
 
