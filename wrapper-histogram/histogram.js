@@ -1,5 +1,5 @@
 
-function makeHistogram(data,stylename,media,plotpadding,legAlign,yAlign,numTicksy,numTicksx){
+function makeHistogram(data,stylename,media,plotpadding,legAlign,yAlign,numTicksy,numTicksx,yHighlight){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -79,6 +79,12 @@ function makeHistogram(data,stylename,media,plotpadding,legAlign,yAlign,numTicks
             }
             else return "translate("+(w-margin.right)+","+margin.top+")"
             })
+
+    //identify 0 line if there is one
+    var originValue = 0;
+    var origin = plot.selectAll(".tick").filter(function(d, i) {
+            return d==originValue || d==yHighlight;
+        }).classed(media+"origin",true);
 
 
 
