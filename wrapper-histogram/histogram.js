@@ -1,5 +1,5 @@
 
-function makeHistogram(data,stylename,media,plotpadding,legAlign,yAlign){
+function makeHistogram(data,stylename,media,plotpadding,legAlign,yAlign,numTicksy,numTicksx){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -28,27 +28,70 @@ function makeHistogram(data,stylename,media,plotpadding,legAlign,yAlign){
     // console.log(margin)
     //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
 
-    var xAxis = d3.scale.linear()
+    var xScale = d3.scale.linear()
         .range([0, plotWidth]);
 
-    var yAxis = d3.scale.linear()
+    var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
 
-    var plotData=data.map(function(d) { return {
-        category: d.category,
+    var plotData=data.map(function(d,i) { return {
+        category: +d.category,
         value: +d.value
         }
     });
 
-     // Normalize each bin to so that height = quantity/width;
-  // see http://en.wikipedia.org/wiki/Histogram#Examples
-  for (var i = 1, n = plotData.length, plotData; i < n; i++) {
-    bin = plotData[i];
-    bin.offset = plotData[i - 1].catagory;
-    bin.width = bin.catagory - bin.offset;
-    bin.height = bin.value / bin.width;
-  }
+    // Normalize each bin to so that height = quantity/width;
+    // see http://en.wikipedia.org/wiki/Histogram#Examples
+    for (var i = 1, n = plotData.length, plotData; i < n; i++) {
+        bin = plotData[i];
+        bin.offset = plotData[i - 1].category;
+        bin.width = bin.category - bin.offset;
+        bin.height = bin.value / bin.width;
+    }
 
-  console.log(plotData)
+    plotData.shift();
 
+    // Set the scale domain.
+    xScale.domain([0, d3.max(plotData.map(function(d) { return d.offset + d.width; }))]);
+    yScale.domain([0, d3.max(plotData.map(function(d) { return d.height; }))]);
+
+    console.log(plotData);
+
+    var yAxis = d3.svg.axis()
+        .scale(yScale)
+        .ticks(numTicksy)
+        .orient(yAlign)
+
+    var yLabel=plot.append("g")
+    .attr("class",media+"yAxis")
+    .call(yAxis);
+
+    var yLabelOffset=yLabel.node().getBBox().width
+    //console.log("offset= ",yLabelOffset)
+    var yticksize=colculateTicksize(yAlign, yLabelOffset);
+    //console.log(yticksize);
+
+    yLabel.call(yAxis.tickSize(yticksize))
+    yLabel
+        .attr("transform",function(){
+            if (yAlign=="right"){
+                return "translate("+(margin.left)+","+margin.top+")"
+            }
+            else return "translate("+(w-margin.right)+","+margin.top+")"
+            })
+
+
+
+
+
+
+
+
+
+    function colculateTicksize(align, offset) {
+        if (align=="right") {
+            return w-margin.left-offset
+        }
+        else {return w-margin.right-offset}
+    }
 }
