@@ -94,12 +94,6 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     .enter()
         .append("g")
         .attr("id",function(d) { return d.cat+"-"+d.value; })
-        .attr("transform",function(){
-                if(yAlign=="right") {
-                    return "translate("+(margin.left)+","+(margin.top)+")"
-                }
-                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
-            })
         .call(function(parent){
             parent.append('rect')
                 .style("fill", function (d) {
