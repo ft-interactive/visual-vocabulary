@@ -20,7 +20,10 @@ function areaChart(data,stylename,media,plotpadding,legAlign,yAlign, yHighlight)
         return (d.name === media);
       });
     margin=margin[0].margin[0]
-    var colours=stylename.fillcolours;
+    
+    var colours= d3.scale.ordinal()
+        .domain(seriesNames)
+        .range(stylename.fillcolours);
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
     
@@ -28,10 +31,7 @@ function areaChart(data,stylename,media,plotpadding,legAlign,yAlign, yHighlight)
     // console.log(margin)
     //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
     //Based on https://bl.ocks.org/mbostock/3885211
-    console.log(data)
-
-    var xDomain = d3.extent(data, function(d) {return d.date;});
-    var yDomain;
+    console.log("data", data)
 
     //calculate range of y axis series data
     var min=6;
@@ -44,18 +44,20 @@ function areaChart(data,stylename,media,plotpadding,legAlign,yAlign, yHighlight)
             }
         });         
     });
-    yDomain=[min,max];
+    var yDomain=[min,max];
+    //calculate range of time series 
+    var xDomain = d3.extent(data, function(d) {return d.date;});
+    var yDomain;
 
-    var xScale = d3.time.scale()
-        .range([0, plotWidth]);
 
     var yScale = d3.scale.linear()
-        .range([plotHeight, 0]);
+        .range([plotHeight, 0])
+        .domain(yDomain);
 
     var area = d3.svg.area()
-        .x(function(d) { return x(d.date); })
-        .y0(function(d) { return y(d.y0); })
-        .y1(function(d) { return y(d.y0 + d.y); });
+        .x(function(d) { return xScale(d.date); })
+        .y0(function(d) { return yScale(d.y0); })
+        .y1(function(d) { return yScale(d.y0 + d.y); });
 
     var stack = d3.layout.stack()
         .values(function(d) { return d.values; });
@@ -64,7 +66,7 @@ function areaChart(data,stylename,media,plotpadding,legAlign,yAlign, yHighlight)
         return {
             name: name,
             values: data.map(function(d) {
-                return {date: d.date, y: d[name]};
+                return {date: d.date, y: +d[name]};
             })
         };
     }));
@@ -100,6 +102,48 @@ function areaChart(data,stylename,media,plotpadding,legAlign,yAlign, yHighlight)
             return d==originValue || d==yHighlight;
         })
     .classed(media+"origin",true);
+
+    var xDomain = d3.extent(data, function(d) {return d.date;});
+    console.log("xDomain",xDomain)
+
+    var xScale = d3.time.scale()
+        .domain(xDomain)
+        .range([0,(plotWidth-yLabelOffset)])
+
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .tickSize(yOffset/2)
+        .orient("bottom");
+
+    var xLabels=plot.append("g")
+        .attr("class", media+"xAxis")
+        .attr("transform",function(){
+            if(yAlign=="right") {
+                return "translate("+(margin.left)+","+(h-margin.bottom)+")"
+            }
+            else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"}
+        })
+      .call(xAxis);
+
+    var areas = plot.selectAll(".browser")
+        .data(plotData)
+        .enter().append("g")
+
+    areas.append("path")
+      .attr("class", media+"area")
+      .attr("d", function(d) { return area(d.values); })
+      .style("fill", function(d) { return colours(d.name)})
+      .attr("transform",function(){
+                if(yAlign=="right") {
+                    return "translate("+(margin.left)+","+(margin.top)+")"
+                }
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
+            })
+
+
+
+
+
 
 
     function colculateTicksize(align, offset) {
