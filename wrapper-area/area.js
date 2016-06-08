@@ -31,7 +31,6 @@ function areaChart(data,stylename,media,plotpadding,legAlign,yAlign, yHighlight)
     // console.log(margin)
     //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
     //Based on https://bl.ocks.org/mbostock/3885211
-    console.log("data", data)
 
     //calculate range of y axis series data
     var min=6;
@@ -49,7 +48,6 @@ function areaChart(data,stylename,media,plotpadding,legAlign,yAlign, yHighlight)
     var xDomain = d3.extent(data, function(d) {return d.date;});
     var yDomain;
 
-
     var yScale = d3.scale.linear()
         .range([plotHeight, 0])
         .domain(yDomain);
@@ -66,12 +64,21 @@ function areaChart(data,stylename,media,plotpadding,legAlign,yAlign, yHighlight)
         return {
             name: name,
             values: data.map(function(d) {
-                return {date: d.date, y: +d[name]};
+                return {date: d.date,
+                    y: +d[name]};
             })
         };
     }));
 
-    console.log(plotData)
+    //work out max value for yScale.domain
+    var yMax=0
+    plotData.map(function(d){
+        d.values.forEach(function(d,i){
+            yMax=Math.max(yMax,(d.y0 + d.y))
+        })
+    })
+
+    yScale.domain([0,yMax])
 
     var yAxis = d3.svg.axis()
     .scale(yScale)
@@ -104,7 +111,6 @@ function areaChart(data,stylename,media,plotpadding,legAlign,yAlign, yHighlight)
     .classed(media+"origin",true);
 
     var xDomain = d3.extent(data, function(d) {return d.date;});
-    console.log("xDomain",xDomain)
 
     var xScale = d3.time.scale()
         .domain(xDomain)
