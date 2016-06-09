@@ -87,7 +87,8 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
                     return "translate("+(margin.left)+","+(h-margin.bottom)+")"
                 }
                  else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"}
-            })      .call(xAxis);
+            })
+      .call(xAxis);
 
     plot.selectAll("."+media+"bar")
     .data(data)
