@@ -1,4 +1,4 @@
-function bubbleChart(data, stylename, media, chartpadding,legend, smallCircle, largeCircle,subYoffset,yAxisHighlight,axisLabel,xaxisLabel,yaxisLabel,xmin,ymin,yAlign){
+function bubbleChart(data, stylename, media, chartpadding,legAlign, smallCircle, largeCircle,subYoffset,yAxisHighlight,axisLabel,xaxisLabel,yaxisLabel,xmin,ymin,yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
