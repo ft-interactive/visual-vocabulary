@@ -6,7 +6,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
     // return the series names from the first row of the spreadsheet
-    var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
+    var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date' && d != 'highlight' ; });
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
     var plot=d3.select("#"+media+"plot")
@@ -26,12 +26,12 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     var plotHeight = h-(margin.top+margin.bottom);
 
     //calculate range of time series 
-   var xDomain = d3.extent(data, function(d) {return d.date;});
+    var xDomain = d3.extent(data, function(d) {return d.date;});
     var yDomain;
 
     //calculate range of y axis series data
-    var min=6;
-    var max=0;
+    var min=-20;
+    var max=60;
     data.forEach(function(d,i){
         seriesNames.forEach(function(e){
             if (d[e]){
@@ -51,6 +51,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         seriesNames.forEach(function(series,e){
             var myRow = new Object();
             myRow.date=d.date;
+            myRow.highlight=d.highlight;
             myRow.val=d[series];
             if (myRow.val){
                 plotArrays[e].push(myRow);
@@ -129,9 +130,9 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
         .attr("class",media+"xAxis")
         .attr("transform",function(){
             if(yAlign=="right") {
-                return "translate("+(margin.left)+","+(plotHeight)+")"
+                return "translate("+(margin.left)+","+(plotHeight+margin.top)+")"
             }
-             else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight)+")"}
+             else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
             })
         .call(xAxis);
 
@@ -144,7 +145,6 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
             return yScale(d.val); 
         })
         .interpolate(lineSmoothing)
-
 
     var lines = plot.append("g").attr("id","series").selectAll("g")
             .data(plotArrays)
@@ -166,6 +166,27 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
                  else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
             })
 
+        lines.append("g").attr("fill",function(d,i){return colours[i]})
+            .selectAll("circle")
+            .data(function(d){
+                return d;})
+            .enter()
+            .append("circle")
+            .attr("r", function(d) {
+                if(d.highlight=="yes") {
+                    return yOffset/4
+                    }
+                    else {return 0}
+                })
+            .attr("cx",function(d){return xScale(d.date)})
+            .attr("cy",function(d){return yScale(d.val)})
+            .attr("transform",function(){
+                if(yAlign=="right") {
+                    return "translate("+(margin.left)+","+(margin.top)+")"
+                }
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
+            });
+
     //if needed, create markers
     if (markers){
         lines.append("g").attr("fill",function(d,i){return colours[i]})
@@ -185,62 +206,6 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     }
 
     d3.selectAll(".domain").remove()
-
-    console.log(seriesNames[0])
-
-    if (seriesNames[0]!="x"){
-        // //create a legend first
-        var legendyOffset=0
-        var legend = plot.append("g")
-            .attr("id",media+"legend")
-            .on("mouseover",pointer)
-            .selectAll("g")
-            .data(seriesNames)
-            .enter()
-            .append("g")
-            .attr ("id",function(d,i){
-                return media+"l"+i
-            })
-
-        var drag = d3.behavior.drag().on("drag", moveLegend);
-        d3.select("#"+media+"legend").call(drag);
-            
-        legend.append("text")
-
-            .attr("id",function(d,i){
-                return media+"t"+i
-            })
-            .attr("x",yOffset+yOffset/2)
-            .attr("y",yOffset/2)
-            .attr("class",media+"subtitle")
-            .text(function(d){
-                return d;
-            })
-        legend.append("line")
-            .attr("stroke",function(d,i){
-                return colours[i];  
-            })
-            .attr("x1",0)
-            .attr("x2",yOffset)
-            .attr("y1",yOffset/4)
-            .attr("y2",yOffset/4)
-            .attr("class",media+"lines")
-
-        legend.attr("transform",function(d,i){
-            if (legAlign=='hori') {
-                var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
-                if (i>0) {
-                    var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+yOffset; 
-                }
-                else {gWidth=0};
-                legendyOffset=legendyOffset+gWidth;
-                return "translate("+(legendyOffset)+","+(gHeigt/2)+")";  
-            }
-            else {
-                return "translate(0,"+((i*yOffset))+")"};
-    })
-
-    }
 
     if (seriesNames[0]!="x"){
         // //create a legend first
