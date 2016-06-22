@@ -39,8 +39,6 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
     min=Math.min(0,min)
     var max=d3.max(data, function(d) { return +d.value;})
 
-    //var max=d3.max(data, function(d,i) { return +d.value;});
-    console.log(min,max)
     yScale.domain([min, max]);
 
     var yAxis = d3.svg.axis()
