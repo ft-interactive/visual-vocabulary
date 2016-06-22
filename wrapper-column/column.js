@@ -36,9 +36,11 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
         .range([plotHeight, 0]);
 
     var min=d3.min(data, function(d) { return +d.value;})
+    min=Math.min(0,min)
     var max=d3.max(data, function(d) { return +d.value;})
 
     //var max=d3.max(data, function(d,i) { return +d.value;});
+    console.log(min,max)
     yScale.domain([min, max]);
 
     var yAxis = d3.svg.axis()
@@ -84,9 +86,9 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
       .attr("class", media+"xAxis")
       .attr("transform",function(){
                 if(yAlign=="right") {
-                    return "translate("+(margin.left)+","+(h-margin.bottom)+")"
+                    return "translate("+(margin.left)+","+(h-margin.top)+")"
                 }
-                 else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"}
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.top)+")"}
             })      .call(xAxis);
 
     plot.selectAll("."+media+"bar")
