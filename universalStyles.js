@@ -19,7 +19,8 @@ var styleprint = {classes:
 titleOffset:10,
 subOffset:0,
 legendyOffset:0,
-linecolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
+linecolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"],
+fillcolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
 }
 
 var styleweb = {classes:
@@ -41,31 +42,33 @@ var styleweb = {classes:
 titleOffset:21,
 subOffset:0,
 legendyOffset:0,
-linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
+linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"],
+fillcolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 }
 
 var stylesoc = {classes:
 [{class:"background{fill: #212121;}"},
 {class:"chartholder{fill: #6b6e68;}"},
-{class:"title{font-size: 38px; fill: #ffffff; opacity: 0.9; font-weight: 600;}"},
-{class:"subtitle{font-size: 28px; fill: #ffffff; opacity: 0.70; font-weight: 400; line-height: 30px;}"},
-{class:"source{font-size: 25px; fill: #ffffff; opacity: 0.50; font-weight: 400; line-height: 30px;}"},
+{class:"title{font-size: 38px; fill: #ffffff; font-weight: 600; opacity: 0.9;}"},
+{class:"subtitle{font-size: 28px; fill: #ffffff; font-weight: 400; opacity: 0.7;}"},
+{class:"source{font-size: 25px; fill: #ffffff; font-weight: 400; opacity: 0.5;}"},
 {class:"logo{fill: #ffffff; opacity: 0.38;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
 {class:"xAxis line{fill:none; stroke:#ffffff; stroke-width: 2.0px; opacity: 0.5;}"},
-{class:"xAxis text{font-size: 28px; fill: #ffffff; opacity: 0.50; font-weight: 400; line-height: 18px;}"},
+{class:"xAxis text{font-size: 28px; fill: #ffffff; font-weight: 400; opacity: 0.5;}"},
 {class:"yAxis{fill:none; stroke: none;}"},
 {class:"yAxis line{fill:none; stroke-width: 2.0px; stroke-dasharray:2,8; opacity: 0.38; stroke:#ffffff;}"},
-{class:"yAxis text{font-size: 28px; fill: #ffffff; opacity: 0.50; font-weight: 400; line-height: 28px; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
-{class:"origin line{fill:none; stroke:#ffffff; stroke-width: 2.0px; opacity: 0.5; stroke-dasharray:1,0}"},
+{class:"yAxis text{font-size: 28px; fill: #ffffff; font-weight: 400; opacity: 0.5; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
+{class:"origin line{fill:none; stroke:#ffffff; stroke-width: 2.0px; opacity: 0.5; stroke-dasharray: 1,0}"},
 {class:"lines{fill:none; stroke-width: 5px;  stroke-linecap: round;}"}
 ],
 titleOffset:36,
 subOffset:0,
 legendyOffset:0,
-linecolours:["#EB3F50","#00D9CA","#BF9413","#1F5E99","#A7FF59","#FF9B96","#81838F"]
-//linecolours:["#CC4759","#00B5B5","#E6B522","#437099","#FF8C8B","#CBFF7E","#8A8A8A"]
+linecolours:["#EB3F50","#00D9CA","#BF9413","#1F5E99","#A7FF59","#FF9B96","#81838F"],
+fillcolours:["#EB3F50","#00D9CA","#BF9413","#1F5E99","#A7FF59","#FF9B96","#81838F"]
 }
+
 var stylevid = {classes:
 [{class:"background{fill: #dfd0bd;}"},
 {class:"titleframe{fill: #757575;}"},
