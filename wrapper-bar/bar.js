@@ -1,4 +1,4 @@
-function barChart(data,stylename,media,xMin,xMax,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, markers){
+function barChart(data,stylename,media,xMin,xMax,xAxisHighlight,plotpadding,legAlign,labels,numTicksy,numTicksx){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -73,7 +73,7 @@ function barChart(data,stylename,media,xMin,xMax,plotpadding,legAlign,lineSmooth
 
     var originValue = 0;
     var origin = plot.selectAll(".tick").filter(function(d, i) {
-            return d==originValue || d==yHighlight;
+            return d==originValue || d==xAxisHighlight;
         }).classed(media+"origin",true);
 
     plot.selectAll("."+media+"fill")
@@ -107,7 +107,7 @@ function barChart(data,stylename,media,xMin,xMax,plotpadding,legAlign,lineSmooth
                         d3.select(this).style("fill",colours.range()[0])
                     }
                 })
-                if (markers) {
+                if (labels) {
                 parent.append("text")
                 .attr("class", media+"label")
                 .style("text-anchor","end")
