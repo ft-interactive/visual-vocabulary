@@ -140,9 +140,9 @@ function bubbleChart(data, stylename, media, chartpadding,legAlign, smallCircle,
         })
         .attr("class",function(d,i){
             if(d.label=="yes"){
-                return media+"circlehighlight"
+                return media+"highlight"
             }
-            else {return media+"circle"}
+            else {return media+"fill"}
         })
         .attr("cx",function(d){
             return xScale(d.x)+(margin.left+yLabelOffset)
@@ -157,9 +157,9 @@ function bubbleChart(data, stylename, media, chartpadding,legAlign, smallCircle,
         .on("mouseover",pointer)
         .on("click",function(d){
             var elClass = d3.select(this)
-            if (elClass.attr("class")==media+"circle") {
+            if (elClass.attr("class")==media+"fill") {
                 elClass.moveToFront()
-                d3.select(this).attr("class",media+"circlehighlight")
+                d3.select(this).attr("class",media+"highlight")
                 dots.append("text")
                     .datum(d)
                     .attr('id',function(d){
@@ -174,13 +174,13 @@ function bubbleChart(data, stylename, media, chartpadding,legAlign, smallCircle,
                     .text(function(d){
                         return d.name+' '+d.size
                     })
-                    .attr("class",media+"label")
+                    .attr("class",media+"subtitle")
                     .on("mouseover",pointer)
             var drag = d3.behavior.drag().on("drag", moveLabel);
-            d3.selectAll("."+media+"label").call(drag);
+            d3.selectAll("."+media+"subtitle").call(drag);
             }
             else{var el=d3.select(this)
-                el.attr("class",media+"circle")
+                el.attr("class",media+"fill")
                 var textEl=d3.select(("#"+media+d.name).replace(/\s/g, ''))
                 textEl.remove()
             }
@@ -202,7 +202,7 @@ function bubbleChart(data, stylename, media, chartpadding,legAlign, smallCircle,
             .attr("y",function(d){
                 return yScale(d.y)-circleScale(d.size)-3+(margin.top);
             })
-            .attr("class",media+"label")
+            .attr("class",media+"subtitle")
             .attr('id',function(d){
                 return (media+d.name).replace(/\s/g, '');
             })
@@ -212,7 +212,7 @@ function bubbleChart(data, stylename, media, chartpadding,legAlign, smallCircle,
 
 
     var drag = d3.behavior.drag().on("drag", moveLabel);
-    d3.selectAll("."+media+"label").call(drag);
+    d3.selectAll("."+media+"subtitle").call(drag);
 
     //create a legend first
     if (cats[0]!="") {
