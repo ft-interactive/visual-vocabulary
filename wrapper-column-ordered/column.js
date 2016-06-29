@@ -94,7 +94,7 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
                  else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"}
             })      .call(xAxis);
 
-    plot.selectAll("."+media+"bar")
+    plot.selectAll("."+media+"fill")
     .data(data)
     .enter()
         .append("g")
@@ -120,9 +120,9 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
                 .on("click",function(d){
                     var elClass = d3.select(this)
                     if (elClass.attr("class")==media+"bars") {
-                        d3.select(this).attr("class",media+"barshighlight");
+                        d3.select(this).attr("class",media+"highlight");
                         console.log(colours.range()[0])
-                        d3.select(this).style("fill",colours.range()[7])
+                        d3.select(this).style("fill",colours.range()[6])
                     }
                     else{var el=d3.select(this)
                         el.attr("class",media+"bars");
