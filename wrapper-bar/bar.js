@@ -100,7 +100,7 @@ function barChart(data,stylename,media,xMin,xMax,xAxisHighlight,plotpadding,legA
                     var elClass = d3.select(this)
                     if (elClass.attr("class")==media+"bars") {
                         d3.select(this).attr("class",media+"barshighlight");
-                        d3.select(this).style("fill",colours.range()[7])
+                        d3.select(this).style("fill",colours.range()[6])
                     }
                     else{var el=d3.select(this)
                         el.attr("class",media+"bars");
