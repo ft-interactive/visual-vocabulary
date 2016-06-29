@@ -80,7 +80,7 @@ function barChart(data,stylename,media,plotpadding,legAlign, logScale, logScaleS
             return d==originValue || d==yHighlight;
         }).classed(media+"origin",true);
 
-    plot.selectAll("."+media+"bar")
+    plot.selectAll("."+media+"fill")
     .data(data)
     .enter()
         .append("g")
@@ -94,7 +94,7 @@ function barChart(data,stylename,media,plotpadding,legAlign, logScale, logScaleS
                 .style("fill", function (d) {
                     return colours(d.group)
                 })
-                .attr("class",media+"bars")
+                .attr("class",media+"fill")
                 .attr("x", function(d) { return xScale(Math.min(0, d.value))-yLabelOffset; })
                 .attr("width", function(d) { return Math.abs(xScale(d.value) - xScale(0)); })
                 .attr("y", function(d) { return yScale(d.cat); })
@@ -102,12 +102,12 @@ function barChart(data,stylename,media,plotpadding,legAlign, logScale, logScaleS
                 .on("mouseover",pointer)
                 .on("click",function(d){
                     var elClass = d3.select(this)
-                    if (elClass.attr("class")==media+"bars") {
-                        d3.select(this).attr("class",media+"barshighlight");
-                        d3.select(this).style("fill",colours.range()[7])
+                    if (elClass.attr("class")==media+"fill") {
+                        d3.select(this).attr("class",media+"highlight");
+                        d3.select(this).style("fill",colours.range()[6])
                     }
                     else{var el=d3.select(this)
-                        el.attr("class",media+"bars");
+                        el.attr("class",media+"fill");
                         d3.select(this).style("fill",colours.range()[0])
                     }
                 })
