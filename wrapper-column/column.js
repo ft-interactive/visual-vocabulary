@@ -84,9 +84,9 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
       .attr("class", media+"xAxis")
       .attr("transform",function(){
                 if(yAlign=="right") {
-                    return "translate("+(margin.left)+","+(h-margin.top)+")"
+                    return "translate("+(margin.left)+","+(h-margin.bottom)+")"
                 }
-                 else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.top)+")"}
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"}
             })      .call(xAxis);
 
     plot.selectAll("."+media+"bar")
@@ -106,7 +106,7 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
                     return colours(d.group)
                 })
                 .attr("id",function(d) { return d.cat+"-"+d.value; })
-                .attr("class",media+"bars")
+                .attr("class",media+"fill")
                 .attr("x", function(d) { return xScale(d.cat); })
                 .attr("width", xScale.rangeBand())
                 .attr("y", function(d) { return yScale(Math.max(0, d.value))})
@@ -114,13 +114,13 @@ function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, lo
                 .on("mouseover",pointer)
                 .on("click",function(d){
                     var elClass = d3.select(this)
-                    if (elClass.attr("class")==media+"bars") {
-                        d3.select(this).attr("class",media+"barshighlight");
+                    if (elClass.attr("class")==media+"fill") {
+                        d3.select(this).attr("class",media+"highlight");
                         console.log(colours.range()[0])
-                        d3.select(this).style("fill",colours.range()[7])
+                        d3.select(this).style("fill",colours.range()[6])
                     }
                     else{var el=d3.select(this)
-                        el.attr("class",media+"bars");
+                        el.attr("class",media+"fill");
                         d3.select(this).style("fill",colours.range()[0])
                     }
                 })
