@@ -1,5 +1,5 @@
 
-function areaChart(data,stylename,media,plotpadding,legAlign,yAlign, yHighlight){
+function areaChart(data, stylename ,media, yMin, yMax ,yAxisHighlight, numTicksy, plotpadding,legAlign,yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -33,17 +33,15 @@ function areaChart(data,stylename,media,plotpadding,legAlign,yAlign, yHighlight)
     //Based on https://bl.ocks.org/mbostock/3885211
 
     //calculate range of y axis series data
-    var min=6;
-    var max=0;
     data.forEach(function(d,i){
         seriesNames.forEach(function(e){
             if (d[e]){
-                min=Math.min(min,d[e]);
-                max=Math.max(max,d[e]);
+                yMin=Math.min(yMin,d[e]);
+                yMax=Math.max(yMax,d[e]);
             }
         });         
     });
-    var yDomain=[min,max];
+    var yDomain=[yMin,yMax];
     //calculate range of time series 
     var xDomain = d3.extent(data, function(d) {return d.date;});
     var yDomain;
@@ -71,7 +69,6 @@ function areaChart(data,stylename,media,plotpadding,legAlign,yAlign, yHighlight)
     }));
 
     //work out max value for yScale.domain
-    var yMax=0
     plotData.map(function(d){
         d.values.forEach(function(d,i){
             yMax=Math.max(yMax,(d.y0 + d.y))
@@ -82,6 +79,7 @@ function areaChart(data,stylename,media,plotpadding,legAlign,yAlign, yHighlight)
     //Define the yScale
     var yAxis = d3.svg.axis()
     .scale(yScale)
+    .ticks(numTicksy)
     .orient(yAlign)//Note that yAlign is passed rom the index to determine which side the scale is plotted
     //Roughly plot the yScale on the page without positioning it correctly
     var yLabel=plot.append("g")
@@ -106,7 +104,7 @@ function areaChart(data,stylename,media,plotpadding,legAlign,yAlign, yHighlight)
     //identify 0 line if there is one or an index line like 100 to make bodler or solid
     var originValue = 0;
     var origin = plot.selectAll(".tick").filter(function(d, i) {
-            return d==originValue || d==yHighlight;
+            return d==originValue || d==yAxisHighlight;
         })
     .classed(media+"origin",true);
     //Now that the yAxis is on the page we can draw the xAxis in the remaining space
