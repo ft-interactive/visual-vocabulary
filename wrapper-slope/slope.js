@@ -134,6 +134,12 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
                 }
                 else {return "#8A8A8A"}
                 })
+            .attr("class",function(d,i){
+                if(d.label=="yes"){
+                    return media+"highlight";
+                }
+                else {return media+"fill"}  
+            })
             .attr("r",yOffset/3.2)
             .attr("cx",margin.left)
             .attr("cy",function(d){return yScale(d.val1)});
@@ -144,11 +150,17 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
                 }
                 else {return "#8A8A8A"}  
             })
+            .attr("class",function(d,i){
+                if(d.label=="yes"){
+                    return media+"highlight";
+                }
+                else {return media+"fill"}  
+            })
             .attr("r",yOffset/3.2)
             .attr("cx",w-margin.right)
             .attr("cy",function(d){return yScale(d.val2)});
     }
-    var el=d3.selectAll("."+media+"circlesHighlight")
+    var el=d3.selectAll("."+media+"highlight")
     el.moveToFront()
 
     //create labels if needed
