@@ -64,7 +64,7 @@ function drawFrame(styles, media,titley,suby) {
             .attr("y", titleYoffset+margin.top)
             .text(title)
             .attr("dy",0)
-            .call(wrap,width - (margin.left + margin.right),margin.left);
+            .call(wrap,width - (margin.left + margin.right),margin.left,media+"title");
         
         var subYOffset = d3.select("#"+media+"header").node().getBBox().height;
         
@@ -75,7 +75,7 @@ function drawFrame(styles, media,titley,suby) {
             .attr("y", subYOffset+subtitleYoffset+titleYoffset+margin.top)
             .text(subtitle)
             .attr("dy",0)
-            .call(wrap,width - (margin.left + margin.right),margin.left);
+            .call(wrap,width - (margin.left + margin.right),margin.left,media+"subtitle");
 
         //adds the hat and basline to the print version only
         if(media=="print") {
@@ -97,11 +97,11 @@ function drawFrame(styles, media,titley,suby) {
         
         footer.append("text")
             .attr("id",media+"Footer")
-            .attr("class", media+"source")
             .selectAll("tspan")
             .data(sourcelines)
             .enter()
             .append("tspan")
+            .attr("class", media+"source")
             .text(function(d){
                 return d;
             })
@@ -147,7 +147,6 @@ function drawFrame(styles, media,titley,suby) {
             .attr("height", contentHeight)
 
         var holder=p.append("div")
-        .attr("id",media+"buttonHolder")
         holder.append("button")
         .attr("class","button")
         .text("Save "+media+" as PNG")
@@ -209,7 +208,7 @@ return frame;
 }
 
 //wrap text function adapted from Mike Bostock
-function wrap(text, width,x) {
+function wrap(text, width,x, media) {
     text.each(function() {
         var text = d3.select(this),
         words = text.text().split(/\s+/).reverse(),
@@ -219,7 +218,7 @@ function wrap(text, width,x) {
         lineHeight = 1.1,
         y = text.attr("y"),
         dy = parseFloat(text.attr("dy")),
-        tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
+        tspan = text.text(null).append("tspan").attr("class", media).attr("x", x).attr("y", y).attr("dy", dy + "em");
         while (word = words.pop()) {
             line.push(word);
             tspan.text(line.join(" "));
@@ -227,7 +226,7 @@ function wrap(text, width,x) {
                 line.pop();
                 tspan.text(line.join(" "));
                 line = [word];
-                tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy",++lineNumber * lineHeight + dy + "em").text(word);
+                tspan = text.append("tspan").attr("class", media).attr("x", x).attr("y", y).attr("dy",++lineNumber * lineHeight + dy + "em").text(word);
             }
         }
     });
