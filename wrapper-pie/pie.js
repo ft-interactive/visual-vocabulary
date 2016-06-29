@@ -43,21 +43,21 @@ function pieChart(data, stylename, media, chartpadding,legAlign, innerRadious, g
         .data(pie(data))
         .enter()
         .append("g")
-        .attr("class", "arc")
+        .attr("class", media+"fill")
         .attr("id", function(d) { return d.data.category+"-"+d.data.value; });
 
     g.append("path")
-        .attr("class", media+"arc")
+        .attr("class", media+"fill")
         .on("mouseover", pointer)
         .on("click",function(d){
                     console.log("click")
                     var elClass = d3.select(this)
-                    if (elClass.attr("class")==media+"arc") {
-                        d3.select(this).attr("class",media+"archighlight");
+                    if (elClass.attr("class")==media+"fill") {
+                        d3.select(this).attr("class",media+"highlight");
                         d3.select(this).style("fill",colours.range()[1])
                     }
                     else{var el=d3.select(this)
-                        el.attr("class",media+"arc");
+                        el.attr("class",media+"fill");
                         d3.select(this).style("fill",colours.range()[0])
                     }
                 })
