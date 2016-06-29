@@ -22,7 +22,10 @@
         var title = "Facebook revenues";
         var subtitle = "$bn";//comment out subtitle assignment if not needed
         var source = "Source: Bloomberg    FT graphic";
+
         //graph options
+        var xMin=-40
+        var xMax=50
         var yAxisHighlight=0;
         var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
         var logScale=false;
@@ -36,7 +39,7 @@
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
         var frames=[
         {name:"print",width:112,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"hori"},
-        {name:"web",width:600,height:622,units:'px',margins:[{top:10,right:35,bottom:18,left:10}],stylesheet:styleweb,legend:"hori"},
+        {name:"web",width:600,height:622,units:'px',margins:[{top:10,right:35,bottom:5,left:10}],stylesheet:styleweb,legend:"hori"},
         {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert"},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
         ]
@@ -44,7 +47,7 @@
         //sets the padding inside the chart area
         var chartpadding=[
         {name:"print",margin:[{top:15, right:0, bottom:15, left:0}]},
-        {name:"web",margin:[{top:0, right:0, bottom:0, left:10}]},
+        {name:"web",margin:[{top:0, right:5, bottom:12, left:10}]},
         {name:"social",margin:[{top:15, right:0, bottom:60, left:0}]},
         {name:"video",margin:[{top:55, right:5,bottom:68, left:0}]}
         ]
@@ -79,7 +82,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset;
                 var yLabel=frames[i].yLabel
-                barChart(data, stylename, media, chartpadding,legend, lineSmoothing, logScale, logScaleStart,yAxisHighlight,markers, numTicksy, numTicksx,markers);
+                barChart(data, stylename, media, xMin, xMax,chartpadding,legend, lineSmoothing, logScale, logScaleStart,yAxisHighlight,markers, numTicksy, numTicksx,markers);
             }
         })//end data load
 

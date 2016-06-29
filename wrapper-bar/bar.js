@@ -1,4 +1,4 @@
-function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, markers){
+function barChart(data,stylename,media,xMin,xMax,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, markers){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -40,7 +40,6 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
     var yAxis = d3.svg.axis()
     .scale(yScale)
     .orient("left")
-    .ticks(numTicksy)
     .tickSize(0);
 
     var yLabel=plot.append("g")
@@ -58,7 +57,9 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
     var min=d3.min(data, function(d) { return +d.value;})
     var xScale = d3.scale.linear()
         .range([yLabelOffset, plotWidth])
-        .domain([min, d3.max(data, function(d) { return +d.value;})]);
+        .domain([xMin,xMax]);
+
+    //d3.max(data, function(d) { return +d.value;})
 
     var xAxis = d3.svg.axis()
     .scale(xScale)
