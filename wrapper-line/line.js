@@ -64,7 +64,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     var yScale;
         if (logScale) {
 			yScale = d3.scale.log()
-			.domain([logScaleStart,max])
+			.domain([logScaleStart,yMax])
 			.range([plotHeight,0]);
 		}
         else {

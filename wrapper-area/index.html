@@ -23,7 +23,10 @@
         var source = "Thomson Reuters Datastream";
 
         //put custom graph options here
+        var yMin=0;
+        var yMax=100;
         var yAxisHighlight=50;
+        var numTicksy = 10;//rough number of ticks for y axis
 
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
@@ -73,7 +76,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                areaChart(data, stylename, media, chartpadding,legend, yLabel, yAxisHighlight);
+                areaChart(data, stylename, media, yMin, yMax,yAxisHighlight, numTicksy, chartpadding,legend, yLabel);
             }
         })//end data load
 
