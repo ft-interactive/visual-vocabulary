@@ -75,7 +75,7 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
             return d==originValue || d==yHighlight;
         }).classed(media+"origin",true);
 
-    plot.selectAll("."+media+"bar")
+    plot.selectAll("."+media+"fill")
     .data(data)
     .enter()
         .append("g")
