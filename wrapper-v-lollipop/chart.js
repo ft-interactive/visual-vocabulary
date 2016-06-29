@@ -72,6 +72,11 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,startZero){
     d3.select("#"+media+"yAxis")
         .attr("transform","translate("+axisWidth+",0)")
 
+    plot.selectAll('.tick')
+  		.classed(media+'origin',function(d,i){
+  			return (d == 0);
+  		});
+
     //now the x axis (categorical)
 
     var xScale = d3.scale.ordinal()
