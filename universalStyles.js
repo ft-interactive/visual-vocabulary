@@ -1,4 +1,3 @@
-
 var styleprint = {classes:
 [{class:"background{fill: none}"},
 {class:"chartholder{fill: #fff1e0}"},
@@ -11,7 +10,7 @@ var styleprint = {classes:
 {class:"xAxis line{fill:none; stroke-width:.3px; stroke:#000000;}"},
 {class:"xAxis text{fill:#000000; font-size: 9.6px; font-feature-settings:'tnum' 1;}"},
 {class:"yAxis{fill:none; stroke-width:0px; stroke:none;}"},
-{class:"yAxis line{fill:none; stroke-width:0.3px; stroke:#000000;}"},
+{class:"yAxis line{fill:none; stroke-width:0.3px; stroke:#22190f;}"},
 {class:"yAxis text{fill:#000000; font-size: 9.6px; font-feature-settings: 'tnum' 1;}"},
 {class:"origin line{fill:none; stroke-width:0.6px;}"},
 {class:"lines{fill:none; stroke-width:2.0px;stroke-linecap: round;}"}
@@ -88,9 +87,3 @@ subOffset:0,
 legendyOffset:15,
 linecolours:["#b34b41","#5a8caf","#9baa6e","#eda45e","#9c5f87","#486ba0"]
 }
-
-
-
-    //Tabular with 
-    //-webkit-font-feature-settings: 'tnum' 1;
-       //font-feature-settings: 'tnum' 1;
