@@ -22,7 +22,7 @@ titleOffset:10,
 subOffset:0,
 legendyOffset:0,
 linecolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"],
-fillcolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
+fillcolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0","#ddb831"]
 }
 
 var styleweb = {classes:
@@ -47,7 +47,7 @@ titleOffset:21,
 subOffset:0,
 legendyOffset:0,
 linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"],
-fillcolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
+fillcolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0","#F19F9E"]
 }
 
 var stylesoc = {classes:
