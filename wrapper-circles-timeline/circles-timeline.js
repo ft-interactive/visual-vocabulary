@@ -100,7 +100,7 @@ function circlesTimelineChart(data,stylename,media,plotpadding,legAlign,yHighlig
 
     var circles = timelines.append('g')
             .attr({
-                'class': media+'circles',
+                'class': media+'fill',
                 'fill': function(d,i){
                     return colours[i];  
                 },
