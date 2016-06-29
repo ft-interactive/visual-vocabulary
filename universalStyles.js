@@ -20,7 +20,9 @@ var styleprint = {classes:
 {class:"fill{fill-opacity:1.0; stroke-width: 0.0px}"},
 {class:"highlight{fill-opacity:1.0;}"},
 {class:"day{fill:none; stroke: #ffffff; stroke-width:1.0px;stroke-linecap: round;}"},
-{class:"month{fill:none; stroke: #000000; stroke-width:1.0px;stroke-linecap: round;}"}
+{class:"month{fill:none; stroke: #000000; stroke-width:1.0px;stroke-linecap: round;}"},
+{class:"link{fill:none; stroke:#000000; opacity: 0.20;}"},
+{class:"node{fill:#000000;}"}
 ],
 titleOffset:10,
 subOffset:0,
@@ -49,7 +51,9 @@ var styleweb = {classes:
 {class:"fill{fill-opacity:1.0; stroke-width: 0.0px}"},
 {class:"highlight{fill-opacity:1.0;}"},
 {class:"day{fill:none;stroke: #fff1e0; stroke-width:1.0px;stroke-linecap: round;}"},
-{class:"month{fill:none;stroke: #000000; stroke-width:1.0px;stroke-linecap: round;}"}
+{class:"month{fill:none;stroke: #000000; stroke-width:1.0px;stroke-linecap: round;}"},
+{class:"link{fill:none; stroke:#000000; opacity: 0.20;}"},
+{class:"node{fill:#000000;}"}
 ],
 titleOffset:21,
 subOffset:0,
@@ -78,7 +82,9 @@ var stylesoc = {classes:
 {class:"fill{fill-opacity:1.0; stroke-width: 0.0px}"},
 {class:"highlight{fill-opacity:1.0;}"},
 {class:"day{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"},
-{class:"month{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"}
+{class:"month{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"},
+{class:"link{fill:none; stroke:#ffffff; opacity: 0.20;}"},
+{class:"node{fill:#000000; }"}
 ],
 titleOffset:36,
 subOffset:0,
@@ -108,7 +114,9 @@ var stylevid = {classes:
 {class:"fill{fill-opacity:1.0; stroke-width: 0.0px}"},
 {class:"highlight{fill-opacity:1.0;}"},
 {class:"day{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"},
-{class:"month{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"}
+{class:"month{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"},
+{class:"link{fill:none; stroke:#ffffff; opacity: 0.20;}"},
+{class:"node{fill:#000000; }"}
 
 ],
 titleOffset:68,
