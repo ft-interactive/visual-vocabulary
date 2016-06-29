@@ -1,4 +1,4 @@
-function barChart(data,stylename,media,xMin,xMax,xAxisHighlight,plotpadding,legAlign,labels,numTicksy,numTicksx){
+function barChart(data,stylename,media,xMin,xMax,xAxisHighlight,plotpadding,legAlign,labels,numTicksx){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -63,6 +63,7 @@ function barChart(data,stylename,media,xMin,xMax,xAxisHighlight,plotpadding,legA
 
     var xAxis = d3.svg.axis()
     .scale(xScale)
+    .ticks(numTicksx)
     .tickSize(plotHeight)
     .orient("bottom");
 

@@ -22,14 +22,13 @@
         var title = "Facebook revenues";
         var subtitle = "$bn";//comment out subtitle assignment if not needed
         var source = "Source: Bloomberg    FT graphic";
-
+        
         //graph options
         var xMin=-40
         var xMax=50
         var xAxisHighlight=0;
         var labels=false;//show numbers on bars
-        var numTicksy = 7;//rough number of ticks for y axis
-        var numTicksx = 0;//rough number of ticks for x axis
+        var numTicksx=12;//rough number of ticks for x axis
         var ticks//=[0.2,0.3];//option to force tick values for online
 
         //Use the frames array to set unique values for each media type of frame
@@ -45,7 +44,7 @@
         var chartpadding=[
         {name:"print",margin:[{top:15, right:0, bottom:15, left:0}]},
         {name:"web",margin:[{top:0, right:5, bottom:12, left:10}]},
-        {name:"social",margin:[{top:15, right:0, bottom:60, left:0}]},
+        {name:"social",margin:[{top:15, right:12, bottom:60, left:0}]},
         {name:"video",margin:[{top:55, right:5,bottom:68, left:0}]}
         ]
 
@@ -79,7 +78,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset;
                 var yLabel=frames[i].yLabel
-                barChart(data, stylename, media, xMin, xMax, xAxisHighlight, chartpadding,legend, labels, numTicksy, numTicksx);
+                barChart(data, stylename, media, xMin, xMax, xAxisHighlight, chartpadding,legend, labels, numTicksx);
             }
         })//end data load
 
