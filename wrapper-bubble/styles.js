@@ -17,7 +17,7 @@ var styleprint = {classes:
 {class:"whiskers{fill:none; stroke-width:1.0px;stroke:#22190f;}"},
 {class:"lines{fill:none; stroke-width:2.0px;stroke-linecap: round;}"},
 {class:"fill{fill-opacity:0.5; stroke-width: 0.0px}"},
-{class:"highlight{fill-opacity:0.5; stroke-width: 1.0px; stroke:#000000;}",}
+{class:"highlight{fill-opacity:0.5; stroke-width: 1.0px; stroke:#000000;}"}
 ],
 titleOffset:10,
 subOffset:0,
@@ -43,7 +43,7 @@ var styleweb = {classes:
 {class:"whiskers{fill:none; stroke-width:1.0px;stroke:#22190f;}"},
 {class:"lines{fill:none; stroke-width: 2.5px; stroke-linecap: round;}"},
 {class:"fill{fill-opacity:0.5; stroke-width: 0.0px}"},
-{class:"highlight{fill-opacity:0.5; stroke-width: 1.0px; stroke:#000000;}"},
+{class:"highlight{fill-opacity:0.5; stroke-width: 1.0px; stroke:#000000;}"}
 ],
 titleOffset:21,
 subOffset:0,
@@ -69,7 +69,7 @@ var stylesoc = {classes:
 {class:"whiskers{fill:none; stroke-width:2.0px;stroke:#ffffff; opacity: 0.5}"},
 {class:"lines{fill:none; stroke-width: 5px;  stroke-linecap: round;}"},
 {class:"fill{fill-opacity:0.6; stroke-width: 0.0px}"},
-{class:"highlight{fill-opacity:0.6; stroke-width: 2.0px; stroke:#ffffff}"},
+{class:"highlight{fill-opacity:0.6; stroke-width: 2.0px; stroke:#ffffff}"}
 ],
 titleOffset:36,
 subOffset:0,
@@ -96,7 +96,7 @@ var stylevid = {classes:
 {class:"whiskers{fill:none; stroke-width:2.0px;stroke:#ffffff; opacity: 0.5}"},
 {class:"lines{fill:none; stroke-width: 8.0px; stroke-linecap: round;}"},
 {class:"fill{fill-opacity:0.5; stroke-width: 0.0px}"},
-{class:"highlight{fill-opacity:0.5; stroke-width: 1.0px; storoke: #000000}"},
+{class:"highlight{fill-opacity:0.5; stroke-width: 1.0px; storoke: #000000}"}
 ],
 titleOffset:68,
 subOffset:0,

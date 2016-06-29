@@ -17,7 +17,9 @@ var styleprint = {classes:
 {class:"whiskers{fill:none; stroke-width:1.0px;stroke:#22190f;}"},
 {class:"lines{fill:none; stroke-width:2.0px;stroke-linecap: round;}"},
 {class:"fill{fill-opacity:1.0; stroke-width: 0.0px}"},
-{class:"highlight{fill-opacity:1.0;}",}
+{class:"highlight{fill-opacity:1.0;}"},
+{class:"day{fill:none; stroke: #ffffff; stroke-width:1.0px;stroke-linecap: round;}"},
+{class:"month{fill:none; stroke: #000000; stroke-width:1.0px;stroke-linecap: round;}"}
 ],
 titleOffset:10,
 subOffset:0,
@@ -44,6 +46,8 @@ var styleweb = {classes:
 {class:"lines{fill:none; stroke-width: 2.5px; stroke-linecap: round;}"},
 {class:"fill{fill-opacity:1.0; stroke-width: 0.0px}"},
 {class:"highlight{fill-opacity:1.0;}"},
+{class:"day{fill:none;stroke: #fff1e0; stroke-width:1.0px;stroke-linecap: round;}"},
+{class:"month{fill:none;stroke: #000000; stroke-width:1.0px;stroke-linecap: round;}"}
 ],
 titleOffset:21,
 subOffset:0,
@@ -70,6 +74,8 @@ var stylesoc = {classes:
 {class:"lines{fill:none; stroke-width: 5px;  stroke-linecap: round;}"},
 {class:"fill{fill-opacity:1.0; stroke-width: 0.0px}"},
 {class:"highlight{fill-opacity:1.0;}"},
+{class:"day{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"},
+{class:"month{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"}
 ],
 titleOffset:36,
 subOffset:0,
@@ -97,6 +103,9 @@ var stylevid = {classes:
 {class:"lines{fill:none; stroke-width: 8.0px; stroke-linecap: round;}"},
 {class:"fill{fill-opacity:1.0; stroke-width: 0.0px}"},
 {class:"highlight{fill-opacity:1.0;}"},
+{class:"day{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"},
+{class:"month{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"}
+
 ],
 titleOffset:68,
 subOffset:0,
