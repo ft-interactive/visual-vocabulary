@@ -1,5 +1,5 @@
 
-function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, yAlign, ticks){
+function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpadding,legAlign,lineSmoothing, logScale, logScaleStart, markers, numTicksy, numTicksx, yAlign, ticks){
 
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
@@ -30,17 +30,15 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     var yDomain;
 
     //calculate range of y axis series data
-    var min=-20;
-    var max=60;
     data.forEach(function(d,i){
         seriesNames.forEach(function(e){
             if (d[e]){
-                min=Math.min(min,d[e]);
-                max=Math.max(max,d[e]);
+                yMin=Math.min(yMin,d[e]);
+                yMax=Math.max(yMax,d[e]);
             }
         });			
     });
-    yDomain=[min,max];
+    yDomain=[yMin,yMax];
 
     //create a separate array for each series, filtering out records of each  series for which there are no data
     var plotArrays = [];
@@ -112,7 +110,7 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
     //identify 0 line if there is one
     var originValue = 0;
     var origin = plot.selectAll(".tick").filter(function(d, i) {
-            return d==originValue || d==yHighlight;
+            return d==originValue || d==yAxisHighlight;
         }).classed(media+"origin",true);
 
     var xScale = d3.time.scale()
