@@ -133,6 +133,7 @@
             .attr("class","example"
           )
 
+
       var thumbnails = cats.selectAll("div")
           .data(function(d,i){
             return d.types;
@@ -141,7 +142,13 @@
           .append("div")
           .attr("class","thumbnail")
 
-      thumbnails.append("h4")
+      var links = thumbnails.append("a")
+        .attr("href",function(d){
+          return d+"/";
+        });
+
+
+      links.append("h4")
               .text(function(d,i){
                 return d;
                 })
