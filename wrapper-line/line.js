@@ -207,6 +207,16 @@ function lineChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logS
 
     d3.selectAll(".domain").remove()
 
+    //Add labels so that the preflight script in illustrator will work
+    d3.selectAll(".printxAxis text")
+    .attr("id","xAxisLabel")
+    d3.selectAll(".printyAxis text")
+    .attr("id","yAxisLabel")
+    d3.selectAll(".printyAxis line")
+    .attr("id","yAxisTick")
+    d3.selectAll(".printxAxis line")
+    .attr("id","xAxisTick")
+
     if (seriesNames[0]!="x"){
         // //create a legend first
         var legendyOffset=0

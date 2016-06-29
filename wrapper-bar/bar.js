@@ -34,7 +34,7 @@ function barChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logSc
     var drag = d3.behavior.drag().on("drag", moveLegend);
 
     var yScale = d3.scale.ordinal()
-    .rangeRoundBands([0, plotHeight],.3)
+    .rangeRoundBands([0, plotHeight],.2)
     .domain(data.map(function(d) { return d.cat;}));
 
     var yAxis = d3.svg.axis()
