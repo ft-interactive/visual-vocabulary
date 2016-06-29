@@ -104,7 +104,7 @@ function makeHistogram(data,stylename,media,plotpadding,legAlign,yAlign,numTicks
             })
         .call(xAxis);
 
-    plot.selectAll("."+media+"bin")
+    plot.selectAll("."+media+"fill")
       .data(plotData)
     .enter().append("rect")
         .attr("transform",function(){
