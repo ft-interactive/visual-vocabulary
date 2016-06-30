@@ -108,27 +108,20 @@ function makeHistogram(data,stylename,media,yMax,plotpadding,legAlign,yAlign,num
         .call(xAxis);
 
     plot.selectAll("."+media+"fill")
-      .data(plotData)
-    .enter().append("rect")
+        .data(plotData)
+        .enter().append("rect")
         .attr("transform",function(){
-                    if(yAlign=="right") {
-                        return "translate("+(margin.left)+","+(margin.top)+")"
-                    }
-                     else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
-                })
+            if(yAlign=="right") {
+                return "translate("+(margin.left)+","+(margin.top)+")"
+            }
+             else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
+        })
         .attr("class", media+"bin")
         .attr("x", function(d) { return xScale(d.offset); })
         .attr("width", function(d) { return xScale(d.width) - 1; })
         .attr("y", function(d) { return yScale(d.height); })
         .attr("height", function(d) { return plotHeight - yScale(d.height); })
         .style("fill",colours[0])
-
-
-
-
-
-
-
 
     function colculateTicksize(align, offset) {
         if (align=="right") {
