@@ -1,4 +1,4 @@
-function barChart(data,stylename,media,plotpadding,legAlign, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, markers, sort){
+function barChart(data,stylename,media,xMin,xMax,xAxisHighlight,plotpadding,legAlign, markers, numTicksy, numTicksx, markers, sort){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -60,10 +60,13 @@ function barChart(data,stylename,media,plotpadding,legAlign, logScale, logScaleS
         .attr("transform",function(){
                 return "translate("+(margin.left+yLabelOffset)+","+margin.top+")"
             })
-    var min=d3.min(data, function(d) { return +d.value;})
+
+    xMin=Math.min(xMin,d3.min(data, function(d) { return +d.value;}))
+    xMax=Math.max(xMax,d3.max(data, function(d) { return +d.value;}))
+
     var xScale = d3.scale.linear()
         .range([yLabelOffset, plotWidth])
-        .domain([min, d3.max(data, function(d) { return +d.value;})]);
+        .domain([xMin,xMax]);
 
     var xAxis = d3.svg.axis()
     .scale(xScale)
@@ -77,7 +80,7 @@ function barChart(data,stylename,media,plotpadding,legAlign, logScale, logScaleS
 
     var originValue = 0;
     var origin = plot.selectAll(".tick").filter(function(d, i) {
-            return d==originValue || d==yHighlight;
+            return d==originValue || d==xAxisHighlight;
         }).classed(media+"origin",true);
 
     plot.selectAll("."+media+"fill")

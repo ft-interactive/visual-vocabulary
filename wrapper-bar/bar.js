@@ -54,7 +54,9 @@ function barChart(data,stylename,media,xMin,xMax,xAxisHighlight,plotpadding,legA
         .attr("transform",function(){
                 return "translate("+(margin.left+yLabelOffset)+","+margin.top+")"
             })
-    var min=d3.min(data, function(d) { return +d.value;})
+    xMin=Math.min(xMin,d3.min(data, function(d) { return +d.value;}))
+    xMax=Math.max(xMax,d3.max(data, function(d) { return +d.value;}))
+
     var xScale = d3.scale.linear()
         .range([yLabelOffset, plotWidth])
         .domain([xMin,xMax]);
