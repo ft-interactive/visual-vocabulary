@@ -38,15 +38,11 @@ function makeChart(data,stylename,media,sort,xMin,xMax,xAxisHighlight,numTicksx,
     //chart variables
     var dotSize=yOffset/2;
     var lineWeight=2;
-    var labelPadding=plotWidth/4;
-    
-
     
     //parse the data for constant data elements
     data.forEach(function(d)    {
         d.value=+d.value;
     });
-    
     
     //sort the data by middle income
     if (sort=="descending") {
@@ -59,28 +55,13 @@ function makeChart(data,stylename,media,sort,xMin,xMax,xAxisHighlight,numTicksx,
         return d.value;
     })
     xEntent[0]=Math.min(xMin,xEntent[0])
+    xEntent[1]=Math.max(xMax,xEntent[1])
     
-    //create scale
-    var xScale = d3.scale.linear()
-        .domain(xEntent)
-        .range([labelPadding,plotWidth])
-    
-    var yScale = d3.scale.ordinal()
-        .domain(data.map(function(d){
-            return d.name;
-        }))
-        .rangeRoundBands([0,plotHeight],1);   
-    
-    //AXES
+    //create y-scale
 
     var yScale = d3.scale.ordinal()
-    .rangeRoundBands([0, plotHeight],.2)
+    .rangeRoundBands([0, plotHeight],1)
     .domain(data.map(function(d) { return d.name;}));
-
-    var xAxis = d3.svg.axis()
-        .scale(xScale)
-        .orient("bottom")
-        .ticks(numTicksx)
 
     var yAxis = d3.svg.axis()
         .scale(yScale)
@@ -99,19 +80,26 @@ function makeChart(data,stylename,media,sort,xMin,xMax,xAxisHighlight,numTicksx,
         .attr("transform",function(){
                 return "translate("+(margin.left+yLabelOffset)+","+margin.top+")"
             })
+
+    //define x-axis
+    var xScale = d3.scale.linear()
+        .domain(xEntent)
+        .range([yLabelOffset,plotWidth])
+
+    var xAxis = d3.svg.axis()
+    .scale(xScale)
+    .ticks(numTicksx)
+    .tickSize(plotHeight)
+    .orient("bottom");
         
+    var xLabels=plot.append("g")
+      .attr("class", media+"xAxis")
+      .attr("transform", "translate("+(margin.left)+"," + (margin.top) + ")")
+      .call(xAxis);
+    
     plot.append("g")
-        .attr("class",media+"xAxis")
-        .attr("transform","translate("+margin.left+","+(margin.top+plotHeight)+")")
-        .call(xAxis)
-    
-    //create geometry
-    var chart = plot.append("g")
-        .attr("id","geometry")
-        .attr("transform","translate("+margin.left+","+margin.top+")")
-    
-    chart.append("g")
         .attr("id","lines")
+        .attr("transform", "translate("+(margin.left)+"," + (margin.top) + ")")
         .selectAll("line")
         .data(data)
         .enter()
@@ -135,8 +123,9 @@ function makeChart(data,stylename,media,sort,xMin,xMax,xAxisHighlight,numTicksx,
 
     
     //create dots
-    chart.append("g")
+    plot.append("g")
         .attr("id","dots")
+        .attr("transform", "translate("+(margin.left)+"," + (margin.top) + ")")
         .selectAll("circle")
         .data(data)
         .enter()
@@ -152,34 +141,4 @@ function makeChart(data,stylename,media,sort,xMin,xMax,xAxisHighlight,numTicksx,
         })
         .attr("r",dotSize)
         .attr("fill",colours[0])
-    
-    
-    //createLabels
-    // chart.append("g")
-    //     .attr("id","labels")
-    //     .selectAll("text")
-    //     .data(data)
-    //     .enter()
-    //     .append("text")
-    //     .attr("y",function(d){
-    //         return yScale(d.name)
-    //     })
-    //     .attr("x",xScale(xEntent[0]))
-    //     .text(function(d){
-    //         return d.name
-    //     })
-    //     .attr("class",media+"subtitle")
-    //     .attr("text-anchor","end")
-    //     .attr("dx",-dotSize)
-    //     .attr("dy",function(d){
-    //         return this.getBoundingClientRect().height/3
-    //     })
-
-    
-    
-    
-    
-    
-    
-
 }
