@@ -27,7 +27,7 @@
         var yAxisHighlight=-40;
         var logScale=false;
         var logScaleStart=1000;
-        var markers=false;//show numbers on bars
+        var labels=false;//show numbers on bars
         var numTicksy = 8;//rough number of ticks for y axis
         var numTicksx = 0;//rough number of ticks for x axis
         var ticks//=[0.2,0.3];//option to force tick values for online
@@ -60,7 +60,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset;
                 var yLabel=frames[i].yLabel
-                columnChart(data, stylename, media, chartpadding,legend, logScale, logScaleStart,yAxisHighlight,markers, numTicksy, numTicksx, yLabel,markers,sort);
+                columnChart(data, stylename, media, chartpadding,legend, logScale, logScaleStart,yAxisHighlight,labels, numTicksy, numTicksx, yLabel,sort);
             }
         })//end data load
 
