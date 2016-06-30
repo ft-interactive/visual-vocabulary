@@ -1,5 +1,5 @@
 
-function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
+function makeChart(data,stylename,media,showRect,showLine,showDot,plotpadding,legAlign,yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -35,12 +35,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
         .attr("width",plotWidth)
         .attr("height",plotHeight)
         .attr("fill",colours[0])*/
-
-    //CHART OPTIONS
-    //specify format of dates
-    var showRect = false;//extent shades
-    var showLine = true;//connecting line
-    var showDot = true;//marker dots
+        
     
     //sort the data into date order of first column
     data.sort(function(a, b){
