@@ -1,4 +1,4 @@
-function columnChart(data,stylename,media,plotpadding,legAlign,yHighlight, markers, numTicksy, numTicksx, yAlign, markers){
+function columnChart(data,stylename,media,yMin,yMax,yAxisHighlight,plotpadding,legAlign, markers, numTicksy, yAlign, markers){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -35,11 +35,10 @@ function columnChart(data,stylename,media,plotpadding,legAlign,yHighlight, marke
     var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
 
-    var min=d3.min(data, function(d) { return +d.value;})
-    min=Math.min(0,min)
-    var max=d3.max(data, function(d) { return +d.value;})
+    yMin=Math.min(yMin,d3.min(data, function(d) { return +d.value;}))
+    yMax=Math.max(yMax,d3.max(data, function(d) { return +d.value;}))
 
-    yScale.domain([min, max]);
+    yScale.domain([yMin,yMax]);
 
     var yAxis = d3.svg.axis()
     .scale(yScale)
@@ -66,7 +65,7 @@ function columnChart(data,stylename,media,plotpadding,legAlign,yHighlight, marke
     //identify 0 line if there is one
     var originValue = 0;
     var origin = plot.selectAll(".tick").filter(function(d, i) {
-            return d==originValue || d==yHighlight;
+            return d==originValue || d==yAxisHighlight;
         })
     .classed(media+"origin",true);
 
