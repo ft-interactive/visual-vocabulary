@@ -1,5 +1,5 @@
 
-function makeChart(data,stylename,media,xMin,xMax,numTicksx,plotpadding,legAlign,yAlign){
+function makeChart(data,stylename,media,xMin,xMax,xAxisHighlight,numTicksx,plotpadding,legAlign,yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
