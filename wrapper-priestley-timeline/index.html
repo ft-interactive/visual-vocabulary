@@ -25,7 +25,6 @@
         //put custom graph options here
         var xMin='1730'//this must be a string
         var xMax='1940'//this must be a string
-        var xAxisHighlight=90;
         var showRect = false;//extent shades
         var showLine = true;//connecting line
         var markers = true;//marker dots
@@ -85,7 +84,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                makeChart(data, stylename, media,xMin,xMax,xAxisHighlight,numTicksx,showRect,showLine,markers,chartpadding,legend, yLabel);
+                makeChart(data, stylename, media,xMin,xMax,numTicksx,showRect,showLine,markers,chartpadding,legend, yLabel);
             }
         })//end data load
 

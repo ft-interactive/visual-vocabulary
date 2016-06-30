@@ -1,5 +1,5 @@
 
-function makeChart(data,stylename,media,xMin,xMax,xAxisHighlight,numTicksx,showRect,showLine,markers,plotpadding,legAlign,yAlign){
+function makeChart(data,stylename,media,xMin,xMax,numTicksx,showRect,showLine,markers,plotpadding,legAlign,yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -46,10 +46,8 @@ function makeChart(data,stylename,media,xMin,xMax,xAxisHighlight,numTicksx,showR
 
     //identify date range of data
     //initialise dates to first date value
-    console.log(xMin,xMax)
     xMin=parseDate(xMin)
     xMax=parseDate(xMax)
-    console.log("Dates",xMin,xMax)
 
     var minDate = data[0][seriesNames[0]]
     var maxDate = data[0][seriesNames[0]]
@@ -65,8 +63,7 @@ function makeChart(data,stylename,media,xMin,xMax,xAxisHighlight,numTicksx,showR
     // minDate = Math.min(xMin,minDate)
     // maxDate = Math.max(xMax,maxDate)
     //min max dates
-    console.log(minDate,maxDate)
-    
+    //console.log(minDate,maxDate)
     
     //y scale for country
     var yScale = d3.scale.ordinal()
@@ -191,26 +188,6 @@ function makeChart(data,stylename,media,xMin,xMax,xAxisHighlight,numTicksx,showR
         }
     })
     
-    // //append chart labels
-    // chart.append("g")
-    //     .attr("id","labels")
-    //     .selectAll("text")
-    //     .data(data)
-    //     .enter()
-    //     .append("text")
-    //     .attr("class",media+"subtitle")
-    //     .attr("x",-yScale.rangeBand())
-    //     .attr("y",function(d){
-    //         return yScale(d.name);
-    //     })
-    //     .attr("text-anchor","end")
-    //     .text(function(d){
-    //         return d.name
-    //     })
-    //     .attr("dy",function(d){
-    //         return yScale.rangeBand();
-    //     })
-
     if (markers||showRect){
     //key
     chart.append("g")
