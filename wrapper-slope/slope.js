@@ -193,7 +193,7 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
     plot.append("text")
         .attr("x",margin.left)
         .attr("y",margin.top)
-        .attr("class",media+"label")
+        .attr("class",media+"labels")
         .attr("text-anchor",function(){
             if (showLabelLeft) {
                 return "end"
@@ -205,7 +205,7 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
     plot.append("text")
         .attr("x",w-margin.right)
         .attr("y",margin.top)
-        .attr("class",media+"label")
+        .attr("class",media+"labels")
         .attr("text-anchor",function(){
             if (showLabelRight) {
                 return "start"

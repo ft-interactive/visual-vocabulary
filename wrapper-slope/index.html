@@ -22,8 +22,8 @@
         var subtitle = "US median adjusted household income ($’000)";//comment out subtitle assignment if not needed
         var source = "Source: forumchart.xls|FT graphic Bob Haslett";
         //slope config
-        var col1="1999"
-        var col2="2014"
+        var label1="1999"
+        var label2="2014"
         var startZero=false;
         var markers=true;
         var showLabelLeft=true;
@@ -83,7 +83,7 @@
                 var stylename=frames[i].stylesheet;
                 var media = frames[i].name;
                 var legend=frames[i].legend;
-                slopeChart(data, stylename, media, chartpadding,legend, yAxisHighlight,startZero, markers, showLabelLeft,showLabelRight, col1, col2);
+                slopeChart(data, stylename, media, chartpadding,legend, yAxisHighlight,startZero, markers, showLabelLeft,showLabelRight, label1, label2);
             }
         })//end data load
         
