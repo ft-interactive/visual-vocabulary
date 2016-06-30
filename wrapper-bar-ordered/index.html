@@ -23,17 +23,12 @@
         var subtitle = "$bn";//comment out subtitle assignment if not needed
         var source = "Source: Bloomberg    FT graphic";
         //graph options
-        var sort="ascending"//ascending or descending
-        var xMin=-8
-        var xMax=12
+        var sort="descending"//ascending or descending
+        var xMin=-8//Minimum value on the x-axis
+        var xMax=12//Maximum value on the x-axis
         var xAxisHighlight=0;
-        var numTicksx=12;//rough number of ticks for x axis
+        var numTicksx=8;//rough number of ticks for x-axis
         var labels=false;//show numbers on bars
-        var ticks//=[0.2,0.3];//option to force tick values for online
-
-        var markers=false;//show numbers on bars
-        var numTicksy = 7;//rough number of ticks for y axis
-        var numTicksx = 12;//rough number of ticks for x axis
         var ticks//=[0.2,0.3];//option to force tick values for online
 
         //Use the frames array to set unique values for each media type of frame
@@ -64,7 +59,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset;
                 var yLabel=frames[i].yLabel
-                barChart(data,stylename,media,xMin,xMax,xAxisHighlight,chartpadding,legend,markers, numTicksy, numTicksx,markers, sort);
+                barChart(data,stylename,media,xMin,xMax,xAxisHighlight,chartpadding,legend,labels, numTicksx,sort);
             }
         })//end data load
 
