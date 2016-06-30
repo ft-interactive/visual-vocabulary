@@ -1,4 +1,4 @@
-function columnChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, yAlign, markers){
+function columnChart(data,stylename,media,plotpadding,legAlign,yHighlight, markers, numTicksy, numTicksx, yAlign, markers){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
