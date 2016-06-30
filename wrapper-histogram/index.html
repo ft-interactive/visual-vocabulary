@@ -23,6 +23,7 @@
         var source = "Thomson Reuters Datastream";
 
         //put custom graph options here
+        var yMax=20000
         var numTicksy = 6;//rough number of ticks for y axis
         var numTicksx = 10;//rough number of ticks for x axis
         var yAxisHighlight=-20;
@@ -75,7 +76,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                makeHistogram(data, stylename, media, chartpadding,legend, yLabel,numTicksy,numTicksx,yAxisHighlight);
+                makeHistogram(data, stylename, media,yMax,chartpadding,legend, yLabel,numTicksy,numTicksx,yAxisHighlight);
             }
         })//end data load
 

@@ -1,5 +1,5 @@
 
-function makeHistogram(data,stylename,media,plotpadding,legAlign,yAlign,numTicksy,numTicksx,yHighlight){
+function makeHistogram(data,stylename,media,yMax,plotpadding,legAlign,yAlign,numTicksy,numTicksx,yHighlight){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -29,9 +29,6 @@ function makeHistogram(data,stylename,media,plotpadding,legAlign,yAlign,numTicks
     //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
     // based on https://bl.ocks.org/mbostock/1624660
 
-    var yScale = d3.scale.linear()
-        .range([plotHeight, 0]);
-
     var plotData=data.map(function(d,i) { return {
         category: +d.category,
         value: +d.value
@@ -49,11 +46,17 @@ function makeHistogram(data,stylename,media,plotpadding,legAlign,yAlign,numTicks
 
     plotData.shift();
 
+    console.log(plotData);
+
+    var yScale = d3.scale.linear()
+        .range([plotHeight, 0]);
+
     // Set the scale domain.
     var xDomain=[0, d3.max(plotData.map(function(d) { return d.offset + d.width; }))];
-    yScale.domain([0, d3.max(plotData.map(function(d) { return d.height; }))]);
+    yMax=Math.max(yMax,d3.max(plotData.map(function(d) { return d.height; })))
 
-    console.log(plotData);
+    yScale.domain([0, yMax]);
+
 
     var yAxis = d3.svg.axis()
         .scale(yScale)
