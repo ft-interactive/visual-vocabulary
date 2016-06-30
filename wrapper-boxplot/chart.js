@@ -50,9 +50,6 @@ function makeChart(data,stylename,media,yMin,yMax,yAxisHighlight,plotpadding,leg
         }
     })
 
-    console.log("plotData",plotData)
-    console.log("yMin",yMin,"yMax",yMax)
-
     var yScale = d3.scale.linear()
         .range([plotHeight, 0])
         .domain([yMin, yMax]);
