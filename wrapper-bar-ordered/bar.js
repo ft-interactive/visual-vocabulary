@@ -1,4 +1,4 @@
-function barChart(data,stylename,media,xMin,xMax,xAxisHighlight,plotpadding,legAlign, markers, numTicksy, numTicksx, markers, sort){
+function barChart(data,stylename,media,xMin,xMax,xAxisHighlight,plotpadding,legAlign, labels, numTicksx, sort){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -45,7 +45,6 @@ function barChart(data,stylename,media,xMin,xMax,xAxisHighlight,plotpadding,legA
     var yAxis = d3.svg.axis()
     .scale(yScale)
     .orient("left")
-    .ticks(numTicksy)
     .tickSize(0);
 
     var yLabel=plot.append("g")
@@ -70,6 +69,7 @@ function barChart(data,stylename,media,xMin,xMax,xAxisHighlight,plotpadding,legA
 
     var xAxis = d3.svg.axis()
     .scale(xScale)
+    .ticks(numTicksx)
     .tickSize(plotHeight)
     .orient("bottom");
 
@@ -114,7 +114,7 @@ function barChart(data,stylename,media,xMin,xMax,xAxisHighlight,plotpadding,legA
                         d3.select(this).style("fill",colours.range()[0])
                     }
                 })
-                if (markers) {
+                if (labels) {
                 parent.append("text")
                 .attr("class", media+"label")
                 .style("text-anchor","end")
