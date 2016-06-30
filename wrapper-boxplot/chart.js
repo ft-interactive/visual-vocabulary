@@ -1,5 +1,5 @@
 
-function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numTicksy,yHighlight){
+function makeChart(data,stylename,media,yMin,yMax,yAxisHighlight,plotpadding,legAlign,yAlign, numTicksy){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -24,9 +24,8 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numTicksy,y
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
 
-    console.log("loaded data",data)
-    var yMin=d3.min(d3.values(data[0]));
-    var yMax=d3.max(d3.values(data[0]));
+    yMin=Math.min(yMin,d3.min(d3.values(data[0])));
+    yMax=Math.max(yMax,d3.max(d3.values(data[0])));
 
     var values = {};
     for (i = 0; i < seriesNames.length; i++) {
@@ -50,9 +49,6 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numTicksy,y
             max: d3.max(values[d]),
         }
     })
-
-    console.log("plotData",plotData)
-    console.log("yMin",yMin,"yMax",yMax)
 
     var yScale = d3.scale.linear()
         .range([plotHeight, 0])
@@ -83,7 +79,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numTicksy,y
     //identify 0 line if there is one
     var originValue = 0;
     var origin = plot.selectAll(".tick").filter(function(d, i) {
-            return d==originValue || d==yHighlight;
+            return d==originValue || d==yAxisHighlight;
         })
     .classed(media+"origin",true);
 
