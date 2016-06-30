@@ -1,5 +1,5 @@
 
-function makeChart(data,stylename,media,showRect,showLine,showDot,plotpadding,legAlign,yAlign){
+function makeChart(data,stylename,media,xMin,xMax,xAxisHighlight,numTicksx,showRect,showLine,markers,plotpadding,legAlign,yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -21,6 +21,8 @@ function makeChart(data,stylename,media,showRect,showLine,showDot,plotpadding,le
     var colours=stylename.linecolours;
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
+    var parseDate = d3.time.format("%Y").parse;
+
     
     // return the series names from the first row of the spreadsheet
     var seriesNames = Object.keys(data[0]).filter(function(d){if (d!='name'){return d}});
@@ -35,7 +37,7 @@ function makeChart(data,stylename,media,showRect,showLine,showDot,plotpadding,le
         .attr("width",plotWidth)
         .attr("height",plotHeight)
         .attr("fill",colours[0])*/
-        
+
     
     //sort the data into date order of first column
     data.sort(function(a, b){
@@ -44,23 +46,27 @@ function makeChart(data,stylename,media,showRect,showLine,showDot,plotpadding,le
 
     //identify date range of data
     //initialise dates to first date value
+    console.log(xMin,xMax)
+    xMin=parseDate(xMin)
+    xMax=parseDate(xMax)
+    console.log("Dates",xMin,xMax)
+
     var minDate = data[0][seriesNames[0]]
     var maxDate = data[0][seriesNames[0]]
     
     //iterate through dates and compare min/max
     seriesNames.forEach(function(d,i){
         data.forEach(function(e,j){
-            minDate = d3.min([minDate,e[d]])
-            maxDate = d3.max([maxDate,e[d]])
+            minDate = Math.min(xMin,d3.min([minDate,e[d]]))
+            maxDate = Math.max(xMax,d3.max([maxDate,e[d]]))
         })  
     })
+
+    // minDate = Math.min(xMin,minDate)
+    // maxDate = Math.max(xMax,maxDate)
     //min max dates
-    //console.log(minDate,maxDate)
+    console.log(minDate,maxDate)
     
-    //x scale for dates
-    var xScale = d3.time.scale()
-        .domain([minDate,maxDate])
-        .range([0,plotWidth])
     
     //y scale for country
     var yScale = d3.scale.ordinal()
@@ -68,16 +74,41 @@ function makeChart(data,stylename,media,showRect,showLine,showDot,plotpadding,le
             return d.name;
         }))
         .rangeRoundBands([0,plotHeight],0.5);
+
+    var yAxis = d3.svg.axis()
+        .scale(yScale)
+        .orient("left")
+        .tickSize(0);
+
+    var yLabel=plot.append("g")
+      .attr("class", media+"yAxis")
+      .call(yAxis)
+
+    //calculate what the ticksize should be now that the text for the labels has been drawn
+    var yLabelOffset=yLabel.node().getBBox().width
+
+    //yLabel.call(yAxis.tickSize(yticksize))
+    yLabel
+        .attr("transform",function(){
+                return "translate("+(margin.left+yLabelOffset)+","+margin.top+")"
+            })
     
     //AXES
+    //x scale for dates
+    var xScale = d3.time.scale()
+        .domain([minDate,maxDate])
+        .range([yLabelOffset,plotWidth])
+
     var xAxis = d3.svg.axis()
         .scale(xScale)
         .orient("bottom")
+        .tickSize(plotHeight)
         .ticks(4)
     
     //secondary axis - more ticks but no labels
     var xAxis2 = d3.svg.axis()
         .scale(xScale)
+        .tickSize(plotHeight)
         .orient("bottom")
         .tickFormat(d3.time.format(""))
         .ticks(20)
@@ -85,11 +116,11 @@ function makeChart(data,stylename,media,showRect,showLine,showDot,plotpadding,le
     //call axes
     plot.append("g")
         .attr("class",media+"xAxis")
-        .attr("transform","translate("+margin.left+","+(margin.top+plotHeight)+")")
+        .attr("transform","translate("+margin.left+","+(margin.top)+")")
         .call(xAxis)
     plot.append("g")
         .attr("class",media+"xAxis")
-        .attr("transform","translate("+margin.left+","+(margin.top+plotHeight)+")")
+        .attr("transform","translate("+margin.left+","+(margin.top)+")")
         .call(xAxis2)
     
     //create chart geometry
@@ -145,7 +176,7 @@ function makeChart(data,stylename,media,showRect,showLine,showDot,plotpadding,le
                 .attr("stroke-width","2px")//should use class
         }
         //marker dots
-        if (showDot){
+        if (markers){
             seriesNames.forEach(function(e,j){
                 d3.select(rowGroups[0][i]).append("circle")
                 .attr("cx",function(d){
@@ -154,33 +185,33 @@ function makeChart(data,stylename,media,showRect,showLine,showDot,plotpadding,le
                 .attr("cy",function(d){
                     return yScale(d.name)+(yScale.rangeBand()/2);
                 })
-                .attr("r",yScale.rangeBand()/2)
+                .attr("r",yOffset/2.4)
                 .attr("fill",colours[j])
             })
         }
     })
     
-    //append chart labels
-    chart.append("g")
-        .attr("id","labels")
-        .selectAll("text")
-        .data(data)
-        .enter()
-        .append("text")
-        .attr("class",media+"subtitle")
-        .attr("x",-yScale.rangeBand())
-        .attr("y",function(d){
-            return yScale(d.name);
-        })
-        .attr("text-anchor","end")
-        .text(function(d){
-            return d.name
-        })
-        .attr("dy",function(d){
-            return yScale.rangeBand();
-        })
+    // //append chart labels
+    // chart.append("g")
+    //     .attr("id","labels")
+    //     .selectAll("text")
+    //     .data(data)
+    //     .enter()
+    //     .append("text")
+    //     .attr("class",media+"subtitle")
+    //     .attr("x",-yScale.rangeBand())
+    //     .attr("y",function(d){
+    //         return yScale(d.name);
+    //     })
+    //     .attr("text-anchor","end")
+    //     .text(function(d){
+    //         return d.name
+    //     })
+    //     .attr("dy",function(d){
+    //         return yScale.rangeBand();
+    //     })
 
-    if (showDot||showRect){
+    if (markers||showRect){
     //key
     chart.append("g")
         .attr("id","key")
