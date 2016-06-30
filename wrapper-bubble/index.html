@@ -28,6 +28,8 @@
         var xMin=-10//Minimum value for the x-axis
         var xMax=50//Maximum value for the x-axis
         var yAxisHighlight=2;
+        var numTicksy = 10;//rough number of ticks for y axis
+        var numTicksx = 5;//rough number of ticks for x axis
         var axisLabel=false;//True or false to label the axis or not
         var xLabel="x-label"//The label that is placed on the x Axix
         var yLabel="y-label"//The label that is placed on the y Axix
@@ -91,7 +93,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset;
                 var yAlign=frames[i].yLabel
-                bubbleChart(data, stylename, media, yMin,yMax,xMin,xMax,chartpadding,legend, smallCircle, largeCircle,subYoffset,yAxisHighlight,axisLabel,xLabel,yLabel,yAlign);
+                bubbleChart(data, stylename, media, yMin,yMax,xMin,xMax,numTicksy, numTicksx,chartpadding,legend,smallCircle, largeCircle,subYoffset,yAxisHighlight,axisLabel,xLabel,yLabel,yAlign);
             }
         })//end data load
         

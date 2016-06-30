@@ -1,4 +1,4 @@
-function bubbleChart(data, stylename, media,yMin,yMax,xMin,xMax,chartpadding,legAlign, smallCircle, largeCircle,subYoffset,yAxisHighlight,axisLabel,xaxisLabel,yaxisLabel,yAlign){
+function bubbleChart(data, stylename, media,yMin,yMax,xMin,xMax,numTicksy, numTicksyx,chartpadding,legAlign, smallCircle, largeCircle,subYoffset,yAxisHighlight,axisLabel,xaxisLabel,yaxisLabel,yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -71,6 +71,7 @@ function bubbleChart(data, stylename, media,yMin,yMax,xMin,xMax,chartpadding,leg
 
     var yAxis = d3.svg.axis()
         .scale(yScale)
+        .ticks(numTicksy)
         .orient("left")
 
     var yLabel=plot.append("g")
@@ -101,6 +102,7 @@ function bubbleChart(data, stylename, media,yMin,yMax,xMin,xMax,chartpadding,leg
     console.log(xExtent)
     var xAxis = d3.svg.axis()
         .scale(xScale)
+        .ticks(numTicksyx)
         .tickSize(yOffset/2)
         .orient("bottom");
 
