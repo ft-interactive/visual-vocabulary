@@ -1,4 +1,4 @@
-function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZero, markers, showLabelLeft,showLabelRigHt, col1, col2){
+function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZero, markers, showLabelLeft,showLabelRigHt, label1, label2){
 
 	//graph options
     var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
@@ -200,7 +200,7 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             }
             else {return "start"}
         })
-        .text(col1);
+        .text(label1);
   
     plot.append("text")
         .attr("x",w-margin.right)
@@ -212,7 +212,7 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             }
             else {return "end"}
         })
-        .text(col2);
+        .text(label2);
 
     
 }
