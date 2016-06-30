@@ -22,14 +22,14 @@
         var title = "Facebook revenues";
         var subtitle = "$bn";//comment out subtitle assignment if not needed
         var source = "Source: Bloomberg    FT graphic";
+        
         //graph options
         var sort="descending"//ascending or descending
+        var yMin=-40;
+        var yMax=50;
         var yAxisHighlight=-40;
-        var logScale=false;
-        var logScaleStart=1000;
-        var markers=false;//show numbers on bars
+        var labels=false;//show numbers on bars
         var numTicksy = 8;//rough number of ticks for y axis
-        var numTicksx = 0;//rough number of ticks for x axis
         var ticks//=[0.2,0.3];//option to force tick values for online
 
         //Use the frames array to set unique values for each media type of frame
@@ -60,7 +60,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset;
                 var yLabel=frames[i].yLabel
-                columnChart(data, stylename, media, chartpadding,legend, logScale, logScaleStart,yAxisHighlight,markers, numTicksy, numTicksx, yLabel,markers,sort);
+                columnChart(data, stylename, media,yMin,yMax,chartpadding,legend,yAxisHighlight,labels, numTicksy, yLabel,sort);
             }
         })//end data load
 

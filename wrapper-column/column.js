@@ -1,4 +1,4 @@
-function columnChart(data,stylename,media,yMin,yMax,yAxisHighlight,plotpadding,legAlign, markers, numTicksy, yAlign, markers){
+function columnChart(data,stylename,media,yMin,yMax,yAxisHighlight,plotpadding,legAlign, labels, numTicksy, yAlign, markers){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -123,7 +123,7 @@ function columnChart(data,stylename,media,yMin,yMax,yAxisHighlight,plotpadding,l
                         d3.select(this).style("fill",colours.range()[0])
                     }
                 })
-            if (markers) {
+            if (labels) {
                 parent.append("text")
                 .attr("class", media+"label")
                 .style("text-anchor","middle")
