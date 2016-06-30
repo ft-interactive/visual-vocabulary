@@ -23,8 +23,9 @@
         var source = "Source: UN data";
 
         //custom graph options here
+        var sort="descending"//ascending or descending
         var xMin=80
-        var xMax=100
+        var xMax=105
         var xAxisHighlight=90;
         var labels=false;//show numbers on bars
         var numTicksx=6;//rough number of ticks for x axis
@@ -32,7 +33,7 @@
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
         var frames=[
-        {name:"print",width:53.5,height:68,units:'mm',margins:[{top:5,right:8,bottom:5, left:3}],stylesheet:styleprint,legend:"vert",yLabel:"right"},
+        {name:"print",width:112.25,height:68,units:'mm',margins:[{top:5,right:8,bottom:5, left:3}],stylesheet:styleprint,legend:"vert",yLabel:"right"},
         {name:"web",width:600,height:422,units:'px',margins:[{top:0,right:29,bottom:5,left:00}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
         {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
@@ -40,8 +41,8 @@
         
         //sets the padding inside the chart area
         var chartpadding=[
-        {name:"print",margin:[{top:0, right:0, bottom:15, left:10}]},
-        {name:"web",margin:[{top:20, right:10, bottom:20, left:10}]},
+        {name:"print",margin:[{top:0, right:0, bottom:15, left:0}]},
+        {name:"web",margin:[{top:0, right:10, bottom:20, left:10}]},
         {name:"social",margin:[{top:00, right:25, bottom:62, left:12}]},
         {name:"video",margin:[{top:55, right:35,bottom:68, left:42}]}
         ]
@@ -77,7 +78,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                makeChart(data, stylename, media,xMin,xMax,numTicksx,chartpadding,legend, yLabel);
+                makeChart(data, stylename, media,sort,xMin,xMax,xAxisHighlight,numTicksx,chartpadding,legend, yLabel);
             }
         })//end data load
 

@@ -1,5 +1,5 @@
 
-function makeChart(data,stylename,media,xMin,xMax,xAxisHighlight,numTicksx,plotpadding,legAlign,yAlign){
+function makeChart(data,stylename,media,sort,xMin,xMax,xAxisHighlight,numTicksx,plotpadding,legAlign,yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -38,58 +38,68 @@ function makeChart(data,stylename,media,xMin,xMax,xAxisHighlight,numTicksx,plotp
     //chart variables
     var dotSize=yOffset/2;
     var lineWeight=2;
-    var labelPadding=plotWidth/4;
-    
-
     
     //parse the data for constant data elements
     data.forEach(function(d)    {
         d.value=+d.value;
     });
     
-    
     //sort the data by middle income
-    data.sort(function(a, b){
-        return b.value-a.value;
-    });
+    if (sort=="descending") {
+        data.sort(function(a, b) { return b.value - a.value; })//Sorts biggest rects to the left
+        }
+    else {data.sort(function(a, b) { return a.value - b.value; })} //Sorts biggest rects to the left
     
     //calculate the range of the data - used for x axis
-    var xRange = d3.extent(data,function(d){
+    var xEntent = d3.extent(data,function(d){
         return d.value;
     })
-    xRange[0]=Math.min(xMin,xRange[0])
+    xEntent[0]=Math.min(xMin,xEntent[0])
+    xEntent[1]=Math.max(xMax,xEntent[1])
     
-    //create scale
-    var xScale = d3.scale.linear()
-        .domain(xRange)
-        .range([labelPadding,plotWidth])
-    
+    //create y-scale
+
     var yScale = d3.scale.ordinal()
-        .domain(data.map(function(d){
-            return d.name;
-        }))
-        .rangeRoundBands([0,plotHeight],1);
-    
-    
-    
-    //AXES
+    .rangeRoundBands([0, plotHeight],1)
+    .domain(data.map(function(d) { return d.name;}));
+
+    var yAxis = d3.svg.axis()
+        .scale(yScale)
+        .orient("left")
+        .tickSize(0);
+
+    var yLabel=plot.append("g")
+      .attr("class", media+"yAxis")
+      .call(yAxis)
+
+    //calculate what the ticksize should be now that the text for the labels has been drawn
+    var yLabelOffset=yLabel.node().getBBox().width
+
+    //yLabel.call(yAxis.tickSize(yticksize))
+    yLabel
+        .attr("transform",function(){
+                return "translate("+(margin.left+yLabelOffset)+","+margin.top+")"
+            })
+
+    //define x-axis
+    var xScale = d3.scale.linear()
+        .domain(xEntent)
+        .range([yLabelOffset,plotWidth])
+
     var xAxis = d3.svg.axis()
-        .scale(xScale)
-        .orient("bottom")
-        .ticks(numTicksx)
+    .scale(xScale)
+    .ticks(numTicksx)
+    .tickSize(plotHeight)
+    .orient("bottom");
         
+    var xLabels=plot.append("g")
+      .attr("class", media+"xAxis")
+      .attr("transform", "translate("+(margin.left)+"," + (margin.top) + ")")
+      .call(xAxis);
+    
     plot.append("g")
-        .attr("class",media+"xAxis")
-        .attr("transform","translate("+margin.left+","+(margin.top+plotHeight)+")")
-        .call(xAxis)
-    
-    //create geometry
-    var chart = plot.append("g")
-        .attr("id","geometry")
-        .attr("transform","translate("+margin.left+","+margin.top+")")
-    
-    chart.append("g")
         .attr("id","lines")
+        .attr("transform", "translate("+(margin.left)+"," + (margin.top) + ")")
         .selectAll("line")
         .data(data)
         .enter()
@@ -97,7 +107,7 @@ function makeChart(data,stylename,media,xMin,xMax,xAxisHighlight,numTicksx,plotp
         .attr("id",function(d){
             return d.name+":"+d.value+"_line"
         })
-        .attr("x1",xScale(xRange[0]))
+        .attr("x1",xScale(xEntent[0]))
         .attr("x2",function(d){
             return xScale(d.value);
         })
@@ -113,8 +123,9 @@ function makeChart(data,stylename,media,xMin,xMax,xAxisHighlight,numTicksx,plotp
 
     
     //create dots
-    chart.append("g")
+    plot.append("g")
         .attr("id","dots")
+        .attr("transform", "translate("+(margin.left)+"," + (margin.top) + ")")
         .selectAll("circle")
         .data(data)
         .enter()
@@ -130,34 +141,4 @@ function makeChart(data,stylename,media,xMin,xMax,xAxisHighlight,numTicksx,plotp
         })
         .attr("r",dotSize)
         .attr("fill",colours[0])
-    
-    
-    //createLabels
-    chart.append("g")
-        .attr("id","labels")
-        .selectAll("text")
-        .data(data)
-        .enter()
-        .append("text")
-        .attr("y",function(d){
-            return yScale(d.name)
-        })
-        .attr("x",xScale(xRange[0]))
-        .text(function(d){
-            return d.name
-        })
-        .attr("class",media+"subtitle")
-        .attr("text-anchor","end")
-        .attr("dx",-dotSize)
-        .attr("dy",function(d){
-            return this.getBoundingClientRect().height/3
-        })
-
-    
-    
-    
-    
-    
-    
-
 }
