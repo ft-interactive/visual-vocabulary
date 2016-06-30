@@ -1,4 +1,4 @@
-function pieChart(data, stylename, media, chartpadding,legAlign, innerRadious, graphLabels, textOffset){
+function pieChart(data, stylename, media, chartpadding,legAlign, innerRadious, labels, textOffset){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -64,7 +64,7 @@ function pieChart(data, stylename, media, chartpadding,legAlign, innerRadious, g
         .attr("d", arc)
         .style("fill", function(d,i){return colours.range()[0]})
 
-    if (graphLabels) {
+    if (labels) {
         g.append("text")
         .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
         .attr("dy", ".35em")
