@@ -1,4 +1,4 @@
-function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZero, showDots, showLabelLeft,showLabelRigHt, col1, col2){
+function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZero, markers, showLabelLeft,showLabelRigHt, col1, col2){
 
 	//graph options
     var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
@@ -126,7 +126,7 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
     el.moveToFront()
 
     //create dots if requested
-    if (showDots)   {
+    if (markers)   {
         slopes.append("circle")
             .attr("fill",function(d,i){
                 if(d.label=="yes"){

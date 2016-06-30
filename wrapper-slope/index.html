@@ -25,7 +25,7 @@
         var col1="1999"
         var col2="2014"
         var startZero=false;
-        var showDots=true;
+        var markers=true;
         var showLabelLeft=true;
         var showLabelRight=false;
         var yAxisHighlight=40000
@@ -83,7 +83,7 @@
                 var stylename=frames[i].stylesheet;
                 var media = frames[i].name;
                 var legend=frames[i].legend;
-                slopeChart(data, stylename, media, chartpadding,legend, yAxisHighlight,startZero, showDots, showLabelLeft,showLabelRight, col1, col2);
+                slopeChart(data, stylename, media, chartpadding,legend, yAxisHighlight,startZero, markers, showLabelLeft,showLabelRight, col1, col2);
             }
         })//end data load
         
