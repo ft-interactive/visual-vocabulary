@@ -1,5 +1,5 @@
 
-function makeChart(data,stylename,media,xMin,xMax,xAxisHighlight,numTicksx,plotpadding,legAlign,yAlign){
+function makeChart(data,stylename,media,sort,xMin,xMax,xAxisHighlight,numTicksx,plotpadding,legAlign,yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -49,34 +49,56 @@ function makeChart(data,stylename,media,xMin,xMax,xAxisHighlight,numTicksx,plotp
     
     
     //sort the data by middle income
-    data.sort(function(a, b){
-        return b.value-a.value;
-    });
+    if (sort=="descending") {
+        data.sort(function(a, b) { return b.value - a.value; })//Sorts biggest rects to the left
+        }
+    else {data.sort(function(a, b) { return a.value - b.value; })} //Sorts biggest rects to the left
     
     //calculate the range of the data - used for x axis
-    var xRange = d3.extent(data,function(d){
+    var xEntent = d3.extent(data,function(d){
         return d.value;
     })
-    xRange[0]=Math.min(xMin,xRange[0])
+    xEntent[0]=Math.min(xMin,xEntent[0])
     
     //create scale
     var xScale = d3.scale.linear()
-        .domain(xRange)
+        .domain(xEntent)
         .range([labelPadding,plotWidth])
     
     var yScale = d3.scale.ordinal()
         .domain(data.map(function(d){
             return d.name;
         }))
-        .rangeRoundBands([0,plotHeight],1);
-    
-    
+        .rangeRoundBands([0,plotHeight],1);   
     
     //AXES
+
+    var yScale = d3.scale.ordinal()
+    .rangeRoundBands([0, plotHeight],.2)
+    .domain(data.map(function(d) { return d.name;}));
+
     var xAxis = d3.svg.axis()
         .scale(xScale)
         .orient("bottom")
         .ticks(numTicksx)
+
+    var yAxis = d3.svg.axis()
+        .scale(yScale)
+        .orient("left")
+        .tickSize(0);
+
+    var yLabel=plot.append("g")
+      .attr("class", media+"yAxis")
+      .call(yAxis)
+
+    //calculate what the ticksize should be now that the text for the labels has been drawn
+    var yLabelOffset=yLabel.node().getBBox().width
+
+    //yLabel.call(yAxis.tickSize(yticksize))
+    yLabel
+        .attr("transform",function(){
+                return "translate("+(margin.left+yLabelOffset)+","+margin.top+")"
+            })
         
     plot.append("g")
         .attr("class",media+"xAxis")
@@ -97,7 +119,7 @@ function makeChart(data,stylename,media,xMin,xMax,xAxisHighlight,numTicksx,plotp
         .attr("id",function(d){
             return d.name+":"+d.value+"_line"
         })
-        .attr("x1",xScale(xRange[0]))
+        .attr("x1",xScale(xEntent[0]))
         .attr("x2",function(d){
             return xScale(d.value);
         })
@@ -133,25 +155,25 @@ function makeChart(data,stylename,media,xMin,xMax,xAxisHighlight,numTicksx,plotp
     
     
     //createLabels
-    chart.append("g")
-        .attr("id","labels")
-        .selectAll("text")
-        .data(data)
-        .enter()
-        .append("text")
-        .attr("y",function(d){
-            return yScale(d.name)
-        })
-        .attr("x",xScale(xRange[0]))
-        .text(function(d){
-            return d.name
-        })
-        .attr("class",media+"subtitle")
-        .attr("text-anchor","end")
-        .attr("dx",-dotSize)
-        .attr("dy",function(d){
-            return this.getBoundingClientRect().height/3
-        })
+    // chart.append("g")
+    //     .attr("id","labels")
+    //     .selectAll("text")
+    //     .data(data)
+    //     .enter()
+    //     .append("text")
+    //     .attr("y",function(d){
+    //         return yScale(d.name)
+    //     })
+    //     .attr("x",xScale(xEntent[0]))
+    //     .text(function(d){
+    //         return d.name
+    //     })
+    //     .attr("class",media+"subtitle")
+    //     .attr("text-anchor","end")
+    //     .attr("dx",-dotSize)
+    //     .attr("dy",function(d){
+    //         return this.getBoundingClientRect().height/3
+    //     })
 
     
     
