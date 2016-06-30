@@ -22,7 +22,12 @@
         var subtitle = "(%)";//comment out subtitle assignment if not needed
         var source = "Source: UN data";
 
-        //put custom graph options here
+        //custom graph options here
+        var xMin=80
+        var xMax=100
+        var xAxisHighlight=90;
+        var labels=false;//show numbers on bars
+        var numTicksx=6;//rough number of ticks for x axis
 
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
@@ -72,7 +77,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                makeChart(data, stylename, media, chartpadding,legend, yLabel);
+                makeChart(data, stylename, media,xMin,xMax,numTicksx,chartpadding,legend, yLabel);
             }
         })//end data load
 

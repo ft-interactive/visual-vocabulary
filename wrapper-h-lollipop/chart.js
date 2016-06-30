@@ -1,5 +1,5 @@
 
-function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
+function makeChart(data,stylename,media,xMin,xMax,numTicksx,plotpadding,legAlign,yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -36,7 +36,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
         .attr("fill",colours[0])*/
     
     //chart variables
-    var dotSize=plotHeight/32;
+    var dotSize=yOffset/2;
     var lineWeight=2;
     var labelPadding=plotWidth/4;
     
@@ -57,6 +57,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     var xRange = d3.extent(data,function(d){
         return d.value;
     })
+    xRange[0]=Math.min(xMin,xRange[0])
     
     //create scale
     var xScale = d3.scale.linear()
@@ -75,7 +76,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     var xAxis = d3.svg.axis()
         .scale(xScale)
         .orient("bottom")
-        .ticks(4)
+        .ticks(numTicksx)
         
     plot.append("g")
         .attr("class",media+"xAxis")
