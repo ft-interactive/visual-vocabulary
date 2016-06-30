@@ -19,17 +19,21 @@
         
         //titles, footnotes
         var title = "Do buy for me Argentina";
-        var subtitle = "Number of graphics with lost of exttra wordsNumber of graphics with lost of exttra wordsA mixed bad of emerging exposures";//comment out subtitle assignment if not needed
+        var subtitle = "Number of graphics with lost of exttra wordsNumber of graphics with";//comment out subtitle assignment if not needed
         var source = "Source: TradingEconomics.com, Standard and Poors";
+
         //graph options
-        var smallCircle=100//smallest circle will be 0.01 of smallest graph dimension (width/height)
-        var largeCircle=10//largest circle will be 0.1 of smallest graph dimension (width/height)
+        var yMin=2//Minimum value for the y-axis
+        var yMax=15//Maximum value for the y-axis
+        var xMin=-10//Minimum value for the x-axis
+        var xMax=50//Maximum value for the x-axis
         var yAxisHighlight=2;
-        var axisLabel=true;//True or false to label the axis or not
+        var axisLabel=false;//True or false to label the axis or not
         var xLabel="x-label"//The label that is placed on the x Axix
         var yLabel="y-label"//The label that is placed on the y Axix
-        var xmin=-10//Minimum value for the x Axis unless dataset is lower
-        var ymin=0//Minimum value for the y Axis unless dataset is lower
+        var smallCircle=100//smallest circle will be 0.01 of smallest graph dimension (width/height)
+        var largeCircle=10//largest circle will be 0.1 of smallest graph dimension (width/height)
+
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
         var frames=[
@@ -87,7 +91,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset;
                 var yAlign=frames[i].yLabel
-                bubbleChart(data, stylename, media, chartpadding,legend, smallCircle, largeCircle,subYoffset,yAxisHighlight,axisLabel,xLabel,yLabel,xmin,ymin,yAlign);
+                bubbleChart(data, stylename, media, yMin,yMax,xMin,xMax,chartpadding,legend, smallCircle, largeCircle,subYoffset,yAxisHighlight,axisLabel,xLabel,yLabel,yAlign);
             }
         })//end data load
         
