@@ -1,4 +1,4 @@
-function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logScaleStart,yHighlight, labels, numTicksy, numTicksx, yAlign,sort){
+function columnChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHighlight, labels, numTicksy, yAlign,sort){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -40,11 +40,11 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
     var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
 
-    var min=d3.min(data, function(d) { return +d.value;})
-    var max=d3.max(data, function(d) { return +d.value;})
+    yMin=Math.min(yMin,d3.min(data, function(d) { return +d.value;}))
+    yMax=Math.max(yMax,d3.max(data, function(d) { return +d.value;}))
 
     //var max=d3.max(data, function(d,i) { return +d.value;});
-    yScale.domain([min, max]);
+    yScale.domain([yMin, yMax]);
 
     var yAxis = d3.svg.axis()
     .scale(yScale)
