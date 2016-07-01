@@ -24,14 +24,14 @@
         var source = "Dazhihui";
 
         //graph options
-        var yMin=0;
-        var yMax=55;
+        var yMin=0.5;
+        var yMax=1.4;
         var yAxisHighlight=-20;
         var lineSmoothing="linear";//choose 'linear' for an unsmoothed line 'monotone' for smooth
         var logScale=false;
         var logScaleStart=1000;
         var markers=false;//show circle markers
-        var numTicksy = 10;//rough number of ticks for y axis
+        var numTicksy = 8;//rough number of ticks for y axis
         var numTicksx = 10;//rough number of ticks for x axis
         var interval="years";//days, months or years
         var ticks//=[0.2,0.3];//option to force tick values for online
@@ -39,17 +39,17 @@
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
         var frames=[
-        {name:"print",width:229.34,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert",yLabel:"right"},
+        {name:"print",width:229.34,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"hori",yLabel:"right"},
         {name:"web",width:600,height:275,units:'px',margins:[{top:0,right:20,bottom:5,left:00}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
-        {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
+        {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"hori",yLabel:"left"},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
         ]
         
         //sets the padding inside the chart area
         var chartpadding=[
-        {name:"print",margin:[{top:0, right:10, bottom:15, left:10}]},
+        {name:"print",margin:[{top:15, right:10, bottom:15, left:0}]},
         {name:"web",margin:[{top:20, right:0,bottom:20,left:10}]},
-        {name:"social",margin:[{top:30, right:35, bottom:40, left:12}]},
+        {name:"social",margin:[{top:40, right:27, bottom:40, left:12}]},
         {name:"video",margin:[{top:55, right:35,bottom:50, left:42}]}
         ]
         //Add blank frames
@@ -70,6 +70,7 @@
             d3.time.format("%H:%M %p")  11:39 AM
             d3.time.format("%B %d") January 28
             d3.time.format("%d %b") 28 Jan
+             d3.time.format("%d/%m/%Y %H:%M")28/01/16
              */
 
             //parse the data
@@ -77,7 +78,7 @@
                 d.date=parseDate(d.date);
             });
         //YOU SHOULD'NT HAVE TO DO MUCH AFTER THIS
-            calculateTicks(data,interval)
+            //ticks=calculateTicks(data,interval)
 
             for (var i=0;i<frames.length;i++){
                 var stylename=frames[i].stylesheet;
@@ -85,7 +86,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                lineChart(data, stylename, media,yMin,yMax,yAxisHighlight, chartpadding,legend, lineSmoothing, logScale, logScaleStart, markers, numTicksy, numTicksx, yLabel);
+                lineChart(data,stylename,media,yMin,yMax,yAxisHighlight,chartpadding,legend, lineSmoothing,logScale,logScaleStart,markers, numTicksy,numTicksx,yLabel,ticks);
             }
         })//end data load
 
@@ -120,28 +121,49 @@
 
         function calculateTicks(data,int) {
             console.log("intercal ", int)
-            var xDomain = d3.extent(data, function(d) {return d.date;});
-            console.log("domain ",xDomain)
-            if (int=="years") {
-                var intervales= d3.time.year.range(new Date(xDomain[0]), new Date(xDomain[1]));
-                intervales.unshift(xDomain[0])
-                ticks=intervales
-                console.log(intervales)
+            var dateDomain = d3.extent(data, function(d) {return d.date;});
+            console.log("domain ",dateDomain)
+            switch (int) {
+                case 'years':
+                var major=years(dateDomain)
+                //var minor=months(dateDomain)
+                case 'months':
+                var major=months(dateDomain)
+                //var minor=days(dateDomain)
+                case 'days':
+                var major=days(dateDomain)
+                //var minor=hours(dateDomain)
             }
-            if (int=="months") {
-                var intervales= d3.time.months(new Date(xDomain[0]), new Date(xDomain[1]));
-                intervales.unshift(xDomain[0])
-                console.log(intervales)
-            }
-            if (int=="days") {
-                var intervales= d3.time.days(new Date(xDomain[0]), new Date(xDomain[1]));
-                intervales.unshift(xDomain[0])
-                console.log(intervales)
-            }
-            tickDistance = (intervales[intervales.length - 1]) - (intervales[intervales.length - 2]);
-            console.log(tickDistance)
+            console.log("major ",major)
+            return major
 
+            function years(dateDomain) {
+                var intervals= d3.time.year.range(new Date(dateDomain[0]), new Date(dateDomain[1]));
+                intervals.unshift(dateDomain[0])
+                console.log("years ", intervals)
+                return intervals
+            }
 
+            function months(dateDomain) {
+                var intervals= d3.time.months(new Date(dateDomain[0]), new Date(dateDomain[1]));
+                intervals.unshift(dateDomain[0])
+                console.log("months ", intervals)
+                return intervals
+            }
+
+            function days(dateDomain) {
+                var intervals = d3.time.days(new Date(dateDomain[0]), new Date(dateDomain[1]));
+                intervals.unshift(dateDomain[0])
+                console.log("days ", intervals)
+                return intervals
+            }
+
+            function hours(dateDomain) {
+                var intervals = d3.time.hours(new Date(dateDomain[0]), new Date(dateDomain[1]));
+                intervals.unshift(dateDomain[0])
+                console.log("minutes ", intervals)
+                return intervals
+            }
         }
 
         function mmToPx(mm){
