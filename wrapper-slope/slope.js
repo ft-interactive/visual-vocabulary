@@ -1,4 +1,4 @@
-function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZero, markers, showLabelLeft,showLabelRigHt, label1, label2){
+function slopeChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHighlight, markers, showLabelLeft,showLabelRigHt, labelleft, labelright){
 
 	//graph options
     var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
@@ -55,14 +55,13 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
     var maxVal = Math.max(d3.max(data, function(d){return parseFloat(d.val1);}),d3.max(data, function(d){return parseFloat(d.val2);}));
     var minVal = Math.min(d3.min(data, function(d){return parseFloat(d.val1);}),d3.min(data, function(d){return parseFloat(d.val2);}));
 
-    //anchor to zero if needed
-    if (startZero==true){
-        minVal = Math.min(minVal,0);   
-    }
+    yMin=Math.min(yMin,minVal);
+    yMax=Math.min(yMax,maxVal);
+   
 
     //create scale for y axis
     var yScale = d3.scale.linear()
-        .domain([minVal,maxVal])
+        .domain([yMin,yMax])
         .range([h-margin.top,0+margin.bottom])
 
     //axis
@@ -200,7 +199,7 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             }
             else {return "start"}
         })
-        .text(label1);
+        .text(labelleft);
   
     plot.append("text")
         .attr("x",w-margin.right)
@@ -212,7 +211,7 @@ function slopeChart(data,stylename,media,plotpadding,legAlign,yHighlight, startZ
             }
             else {return "end"}
         })
-        .text(label2);
+        .text(labelright);
 
     
 }
