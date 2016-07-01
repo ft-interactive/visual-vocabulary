@@ -21,7 +21,7 @@
         //titles, footnotes
         var title = "Chinese profits are down for the first time since 2008";
         var subtitle = "Changes in Chinese listed companies' net profit* (%)";//comment out subtitle assignment if not needed
-        var source = "Dazhihui";
+        var source = "Source: Dazhihui";
 
         //graph options
         var yMin=0.5;
@@ -32,7 +32,6 @@
         var logScaleStart=1000;
         var markers=false;//show circle markers
         var numTicksy = 8;//rough number of ticks for y axis
-        var numTicksx = 10;//rough number of ticks for x axis
         var interval="years";//days, months or years
         var ticks//=[0.2,0.3];//option to force tick values for online
 
@@ -125,7 +124,7 @@
             var dateDomain = d3.extent(data, function(d) {return d.date;});
             
             return {
-                'years':years(dateDomain),
+                'years':{major: years(dateDomain),minor:months(dateDomain)},
                 'months':months(dateDomain),
                 'days':days(dateDomain),
             }[int];
