@@ -28,8 +28,6 @@
         var yMax=12
         var numTicksy =14;//rough number of ticks for y axis
         var yAxisHighlight=-10;
-        var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
-
         var labels= false;//show numbers on bars
         var ticks//=[0.2,0.3];//option to force tick values for online
 
@@ -80,7 +78,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset;
                 var yLabel=frames[i].yLabel
-                waterfallChart(data, stylename, media,yMin,yMax, chartpadding,legend, lineSmoothing,yAxisHighlight,labels, numTicksy, yLabel);
+                waterfallChart(data, stylename, media,yMin,yMax, chartpadding,legend,yAxisHighlight,labels, numTicksy, yLabel);
             }
         })//end data load
 

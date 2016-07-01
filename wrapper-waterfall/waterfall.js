@@ -1,4 +1,4 @@
-function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,lineSmoothing,yHighlight, labels, numTicksy, yAlign){
+function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHighlight, labels, numTicksy, yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -98,7 +98,6 @@ function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,line
 
     var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
-    console.log(yMin, yMax)
     //var max=d3.max(data, function(d,i) { return +d.value;});
     yScale.domain([yMin, yMax]);
 
