@@ -25,10 +25,9 @@
         //put custom graph options here
         var yMin=0//Minimum value for the y-axis
         var yMax=650//Maximum value for the y-axis
-        var yAxisHighlight=2;
+        var yAxisHighlight=100;
         var numTicksy = 10;//rough number of ticks for y axis
 
-        var startZero=true;
         
 
         //Use the frames array to set unique values for each media type of frame
@@ -45,7 +44,7 @@
         var chartpadding=[
         {name:"print",margin:[{top:0, right:0, bottom:15, left:5}]},
         {name:"web",margin:[{top:20, right:10, bottom:20, left:0}]},
-        {name:"social",margin:[{top:00, right:25, bottom:62, left:12}]},
+        {name:"social",margin:[{top:50, right:25, bottom:0, left:12}]},
         {name:"video",margin:[{top:55, right:35,bottom:68, left:42}]}
         ]
         //Calls the functions that adds the balnk frames before loading the data 
@@ -85,7 +84,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                makeChart(data, stylename, media, chartpadding,legend, yLabel,startZero);
+                makeChart(data, stylename, media,yMin,yMax,yAxisHighlight,numTicksy,chartpadding,legend, yLabel);
             }
         })//end data load
 

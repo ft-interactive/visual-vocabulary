@@ -1,5 +1,5 @@
 
-function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,startZero){
+function makeChart(data,stylename,media,yMin,yMax,yAxisHighlight,numTicksy,plotpadding,legAlign,yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -32,10 +32,9 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,startZero){
     var extent=d3.extent(data,function(d){
         return d.y;
     })
+    extent[0]=Math.min(yMin,extent[0]);
+    extent[1]=Math.max(yMax,extent[1]);
 
-    if (startZero){
-        extent[0]=0;
-    }
 
     //over-ride default scale values here
     //extent=[0,1000]
@@ -51,7 +50,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,startZero){
     var yAxis = d3.svg.axis()
         .scale(yScale)
         .orient("left")
-        .ticks(4)
+        .ticks(numTicksy)
     //attach it to plot
     var yLabel = plot.append("g")
         .attr("id",media+"yAxis")
@@ -88,6 +87,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,startZero){
 
     var xAxis = d3.svg.axis()
         .scale(xScale)
+        .ticks(yOffset)
         .orient("bottom");
 
     plot.append("g")
@@ -125,10 +125,5 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,startZero){
         })
         .attr("stroke",colours[0])
         .attr("stroke-width",plotWidth/100)
-
-
-
-
-
 
 }
