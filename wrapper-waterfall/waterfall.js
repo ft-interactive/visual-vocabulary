@@ -1,4 +1,4 @@
-function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,yHighlight, labels, numTicksy, numTicksx, yAlign){
+function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,lineSmoothing,yHighlight, labels, numTicksy, yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -39,10 +39,8 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
     var plotHeight=h-margin.top-margin.bottom
     //Work out xdomain
 
-    var xMin=-9;
-    var xMax=0
-
-     var cumulative =0;
+    console.log(yMin,yMax)
+    var cumulative =0;
 
     function extents(last,value) {
 
@@ -66,8 +64,8 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
     }
 
     var plotData=data.map(function(d) {
-        xMin=Math.min(cumulative,xMin);
-        xMax=Math.max(cumulative,xMax);
+        yMin=Math.min(cumulative,yMin);
+        yMax=Math.max(cumulative,yMax);
 
 
         var extent = extents(cumulative,+d.value);
@@ -100,9 +98,9 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
 
     var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
-
+    console.log(yMin, yMax)
     //var max=d3.max(data, function(d,i) { return +d.value;});
-    yScale.domain([xMin, xMax]);
+    yScale.domain([yMin, yMax]);
 
     var yAxis = d3.svg.axis()
     .scale(yScale)
