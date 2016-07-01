@@ -1,5 +1,5 @@
 
-function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,startZero){
+function makeChart(data,stylename,media,yMin,yMax,yAxisHighlight,numTicksy,plotpadding,legAlign,yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -32,10 +32,9 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,startZero){
     var extent=d3.extent(data,function(d){
         return d.y;
     })
+    extent[0]=Math.min(yMin,extent[0]);
+    extent[1]=Math.max(yMax,extent[1]);
 
-    if (startZero){
-        extent[0]=0;
-    }
 
     //over-ride default scale values here
     //extent=[0,1000]
@@ -47,53 +46,63 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,startZero){
         .domain(extent)
         .range([plotHeight,0])
         .nice()
+    
     //axis
     var yAxis = d3.svg.axis()
         .scale(yScale)
-        .orient("left")
-        .ticks(4)
+        .orient(yAlign)
+        .ticks(numTicksy)
     //attach it to plot
     var yLabel = plot.append("g")
         .attr("id",media+"yAxis")
         .attr("class", media+"yAxis")
         .call(yAxis)
 
-    //establish the width of the y axis
-    var axisWidth=document.getElementById(media+"yAxis").getBBox().width;
+     //calculate what the ticksize should be now that the text for the labels has been drawn
+    var yLabelOffset=yLabel.node().getBBox().width
+    //console.log("offset= ",yLabelOffset)
+    var yticksize=colculateTicksize(yAlign, yLabelOffset);
+    //console.log(yticksize);
 
-    //calculate full tick width - the offset
-    var ticksize = plotWidth-axisWidth;
-
-    //set ticksize and re-call the axis to draw the tick marks properly
-    yAxis.tickSize(-ticksize)
-    yLabel.call(yAxis);
-
-    //offset the y axis by the length of the text
-    d3.select("#"+media+"yAxis")
-        .attr("transform","translate("+axisWidth+",0)")
-
-    plot.selectAll('.tick')
-  		.classed(media+'origin',function(d,i){
-  			return (d == 0);
-  		});
+    yLabel.call(yAxis.tickSize(yticksize))
+    yLabel
+        .attr("transform",function(){
+            if (yAlign=="right"){
+                return "translate("+(margin.left)+","+margin.top+")"
+            }
+            else return "translate("+(w-margin.right)+","+margin.top+")"
+            })
 
     //now the x axis (categorical)
+
+
+    //identify 0 line if there is one
+    var originValue = 0;
+    var origin = plot.selectAll(".tick").filter(function(d, i) {
+            return d==originValue || d==yAxisHighlight;
+        }).classed(media+"origin",true);
 
     var xScale = d3.scale.ordinal()
         .domain(data.map(function(d){
             //extracts names for cat labels
             return d.x
     }))
-        .rangeRoundBands([axisWidth,plotWidth],0.5)
+        .rangeRoundBands([0,plotWidth-yLabelOffset],0.5)
 
     var xAxis = d3.svg.axis()
         .scale(xScale)
+        .ticks(yOffset)
         .orient("bottom");
 
-    plot.append("g")
-        .attr("class", media+"xAxis")
-        .attr("transform","translate(0,"+(h-margin.bottom)+")")
-        .call(xAxis)
+    var xLabels=plot.append("g")
+.attr("class", media+"xAxis")
+.attr("transform",function(){
+            if(yAlign=="right") {
+                return "translate("+(margin.left)+","+(h-margin.bottom)+")"
+            }
+             else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"}
+        })
+      .call(xAxis);
 
 
     //draw chart geometry
@@ -103,7 +112,10 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,startZero){
         .enter()
         .append("g")
         .attr("transform",function(d){
-            return "translate("+xScale(d.x)+",0)";
+            if(yAlign=="right") {
+                return "translate("+(margin.left+xScale(d.x))+","+(margin.top)+")"
+            }
+             else {return "translate("+(margin.left+yLabelOffset+xScale(d.x))+","+(margin.top)+")"}
         })
 
     pops.append("circle")
@@ -126,9 +138,11 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,startZero){
         .attr("stroke",colours[0])
         .attr("stroke-width",plotWidth/100)
 
-
-
-
-
+    function colculateTicksize(align, offset) {
+        if (align=="right") {
+            return w-margin.left-offset
+        }
+        else {return w-margin.right-offset}
+    }
 
 }
