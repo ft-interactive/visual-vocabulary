@@ -1,4 +1,4 @@
-function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, yAlign, markers){
+function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,yHighlight, labels, numTicksy, numTicksx, yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -211,7 +211,7 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
             //         else {return "M"+(xScale(d.cat))+","+(yScale(d.start))+"L"+(1*xScale.rangeBand())+","+(yScale(d.start))}
             //     })
 
-            if (markers) {
+            if (labels) {
                 parent.append("text")
                 .attr("class", media+"label")
                 .style("text-anchor","middle")

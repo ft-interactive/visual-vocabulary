@@ -25,10 +25,8 @@
         //graph options
         var yAxisHighlight=-9;
         var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
-        var logScale=false;
-        var logScaleStart=1000;
 
-        var markers= false;//show numbers on bars
+        var labels= false;//show numbers on bars
         var numTicksy = 12;//rough number of ticks for y axis
 
         var numTicksx = 0;//rough number of ticks for x axis
@@ -81,7 +79,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset;
                 var yLabel=frames[i].yLabel
-                waterfallChart(data, stylename, media, chartpadding,legend, lineSmoothing, logScale, logScaleStart,yAxisHighlight,markers, numTicksy, numTicksx, yLabel,markers);
+                waterfallChart(data, stylename, media, chartpadding,legend, lineSmoothing,yAxisHighlight,labels, numTicksy, numTicksx, yLabel);
             }
         })//end data load
 
