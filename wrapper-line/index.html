@@ -78,7 +78,8 @@
                 d.date=parseDate(d.date);
             });
         //YOU SHOULD'NT HAVE TO DO MUCH AFTER THIS
-            //ticks=calculateTicks(data,interval)
+            ticks=calculateTicks(data,interval)
+            console.log("ticks", ticks)
 
             for (var i=0;i<frames.length;i++){
                 var stylename=frames[i].stylesheet;
@@ -122,20 +123,13 @@
         function calculateTicks(data,int) {
             console.log("intercal ", int)
             var dateDomain = d3.extent(data, function(d) {return d.date;});
-            console.log("domain ",dateDomain)
-            switch (int) {
-                case 'years':
-                var major=years(dateDomain)
-                //var minor=months(dateDomain)
-                case 'months':
-                var major=months(dateDomain)
-                //var minor=days(dateDomain)
-                case 'days':
-                var major=days(dateDomain)
-                //var minor=hours(dateDomain)
-            }
-            console.log("major ",major)
-            return major
+            
+            return {
+                'years':years(dateDomain),
+                'months':months(dateDomain),
+                'days':days(dateDomain),
+            }[int];
+
 
             function years(dateDomain) {
                 var intervals= d3.time.year.range(new Date(dateDomain[0]), new Date(dateDomain[1]));
@@ -147,21 +141,18 @@
             function months(dateDomain) {
                 var intervals= d3.time.months(new Date(dateDomain[0]), new Date(dateDomain[1]));
                 intervals.unshift(dateDomain[0])
-                console.log("months ", intervals)
                 return intervals
             }
 
             function days(dateDomain) {
                 var intervals = d3.time.days(new Date(dateDomain[0]), new Date(dateDomain[1]));
                 intervals.unshift(dateDomain[0])
-                console.log("days ", intervals)
                 return intervals
             }
 
             function hours(dateDomain) {
                 var intervals = d3.time.hours(new Date(dateDomain[0]), new Date(dateDomain[1]));
                 intervals.unshift(dateDomain[0])
-                console.log("minutes ", intervals)
                 return intervals
             }
         }
