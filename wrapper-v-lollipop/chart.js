@@ -133,7 +133,11 @@ function makeChart(data,stylename,media,yMin,yMax,yAxisHighlight,numTicksy,plotp
             return yScale(d.y)
         })
         .attr("y2",function(d){
-            return yScale(extent[0])
+            if (d.y>0)  {
+            return yScale(d3.max([0,extent[0]]))
+            }   else    {
+            return yScale(0)    
+            }
         })
         .attr("stroke",colours[0])
         .attr("stroke-width",plotWidth/100)
