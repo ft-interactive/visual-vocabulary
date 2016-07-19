@@ -19,8 +19,8 @@
         var dataURL = "data.csv"
         
         //titles, footnotes
-        var title = "European IPO market";
-        var subtitle = "$ per barrel, then a load more words just to see what happens on a long subhead";//comment out subtitle assignment if not needed
+        var title = "Current asset allocation";
+        var subtitle = "Average capital growth portfolio invested on behalf of UK private clients (%)";//comment out subtitle assignment if not needed
         var source = "FT graphic Bob Haslett|Another line in here|Source: PwC";
         //graph options
         var innerRadious=0;//This is a percent
@@ -29,7 +29,7 @@
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
         var frames=[
-        {name:"print",width:53.5,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert"},
+        {name:"print",width:85,height:63,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert"},
         {name:"web",width:300,height:422,units:'px',margins:[{top:10,right:40,bottom:5,left:10}],stylesheet:styleweb,legend:"hori"},
         {name:"social",width:560,height:750,units:'px',margins:[{top:50,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert"},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori"}
