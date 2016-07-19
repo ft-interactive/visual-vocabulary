@@ -1,4 +1,4 @@
-function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, yAlign, markers){
+function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHighlight, labels, numTicksy, yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -39,10 +39,8 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
     var plotHeight=h-margin.top-margin.bottom
     //Work out xdomain
 
-    var xMin=-9;
-    var xMax=0
-
-     var cumulative =0;
+    console.log(yMin,yMax)
+    var cumulative =0;
 
     function extents(last,value) {
 
@@ -66,8 +64,8 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
     }
 
     var plotData=data.map(function(d) {
-        xMin=Math.min(cumulative,xMin);
-        xMax=Math.max(cumulative,xMax);
+        yMin=Math.min(cumulative,yMin);
+        yMax=Math.max(cumulative,yMax);
 
 
         var extent = extents(cumulative,+d.value);
@@ -100,9 +98,8 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
 
     var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
-
     //var max=d3.max(data, function(d,i) { return +d.value;});
-    yScale.domain([xMin, xMax]);
+    yScale.domain([yMin, yMax]);
 
     var yAxis = d3.svg.axis()
     .scale(yScale)
@@ -148,7 +145,7 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
       .attr("transform", "translate("+(margin.left)+"," + (h-margin.bottom) + ")")
       .call(xAxis);
 
-    plot.selectAll("."+media+"bar")
+    plot.selectAll("."+media+"fill")
     .data(plotData)
     .enter()
         .append("g")
@@ -162,7 +159,7 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
                     return colours(d.group)
                 })
                 .attr("id",function(d) { return d.cat+"-"+d.value; })
-                .attr("class",media+"bars")
+                .attr("class",media+"fill")
                 .attr("x", function(d) { return xScale(d.cat); })
                 .attr("width", xScale.rangeBand())
                 .attr("y", function(d) { return yScale(d.start)-(yScale(d.start)-yScale(d.end))})
@@ -170,19 +167,19 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
                 .on("mouseover",pointer)
                 .on("click",function(d){
                     var elClass = d3.select(this)
-                    if (elClass.attr("class")==media+"bars") {
-                        d3.select(this).attr("class",media+"barshighlight");
-                        d3.select(this).style("fill",colours.range()[7])
+                    if (elClass.attr("class")==media+"fill") {
+                        d3.select(this).attr("class",media+"highlight");
+                        d3.select(this).style("fill",colours.range()[6])
                     }
                     else{var el=d3.select(this)
-                        el.attr("class",media+"bars");
+                        el.attr("class",media+"fill");
                         d3.select(this).style("fill",colours.range()[0])
                     }
                 })
              
              parent.filter(function(d,i) {return d.cat != "Total" && i<(plotData.length-2)})
              .append("line")
-                .attr("class", media+"connectors")
+                .attr("class", media+"whiskers")
                 .attr("x1", function(d,i) {return xScale(d.cat)})
                 .attr("y1", function(d) { 
                     if(d.value>0){
@@ -198,7 +195,7 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
                     else {return yScale(d.start)}
                 })
 
-            var el=d3.selectAll("."+media+"connectors")
+            var el=d3.selectAll("."+media+"whiskers")
             el.moveToFront()
 
             
@@ -211,7 +208,7 @@ function waterfallChart(data,stylename,media,plotpadding,legAlign,lineSmoothing,
             //         else {return "M"+(xScale(d.cat))+","+(yScale(d.start))+"L"+(1*xScale.rangeBand())+","+(yScale(d.start))}
             //     })
 
-            if (markers) {
+            if (labels) {
                 parent.append("text")
                 .attr("class", media+"label")
                 .style("text-anchor","middle")
