@@ -134,21 +134,21 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             })
         .call(xAxis);
 
-    // var xAxisMinor = d3.svg.axis()
-    //     .scale(xScale)
-    //     .tickValues(ticks.minor)
-    //     .tickSize(yOffset/4)
-    //     .orient("bottom");
+    var xAxisMinor = d3.svg.axis()
+        .scale(xScale)
+        .tickValues(ticks.minor)
+        .tickSize(yOffset/4)
+        .orient("bottom");
 
-    // var xLabelMinor=plot.append("g")
-    //     .attr("class",media+"xAxisMinor")
-    //     .attr("transform",function(){
-    //         if(yAlign=="right") {
-    //             return "translate("+(margin.left)+","+(plotHeight+margin.top)+")"
-    //         }
-    //          else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
-    //         })
-    //     .call(xAxisMinor);
+    var xLabelMinor=plot.append("g")
+        .attr("class",media+"minorAxis")
+        .attr("transform",function(){
+            if(yAlign=="right") {
+                return "translate("+(margin.left)+","+(plotHeight+margin.top)+")"
+            }
+             else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
+            })
+        .call(xAxisMinor);
 
     //create a line function that can convert data[] into x and y points
     var lineData= d3.svg.line()
