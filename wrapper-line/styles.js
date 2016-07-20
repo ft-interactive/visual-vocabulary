@@ -64,6 +64,8 @@ var stylesoc = {classes:
 {class:"yAxis{fill:none; stroke: none;}"},
 {class:"yAxis line{fill:none; stroke-width: 2.0px; stroke-dasharray:2,8; opacity: 0.38; stroke:#ffffff;}"},
 {class:"yAxis text{font-size: 28px; fill: #ffffff; font-weight: 400; opacity: 0.5; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
+{class:"minorAxis{fill:none; stroke: none;}"},
+{class:"minorAxis line{fill:none; stroke:#ffffff; stroke-width: 2.0px; opacity: 0.5; stroke-dasharray: 1,0}"},
 {class:"origin line{fill:none; stroke:#ffffff; stroke-width: 2.0px; opacity: 0.5; stroke-dasharray: 1,0}"},
 {class:"lines{fill:none; stroke-width: 5px;  stroke-linecap: round;}"}
 ],

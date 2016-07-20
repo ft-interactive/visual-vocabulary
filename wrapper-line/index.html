@@ -33,6 +33,7 @@
         var markers=false;//show circle markers
         var numTicksy = 8;//rough number of ticks for y axis
         var interval="years";//days, months or years
+        var minAxis=true //true or false
         var ticks//=[0.2,0.3];//option to force tick values for online
 
         //Use the frames array to set unique values for each media type of frame
@@ -86,7 +87,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                lineChart(data,stylename,media,yMin,yMax,yAxisHighlight,chartpadding,legend, lineSmoothing,logScale,logScaleStart,markers, numTicksy,yLabel,ticks);
+                lineChart(data,stylename,media,yMin,yMax,yAxisHighlight,chartpadding,legend, lineSmoothing,logScale,logScaleStart,markers, numTicksy,yLabel,ticks,minAxis);
             }
         })//end data load
 
