@@ -1,5 +1,5 @@
 
-function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpadding,legAlign,lineSmoothing, logScale, logScaleStart, markers, numTicksy, yAlign, ticks){
+function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpadding,legAlign,lineSmoothing, logScale, logScaleStart, markers, numTicksy, yAlign, ticks,minAxis){
 
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
@@ -117,13 +117,14 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         .domain(xDomain)
         .range([0,(plotWidth-yLabelOffset)])
 
+    
     var xAxis = d3.svg.axis()
         .scale(xScale)
-        .tickValues(ticks)
+        .tickValues(ticks.major)
         .tickSize(yOffset/2)
         .orient("bottom");
 
-     var xLabel=plot.append("g")
+    var xLabel=plot.append("g")
         .attr("class",media+"xAxis")
         .attr("transform",function(){
             if(yAlign=="right") {
@@ -132,6 +133,25 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
              else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
             })
         .call(xAxis);
+
+    if(minAxis) {
+        var xAxisMinor = d3.svg.axis()
+        .scale(xScale)
+        .tickValues(ticks.minor)
+        .tickSize(yOffset/4)
+        .orient("bottom");
+
+        var xLabelMinor=plot.append("g")
+            .attr("class",media+"minorAxis")
+            .attr("transform",function(){
+                if(yAlign=="right") {
+                    return "translate("+(margin.left)+","+(plotHeight+margin.top)+")"
+                }
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
+                })
+            .call(xAxisMinor);
+    }
+
 
     //create a line function that can convert data[] into x and y points
     var lineData= d3.svg.line()
