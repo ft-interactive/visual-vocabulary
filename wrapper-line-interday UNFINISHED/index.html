@@ -79,6 +79,7 @@
             });
         //YOU SHOULD'NT HAVE TO DO MUCH AFTER THIS
             ticks=calculateTicks(data,interval)
+            console.log(ticks)
 
 
             // var test=ticks.major.filter(function(d,i) {
@@ -152,7 +153,6 @@
             function years(dateDomain) {
                 var intervals= d3.time.year.range(new Date(dateDomain[0]), new Date(dateDomain[1]));
                 intervals.unshift(dateDomain[0])
-                console.log("years ", intervals)
                 return intervals
             }
 

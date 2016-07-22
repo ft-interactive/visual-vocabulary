@@ -26,7 +26,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     var plotHeight = h-(margin.top+margin.bottom);
 
     //calculate range of time series 
-    var xDomain = d3.extent(data, function(d) {return d.date;});
+    var xDomain = data.map(function(d) { return d.date;})
     var yDomain;
 
     //calculate range of y axis series data
@@ -113,15 +113,15 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             return d==originValue || d==yAxisHighlight;
         }).classed(media+"origin",true);
 
-    var xScale = d3.time.scale()
+    var xScale = d3.scale.ordinal()
     //var xScale = scaleWeekday()
         .domain(xDomain)
-        .range([0,(plotWidth-yLabelOffset)])
+        .rangeRoundBands([0,(plotWidth-yLabelOffset)])
 
     
     var xAxis = d3.svg.axis()
         .scale(xScale)
-        .tickValues(ticks.major)
+        //.tickValues(ticks.major)
         .tickSize(yOffset/2)
         .orient("bottom");
 
