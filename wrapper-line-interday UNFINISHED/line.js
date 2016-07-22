@@ -116,7 +116,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     var xScale = d3.scale.ordinal()
     //var xScale = scaleWeekday()
         .domain(xDomain)
-        .rangeRoundBands([0,(plotWidth-yLabelOffset)])
+        .rangeBands([0,(plotWidth-yLabelOffset)])
 
     
     var xAxis = d3.svg.axis()
@@ -235,6 +235,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     d3.selectAll(".printxAxis line")
     .attr("id","xAxisTick")
 
+
     if (seriesNames[0]!="x"){
         // //create a legend first
         var legendyOffset=0
@@ -307,60 +308,6 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");
 
     }
-
-
-    function scaleWeekday(){
-        var domain = [0,1];
-        var range = [0,1];
-        var msDay = 60000 * 60 * 24; //number of ms in a day
-        function scale(x){
-            //TODO: check we have a date... if not NaN
-            //if it's a weekend reject, returning NaN
-            if(x.getDay() == 0 || x.getDay() == 6) return undefined; //sunday is 0, saturday is 6
-            var domainWeekendsMs = countWeekendDays(domain[0], domain[1]) * msDay;
-            //  console.log(domain[0] + '->' + x, ' weekend days ' + countWeekendDays(domain[0], x) )
-            //  console.log('adjusting')
-            //  console.log(x.getTime(),'-',countWeekendDays(domain[0],x) * msDay)
-            var adjustedValue = ( x.getTime() - (countWeekendDays(domain[0],x) * msDay) )-domain[0].getTime();
-            var scaleFactor = (range[1] - range[0]) / ((domain[1] - domain[0]) - domainWeekendsMs ); //range units per ms
-            //  console.log('scale', scaleFactor);
-            return adjustedValue * scaleFactor;
-        }
-
-        scale.invert = function(x){ //TODO, this would be useful
-        }
-        scale.domain = function(x){
-            if(!x) return domain;
-            domain = x;
-            return scale;
-        }
-
-        scale.range = function(x){
-            if(!x) return range;
-            range = x;
-            return scale;
-        }
-
-        function countWeekendDays(d1, d2){ //how many weekend days are there between d1 and d2
-            var firstday = d1.getDay();
-            var daySpan = (d2.getTime() - d1.getTime() - firstday) / msDay;
-            var weekSpan = (daySpan / 7) | 0;
-            var weekRemainder = Math.ceil(daySpan % 7);
-            var extra = 0;
-            if (firstday + weekRemainder > 7){
-            extra = 2;
-            }else if (firstday + weekRemainder == 7 || weekRemainder > firstday){
-            extra = 1;
-            }
-            return weekSpan * 2 + extra;
-        }
-
-
-        return scale;
-    }
-
-
-
 
 
 }
