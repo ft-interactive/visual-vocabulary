@@ -107,9 +107,20 @@ function makeChart(data,stylename,media,sort,xMin,xMax,xAxisHighlight,numTicksx,
         .attr("id",function(d){
             return d.name+":"+d.value+"_line"
         })
-        .attr("x1",xScale(xEntent[0]))
+        .attr("x1",function(d){
+            if (d.value>0){
+                return xScale(d3.max([0,xEntent[0]]))
+            }   else    {
+                return xScale(d.value)
+            }
+        })
         .attr("x2",function(d){
-            return xScale(d.value);
+            if (d.value<0){
+                return xScale(0)
+            }   else    {
+                return xScale(d.value);
+            }
+            
         })
         .attr("y1",function(d){
             return yScale(d.name)
