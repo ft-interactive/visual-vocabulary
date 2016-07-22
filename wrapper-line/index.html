@@ -16,7 +16,7 @@
     <script>
         
         //datafile
-        var dataURL = "data.csv"
+        var dataURL = "bonds.csv"
         
         //titles, footnotes
         var title = "Chinese profits are down for the first time since 2008";
@@ -24,16 +24,16 @@
         var source = "Source: Dazhihui";
 
         //graph options
-        var yMin=-20;
-        var yMax=60;
-        var yAxisHighlight=-20;
+        var yMin=0.5;
+        var yMax=1.4;
+        var yAxisHighlight=0.5;
         var lineSmoothing="linear";//choose 'linear' for an unsmoothed line 'monotone' for smooth
         var logScale=false;
         var logScaleStart=1000;
         var markers=false;//show circle markers
         var numTicksy = 8;//rough number of ticks for y axis
-        var interval="years";//hours, days, months or years, NOTE THAT HOURS FUNCTION IS TURNED OFF FOR GENERAL USE AS IT TAKES TOO LONG TO CALCULATE
-        var minAxis=true //true or false
+        var interval="days";//hours, days, months or years, NOTE THAT HOURS FUNCTION IS TURNED OFF FOR GENERAL USE AS IT TAKES TOO LONG TO CALCULATE
+        var minAxis=false //true or false
         var ticks//Contains the tick values for the major and minor xAxis
 
         //Use the frames array to set unique values for each media type of frame
@@ -48,8 +48,8 @@
         //sets the padding inside the chart area
         var chartpadding=[
         {name:"print",margin:[{top:15, right:10, bottom:15, left:0}]},
-        {name:"web",margin:[{top:20, right:0,bottom:20,left:10}]},
-        {name:"social",margin:[{top:40, right:27, bottom:40, left:12}]},
+        {name:"web",margin:[{top:20, right:10,bottom:20,left:10}]},
+        {name:"social",margin:[{top:40, right:10, bottom:40, left:12}]},
         {name:"video",margin:[{top:55, right:35,bottom:50, left:42}]}
         ]
         //Add blank frames
@@ -59,7 +59,7 @@
             //date formatter, matching the format of the incoming csv...
             //var parseDate = d3.time.format("%Y %b").parse;
             //var parseDate = d3.time.format("%Y").parse;//just full year
-            var parseDate = d3.time.format("%Y").parse;
+            var parseDate = d3.time.format("%d/%m/%Y %H:%M").parse;
             /*
             some common formatting parsers....
             d3.time.format("%Y %b") 1986 Jan
