@@ -1,5 +1,5 @@
 
-function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpadding,legAlign,lineSmoothing, logScale, logScaleStart, markers, numTicksy, yAlign, ticks){
+function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpadding,legAlign,lineSmoothing, logScale, logScaleStart, markers, numTicksy, yAlign, ticks,minAxis){
 
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
@@ -114,16 +114,18 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         }).classed(media+"origin",true);
 
     var xScale = d3.time.scale()
+    //var xScale = scaleWeekday()
         .domain(xDomain)
         .range([0,(plotWidth-yLabelOffset)])
 
+    
     var xAxis = d3.svg.axis()
         .scale(xScale)
-        .tickValues(ticks)
+        .tickValues(ticks.major)
         .tickSize(yOffset/2)
         .orient("bottom");
 
-     var xLabel=plot.append("g")
+    var xLabel=plot.append("g")
         .attr("class",media+"xAxis")
         .attr("transform",function(){
             if(yAlign=="right") {
@@ -132,6 +134,25 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
              else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
             })
         .call(xAxis);
+
+    if(minAxis) {
+        var xAxisMinor = d3.svg.axis()
+        .scale(xScale)
+        .tickValues(ticks.minor)
+        .tickSize(yOffset/4)
+        .orient("bottom");
+
+        var xLabelMinor=plot.append("g")
+            .attr("class",media+"minorAxis")
+            .attr("transform",function(){
+                if(yAlign=="right") {
+                    return "translate("+(margin.left)+","+(plotHeight+margin.top)+")"
+                }
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
+                })
+            .call(xAxisMinor);
+    }
+
 
     //create a line function that can convert data[] into x and y points
     var lineData= d3.svg.line()
@@ -285,6 +306,57 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         var dY = d3.event.y; // subtract cy
         d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");
 
+    }
+
+
+    function scaleWeekday(){
+        var domain = [0,1];
+        var range = [0,1];
+        var msDay = 60000 * 60 * 24; //number of ms in a day
+        function scale(x){
+            //TODO: check we have a date... if not NaN
+            //if it's a weekend reject, returning NaN
+            if(x.getDay() == 0 || x.getDay() == 6) return undefined; //sunday is 0, saturday is 6
+            var domainWeekendsMs = countWeekendDays(domain[0], domain[1]) * msDay;
+            //  console.log(domain[0] + '->' + x, ' weekend days ' + countWeekendDays(domain[0], x) )
+            //  console.log('adjusting')
+            //  console.log(x.getTime(),'-',countWeekendDays(domain[0],x) * msDay)
+            var adjustedValue = ( x.getTime() - (countWeekendDays(domain[0],x) * msDay) )-domain[0].getTime();
+            var scaleFactor = (range[1] - range[0]) / ((domain[1] - domain[0]) - domainWeekendsMs ); //range units per ms
+            //  console.log('scale', scaleFactor);
+            return adjustedValue * scaleFactor;
+        }
+
+        scale.invert = function(x){ //TODO, this would be useful
+        }
+        scale.domain = function(x){
+            if(!x) return domain;
+            domain = x;
+            return scale;
+        }
+
+        scale.range = function(x){
+            if(!x) return range;
+            range = x;
+            return scale;
+        }
+
+        function countWeekendDays(d1, d2){ //how many weekend days are there between d1 and d2
+            var firstday = d1.getDay();
+            var daySpan = (d2.getTime() - d1.getTime() - firstday) / msDay;
+            var weekSpan = (daySpan / 7) | 0;
+            var weekRemainder = Math.ceil(daySpan % 7);
+            var extra = 0;
+            if (firstday + weekRemainder > 7){
+            extra = 2;
+            }else if (firstday + weekRemainder == 7 || weekRemainder > firstday){
+            extra = 1;
+            }
+            return weekSpan * 2 + extra;
+        }
+
+
+        return scale;
     }
 
 
