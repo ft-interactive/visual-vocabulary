@@ -118,21 +118,27 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         .domain(xDomain)
         .rangeBands([0,(plotWidth-yLabelOffset)])
 
+
     
     var xAxis = d3.svg.axis()
         .scale(xScale)
-        //.tickValues(ticks.major)
-        .tickFormat(function (d,i) {
-            var dateFormat=d3.time.format("%d");
-            if(i>0) {
-                var day=d.getDay()
-                var yesterday=data[i-1].date.getDay()
-                console.log(day,yesterday)
-                if(day!=yesterday) {
-                    return dateFormat(d)
-                }
-            }
-        })
+        .tickValues(xScale.domain().filter(function (d, i) {
+            return (d.getHours() == 12 && d.getMinutes() == 00);
+        }))
+       .tickFormat(function (d) {
+             var dateFormat=d3.time.format("%d");
+             return dateFormat(d);
+       })
+        // .tickFormat(function (d,i) {
+        //     var dateFormat=d3.time.format("%d");
+        //     if(i>0) {
+        //         var day=d.getDay()
+        //         var yesterday=data[i-1].date.getDay()
+        //         if(day!=yesterday) {
+        //             return dateFormat(d)
+        //         }
+        //     }
+        // })
         .tickSize(yOffset/2)
         .orient("bottom");
 
@@ -149,7 +155,6 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     if(minAxis) {
         var xAxisMinor = d3.svg.axis()
         .scale(xScale)
-        .tickValues(ticks.minor)
         .tickSize(yOffset/4)
         .orient("bottom");
 
