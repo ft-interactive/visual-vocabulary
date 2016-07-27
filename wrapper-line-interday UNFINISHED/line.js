@@ -122,6 +122,17 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     var xAxis = d3.svg.axis()
         .scale(xScale)
         //.tickValues(ticks.major)
+        .tickFormat(function (d,i) {
+            var dateFormat=d3.time.format("%d");
+            if(i>0) {
+                var day=d.getDay()
+                var yesterday=data[i-1].date.getDay()
+                console.log(day,yesterday)
+                if(day!=yesterday) {
+                    return dateFormat(d)
+                }
+            }
+        })
         .tickSize(yOffset/2)
         .orient("bottom");
 
