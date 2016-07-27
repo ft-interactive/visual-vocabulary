@@ -16,7 +16,7 @@
     <script>
         
         //datafile
-        var dataURL = "bonds.csv"
+        var dataURL = "data.csv"
         
         //titles, footnotes
         var title = "Chinese profits are down for the first time since 2008";
@@ -24,16 +24,16 @@
         var source = "Source: Dazhihui";
 
         //graph options
-        var yMin=0.5;
-        var yMax=1.4;
-        var yAxisHighlight=0.5;
+        var yMin=60;
+        var yMax=-20;
+        var yAxisHighlight=-20;
         var lineSmoothing="linear";//choose 'linear' for an unsmoothed line 'monotone' for smooth
         var logScale=false;
         var logScaleStart=1000;
         var markers=false;//show circle markers
         var numTicksy = 8;//rough number of ticks for y axis
-        var interval="days";//hours, days, months or years, NOTE THAT HOURS FUNCTION IS TURNED OFF FOR GENERAL USE AS IT TAKES TOO LONG TO CALCULATE
-        var minAxis=false //true or false
+        var interval="years";//hours, days, months or years, NOTE THAT HOURS FUNCTION IS TURNED OFF FOR GENERAL USE AS IT TAKES TOO LONG TO CALCULATE
+        var minAxis=true //true or false
         var ticks//Contains the tick values for the major and minor xAxis
 
         //Use the frames array to set unique values for each media type of frame
@@ -59,7 +59,7 @@
             //date formatter, matching the format of the incoming csv...
             //var parseDate = d3.time.format("%Y %b").parse;
             //var parseDate = d3.time.format("%Y").parse;//just full year
-            var parseDate = d3.time.format("%d/%m/%Y %H:%M").parse;
+            var parseDate = d3.time.format("%Y").parse;
             /*
             some common formatting parsers....
             d3.time.format("%Y %b") 1986 Jan
@@ -79,6 +79,7 @@
             });
         //YOU SHOULD'NT HAVE TO DO MUCH AFTER THIS
             ticks=calculateTicks(data,interval)
+            console.log(ticks)
 
 
             // var test=ticks.major.filter(function(d,i) {
@@ -149,10 +150,17 @@
             }[int];
 
 
+            function timeline(dateDomain,time) {
+                var intervals= d3.time[time].range(new Date(dateDomain[0]), new Date(dateDomain[1]));
+                intervals.unshift(dateDomain[0])
+
+                return intervals
+            }
+
+
             function years(dateDomain) {
                 var intervals= d3.time.year.range(new Date(dateDomain[0]), new Date(dateDomain[1]));
                 intervals.unshift(dateDomain[0])
-                console.log("years ", intervals)
                 return intervals
             }
 
