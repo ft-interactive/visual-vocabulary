@@ -9,7 +9,7 @@ var styleprint = {classes:
 {class:"hat{fill:none; stroke-width:0.3px; stroke:#22190f;}"},
 {class:"xAxis{fill:none; stroke-width:0px; stroke:none;}"},
 {class:"xAxis line{fill:none; stroke-width:.3px; stroke:#000000;}"},
-//{class:"xAxis text{fill:#000000; font-size: 9.6px; font-weight: 400; font-feature-settings:'tnum' 1;}"},
+{class:"xAxis text{fill:#000000; font-size: 9.6px; font-weight: 400; font-feature-settings:'tnum' 1;}"},
 {class:"yAxis{fill:none; stroke-width:0px; stroke:none;}"},
 {class:"yAxis line{fill:none; stroke-width:0.3px; stroke:#000000;}"},
 {class:"yAxis text{fill:#000000; font-size: 9.6px; font-weight: 400; font-feature-settings: 'tnum' 1;}"},
