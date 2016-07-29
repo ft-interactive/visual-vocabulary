@@ -125,8 +125,7 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
       .attr("width", sankey.nodeWidth())
       .attr("transform", 
               "translate(" + margin.left + "," + margin.top + ")")
-      .style("fill", function(d) { 
-          return colours(d.name)})
+      .style("fill", "9D9D9C")
 
     var numNodes=plotData.nodes.length/2;
 
