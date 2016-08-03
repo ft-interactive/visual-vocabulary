@@ -112,6 +112,24 @@
             }
         }
 
+        function calculateTicks(data,int) {
+            console.log("intercal ", int)
+            var dateDomain = d3.extent(data, function(d) {return d.date;});       
+            return {
+                'years':{major: timeline(dateDomain,"year"),minor:timeline(dateDomain,"month")},
+                'months':{major: timeline(dateDomain,"month"),minor:timeline(dateDomain,"day")},
+                'days':{major: timeline(dateDomain,"day"),minor:timeline(dateDomain,"hour")}
+
+            }[int];
+
+            function timeline(dateDomain,time) {
+                var intervals= d3.time[time].range(new Date(dateDomain[0]), new Date(dateDomain[1]));
+                intervals.unshift(dateDomain[0])
+                //console.log("test interva;",intervals)
+                return intervals
+            }
+        }
+
         function mmToPx(mm){
             var px = mm*2.83464480558843;
             return px;
