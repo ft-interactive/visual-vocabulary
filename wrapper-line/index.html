@@ -32,8 +32,8 @@
         var logScaleStart=1000;
         var markers=false;//show circle markers
         var numTicksy = 8;//rough number of ticks for y axis
-        var interval="years";//hours, days, months or years, NOTE THAT HOURS FUNCTION IS TURNED OFF FOR GENERAL USE AS IT TAKES TOO LONG TO CALCULATE
-        var minAxis=true //true or false
+        var interval="years";//days, months or years, NOTE THAT HOURS FUNCTION IS TURNED OFF FOR GENERAL USE AS IT TAKES TOO LONG TO CALCULATE
+        var minAxis=false //true or false
         var ticks//Contains the tick values for the major and minor xAxis
 
         //Use the frames array to set unique values for each media type of frame
@@ -79,25 +79,8 @@
             });
         //YOU SHOULD'NT HAVE TO DO MUCH AFTER THIS
             ticks=calculateTicks(data,interval)
-            console.log(ticks)
+            //console.log(ticks)
 
-
-            // var test=ticks.major.filter(function(d,i) {
-            //     var day=d.getDay()
-            //     if (day!=0 && day!=6) {
-            //         return d
-            //         }
-            //     })
-            // ticks.major=test
-
-            // test=ticks.minor.filter(function(d,i) {
-            //     var day=d.getDay()
-            //     if (day!=0 && day!=6) {
-            //         return d
-            //         }
-            //     })
-            // ticks.minor=test
-            // console.log("ticks", ticks)
 
             for (var i=0;i<frames.length;i++){
                 var stylename=frames[i].stylesheet;
@@ -140,51 +123,18 @@
 
         function calculateTicks(data,int) {
             console.log("intercal ", int)
-            var dateDomain = d3.extent(data, function(d) {return d.date;});
-            
+            var dateDomain = d3.extent(data, function(d) {return d.date;});       
             return {
-                'years':{major: years(dateDomain),minor:months(dateDomain)},
-                'months':{major: months(dateDomain),minor:days(dateDomain)},
-                'days':{major: days(dateDomain),minor:hours(dateDomain)},
-                //'hours':{major: hours(dateDomain),minor:mins(dateDomain)},
-            }[int];
+                'years':{major: timeline(dateDomain,"year"),minor:timeline(dateDomain,"month")},
+                'months':{major: timeline(dateDomain,"month"),minor:timeline(dateDomain,"day")},
+                'days':{major: timeline(dateDomain,"day"),minor:timeline(dateDomain,"hour")}
 
+            }[int];
 
             function timeline(dateDomain,time) {
                 var intervals= d3.time[time].range(new Date(dateDomain[0]), new Date(dateDomain[1]));
                 intervals.unshift(dateDomain[0])
-
-                return intervals
-            }
-
-
-            function years(dateDomain) {
-                var intervals= d3.time.year.range(new Date(dateDomain[0]), new Date(dateDomain[1]));
-                intervals.unshift(dateDomain[0])
-                return intervals
-            }
-
-            function months(dateDomain) {
-                var intervals= d3.time.months(new Date(dateDomain[0]), new Date(dateDomain[1]));
-                intervals.unshift(dateDomain[0])
-                return intervals
-            }
-
-            function days(dateDomain) {
-                var intervals = d3.time.days(new Date(dateDomain[0]), new Date(dateDomain[1]));
-                intervals.unshift(dateDomain[0])
-                return intervals
-            }
-
-            function hours(dateDomain) {
-                var intervals = d3.time.hours(new Date(dateDomain[0]), new Date(dateDomain[1]));
-                intervals.unshift(dateDomain[0])
-                return intervals
-            }
-
-            function mins(dateDomain) {
-                var intervals = d3.time.minutes(new Date(dateDomain[0]), new Date(dateDomain[1]));
-                intervals.unshift(dateDomain[0])
+                //console.log("test interva;",intervals)
                 return intervals
             }
         }
