@@ -8,7 +8,10 @@ function circlesTimelineChart(data,stylename,media,plotpadding,legAlign,minAxis,
 
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
-    var plot=d3.select("#"+media+"plot")
+    var plot=d3.select("#"+media+"plot");
+
+    var yOffset=d3.select("#"+media+"Subtitle").style("font-size");
+    yOffset=Number(yOffset.replace(/[^\d.-]/g, ''));
     
     //Get the width,height and the marginins unique to this plot
     var w=plot.node().getBBox().width;
@@ -55,11 +58,12 @@ function circlesTimelineChart(data,stylename,media,plotpadding,legAlign,minAxis,
     //define a main axis based on the scale
     var xAxis = d3.svg.axis()
         .scale(xScale)
+        .tickSize(yOffset/2)
         .tickValues(ticks.major)
         .orient('bottom');
 
     //define another axis based on days
-    var dayAxis = d3.svg.axis()
+    var yAxis = d3.svg.axis()
         .scale(xScale)
         .orient('bottom')
         .tickFormat('');
@@ -94,11 +98,23 @@ function circlesTimelineChart(data,stylename,media,plotpadding,legAlign,minAxis,
 
     timelines.append('g')
         .attr('class', media+'yAxis')
-        .call(dayAxis);
+        .call(yAxis);
 
     timelines.append('g')
         .attr('class',media+'xAxis')
         .call(xAxis);
+
+    if(minAxis) {
+        var xAxisMinor = d3.svg.axis()
+        .scale(xScale)
+        .tickValues(ticks.minor)
+        .tickSize(yOffset/4)
+        .orient("bottom");
+
+        var xLabelMinor=timelines.append("g")
+            .attr("class",media+"minorAxis")
+            .call(xAxisMinor);
+    }
 
     var circles = timelines.append('g')
             .attr({
