@@ -27,7 +27,7 @@
         var yMax=100;
         var yAxisHighlight=50;
         var numTicksy = 10;//rough number of ticks for y axis
-        var interval="years";//hours, days, months or years, NOTE THAT HOURS FUNCTION IS TURNED OFF FOR GENERAL USE AS IT TAKES TOO LONG TO CALCULATE
+        var interval="months";//hours, days, months or years, NOTE THAT HOURS FUNCTION IS TURNED OFF FOR GENERAL USE AS IT TAKES TOO LONG TO CALCULATE
         var minAxis=true //true or false
         var ticks//Contains the tick values for the major and minor xAxis
 
@@ -72,6 +72,8 @@
 
 
          /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
+         ticks=calculateTicks(data,interval)
+         console.log(ticks)
 
             for (var i=0;i<frames.length;i++){
                 var stylename=frames[i].stylesheet;
@@ -79,7 +81,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                areaChart(data, stylename, media, yMin, yMax,yAxisHighlight, numTicksy, chartpadding,legend, yLabel);
+                areaChart(data, stylename, media, yMin, yMax,yAxisHighlight, numTicksy, chartpadding,legend, yLabel, ticks,minAxis);
             }
         })//end data load
 
@@ -109,6 +111,24 @@
                     frame.subtitle(subtitle)
                 }
                 d3.select("body").call(frame)
+            }
+        }
+
+        function calculateTicks(data,int) {
+            console.log("intercal ", int)
+            var dateDomain = d3.extent(data, function(d) {return d.date;});       
+            return {
+                'years':{major: timeline(dateDomain,"year"),minor:timeline(dateDomain,"month")},
+                'months':{major: timeline(dateDomain,"month"),minor:timeline(dateDomain,"day")},
+                'days':{major: timeline(dateDomain,"day"),minor:timeline(dateDomain,"hour")}
+
+            }[int];
+
+            function timeline(dateDomain,time) {
+                var intervals= d3.time[time].range(new Date(dateDomain[0]), new Date(dateDomain[1]));
+                intervals.unshift(dateDomain[0])
+                //console.log("test interva;",intervals)
+                return intervals
             }
         }
 

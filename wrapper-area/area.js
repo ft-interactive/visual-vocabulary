@@ -1,5 +1,5 @@
 
-function areaChart(data, stylename ,media, yMin, yMax ,yAxisHighlight, numTicksy, plotpadding,legAlign,yAlign){
+function areaChart(data, stylename ,media, yMin, yMax ,yAxisHighlight, numTicksy, plotpadding,legAlign,yAlign, ticks,minAxis){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -116,6 +116,7 @@ function areaChart(data, stylename ,media, yMin, yMax ,yAxisHighlight, numTicksy
     //Define xAxis
     var xAxis = d3.svg.axis()
         .scale(xScale)
+        .tickValues(ticks.major)
         .tickSize(yOffset/2)//Half the size of the Subtitle text
         .orient("bottom");
     //Plot and position on the page
@@ -128,6 +129,25 @@ function areaChart(data, stylename ,media, yMin, yMax ,yAxisHighlight, numTicksy
             else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"}
         })
       .call(xAxis);
+
+    if(minAxis) {
+        var xAxisMinor = d3.svg.axis()
+        .scale(xScale)
+        .tickValues(ticks.minor)
+        .tickSize(yOffset/4)
+        .orient("bottom");
+
+        var xLabelMinor=plot.append("g")
+            .attr("class",media+"minorAxis")
+            .attr("transform",function(){
+                if(yAlign=="right") {
+                    return "translate("+(margin.left)+","+(h-margin.bottom)+")"
+                }
+                else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"}
+            })
+            .call(xAxisMinor);
+    }
+    
     //Add group to plot the areas
     var areas = plot.selectAll(".browser")
         .data(plotData)
