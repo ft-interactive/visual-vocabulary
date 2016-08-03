@@ -1,5 +1,6 @@
-function circlesTimelineChart(data,stylename,media,plotpadding,legAlign,yHighlight,minAxis, ticks){
+function circlesTimelineChart(data,stylename,media,plotpadding,legAlign,minAxis,ticks){
 	//graph options
+    console.log(ticks)
     var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height
@@ -54,6 +55,7 @@ function circlesTimelineChart(data,stylename,media,plotpadding,legAlign,yHighlig
     //define a main axis based on the scale
     var xAxis = d3.svg.axis()
         .scale(xScale)
+        .tickValues(ticks.major)
         .orient('bottom');
 
     //define another axis based on days
