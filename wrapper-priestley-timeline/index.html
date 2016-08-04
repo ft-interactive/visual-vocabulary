@@ -29,6 +29,9 @@
         var showLine = true;//connecting line
         var markers = true;//marker dots
         var numTicksx=5
+        var interval="years";//days, months or years, NOTE THAT HOURS FUNCTION IS TURNED OFF FOR GENERAL USE AS IT TAKES TOO LONG TO CALCULATE
+        var minAxis=true //true or false
+        var ticks//Contains the tick values for the major and minor xAxis
 
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
@@ -76,6 +79,9 @@
                     })
             });
 
+            ticks=calculateTicks(data,interval)
+            //console.log(ticks)
+
 
          /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
             for (var i=0;i<frames.length;i++){
@@ -114,6 +120,24 @@
                     frame.subtitle(subtitle)
                 }
                 d3.select("body").call(frame)
+            }
+        }
+
+        function calculateTicks(data,int) {
+            console.log("intercal ", int)
+            var dateDomain = d3.extent(data, function(d) {return d.date;});       
+            return {
+                'years':{major: timeline(dateDomain,"year"),minor:timeline(dateDomain,"month")},
+                'months':{major: timeline(dateDomain,"month"),minor:timeline(dateDomain,"day")},
+                'days':{major: timeline(dateDomain,"day"),minor:timeline(dateDomain,"hour")}
+
+            }[int];
+
+            function timeline(dateDomain,time) {
+                var intervals= d3.time[time].range(new Date(dateDomain[0]), new Date(dateDomain[1]));
+                intervals.unshift(dateDomain[0])
+                //console.log("test interva;",intervals)
+                return intervals
             }
         }
 
