@@ -20,8 +20,7 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
         return (d.name === media);
       });
     margin=margin[0].margin[0]
-    var colours= d3.scale.ordinal()
-      .range(stylename.fillcolours);
+    var colours=stylename.linecolours;
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
     
@@ -31,7 +30,6 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
 
     //code adapted from http://bl.ocks.org/d3noob/c9b90689c1438f57d649
 
-    console.log("data", data)
     console.log("seriesNames", seriesNames)
 
     
@@ -57,10 +55,16 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
                          "value": +d.value });
      });
 
+    console.log("data", data)
+
     // return only the distinct / unique nodes
     plotData.nodes = d3.keys(d3.nest()
         .key(function (d) { return d.name; })
         .map(plotData.nodes));
+
+    console.log("nodes", plotData.nodes)
+    
+    var cat=[]
 
     // loop through each link replacing the text with its index from node
     plotData.links.forEach(function (d, i) {
@@ -71,6 +75,10 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
     //now loop through each nodes to make nodes an array of objects
     // rather than an array of strings and remove serieNames as these are no longer needed
     plotData.nodes.forEach(function (d, i) {
+        var check=d.slice(-(seriesNames[0].length));
+        if (check==seriesNames[0]){
+            cat.push(d.slice(0,-(seriesNames[0].length)))
+        }
         if (isEven(i)){
             console.log("even")
             var chrts=seriesNames[0].length
@@ -83,7 +91,10 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
         plotData.nodes[i] = { "name": d };
     });
 
-    console.log(plotData)
+
+
+
+    console.log("cat",cat)
 
     sankey
     .nodes(plotData.nodes)
@@ -102,6 +113,10 @@ function sankeyChart(data,stylename,media,plotpadding,legAlign,yAlign){
               "translate(" + margin.left + "," + margin.top + ")")
         .attr("class", media+"link")
         .attr("d", path)
+        .style("stroke",function(d,i){
+            console.log(colours[cat.indexOf(d.source.name)])
+            return colours[cat.indexOf(d.source.name)]
+        })
         .style("stroke-width", function(d) { return Math.max(1, d.dy); })
         .sort(function(a, b) { return b.dy - a.dy; });
 
