@@ -49,14 +49,15 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
         }
     })
     function getFiscalYear(e){
-        var date=e.getDate()
-        var month=e.getMonth()
-        if(date>5 && month>2){
-            console.log(e,e.getFullYear(),"date",date, "month",month)
+        var dayNumber=d3.time.format("%j") 
+        var day=dayNumber(e)
+        console.log(day)
+        if(day>95){
+            console.log(e,e.getFullYear(),day)
             return e.getFullYear()
         }
         else {
-            console.log("minus ",e,e.getFullYear()-1,"date",date, "month",month)
+            console.log("minus ",e,e.getFullYear()-1,day)
             return e.getFullYear()-1}
     }
     console.log("fiscal", fiscalPlot)
