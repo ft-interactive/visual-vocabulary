@@ -21,8 +21,9 @@
         var title = "Bitcoin";
         var subtitle = "Number of transaction (per day)";//comment out subtitle assignment if not needed
         var source = "Thomson Reuters Datastream";
-
         //put custom graph options here
+        var fiscal=true//should be true if you want to disply financial years
+
 
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
@@ -72,7 +73,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                makeChart(data, stylename, media, chartpadding,legend, yLabel);
+                makeChart(data, stylename, media, chartpadding,legend, yLabel, fiscal);
             }
         })//end data load
 

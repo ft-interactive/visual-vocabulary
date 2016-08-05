@@ -1,5 +1,5 @@
 
-function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
+function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -40,6 +40,22 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     var percent = d3.format(".1%");
     var format = d3.time.format("%Y-%m-%d");
     var toolDate = d3.time.format("%d/%b/%y");
+
+    console.log(data)
+    var fiscalPlot=data.map(function(d){
+        return {
+            date:d.date,
+            value:d.value,
+            fyear: getFiscalYear(d.date)
+        }
+    })
+    function getFiscalYear(e){
+        if(e.getMonth()>3){
+            return e.getFullYear()+1
+        }
+        else {return e.getFullYear()}
+    }
+    console.log(fiscalPlot)
 
     var plotData=d3.nest()
         .key(function(d){return d.date.getFullYear();})
