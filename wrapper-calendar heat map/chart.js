@@ -51,9 +51,9 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
     })
     function getFiscalYear(e){
         if(e.getMonth()>3){
-            return e.getFullYear()+1
+            return e.getFullYear()
         }
-        else {return e.getFullYear()}
+        else {return e.getFullYear()-1}
     }
     console.log(fiscalPlot)
 
