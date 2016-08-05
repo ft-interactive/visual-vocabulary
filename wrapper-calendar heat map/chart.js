@@ -49,12 +49,14 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
         }
     })
     function getFiscalYear(e){
-        if(e.getMonth()>2){
-            console.log(e,e.getFullYear())
+        var date=e.getDate()
+        var month=e.getMonth()
+        if(date>5 && month>2){
+            console.log(e,e.getFullYear(),"date",date, "month",month)
             return e.getFullYear()
         }
         else {
-            console.log("minus",e,e.getFullYear()-1)
+            console.log("minus ",e,e.getFullYear()-1,"date",date, "month",month)
             return e.getFullYear()-1}
     }
     console.log("fiscal", fiscalPlot)
@@ -117,7 +119,14 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
             .attr('width', cellSize)
             .attr('height', cellSize)
             .attr('x', function(d) {
-                return (d3.time.weekOfYear(d.date) * cellSize+margin.left);
+                if (fiscal){
+                    if(d3.time.weekOfYear(d.date)>13) {
+                        return ((d3.time.weekOfYear(d.date)-13) * cellSize+margin.left);
+                    }
+                    else {return ((d3.time.weekOfYear(d.date)+39) * cellSize+margin.left);
+}
+                }
+                else {return (d3.time.weekOfYear(d.date) * cellSize+margin.left)};
             })
             .attr('y', function(d) { return (d.date.getDay() * cellSize); })
             .style("fill",function(d) {return colours(d.value)})
