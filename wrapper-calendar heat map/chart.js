@@ -41,7 +41,6 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
     var format = d3.time.format("%Y-%m-%d");
     var toolDate = d3.time.format("%d/%b/%y");
 
-    console.log(data)
     var fiscalPlot=data.map(function(d){
         return {
             date:d.date,
@@ -50,16 +49,27 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
         }
     })
     function getFiscalYear(e){
-        if(e.getMonth()>3){
+        if(e.getMonth()>2){
+            console.log(e,e.getFullYear())
             return e.getFullYear()
         }
-        else {return e.getFullYear()-1}
+        else {
+            console.log("minus",e,e.getFullYear()-1)
+            return e.getFullYear()-1}
     }
-    console.log(fiscalPlot)
+    console.log("fiscal", fiscalPlot)
 
-    var plotData=d3.nest()
+    if (fiscal){
+        var plotData=d3.nest()
+        .key(function(d){return d.fyear;})
+        .entries(fiscalPlot)
+    }
+    else {
+        var plotData=d3.nest()
         .key(function(d){return d.date.getFullYear();})
         .entries(data)
+    }
+    console.log(plotData)
 
     var calendar = plot.selectAll("g")
     .data(plotData)
