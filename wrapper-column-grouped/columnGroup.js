@@ -71,50 +71,50 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
         })
     .classed(media+"origin",true);
 
-    // var x0 = d3.scale.ordinal()
-    // .rangeRoundBands([0, plotWidth-yLabelOffset], .1);
+    var x0 = d3.scale.ordinal()
+    .rangeBands([0, plotWidth-yLabelOffset], .1);
 
-    // var x1 = d3.scale.ordinal();
+    var x1 = d3.scale.ordinal();
 
-    // var xAxis = d3.svg.axis()
-    //     .scale(x0)
-    //     .tickSize(yOffset/2)
-    //     .orient("bottom");
+    var xAxis = d3.svg.axis()
+        .scale(x0)
+        .tickSize(yOffset/2)
+        .orient("bottom");
 
-    // x0.domain(data.map(function(d) { return d.cat; }));
-    // x1.domain(bandNames).rangeRoundBands([0, x0.rangeBand()]);    
+    x0.domain(data.map(function(d) { return d.cat; }));
+    x1.domain(seriesNames).rangeRoundBands([0, x0.rangeBand()]);    
 
-    // var xlabels=plot.append("g")
-    //     .attr("class",media+"xAxis")
-    //     .attr("transform",function(){
-    //         if(yAlign=="right") {
-    //             return "translate("+(margin.left)+","+(plotHeight)+")"
-    //         }
-    //          else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight)+")"}
-    //         })
-    //     .call(xAxis);
+    var xlabels=plot.append("g")
+        .attr("class",media+"xAxis")
+        .attr("transform",function(){
+            if(yAlign=="right") {
+                return "translate("+(margin.left)+","+(plotHeight+margin.top)+")"
+            }
+             else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
+            })
+        .call(xAxis);
 
 
-    // var category = plot.selectAll("."+media+"category")
-    //     .data(plotData)
-    //     .enter().append("g")
-    //     .attr("class", media+"category")
-    //     .attr("transform", function(d) { return "translate(" + (x0(d.cat)+(margin.left)) + ",0)"; });
+    var category = plot.selectAll("."+media+"category")
+        .data(plotData)
+        .enter().append("g")
+        .attr("class", media+"category")
+        .attr("transform", function(d) { return "translate(" + (x0(d.cat)+(margin.left)) + ",0)"; });
 
-    // category.selectAll("rect")
-    //     .data(function(d) { return d.bands; })
-    //     .enter().append("rect")
-    //       .attr("width", x1.rangeBand())
-    //       .attr("x", function(d) { return x1(d.name)+margin.left; })
-    //       .attr("y", function(d) { return yScale(Math.max(0, d.value))})
-    //       .attr("height", function(d) {return (Math.abs(yScale(d.value) - yScale(0))); })
-    //       .style("fill", function(d,i) { return colours[i] })
-    //       .attr("transform",function(){
-    //             if(yAlign=="right") {
-    //                 return "translate("+(margin.left)+","+(margin.top)+")"
-    //             }
-    //              else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
-    //         });
+    category.selectAll("rect")
+        .data(function(d) { return d.bands; })
+        .enter().append("rect")
+          .attr("width", x1.rangeBand())
+          .attr("x", function(d) { return x1(d.name)+margin.left; })
+          .attr("y", function(d) { return yScale(Math.max(0, d.value))})
+          .attr("height", function(d) {return (Math.abs(yScale(d.value) - yScale(0))); })
+          .style("fill", function(d,i) { return colours[i] })
+          .attr("transform",function(){
+                if(yAlign=="right") {
+                    return "translate("+(margin.left)+","+(margin.top)+")"
+                }
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
+            });
 
     // //create a legend first
     // var legendyOffset=0
