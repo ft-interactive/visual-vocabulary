@@ -163,7 +163,18 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
             months.forEach(function(d,i)    {
                 monthLabels.append('text')
                 .attr('class',media+'subtitle')
-                .attr('x',monthX[i]+margin.left)
+                .attr('x',function (d) {
+                    if (fiscal && i>2){
+                        console.log("greater")
+                        return monthX[i-3]+margin.left
+                    }
+                    if (fiscal && i<3){
+                        console.log("less than")
+                        return monthX[i+9]+margin.left
+                    }
+                    else {console.log("standard year")
+                        return monthX[i]+margin.left}
+                })
                 .attr('y',yOffset)
                 .text(d);
             })
