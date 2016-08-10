@@ -140,7 +140,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
             .data(function(d) {
                 if (fiscal){
                     console.log(fiscal)
-                    return d3.time.months(new Date(parseInt(d.key)-1, 2, 6),new Date(parseInt(d.key), 2, 5));
+                    return d3.time.months(new Date(parseInt(d.key)-1, 3, 1),new Date(parseInt(d.key), 2, 31));
 
                 }
                 else {
