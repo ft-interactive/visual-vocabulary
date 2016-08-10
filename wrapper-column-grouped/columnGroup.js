@@ -1,4 +1,4 @@
-function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logScaleStart,yHighlight, markers, numTicksy, numTicksx, ticks, yAlign){
+function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logScaleStart, yMin,yMax,yHighlight, markers, numTicksy, ticks, yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -37,16 +37,15 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
     });
     console.log("plotData-bands", plotData)
 
+    var yMin=Math.min(yMin,d3.min(data, function(d) { return d3.min(d.bands, function(d) { return d.value; })})); 
+    var yMax=Math.max(yMax,d3.max(data, function(d) { return d3.max(d.bands, function(d) { return d.value; })})); 
 
-    // var min=Math.min(0,d3.min(data, function(d) { return d3.min(d.bands, function(d) { return d.value; })})); 
-    // var max=d3.max(data, function(d) { return d3.max(d.bands, function(d) { return d.value; })}); 
+    yScale.domain([yMin, yMax]);
 
-    // yScale.domain([min, max]);
-
-    // var yAxis = d3.svg.axis()
-    // .scale(yScale)
-    // .orient(yAlign)
-    // .ticks(numTicksy);
+    var yAxis = d3.svg.axis()
+    .scale(yScale)
+    .orient(yAlign)
+    .ticks(numTicksy);
 
     // var yLabel=plot.append("g")
     //   .attr("class", media+"yAxis")

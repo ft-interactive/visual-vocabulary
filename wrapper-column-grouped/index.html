@@ -22,13 +22,13 @@
         var subtitle = "$ per barrel, then a load more words just to see what happens on a long subhead";//comment out subtitle assignment if not needed
         var source = "Source: PwC     FT graphic Bob Haslett";
         //graph options
+        var yMin=-1000
+        var yMax=2500
         var yAxisHighlight=100;
-
         var logScale=false;
         var logScaleStart=1000;
         var markers=true;//show circle markers
         var numTicksy = 14;//rough number of ticks for y axis
-        var numTicksx = 10;//rough number of ticks for x axis
         var ticks//=[0.2,0.3];//option to force tick values for online
 
         //Use the frames array to set unique values for each media type of frame
@@ -106,7 +106,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset;
                 var yLabel=frames[i].yLabel
-                columnChart(data, stylename, media, chartpadding,legend, logScale, logScaleStart, yAxisHighlight,markers, numTicksy, numTicksx, ticks, yLabel);
+                columnChart(data, stylename, media, chartpadding,legend, logScale, logScaleStart, yMin,yMax, yAxisHighlight,markers, numTicksy, ticks, yLabel);
             }
         })//end data load
 
