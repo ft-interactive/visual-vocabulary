@@ -47,29 +47,29 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
     .orient(yAlign)
     .ticks(numTicksy);
 
-    // var yLabel=plot.append("g")
-    //   .attr("class", media+"yAxis")
-    //   .call(yAxis)
+    var yLabel=plot.append("g")
+      .attr("class", media+"yAxis")
+      .call(yAxis)
 
-    // //calculate what the ticksize should be now that the text for the labels has been drawn
-    // var yLabelOffset=yLabel.node().getBBox().width
-    // var yticksize=colculateTicksize(yAlign, yLabelOffset);
+    //calculate what the ticksize should be now that the text for the labels has been drawn
+    var yLabelOffset=yLabel.node().getBBox().width
+    var yticksize=colculateTicksize(yAlign, yLabelOffset);
 
-    // yLabel.call(yAxis.tickSize(yticksize))
-    // yLabel
-    //     .attr("transform",function(){
-    //         if (yAlign=="right"){
-    //             return "translate("+(margin.left)+","+margin.top+")"
-    //         }
-    //         else return "translate("+(w-margin.right)+","+margin.top+")"
-    //         })
+    yLabel.call(yAxis.tickSize(yticksize))
+    yLabel
+        .attr("transform",function(){
+            if (yAlign=="right"){
+                return "translate("+(margin.left)+","+margin.top+")"
+            }
+            else return "translate("+(w-margin.right)+","+margin.top+")"
+            })
 
-    // //identify 0 line if there is one
-    // var originValue = 0;
-    // var origin = plot.selectAll(".tick").filter(function(d, i) {
-    //         return d==originValue || d==yHighlight;
-    //     })
-    // .classed(media+"origin",true);
+    //identify 0 line if there is one
+    var originValue = 0;
+    var origin = plot.selectAll(".tick").filter(function(d, i) {
+            return d==originValue || d==yHighlight;
+        })
+    .classed(media+"origin",true);
 
     // var x0 = d3.scale.ordinal()
     // .rangeRoundBands([0, plotWidth-yLabelOffset], .1);
