@@ -52,10 +52,10 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
         var dayNumber=d3.time.format("%j") 
         var day=dayNumber(e)
         if(day>95){
-            return e.getFullYear()
+            return e.getFullYear()+1
         }
         else {
-            return e.getFullYear()-1}
+            return e.getFullYear()}
     }
 
     if (fiscal){
@@ -67,7 +67,9 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
         var plotData=d3.nest()
         .key(function(d){return d.date.getFullYear();})
         .entries(data)
-    }  
+    }
+
+    console.log(plotData)
 
     var calendar = plot.selectAll("g")
     .data(plotData)
@@ -136,11 +138,14 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
             .attr('id',media+'monthOutlines')
             .selectAll('.month')
             .data(function(d) {
-                console.log(d.key)
-                console.log(d3.time.months(new Date(parseInt(d.key)-1, 0, 1),
-                                      new Date(parseInt(d.key), 0, 1)))
-                return d3.time.months(new Date(parseInt(d.key), 0, 1),
-                                      new Date(parseInt(d.key), 11, 31)); 
+                if (fiscal){
+                    console.log(fiscal)
+                    return d3.time.months(new Date(parseInt(d.key)-1, 2, 6),new Date(parseInt(d.key), 2, 5));
+
+                }
+                else {
+                    return d3.time.months(new Date(parseInt(d.key), 0, 1),
+                    new Date(parseInt(d.key), 11, 31));} 
             })
             .enter().append('path')
             .attr('class', media+'month')
@@ -166,15 +171,16 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
             months.forEach(function(d,i)    {
                 monthLabels.append('text')
                 .attr('class',media+'subtitle')
-                .attr('x',function (d) {
-                    if (fiscal && i>2){
-                        return monthX[i-3]+margin.left
-                    }
-                    if (fiscal && i<3){
-                        return monthX[i+9]+margin.left
-                    }
-                    else {return monthX[i]+margin.left}
-                })
+                .attr('x',monthX[i]+margin.left)
+                // .attr('x',function (d) {
+                //     if (fiscal && i>2){
+                //         return monthX[i-3]+margin.left
+                //     }
+                //     if (fiscal && i<3){
+                //         return monthX[i+9]+margin.left
+                //     }
+                //     else {return monthX[i]+margin.left}
+                // })
                 .attr('y',yOffset)
                 .text(d);
             })
