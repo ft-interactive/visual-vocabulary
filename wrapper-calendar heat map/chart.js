@@ -213,7 +213,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
             // add min/max legend
 
 
-            //pure Bostock - compute and return monthly path data for any year
+            //not quite pure Bostock - compute and return monthly path data for any year
             function monthPath(t0) {
                 console.log("t0",t0)
                     var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0)
