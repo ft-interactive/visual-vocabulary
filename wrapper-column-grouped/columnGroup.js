@@ -2,12 +2,9 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
-    
-    console.log("data ",data)
 
     // return the series names from the first row of the spreadsheet
     var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'cat'; });
-    console.log("seriesNames",seriesNames)
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
     var plot=d3.select("#"+media+"plot")
@@ -37,7 +34,6 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
             bands:getBands(d)
         }
     });
-    console.log("plotData", plotData)
 
     function getBands(el) {
         var bands=seriesNames.map(function(name) {
