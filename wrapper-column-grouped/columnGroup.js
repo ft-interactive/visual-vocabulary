@@ -2,7 +2,9 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
+    
     console.log("data ",data)
+
     // return the series names from the first row of the spreadsheet
     var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'cat'; });
     console.log("seriesNames",seriesNames)
@@ -29,16 +31,26 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
     var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
 
-    var plotData=data.map(function(d) {return d})
+    var plotData=data.map(function(d) {
+        return {
+            cat:d.cat,
+            bands:getBands(d)
+        }
+    });
     console.log("plotData", plotData)
 
-    plotData.forEach(function(d) {
-        d.bands = seriesNames.map(function(name) { return {name: name, value: +d[name]}; });
-    });
-    console.log("plotData-bands", plotData)
+    function getBands(el) {
+        var bands=seriesNames.map(function(name) {
+            return {
+                name: name,
+                value:+el[name]
+            }
+        });
+       return bands
+    }
 
-    var yMin=Math.min(yMin,d3.min(data, function(d) { return d3.min(d.bands, function(d) { return d.value; })})); 
-    var yMax=Math.max(yMax,d3.max(data, function(d) { return d3.max(d.bands, function(d) { return d.value; })})); 
+    var yMin=Math.min(yMin,d3.min(plotData, function(d) { return d3.min(d.bands, function(d) { return d.value; })})); 
+    var yMax=Math.max(yMax,d3.max(plotData, function(d) { return d3.max(d.bands, function(d) { return d.value; })})); 
 
     yScale.domain([yMin, yMax]);
 
@@ -82,7 +94,8 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
         .orient("bottom");
 
     x0.domain(data.map(function(d) { return d.cat; }));
-    x1.domain(seriesNames).rangeRoundBands([0, x0.rangeBand()]);    
+    x1.domain(seriesNames)
+    .rangeBands([0, x0.rangeBand()]);    
 
     var xlabels=plot.append("g")
         .attr("class",media+"xAxis")
@@ -94,7 +107,6 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
             })
         .call(xAxis);
 
-
     var category = plot.selectAll("."+media+"category")
         .data(plotData)
         .enter().append("g")
@@ -105,8 +117,11 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
         .data(function(d) { return d.bands; })
         .enter().append("rect")
           .attr("width", x1.rangeBand())
-          .attr("x", function(d) { return x1(d.name)+margin.left; })
-          .attr("y", function(d) { return yScale(Math.max(0, d.value))})
+          .attr("x", function(d) { return x1(d.name); })
+          .attr("y", function(d,i) {
+            //console.log(i, "value",d.value)
+            //console.log("Scale",yScale(Math.max(0, d.value)));
+            return yScale(Math.max(0, d.value))})
           .attr("height", function(d) {return (Math.abs(yScale(d.value) - yScale(0))); })
           .style("fill", function(d,i) { return colours[i] })
           .attr("transform",function(){
@@ -116,56 +131,55 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
                  else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
             });
 
-    // //create a legend first
-    // var legendyOffset=0
-    // var legend = plot.append("g")
-    //     .attr("id",media+"legend")
-    //     .on("mouseover",pointer)
-    //     .selectAll("g")
-    //     .data(bandNames)
-    //     .enter()
-    //     .append("g")
-    //     .attr ("id",function(d,i){
-    //         return media+"l"+i
-    //     })
+    var legendyOffset=0
+    var legend = plot.append("g")
+        .attr("id",media+"legend")
+        .on("mouseover",pointer)
+        .selectAll("g")
+        .data(seriesNames)
+        .enter()
+        .append("g")
+        .attr ("id",function(d,i){
+            return media+"l"+i
+        })
 
-    // var drag = d3.behavior.drag().on("drag", moveLegend);
-    // d3.select("#"+media+"legend").call(drag);
+    var drag = d3.behavior.drag().on("drag", moveLegend);
+    d3.select("#"+media+"legend").call(drag);
         
-    // legend.append("text")
+    legend.append("text")
 
-    //     .attr("id",function(d,i){
-    //         return media+"t"+i
-    //     })
-    //     .attr("x",yOffset+yOffset/2)
-    //     .attr("y",yOffset/2)
-    //     .attr("class",media+"subtitle")
-    //     .text(function(d){
-    //         return d;
-    //     })
-    // legend.append("line")
-    //     .attr("stroke",function(d,i){
-    //         return colours[i];  
-    //     })
-    //     .attr("x1",0)
-    //     .attr("x2",yOffset)
-    //     .attr("y1",yOffset/4)
-    //     .attr("y2",yOffset/4)
-    //     .attr("class",media+"lines")
+        .attr("id",function(d,i){
+            return media+"t"+i
+        })
+        .attr("x",yOffset+yOffset/2)
+        .attr("y",yOffset/2)
+        .attr("class",media+"subtitle")
+        .text(function(d){
+            return d;
+        })
+    legend.append("line")
+        .attr("stroke",function(d,i){
+            return colours[i];  
+        })
+        .attr("x1",0)
+        .attr("x2",yOffset)
+        .attr("y1",yOffset/4)
+        .attr("y2",yOffset/4)
+        .attr("class",media+"lines")
 
-    // legend.attr("transform",function(d,i){
-    //     if (legAlign=='hori') {
-    //         var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
-    //         if (i>0) {
-    //             var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+yOffset; 
-    //         }
-    //         else {gWidth=0};
-    //         legendyOffset=legendyOffset+gWidth;
-    //         return "translate("+(legendyOffset)+","+(gHeigt/2)+")";  
-    //     }
-    //     else {
-    //         return "translate(0,"+((i*yOffset))+")"};
-    // })
+    legend.attr("transform",function(d,i){
+        if (legAlign=='hori') {
+            var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
+            if (i>0) {
+                var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+yOffset; 
+            }
+            else {gWidth=0};
+            legendyOffset=legendyOffset+gWidth;
+            return "translate("+(legendyOffset)+","+(gHeigt/2)+")";  
+        }
+        else {
+            return "translate(0,"+((i*yOffset))+")"};
+    })
 
     function colculateTicksize(align, offset) {
         if (align=="right") {
