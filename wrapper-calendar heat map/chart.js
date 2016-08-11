@@ -7,6 +7,10 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
     // return the series names from the first row of the spreadsheet
     var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
     //Select the plot space in the frame from which to take measurements
+    var div = d3.select("body").append("div")   
+    .attr("class", media+"Title")               
+    .style("opacity", 0);
+
     var frame=d3.select("#"+media+"chart")
     var plot=d3.select("#"+media+"plot")
 
@@ -30,6 +34,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
 
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
+    var parseDate = d3.time.format("%d/%m/%Y").parse;
     var cellSize = plotWidth/54; // cell size
 
     
@@ -41,21 +46,41 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
     var format = d3.time.format("%Y-%m-%d");
     var toolDate = d3.time.format("%d/%b/%y");
 
-    var fiscalPlot=data.map(function(d){
+    var fiscalPlot=data.map(function(d,i){
+        //d3.time.weekOfYear(d.date)
         return {
             date:d.date,
             value:d.value,
-            fyear: getFiscalYear(d.date)
+            fyear: getFiscalYear(d.date),
+            fweek: getFiscalWeek(d.date)
         }
     })
     function getFiscalYear(e){
-        var dayNumber=d3.time.format("%j") 
-        var day=dayNumber(e)
-        if(day>95){
+        var startDate="05/04/"+e.getFullYear()
+        if(e>parseDate(startDate)){
+            //console.log("greater",e)
             return e.getFullYear()+1
         }
         else {
             return e.getFullYear()}
+    }
+
+    function getFiscalWeek(e){
+        console.log("date",e)
+        var startDate="05/04/"+e.getFullYear()
+        var week=d3.time.weekOfYear(e)
+        var startWeek=d3.time.weekOfYear(parseDate(startDate))
+        if(e>parseDate(startDate)) {
+            var fweek=week-startWeek
+            console.log(fweek)
+        }
+        else {
+            var fweek=52-(startWeek-week);
+            console.log(fweek)
+        }
+
+        return fweek
+
     }
 
     if (fiscal){
@@ -112,6 +137,14 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
                 //return d3.time.days(new Date(parseInt(d.key), 0, 1), new Date(parseInt(d.key) + 1, 0, 1));
             })
             .enter().append('rect')
+            .on("mouseover", function(d) {
+            var dayNumber=d3.time.format("%j")    
+            div.transition()             
+                .style("opacity", .9);      
+            div .html(d.date+" "+d3.time.weekOfYear(d.date)+" "+dayNumber(d.date)+"value"+d.value)  
+                .style("left", (d3.event.pageX) + "px")     
+                .style("top", (d3.event.pageY - 28) + "px");    
+            })  
             .attr('id',function(d) {
                 return '_'+format(d.date);
                 //return toolDate(d.date)+':\n'+d.value+' dead or missing';
@@ -121,11 +154,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
             .attr('height', cellSize)
             .attr('x', function(d) {
                 if (fiscal){
-                    if(d3.time.weekOfYear(d.date)>13) {
-                        return ((d3.time.weekOfYear(d.date)-13) * cellSize+margin.left);
-                    }
-                    else {return ((d3.time.weekOfYear(d.date)+39) * cellSize+margin.left);
-}
+                    return d.fweek * cellSize+margin.left;
                 }
                 else {return (d3.time.weekOfYear(d.date) * cellSize+margin.left)};
             })
@@ -139,7 +168,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
             .selectAll('.month')
             .data(function(d) {
                 if (fiscal){
-                    console.log(fiscal)
+                    //console.log(fiscal)
                     return d3.time.months(new Date(parseInt(d.key)-1, 3, 1),
                         new Date(parseInt(d.key), 2, 31));
 
@@ -175,7 +204,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
                 .attr('x',monthX[i]+margin.left)
                 .attr('x',function (d) {
                     if (fiscal && i>2){
-                        console.log("month",d,i)
+                        //console.log("month",d,i)
                         return monthX[i]+margin.left
                     }
                     // if (fiscal && i>3){
@@ -192,14 +221,23 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
 
             //pure Bostock - compute and return monthly path data for any year
             function monthPath(t0) {
-                console.log("t0",t0)
-                 var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0)
-                console.log("t1",t1)
-                 var d0 = t0.getDay()
-                 var w0 = d3.time.weekOfYear(t0)
-                console.log("w0",w0)
-                 var d1 = t1.getDay()
-                 var w1 = d3.time.weekOfYear(t1);
+                //console.log("t0",t0)
+                    var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0)
+                //console.log("t1",t1)
+                    var w0 = d3.time.weekOfYear(t0)
+                    var w1 = d3.time.weekOfYear(t1)
+                    // if (fiscal){
+                    //     if(w0>12) {
+                    //         w0-13,w1-13;
+                    //     }
+                    //     if(w0>39) {
+                    //          w0+38,w1+38;
+                    //     }
+                    // }
+                //console.log("w",w0,w1)
+                    var d0 = t0.getDay()
+                    var d1 = t1.getDay();
+                //console.log("d",d0,d1)
               return "M" + (w0 + 1) * cellSize + "," + d0 * cellSize
                   + "H" + w0 * cellSize + "V" + 7 * cellSize
                   + "H" + w1 * cellSize + "V" + (d1 + 1) * cellSize
