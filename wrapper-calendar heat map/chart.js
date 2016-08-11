@@ -140,7 +140,8 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
             .data(function(d) {
                 if (fiscal){
                     console.log(fiscal)
-                    return d3.time.months(new Date(parseInt(d.key)-1, 3, 1),new Date(parseInt(d.key), 2, 31));
+                    return d3.time.months(new Date(parseInt(d.key)-1, 3, 1),
+                        new Date(parseInt(d.key), 2, 31));
 
                 }
                 else {
@@ -172,15 +173,16 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
                 monthLabels.append('text')
                 .attr('class',media+'subtitle')
                 .attr('x',monthX[i]+margin.left)
-                // .attr('x',function (d) {
-                //     if (fiscal && i>2){
-                //         return monthX[i-3]+margin.left
-                //     }
-                //     if (fiscal && i<3){
-                //         return monthX[i+9]+margin.left
-                //     }
-                //     else {return monthX[i]+margin.left}
-                // })
+                .attr('x',function (d) {
+                    if (fiscal && i>2){
+                        console.log("month",d,i)
+                        return monthX[i]+margin.left
+                    }
+                    // if (fiscal && i>3){
+                    //     return monthX[i+9]+margin.left
+                    //}
+                    else {return monthX[i]+margin.left}
+                })
                 .attr('y',yOffset)
                 .text(d);
             })
@@ -188,12 +190,16 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
             // add min/max legend
 
 
-            //pure Bostock, with a litle bit of Haslett - compute and return monthly path data for any year
+            //pure Bostock - compute and return monthly path data for any year
             function monthPath(t0) {
-                console.log(t0)
-                 var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
-                  d0 = t0.getDay(), w0 = d3.time.weekOfYear(t0),
-                  d1 = t1.getDay(), w1 = d3.time.weekOfYear(t1);
+                console.log("t0",t0)
+                 var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0)
+                console.log("t1",t1)
+                 var d0 = t0.getDay()
+                 var w0 = d3.time.weekOfYear(t0)
+                console.log("w0",w0)
+                 var d1 = t1.getDay()
+                 var w1 = d3.time.weekOfYear(t1);
               return "M" + (w0 + 1) * cellSize + "," + d0 * cellSize
                   + "H" + w0 * cellSize + "V" + 7 * cellSize
                   + "H" + w1 * cellSize + "V" + (d1 + 1) * cellSize
