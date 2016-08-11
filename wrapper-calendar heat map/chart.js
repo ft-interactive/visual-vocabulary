@@ -66,21 +66,16 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
     }
 
     function getFiscalWeek(e){
-        console.log("date",e)
         var startDate="05/04/"+e.getFullYear()
         var week=d3.time.weekOfYear(e)
         var startWeek=d3.time.weekOfYear(parseDate(startDate))
         if(e>parseDate(startDate)) {
             var fweek=week-startWeek
-            console.log(fweek)
         }
         else {
             var fweek=52-(startWeek-week);
-            console.log(fweek)
         }
-
         return fweek
-
     }
 
     if (fiscal){
@@ -94,7 +89,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
         .entries(data)
     }
 
-    console.log(plotData)
+    //console.log(plotData)
 
     var calendar = plot.selectAll("g")
     .data(plotData)
@@ -141,7 +136,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
             var dayNumber=d3.time.format("%j")    
             div.transition()             
                 .style("opacity", .9);      
-            div .html(d.date+" "+d3.time.weekOfYear(d.date)+" "+dayNumber(d.date)+"value"+d.value)  
+            div .html(d.date+" "+d3.time.weekOfYear(d.date)+"</br>"+dayNumber(d.date)+" value"+d.value+" fweek "+getFiscalWeek(d.date))  
                 .style("left", (d3.event.pageX) + "px")     
                 .style("top", (d3.event.pageY - 28) + "px");    
             })  
@@ -168,7 +163,6 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
             .selectAll('.month')
             .data(function(d) {
                 if (fiscal){
-                    //console.log(fiscal)
                     return d3.time.months(new Date(parseInt(d.key)-1, 3, 1),
                         new Date(parseInt(d.key), 2, 31));
 
@@ -221,23 +215,23 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
 
             //pure Bostock - compute and return monthly path data for any year
             function monthPath(t0) {
-                //console.log("t0",t0)
+                console.log("t0",t0)
                     var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0)
-                //console.log("t1",t1)
-                    var w0 = d3.time.weekOfYear(t0)
-                    var w1 = d3.time.weekOfYear(t1)
-                    // if (fiscal){
-                    //     if(w0>12) {
-                    //         w0-13,w1-13;
-                    //     }
-                    //     if(w0>39) {
-                    //          w0+38,w1+38;
-                    //     }
-                    // }
-                //console.log("w",w0,w1)
+                console.log("t1",t1)
+
+                    if (fiscal){
+                        var w0 = getFiscalWeek(t0)
+                        var w1 = getFiscalWeek(t1)
+                    }
+                    else {
+                        var w0 = d3.time.weekOfYear(t0)
+                        var w1 = d3.time.weekOfYear(t1)
+                    }
+                    console.log("w",w0,w1)
+
                     var d0 = t0.getDay()
                     var d1 = t1.getDay();
-                //console.log("d",d0,d1)
+                console.log("d",d0,d1)
               return "M" + (w0 + 1) * cellSize + "," + d0 * cellSize
                   + "H" + w0 * cellSize + "V" + 7 * cellSize
                   + "H" + w1 * cellSize + "V" + (d1 + 1) * cellSize
