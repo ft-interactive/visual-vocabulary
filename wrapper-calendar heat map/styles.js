@@ -32,7 +32,7 @@ var styleweb = {classes:
 [{class:"background{fill: none}"},
 {class:"chartholder{fill: none;}"},
 {class:"title{font-size:25.0px; font-weight: 400; fill: #3b3d3b;}"},
-{class:"subtitle{font-size:18.0px; font-weight: 400; fill: #6b6e68;}"},
+{class:"subtitle{font-size:14.0px; font-weight: 400; fill: #6b6e68;}"},
 {class:"source{fill: #6b6e68; font-size: 14.0px; font-weight: 400;}"},
 {class:"logo{fill: #dacfc5;}"},
 {class:"xAxis{fill:none; stroke: none;}"},

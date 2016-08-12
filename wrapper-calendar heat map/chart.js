@@ -56,8 +56,8 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
         }
     })
     function getFiscalYear(e){
-        var startDate="05/04/"+e.getFullYear()
-        if(e>parseDate(startDate)){
+        var startDate="06/04/"+e.getFullYear()
+        if(e>=parseDate(startDate)){
             //console.log("greater",e)
             return e.getFullYear()+1
         }
@@ -66,10 +66,10 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
     }
 
     function getFiscalWeek(e){
-        var startDate="05/04/"+e.getFullYear()
-        var week=d3.time.weekOfYear(e)
+        var startDate="06/04/"+e.getFullYear()
+        var week=d3.time.weekOfYear(e)  
         var startWeek=d3.time.weekOfYear(parseDate(startDate))
-        if(e>parseDate(startDate)) {
+        if(e>=parseDate(startDate)) {
             var fweek=week-startWeek
         }
         else {
@@ -197,13 +197,12 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
                 .attr('class',media+'subtitle')
                 .attr('x',monthX[i]+margin.left)
                 .attr('x',function (d) {
-                    if (fiscal && i>2){
-                        //console.log("month",d,i)
-                        return monthX[i]+margin.left
+                    if (fiscal && i<3){
+                        return monthX[i+9]+margin.left
                     }
-                    // if (fiscal && i>3){
-                    //     return monthX[i+9]+margin.left
-                    //}
+                    if (fiscal && i>2){
+                        return monthX[i-3]+margin.left
+                    }
                     else {return monthX[i]+margin.left}
                 })
                 .attr('y',yOffset)
@@ -213,30 +212,27 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
             // add min/max legend
 
 
-            //not quite pure Bostock - compute and return monthly path data for any year
+            //not quite pure Bostock, little bit of Haslett also - compute and return monthly path data for any year
             function monthPath(t0) {
-                console.log("t0",t0)
-                    var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0)
-                console.log("t1",t1)
-
-                    if (fiscal){
-                        var w0 = getFiscalWeek(t0)
-                        var w1 = getFiscalWeek(t1)
-                    }
-                    else {
-                        var w0 = d3.time.weekOfYear(t0)
-                        var w1 = d3.time.weekOfYear(t1)
-                    }
-                    console.log("w",w0,w1)
-
-                    var d0 = t0.getDay()
-                    var d1 = t1.getDay();
-                console.log("d",d0,d1)
-              return "M" + (w0 + 1) * cellSize + "," + d0 * cellSize
-                  + "H" + w0 * cellSize + "V" + 7 * cellSize
-                  + "H" + w1 * cellSize + "V" + (d1 + 1) * cellSize
-                  + "H" + (w1 + 1) * cellSize + "V" + 0
-                  + "H" + (w0 + 1) * cellSize + "Z";
+                //console.log("t0",t0)
+                var t1 = new Date(t0.getFullYear(),t0.getMonth() + 1, 0)
+                //console.log("t1",t1)
+                if (fiscal){
+                    var w0 = getFiscalWeek(t0), w1 = getFiscalWeek(t1)
+                    if(w0>w1){w0=0}
+                }
+                else {
+                    var w0 = d3.time.weekOfYear(t0), w1 = d3.time.weekOfYear(t1)
+                }
+                //console.log("w",w0,w1)
+                var d0 = t0.getDay(), d1 = t1.getDay();
+                if(w0==0){d0=0};
+                //console.log("d",d0,d1)
+                return "M" + (w0 + 1) * cellSize + "," + d0 * cellSize
+                    + "H" + w0 * cellSize + "V" + 7 * cellSize
+                    + "H" + w1 * cellSize + "V" + (d1 + 1) * cellSize
+                    + "H" + (w1 + 1) * cellSize + "V" + 0
+                    + "H" + (w0 + 1) * cellSize + "Z";
             }
 
     })
