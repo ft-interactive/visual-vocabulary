@@ -198,7 +198,6 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
                 .attr('x',monthX[i]+margin.left)
                 .attr('x',function (d) {
                     if (fiscal && i<3){
-                        console.log("month",d,i)
                         return monthX[i+9]+margin.left
                     }
                     if (fiscal && i>2){
