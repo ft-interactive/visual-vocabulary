@@ -66,14 +66,17 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
     }
 
     function getFiscalWeek(e){
-        var startDate="05/04/"+e.getFullYear()
+        var startDate="06/04/"+e.getFullYear()
         var week=d3.time.weekOfYear(e)
+        if(week===0){console.log("week",e)}
         var startWeek=d3.time.weekOfYear(parseDate(startDate))
         if(e>parseDate(startDate)) {
             var fweek=week-startWeek
+            if (fweek==0){console.log(e)}
         }
         else {
             var fweek=52-(startWeek-week);
+            //if (fweek==0){console.log(e)}
         }
         return fweek
     }
@@ -215,9 +218,9 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
 
             //not quite pure Bostock - compute and return monthly path data for any year
             function monthPath(t0) {
-                console.log("t0",t0)
+                //  console.log("t0",t0)
                     var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0)
-                console.log("t1",t1)
+                //console.log("t1",t1)
 
                     if (fiscal){
                         var w0 = getFiscalWeek(t0)
@@ -227,11 +230,12 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
                         var w0 = d3.time.weekOfYear(t0)
                         var w1 = d3.time.weekOfYear(t1)
                     }
-                    console.log("w",w0,w1)
+                    //console.log("w",w0,w1)
 
                     var d0 = t0.getDay()
                     var d1 = t1.getDay();
-                console.log("d",d0,d1)
+                //console.log("d",d0,d1)
+
               return "M" + (w0 + 1) * cellSize + "," + d0 * cellSize
                   + "H" + w0 * cellSize + "V" + 7 * cellSize
                   + "H" + w1 * cellSize + "V" + (d1 + 1) * cellSize
