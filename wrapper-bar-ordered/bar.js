@@ -39,7 +39,7 @@ function barChart(data,stylename,media,xMin,xMax,xAxisHighlight,plotpadding,legA
     else {data.sort(function(a, b) { return a.value - b.value; })} //Sorts biggest rects to the left
 
     var yScale = d3.scale.ordinal()
-    .rangeRoundBands([0, plotHeight],.3)
+    .rangeBands([0, plotHeight],.3)
     .domain(data.map(function(d) { return d.cat;}));
 
     var yAxis = d3.svg.axis()
