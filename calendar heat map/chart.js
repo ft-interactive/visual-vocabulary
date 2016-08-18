@@ -1,5 +1,5 @@
 
-function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
+function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal,breaks){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -28,9 +28,9 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
     var maxVal=d3.max(data, function(d){return +d.value})
     var minVal=d3.min(data, function(d){return +d.value})
 
-    var colours = d3.scale.linear()
-    .range(["white", stylename.fillcolours[0]])
-    .domain([minVal, maxVal]);
+    var colours=stylename.fillcolours;
+    // .range(["white", stylename.fillcolours[0]])
+    // .domain([minVal, maxVal]);
 
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
@@ -154,8 +154,20 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
                 else {return (d3.time.weekOfYear(d.date) * cellSize+margin.left)};
             })
             .attr('y', function(d) { return (d.date.getDay() * cellSize); })
-            .style("fill",function(d) {return colours(d.value)})
-            //.datum(format);
+            //.style("fill",function(d) {return colours(d.value)})
+            .style("fill",function(d,i){
+                if (d.value<breaks[0]) {
+                    return colours[0];
+                }
+                for (i=0;i<breaks.length+1;i++){
+                    if (d.value>=breaks[i]&&d.value<breaks[i+1]){
+                        return colours[i];
+                    }
+                }
+                if (d.value>breaks.length-1){
+                    return colours[breaks.length]   
+                }   
+            })//.datum(format);
 
             //add montly outlines for calendar
             parent.append('g')
@@ -244,7 +256,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
         .attr("id",media+"legend")
         .on("mouseover",pointer)
         .selectAll("g")
-        .data(legData)
+        .data(colours)
         .enter()
         .append("g")
         .attr ("id",function(d,i){
@@ -255,15 +267,14 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
     d3.select("#"+media+"legend").call(drag);
         
     legend.append("text")
-
         .attr("id",function(d,i){
             return media+"t"+i
         })
         .attr("x",yOffset+yOffset/5)
         .attr("y",0)
         .attr("class",media+"subtitle")
-        .text(function(d){
-            return d.text+" "+d.val;
+        .text(function(d,i){
+            return "up to "+breaks[i];
         })
 
     legend.append("rect")
@@ -271,7 +282,10 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal){
         .attr("y",-yOffset+yOffset/3)
         .attr("width",(yOffset/100)*85)
         .attr("height",(yOffset/100)*70)
-        .style("fill", function(d,i){return colours(d.val)})
+        .attr("fill",function(d){
+                return d;
+            });
+        //.style("fill", function(d,i){return colours(d.val)})
 
     legend.attr("transform",function(d,i){
         if (legAlign=='hori') {
