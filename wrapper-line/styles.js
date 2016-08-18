@@ -53,7 +53,7 @@ fillcolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 
 var stylenowcast = {classes:
 [{class:"background{fill: none}"},
-{class:"chartholder{fill: none;}"},
+{class:"chartholder{fill: #fff1e0}"},
 {class:"title{font-size:21.0px; font-weight: 400; fill: #3b3d3b;}"},
 {class:"subtitle{font-size:14.0px; font-weight: 400; fill: #6b6e68;}"},
 {class:"source{fill: #6b6e68; font-size: 12.5px; font-weight: 400;}"},
