@@ -45,7 +45,6 @@ function makeChart(data,stylename,media,yMin,yMax,yAxisHighlight,numTicksy,plotp
     var yScale=d3.scale.linear()
         .domain(extent)
         .range([plotHeight,0])
-        .nice()
     
     //axis
     var yAxis = d3.svg.axis()

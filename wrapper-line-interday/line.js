@@ -71,7 +71,6 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
 			yScale = d3.scale.linear()
 			.domain(yDomain)
 			.range([plotHeight,0])
-			.nice();
 		}
 
     var yAxis = d3.svg.axis()
