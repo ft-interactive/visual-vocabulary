@@ -1,0 +1,171 @@
+	<html>
+<head>
+	<title>treemap</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+	<script charset="utf-8" src="http://d3js.org/queue.v1.min.js"></script>
+	<style type="text/css">
+
+	</style>
+</head>
+
+<body>
+	<div id="title"></div>
+	<div id="subtitle"></div>
+	<!-- <a href="https://github.com/ft-interactive/graphics-examples/tree/master/open-close-high-low">source</a> -->
+	<div id="treemap">
+	</div>
+</body>
+
+<script type="text/javascript">
+
+//Configuration
+var title="Daily number of teas drunk";
+var subtitle="By department";
+var source="Source: Spurious data example";
+
+d3.select("#title").html(title)
+	.style("font-family","Metric, sans-serif")
+	.style("font-size",12)
+
+d3.select("#subtitle").html(subtitle)
+	.style("font-family","Metric, sans-serif")
+	.style("font-size",9.6)
+
+var chartWidth = 750,
+	chartHeight = 400,
+	margin = { top:12, bottom:0, left:0, right:0 },//without top margin of 12 the top of the treemap gets cut off
+	plotWidth = chartWidth - (margin.left + margin.right),
+	plotHeight = chartHeight - (margin.top + margin.bottom),
+	dataset;//Holds the data in a format that the treemap will understand (JSON)
+//d3 colour scale that will set the colors of the treemap rextangles according to their group. the 7 HEX colour in it are the default bar chart colours for print bars.To change the colours change the hex values
+var color = d3.scale.ordinal()
+      .range(["#004C6C","#007BA8","#64A2C1","#95BFC5","#C6D6CC","#D9E7EF","#DDB831"]);
+
+//Load the data, when it's loaded draw the chart
+queue()
+      .defer(d3.csv,'tremap-data.csv')
+      .await(process); //Passes the loaded data to the process function
+
+function process(error,loadedData){
+	console.log("Data loaded through the d3 parser",loadedData)
+	dataset=nest(loadedData)//sends loaded data to the nest function that groups it and returns a JSON object that the treemap will understand. Data is now held in the dataset variable
+	console.log("Data that has been arranged by group",dataset)
+	drawTreemap(dataset);//Passes the sorted data to the treemap function
+	drawKey(dataset)//Passes the sorted data to the function that creates the key
+
+}
+
+function nest(data) {
+	return {
+		"key":"Groups", 
+		"values":d3.nest()
+			.key(function (d) { return d.group})
+			.entries(data)
+	};
+}
+
+//Draws the treemap
+function drawTreemap(data){
+    chartWidth = (chartWidth) - margin.left - margin.right;
+    chartHeight = (chartHeight) - margin.top - margin.bottom;
+
+    var treemap = d3.layout.treemap()//defines a potential treemap to be drawn
+	    .size([chartWidth, chartHeight])//sets the width and height as defined abouve
+	    .sticky(true)
+	    .sort(function(a, b) { return a.value - b.value; })//Sorts biggest rects to the left
+	    .value(function(d) { 
+	    	return d.value; })//gets the value for the group rect
+	    .children(function(d){
+	    	return d.values;//gets the value for each smaller item rect within the group rect
+	    });
+	var treeData = treemap(data);//tells the treemap what data to use, In this case the variable dataset that has been passed into the function as 'data'
+
+    var svg = d3.select("#treemap")//selects the 'chart' div
+    	.append("svg")//appends a blank svg to the 'chart' div
+    		.attr("width",chartWidth)//sets the svg width
+	    	.attr("height", chartHeight)//sets the svg height
+    	.append('g')//appends an svg group item for each group in the dataset
+    		.attr({
+    			transform: 'translate(' + margin.left + ',' + margin.top + ')'//positions the svg
+    		});
+
+    var node = svg
+    	.selectAll(".node")//selects all the potential rect with the node class
+		.data(treeData)
+			.enter()//adds a g for each item of data
+		.append("g")
+			.attr("id",function(d){if(d.children){
+				return d.key+" "+d.value
+				}
+				else {return d.group+" "+d.item+" "+d.value}
+			})
+			.attr({
+				"class": "node",//assigns class name node
+				transform: function(d){ 
+					return 'translate('+d.x+','+(d.y)+')'//works out their position
+				}
+			})
+		.call(function(parent){//adds a rectangle into the g element and define height widht etc
+			parent.append('rect')
+				.attr("x",0-7)
+				.attr("y",0-12)
+				.attr("width",function(d){ return d.dx })
+				.attr("height",function(d){ return d.dy })
+				.style("stroke", "white")
+				.style("fill",function(d){
+					//before defining the fill style checks to see if this is a group rect that has smaller rect in it. if so then it has a colour of none as it would be drawn over the small rect and you would not be able to see them
+					if(d.children){
+						return "none"
+					}
+					//if theis is a smaller rect within a group then returans a colour depending on the group name as defined on the colour scale at the top
+					else {return color(d.group)}
+				})
+
+			parent.append('text')//adds a text beox and put the 'item' value in it and the 'value' value
+				.style("font-family","Metric, sans-serif")
+				.style("font-size",9.6)
+				.text(function(d){
+					return d.item +" "+d.value;
+				})
+		})
+			
+}
+
+function drawKey(data){
+	var legend=data.children.filter(function(el){return el.key});
+	legend.sort(function(a, b) { return b.value - a.value; })
+	console.log(legend)
+	var key=d3.select("#treemap").append("svg")
+	key.selectAll('rect')
+		.data(legend)
+		.enter()
+			.append("g")
+			.call(function(parent){
+				parent.append('rect')
+				.attr("width",12)
+				.attr("height",8)
+				.attr("x",10)
+				.attr("y",function(d,i){return i*12})
+				.style("fill",function(d){return color(d.key)})
+
+				parent.append('text')
+					.style("font-family","Metric, sans-serif")
+					.style("font-size",9.6)
+					.attr("x",24)
+					.attr("y",function(d,i){return i*12+8})
+					.attr("class","node")
+					.text(function(d){
+						return d.key
+					})
+			})
+
+}
+
+</script>
+</html>
+
+
+</script>
+ 
+</body>
+
