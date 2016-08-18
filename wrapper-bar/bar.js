@@ -116,7 +116,7 @@ function barChart(data,stylename,media,xMin,xMax,xAxisHighlight,plotpadding,legA
                 .attr("class", media+"label")
                 .style("text-anchor","end")
                 .text(function(d) {return d3.format(".1f")(d.value);})
-                .attr("x", xScale(0)-yLabelOffset/4)
+                .attr("x", xScale(0)-yLabelOffset)
                 .attr("y", function(d) { return yScale(d.cat)+(yScale.rangeBand()-yOffset*.2    ); });
 
                 var clear = xLabels.selectAll(".tick").filter(function(d, i) {

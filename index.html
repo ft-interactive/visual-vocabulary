@@ -138,7 +138,8 @@
     .attr('class', 'intro-text')
     container.append("h4").text("Inspired by the Graphic Continuum by Jon Schwabish and Severino Ribecca")
 
-    var cats = container.selectAll("div").data(myObjects).enter().append("div")
+    var cats = container.selectAll("div")
+    .data(myObjects).enter().append("div")
         .attr("class",function(d,i){
             return d.title+" container-div"
         })

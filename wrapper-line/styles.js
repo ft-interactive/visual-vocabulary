@@ -51,6 +51,31 @@ linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"],
 fillcolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 }
 
+var stylenowcast = {classes:
+[{class:"background{fill: none}"},
+{class:"chartholder{fill: none;}"},
+{class:"title{font-size:21.0px; font-weight: 400; fill: #3b3d3b;}"},
+{class:"subtitle{font-size:14.0px; font-weight: 400; fill: #6b6e68;}"},
+{class:"source{fill: #6b6e68; font-size: 12.5px; font-weight: 400;}"},
+{class:"logo{fill: #dacfc5;}"},
+{class:"xAxis{fill:none; stroke: none;}"},
+{class:"xAxis line{fill:none; stroke-width: 1.0px; stroke:#c3bcb0;}"},
+{class:"xAxis text{fill:#6b6e68; font-size: 14.0px; font-weight: 400;}"},
+{class:"yAxis{fill:none; stroke: none;}"},
+{class:"yAxis line{fill:none; stroke-width: 1.0px; stroke:#c3bcb0; stroke-dasharray:1,2}"},
+{class:"yAxis text{fill:#6b6e68; font-size: 14.0px; font-weight: 400; font-feature-settings: 'tnum' 1; text-anchor: end;}"},
+{class:"minorAxis{fill:none; stroke: none;}"},
+{class:"minorAxis line{fill:none; stroke:#9ba497; stroke-width: 1px;stroke-dasharray:1,0}"},
+{class:"origin line{fill:none; stroke:#9ba497; stroke-width: 1px;stroke-dasharray:1,0}"},
+{class:"lines{fill:none; stroke-width: 2.5px; stroke-linecap: round;}"}
+],
+titleOffset:21,
+subOffset:0,
+legendyOffset:0,
+linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"],
+fillcolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
+}
+
 var stylesoc = {classes:
 [{class:"background{fill: #212121;}"},
 {class:"chartholder{fill: #6b6e68;}"},

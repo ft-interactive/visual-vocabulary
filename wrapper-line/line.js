@@ -39,7 +39,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         });			
     });
     yDomain=[yMin,yMax];
-
+console.log(yDomain);
     //creat an array of start stop areas
     var boundries= data.filter(function(d) {
         return  (d.highlight==="begin" || d.highlight==="end")
@@ -82,8 +82,8 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         else {
 			yScale = d3.scale.linear()
 			.domain(yDomain)
-			.range([plotHeight,0])
-			.nice();
+			.range([plotHeight,0]);
+			//.nice();
 		}
 
     var yAxis = d3.svg.axis()
@@ -165,7 +165,6 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             .call(xAxisMinor);
     }
     if(shadeAreas.length>0){
-        console.log(yMin,yMax)
         plot.selectAll("."+media+"area")
         .data(shadeAreas)
         .enter()
@@ -176,7 +175,6 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
                 })
                 .style ("opacity",0.2)
                 .attr("x", function(d) {
-                    console.log(d);
                     return xScale(d.begin)})
                 .attr("width", function (d) {return xScale(d.end)-xScale(d.begin)})
                 .attr("y", yScale(yMax))

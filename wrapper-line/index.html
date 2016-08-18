@@ -24,23 +24,24 @@
         var source = "Source: Dazhihui";
 
         //graph options
-        var yMin=4.5;
-        var yMax=8;
-        var yAxisHighlight=4.5;
+        var yMin=1.5;
+        var yMax=3.5;
+        var yAxisHighlight=1.5;
         var lineSmoothing="linear";//choose 'linear' for an unsmoothed line 'monotone' for smooth
         var logScale=false;
         var logScaleStart=1000;
         var markers=false;//show circle markers
-        var numTicksy = 8;//rough number of ticks for y axis
-        var interval="years";//days, months, quarters or years, NOTE THAT HOURS FUNCTION IS TURNED OFF FOR GENERAL USE AS IT TAKES TOO LONG TO CALCULATE
-        var minAxis=true //true or false
+        var numTicksy = 5;//rough number of ticks for y axis
+        var interval="months";//days, months, quarters or years, NOTE THAT HOURS FUNCTION IS TURNED OFF FOR GENERAL USE AS IT TAKES TOO LONG TO CALCULATE
+        var minAxis=false //true or false
         var ticks//Contains the tick values for the major and minor xAxis
 
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
         var frames=[
-        {name:"print",width:229.34,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"hori",yLabel:"right"},
-        {name:"web",width:600,height:275,units:'px',margins:[{top:0,right:20,bottom:5,left:10}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
+        //{name:"print",width:229.34,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"hori",yLabel:"right"},
+        //{name:"web",width:600,height:275,units:'px',margins:[{top:0,right:20,bottom:5,left:10}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
+        {name:"now",width:274,height:276,units:'px',margins:[{top:0,right:20,bottom:5,left:10}],stylesheet:stylenowcast,legend:"hori",yLabel:"right"},
         //{name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"hori",yLabel:"left"},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
         ]
@@ -49,6 +50,7 @@
         var chartpadding=[
         {name:"print",margin:[{top:15, right:10, bottom:15, left:0}]},
         {name:"web",margin:[{top:20, right:10,bottom:20,left:10}]},
+        {name:"now",margin:[{top:20, right:10,bottom:20,left:10}]},
         {name:"social",margin:[{top:40, right:10, bottom:40, left:12}]},
         {name:"video",margin:[{top:55, right:35,bottom:50, left:42}]}
         ]
@@ -59,7 +61,7 @@
             //date formatter, matching the format of the incoming csv...
             //var parseDate = d3.time.format("%Y %b").parse;
             //var parseDate = d3.time.format("%Y").parse;//just full year
-            var parseDate = d3.time.format("%d/%m/%y").parse;
+            var parseDate = d3.time.format("%d-%b-%y").parse;
             /*
             some common formatting parsers....
             d3.time.format("%Y %b") 1986 Jan
@@ -79,8 +81,6 @@
             });
         //YOU SHOULD'NT HAVE TO DO MUCH AFTER THIS
             ticks=calculateTicks(data,interval)
-            console.log(ticks)
-
 
             for (var i=0;i<frames.length;i++){
                 var stylename=frames[i].stylesheet;
@@ -122,7 +122,6 @@
         }
 
         function calculateTicks(data,int) {
-            console.log("intercal ", int)
             var dateDomain = d3.extent(data, function(d) {return d.date;});       
             return {
                 'years':{major: timeline(dateDomain,"year",1),minor:timeline(dateDomain,"month",1)},
