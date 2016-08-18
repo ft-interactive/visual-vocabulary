@@ -83,7 +83,6 @@ console.log(yDomain);
 			yScale = d3.scale.linear()
 			.domain(yDomain)
 			.range([plotHeight,0]);
-			//.nice();
 		}
 
     var yAxis = d3.svg.axis()
@@ -99,6 +98,9 @@ console.log(yDomain);
     var yLabel=plot.append("g")
     .attr("class",media+"yAxis")
     .call(yAxis);
+
+    yLabel.selectAll('text')
+        .attr("style", null)
 
     //work out number of ticks
 
@@ -146,6 +148,11 @@ console.log(yDomain);
              else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
             })
         .call(xAxis);
+
+    xLabel.selectAll('text')
+        .attr("style", null)
+
+    
 
     if(minAxis) {
         var xAxisMinor = d3.svg.axis()
