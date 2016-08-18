@@ -39,7 +39,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         });			
     });
     yDomain=[yMin,yMax];
-console.log(yDomain);
+
     //creat an array of start stop areas
     var boundries= data.filter(function(d) {
         return  (d.highlight==="begin" || d.highlight==="end")
@@ -101,10 +101,6 @@ console.log(yDomain);
 
     yLabel.selectAll('text')
         .attr("style", null)
-
-    //work out number of ticks
-
-
 
     //calculate what the ticksize should be now that the text for the labels has been drawn
     var yLabelOffset=yLabel.node().getBBox().width
