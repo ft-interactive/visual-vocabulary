@@ -16,7 +16,7 @@
     <script>
         
         //datafile
-        var dataURL = "data.csv"
+        var dataURL = "2lines.csv"
         
         //titles, footnotes
         var title = "Predicted quarterly growth";
@@ -24,16 +24,16 @@
         var source = "Source: Now-casting.com,Aug 14";
 
         //graph options
-        var yMin=1.5;
-        var yMax=3.5;
-        var yAxisHighlight=1.5;
+        var yMin=-6;
+        var yMax=4;
+        var yAxisHighlight=-6;
         var lineSmoothing="linear";//choose 'linear' for an unsmoothed line 'monotone' for smooth
         var logScale=false;
         var logScaleStart=1000;
         var markers=false;//show circle markers
-        var numTicksy = 5;//rough number of ticks for y axis
-        var interval="months";//days, months, quarters or years, NOTE THAT HOURS FUNCTION IS TURNED OFF FOR GENERAL USE AS IT TAKES TOO LONG TO CALCULATE
-        var minAxis=false //true or false
+        var numTicksy = 8;//rough number of ticks for y axis
+        var interval="quarters";//days, months, quarters, years, lustrum or decade
+        var minAxis=true //true or false
         var ticks//Contains the tick values for the major and minor xAxis
 
         //Use the frames array to set unique values for each media type of frame
@@ -124,6 +124,8 @@
         function calculateTicks(data,int) {
             var dateDomain = d3.extent(data, function(d) {return d.date;});       
             return {
+                'decade':{major: timeline(dateDomain,"year",10),minor:timeline(dateDomain,"year",1)},
+                'lutrrum':{major: timeline(dateDomain,"year",5),minor:timeline(dateDomain,"year",1)},
                 'years':{major: timeline(dateDomain,"year",1),minor:timeline(dateDomain,"month",1)},
                 'quarters':{major: timeline(dateDomain,"year",1),minor:timeline(dateDomain,"month",3)},
                 'months':{major: timeline(dateDomain,"month",1 ),minor:timeline(dateDomain,"day",1)},

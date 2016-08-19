@@ -27,7 +27,6 @@
         var yAxisHighlight=-1000;
         var logScale=false;
         var logScaleStart=1000;
-        var markers=true;//show circle markers
         var numTicksy = 7;//rough number of ticks for y axis
         var ticks//=[0.2,0.3];//option to force tick values for online
 
@@ -106,7 +105,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset;
                 var yLabel=frames[i].yLabel
-                columnChart(data, stylename, media, chartpadding,legend, logScale, logScaleStart, yMin,yMax, yAxisHighlight,markers, numTicksy, ticks, yLabel);
+                columnChart(data, stylename, media, chartpadding,legend, logScale, logScaleStart, yMin,yMax, yAxisHighlight, numTicksy, ticks, yLabel);
             }
         })//end data load
 
