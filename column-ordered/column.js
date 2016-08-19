@@ -131,16 +131,16 @@ function columnChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHighli
                 })
             if (labels) {
                 parent.append("text")
-                .attr("class", media+"label")
+                .attr("class", media+"labels")
                 .style("text-anchor","middle")
                 .text(function(d) {return d.value;})
                 .attr("x", function(d) { return xScale(d.cat)+(xScale.rangeBand()/2)})
                 .attr("y", function(d) {
                     if(d.value>0) {
-                        return yScale(d.value)+yOffset+yOffset/2
+                        return yScale(d.value)+yOffset
                     }
                     else {
-                        return yScale(d.value)-yOffset/2}
+                        return yScale(d.value)-(yOffset*.5)}
                 });
                 var clear = yLabel.selectAll(".tick").filter(function(d, i) {
                     return d!=originValue
