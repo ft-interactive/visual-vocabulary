@@ -16,7 +16,7 @@
     <script>
         
         //datafile
-        var dataURL = "2lines.csv"
+        var dataURL = "data.csv"
         
         //titles, footnotes
         var title = "Predicted quarterly growth";
@@ -32,7 +32,7 @@
         var logScaleStart=1000;
         var markers=false;//show circle markers
         var numTicksy = 8;//rough number of ticks for y axis
-        var interval="quarters";//days, months, quarters, years, lustrum or decade
+        var interval="months";//days, months, quarters, years, lustrum or decade
         var minAxis=true //true or false
         var ticks//Contains the tick values for the major and minor xAxis
 
@@ -130,7 +130,6 @@
                 'quarters':{major: timeline(dateDomain,"year",1),minor:timeline(dateDomain,"month",3)},
                 'months':{major: timeline(dateDomain,"month",1 ),minor:timeline(dateDomain,"day",1)},
                 'days':{major: timeline(dateDomain,"day",1),minor:timeline(dateDomain,"hour",1)}
-
             }[int];
 
             function timeline(dateDomain,time,step) {
