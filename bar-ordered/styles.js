@@ -38,7 +38,7 @@ var styleweb = {classes:
 {class:"title{font-size:25px; font-weight: 400; fill: #3b3d3b;}"},
 {class:"subtitle{font-size:18px; font-weight: 400; fill: #6b6e68;}"},
 {class:"source{fill: #6b6e68; font-size: 14.0px; font-weight: 400;}"},
-{class:"labels{font-size:12px; fill: #ffffff; font-weight: 600;}"},
+{class:"labels{font-size:18px; fill: #ffffff; font-weight: 600;}"},
 {class:"logo{fill: #dacfc5;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
 {class:"xAxis line{fill:none; stroke-width: 1.0px; stroke:#c3bcb0; stroke-dasharray:1,2;}"},
@@ -66,10 +66,10 @@ fillcolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0","#F19F9
 
 var stylesoc = {classes:
 [{class:"background{fill: #212121;}"},
-{class:"chartholder{fill: #6b6e68;}"},
+{class:"chartholder{fill: none;}"},
 {class:"title{font-size: 38px; fill: #ffffff; font-weight: 600; opacity: 0.9;}"},
 {class:"subtitle{font-size: 28px; fill: #ffffff; font-weight: 400; opacity: 0.7;}"},
-{class:"labels{font-size: 38px; fill: #ffffff; opacity: 0.95; font-weight: 400;}"},
+{class:"labels{font-size: 28px; fill: #ffffff; opacity: 0.5; font-weight: 400;}"},
 {class:"source{font-size: 25px; fill: #ffffff; font-weight: 400; opacity: 0.5;}"},
 {class:"logo{fill: #ffffff; opacity: 0.38;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
