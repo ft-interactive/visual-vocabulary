@@ -113,10 +113,16 @@ function barChart(data,stylename,media,xMin,xMax,xAxisHighlight,plotpadding,legA
                 })
                 if (labels) {
                 parent.append("text")
-                .attr("class", media+"label")
+                .attr("class", media+"labels")
                 .style("text-anchor","end")
                 .text(function(d) {return d3.format(".1f")(d.value);})
-                .attr("x", xScale(0)-yLabelOffset)
+                // .attr("width",30)
+                .attr("x", function (d){
+                    if(d.value>0){
+                        return (xScale(0)-yLabelOffset+(yOffset*2.5))
+                    }
+                    else {return xScale(0)-yLabelOffset-(yOffset*.5)}
+                })
                 .attr("y", function(d) { return yScale(d.cat)+(yScale.rangeBand()-yOffset*.2    ); });
 
                 var clear = xLabels.selectAll(".tick").filter(function(d, i) {
