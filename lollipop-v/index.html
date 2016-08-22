@@ -23,6 +23,7 @@
         var source = "Source: FT research";
 
         //put custom graph options here
+        var sort="ascending"//ascending or descending
         var yMin=300//Minimum value for the y-axis
         var yMax=650//Maximum value for the y-axis
         var yAxisHighlight=0;
@@ -84,7 +85,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                makeChart(data, stylename, media,yMin,yMax,yAxisHighlight,numTicksy,chartpadding,legend, yLabel);
+                makeChart(data, stylename, media,sort, yMin,yMax,yAxisHighlight,numTicksy,chartpadding,legend, yLabel);
             }
         })//end data load
 

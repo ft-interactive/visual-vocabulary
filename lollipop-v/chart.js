@@ -1,9 +1,9 @@
 
-function makeChart(data,stylename,media,yMin,yMax,yAxisHighlight,numTicksy,plotpadding,legAlign,yAlign){
+function makeChart(data,stylename,media,sort,yMin,yMax,yAxisHighlight,numTicksy,plotpadding,legAlign,yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
-
+    console.log (data)
     // return the series names from the first row of the spreadsheet
     var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
     //Select the plot space in the frame from which to take measurements
@@ -27,6 +27,13 @@ function makeChart(data,stylename,media,yMin,yMax,yAxisHighlight,numTicksy,plotp
      //console.log(plotWidth,colours,plotHeight,data)
      //console.log(margin)
     //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
+
+    //sort the data by middle income
+    if (sort=="descending") {
+        data.sort(function(a, b) { return b.y - a.y; })//Sorts biggest rects to the left
+        }
+    else {data.sort(function(a, b) { return a.y - b.y; })} //Sorts biggest rects to the left
+    
 
     //query data
     var extent=d3.extent(data,function(d){
