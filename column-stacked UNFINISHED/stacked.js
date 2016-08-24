@@ -97,7 +97,25 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
     var origin = plot.selectAll(".tick").filter(function(d, i) {
             return d==originValue || d==yAxisHighlight;
         })
-    .classed(media+"origin",true);
+        .classed(media+"origin",true);
+
+    var xScale = d3.scale.ordinal()
+        .rangeBands([0, plotWidth-yLabelOffset],.3);
+
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .orient("bottom");
+
+    xScale.domain(data.map(function(d) { return d.cat;}));
+
+    var xLabels=plot.append("g")
+      .attr("class", media+"xAxis")
+      .attr("transform",function(){
+                if(yAlign=="right") {
+                    return "translate("+(margin.left)+","+(h-margin.bottom)+")"
+                }
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"}
+            })      .call(xAxis);
 
 
 
