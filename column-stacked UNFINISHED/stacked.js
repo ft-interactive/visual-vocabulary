@@ -1,5 +1,5 @@
 
-function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax){
+function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,yAxisHighlight, numTicksy){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -72,11 +72,33 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
 
     var yAxis = d3.svg.axis()
         .scale(yScale)
-        .orient(yAlign);
+        .orient(yAlign)
+        .ticks(numTicksy);
 
     var yLabel=plot.append("g")
       .attr("class", media+"yAxis")
       .call(yAxis)
+
+    //calculate what the ticksize should be now that the text for the labels has been drawn
+    var yLabelOffset=yLabel.node().getBBox().width
+    var yticksize=colculateTicksize(yAlign, yLabelOffset);
     
+    yLabel.call(yAxis.tickSize(yticksize))
+    yLabel
+        .attr("transform",function(){
+            if (yAlign=="right"){
+                return "translate("+(margin.left)+","+margin.top+")"
+            }
+            else return "translate("+(w-margin.right)+","+margin.top+")"
+            })
+
+
+
+    function colculateTicksize(align, offset) {
+        if (align=="right") {
+            return w-margin.left-offset
+        }
+        else {return w-margin.right-offset}
+    }
 
 }

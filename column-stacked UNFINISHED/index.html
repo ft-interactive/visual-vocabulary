@@ -23,9 +23,11 @@
         var source = "Thomson Reuters Datastream";
 
         //put custom graph options here
-        var yMin=-1;
-        var yMax=5;
+        var yMin=-15;
+        var yMax=30;
         var yAxisHighlight=0;
+        var numTicksy = 10;//rough number of ticks for y axis
+
 
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
@@ -75,7 +77,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                stackedChart(data, stylename, media, chartpadding,legend, yLabel, yMin, yMax);
+                stackedChart(data, stylename, media, chartpadding,legend, yLabel, yMin, yMax, yAxisHighlight, numTicksy);
             }
         })//end data load
 
