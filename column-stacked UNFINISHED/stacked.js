@@ -1,11 +1,11 @@
 
-function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign){
+function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
     // return the series names from the first row of the spreadsheet
-    var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'group'; });
+    var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'cat'; });
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
     var plot=d3.select("#"+media+"plot")
@@ -31,30 +31,44 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign){
     console.log("data",data)
     //Makes copy of daa so that all calculations don't overwrite
     //the loaded data when more that one fram is needed
-    var plotData=data.map(function(d){
+
+    var plotData=data.map(function(d) {
         return {
-            group:d.group
-        };
-    })
-    plotData.forEach(function(d) {
-        seriesNames.map(function(name) {
-            var groupName=[name]
-            return {groupName: +d[name]
-            };
-        });
+            cat:d.cat,
+            bands:getBands(d),
+        }
     });
 
-    plotData.forEach(function(d) {
-        var y0 = 0;
-        d.categories = seriesNames.map(function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
-        d.total = d.categories[d.categories.length - 1].y1;
-    });
+    function getBands(el) {
+        let posCumulative=0;
+        let negCumulative=0;
+        let baseY=0
+        var bands=seriesNames.map(function(name,i) {
+            if(el[name]>0){
+                baseY=posCumulative;
+                posCumulative = posCumulative+(+el[name]);
+            }
+            if(el[name]<0){
+                baseY=negCumulative;
+                negCumulative = negCumulative+(+el[name]);
+            }
+            return {
+                name: name,
+                y: baseY,
+                height:+el[name]
+            }
+        });
+        yMin=Math.min(yMin,negCumulative)
+        yMax=Math.max(yMax,posCumulative)
+       return bands
+    }
 
     console.log("plotData",plotData)
-
+    console.log(yMin,yMax)
 
     var yScale = d3.scale.linear()
-        .rangeRound([plotHeight, 0]);
+        .range([plotHeight, 0])
+        .domain([yMin,yMax]);
 
     var yAxis = d3.svg.axis()
         .scale(yScale)
