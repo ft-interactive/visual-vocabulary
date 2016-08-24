@@ -92,6 +92,13 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
             else return "translate("+(w-margin.right)+","+margin.top+")"
             })
 
+    //identify 0 line if there is one
+    var originValue = 0;
+    var origin = plot.selectAll(".tick").filter(function(d, i) {
+            return d==originValue || d==yAxisHighlight;
+        })
+    .classed(media+"origin",true);
+
 
 
     function colculateTicksize(align, offset) {
