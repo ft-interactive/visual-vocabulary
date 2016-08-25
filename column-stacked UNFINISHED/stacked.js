@@ -40,20 +40,17 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
     });
 
     function getBands(el) {
-        console.log(el)
         let posCumulative=0;
         let negCumulative=0;
         let baseY=0
         let basey1=0
         var bands=seriesNames.map(function(name,i) {
             if(el[name]>0){
-                console.log("pos",posCumulative)
                 baseY1=posCumulative
                 posCumulative = posCumulative+(+el[name]);
                 baseY=posCumulative;
             }
             if(el[name]<0){
-                console.log("neg",negCumulative);
                 baseY1=negCumulative
                 negCumulative = negCumulative+(+el[name]);
                 baseY=negCumulative;
@@ -61,8 +58,8 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
             }
             return {
                 name: name,
-                y: baseY,
-                y1:baseY1,
+                y: +baseY,
+                y1:+baseY1,
                 height:+el[name]
             }
         });
@@ -72,7 +69,7 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
     }
 
     console.log("plotData",plotData)
-    console.log(yMin,yMax)
+
 
     var yScale = d3.scale.linear()
         .range([plotHeight, 0])
@@ -138,12 +135,9 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
         .attr("width", xScale.rangeBand())
         .attr("x", function(d) { return xScale(d.name)})
         .attr("y", function(d) {
-            console.log(d.name,d.y, d.y1,"y=",Math.max(d.y, d.y1))
             { return yScale(Math.max(d.y, d.y1))}
         })
         .attr("height", function(d) {
-            console.log("height",d.height)
-            console.log("xx",Math.abs(d.y-d.y1))
             return Math.abs(yScale(0)-yScale(d.height))
         })
         .style("fill", function(d,i) { return colours[i] })
@@ -153,6 +147,29 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
             }
              else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
         });
+    if (labels) {
+            category.selectAll("text")
+            .data(function(d) { return d.bands; })
+            .enter().append("text")
+            .attr("class", media+"labels")
+            .style("text-anchor","middle")
+            .text(function(d) {return d.height;})
+            .attr("x", function(d,i) {
+                return xScale.rangeBand()-xScale.rangeBand()/2.5
+            })
+            .attr("y", function(d) {
+                if(d.height>0) {
+                    //console.log(d.height)
+                    return yScale(d.y1)+yOffset
+                }
+                if (d.height<0){
+                    return yScale(d.y)+yOffset}
+            });
+            var clear = yLabel.selectAll(".tick").filter(function(d, i) {
+                return d!=originValue
+            })
+            clear.remove()
+        }
 
     // //create a legend first
     var legendyOffset=0
