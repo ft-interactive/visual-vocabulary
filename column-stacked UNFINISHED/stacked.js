@@ -165,6 +165,7 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
                 if (d.height<0){
                     return yScale(d.y)+yOffset}
             });
+            
             var clear = yLabel.selectAll(".tick").filter(function(d, i) {
                 return d!=originValue
             })
