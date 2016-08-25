@@ -40,21 +40,29 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
     });
 
     function getBands(el) {
+        console.log(el)
         let posCumulative=0;
         let negCumulative=0;
         let baseY=0
+        let basey1=0
         var bands=seriesNames.map(function(name,i) {
             if(el[name]>0){
-                baseY=posCumulative;
+                console.log("pos",posCumulative)
+                baseY1=posCumulative
                 posCumulative = posCumulative+(+el[name]);
+                baseY=posCumulative;
             }
             if(el[name]<0){
-                baseY=negCumulative;
+                console.log("neg",negCumulative);
+                baseY1=negCumulative
                 negCumulative = negCumulative+(+el[name]);
+                baseY=negCumulative;
+                if (i<1){baseY=0;baseY1=negCumulative}
             }
             return {
                 name: name,
                 y: baseY,
+                y1:baseY1,
                 height:+el[name]
             }
         });
@@ -109,13 +117,42 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
     xScale.domain(data.map(function(d) { return d.cat;}));
 
     var xLabels=plot.append("g")
-      .attr("class", media+"xAxis")
-      .attr("transform",function(){
-                if(yAlign=="right") {
-                    return "translate("+(margin.left)+","+(h-margin.bottom)+")"
-                }
-                 else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"}
-            })      .call(xAxis);
+        .attr("class", media+"xAxis")
+        .attr("transform",function(){
+            if(yAlign=="right") {
+                return "translate("+(margin.left)+","+(h-margin.bottom)+")"
+            }
+             else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"}
+        })
+        .call(xAxis);
+
+    var category = plot.selectAll("."+media+"category")
+        .data(plotData)
+        .enter().append("g")
+        .attr("class", media+"category")
+        .attr("transform", function(d) { return "translate(" + (xScale(d.cat)+(0)) + ",0)"; });
+
+    category.selectAll("rect")
+        .data(function(d) { return d.bands; })
+        .enter().append("rect")
+        .attr("width", xScale.rangeBand())
+        .attr("x", function(d) { return xScale(d.name)})
+        .attr("y", function(d) {
+            console.log(d.name,d.y, d.y1,"y=",Math.max(d.y, d.y1))
+            { return yScale(Math.max(d.y, d.y1))}
+        })
+        .attr("height", function(d) {
+            console.log("height",d.height)
+            console.log("xx",Math.abs(d.y-d.y1))
+            return Math.abs(yScale(0)-yScale(d.height))
+        })
+        .style("fill", function(d,i) { return colours[i] })
+        .attr("transform",function(){
+            if(yAlign=="right") {
+                return "translate("+(margin.left)+","+(margin.top)+")"
+            }
+             else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
+        });
 
 
 
