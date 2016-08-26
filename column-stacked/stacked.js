@@ -1,5 +1,5 @@
 
-function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,yAxisHighlight, labels, numTicksy){
+function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,yAxisHighlight, labels, numTicksy,sort){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -36,6 +36,7 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
         return {
             cat:d.cat,
             bands:getBands(d),
+            total:d3.sum(getBands(d), function(d) { return d.height; })
         }
     });
 
@@ -69,6 +70,17 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
     }
 
     console.log("plotData",plotData)
+
+    if (sort=="descending") {
+        plotData.sort(function(a, b) { 
+        return b.total - a.total; })//Sorts biggest rects to the left
+        }
+        else {plotData.sort(function(a, b) { 
+        return a.total - b.total; })//Sorts biggest rects to the left
+    }
+
+    console.log("plotData",plotData)
+
 
 
     var yScale = d3.scale.linear()
@@ -111,7 +123,7 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
         .scale(xScale)
         .orient("bottom");
 
-    xScale.domain(data.map(function(d) { return d.cat;}));
+    xScale.domain(plotData.map(function(d) { return d.cat;}));
 
     var xLabels=plot.append("g")
         .attr("class", media+"xAxis")
