@@ -1,5 +1,5 @@
 
-function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,yAxisHighlight, labels, numTicksy,sort){
+function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xMax,xAxisHighlight, labels, numTicksx,sort){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -64,8 +64,8 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
                 height:+el[name]
             }
         });
-        yMin=Math.min(yMin,negCumulative)
-        yMax=Math.max(yMax,posCumulative)
+        xMin=Math.min(xMin,negCumulative)
+        xMax=Math.max(xMax,posCumulative)
        return bands
     }
 
@@ -79,14 +79,14 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
         return a.total - b.total; })//Sorts biggest rects to the left
     }
 
-    var yScale = d3.scale.linear()
-        .range([plotHeight, 0])
-        .domain([yMin,yMax]);
+    var yScale = d3.scale.ordinal()
+        .rangeBands([0, plotHeight],.2)
+        .domain(plotData.map(function(d) { return d.cat;}));
 
     var yAxis = d3.svg.axis()
         .scale(yScale)
-        .orient(yAlign)
-        .ticks(numTicksy);
+        .orient("left")
+        .tickSize(0);
 
     var yLabel=plot.append("g")
       .attr("class", media+"yAxis")
@@ -94,142 +94,126 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
 
     //calculate what the ticksize should be now that the text for the labels has been drawn
     var yLabelOffset=yLabel.node().getBBox().width
-    var yticksize=colculateTicksize(yAlign, yLabelOffset);
     
-    yLabel.call(yAxis.tickSize(yticksize))
     yLabel
         .attr("transform",function(){
-            if (yAlign=="right"){
-                return "translate("+(margin.left)+","+margin.top+")"
-            }
-            else return "translate("+(w-margin.right)+","+margin.top+")"
+                return "translate("+(margin.left+yLabelOffset)+","+margin.top+")"
             })
 
-    //identify 0 line if there is one
-    var originValue = 0;
-    var origin = plot.selectAll(".tick").filter(function(d, i) {
-            return d==originValue || d==yAxisHighlight;
-        })
-        .classed(media+"origin",true);
-
-    var xScale = d3.scale.ordinal()
-        .rangeBands([0, plotWidth-yLabelOffset],.3);
+    var xScale = d3.scale.linear()
+        .range([yLabelOffset, plotWidth])
+        .domain([xMin,xMax]);
 
     var xAxis = d3.svg.axis()
-        .scale(xScale)
-        .orient("bottom");
-
-    xScale.domain(plotData.map(function(d) { return d.cat;}));
+    .scale(xScale)
+    .ticks(numTicksx)
+    .tickSize(plotHeight)
+    .orient("bottom");
 
     var xLabels=plot.append("g")
-        .attr("class", media+"xAxis")
-        .attr("transform",function(){
-            if(yAlign=="right") {
-                return "translate("+(margin.left)+","+(h-margin.bottom)+")"
-            }
-             else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"}
-        })
-        .call(xAxis);
+      .attr("class", media+"xAxis")
+      .attr("transform", "translate("+(margin.left)+"," + (margin.top) + ")")
+      .call(xAxis);
 
-    var category = plot.selectAll("."+media+"category")
-        .data(plotData)
-        .enter().append("g")
-        .attr("class", media+"category")
-        .attr("transform", function(d) { return "translate(" + (xScale(d.cat)+(0)) + ",0)"; });
+    // var category = plot.selectAll("."+media+"category")
+    //     .data(plotData)
+    //     .enter().append("g")
+    //     .attr("class", media+"category")
+    //     .attr("transform", function(d) { return "translate(" + (xScale(d.cat)+(0)) + ",0)"; });
 
-    category.selectAll("rect")
-        .data(function(d) { return d.bands; })
-        .enter().append("rect")
-        .attr("width", xScale.rangeBand())
-        .attr("x", function(d) { return xScale(d.name)})
-        .attr("y", function(d) {
-            { return yScale(Math.max(d.y, d.y1))}
-        })
-        .attr("height", function(d) {
-            return Math.abs(yScale(0)-yScale(d.height))
-        })
-        .style("fill", function(d,i) { return colours[i] })
-        .attr("transform",function(){
-            if(yAlign=="right") {
-                return "translate("+(margin.left)+","+(margin.top)+")"
-            }
-             else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
-    });
-    if (labels) {
-            category.selectAll("text")
-            .data(function(d) { return d.bands; })
-            .enter().append("text")
-            .attr("class", media+"labels")
-            .style("text-anchor","middle")
-            .text(function(d) {return d.height;})
-            .attr("x", function(d,i) {
-                console.log("xx",xScale.rangeBand()*i)
-                return xScale(d.name)
-                //return xScale(d.name)+(xScale.rangeBand()/2)
-            })
-            .attr("y", function(d) {
-                if(d.height>0) {
-                    //console.log(d.height)
-                    return yScale(Math.min(d.y, d.y1))+yOffset
-                }
-                else {
-                    return yScale(Math.max(d.y, d.y1))-(yOffset*.5)}
-            });
-            var clear = yLabel.selectAll(".tick").filter(function(d, i) {
-                return d!=originValue
-            })
-            clear.remove()
-        }
+    // category.selectAll("rect")
+    //     .data(function(d) { return d.bands; })
+    //     .enter().append("rect")
+    //     .attr("width", xScale.rangeBand())
+    //     .attr("x", function(d) { return xScale(d.name)})
+    //     .attr("y", function(d) {
+    //         { return yScale(Math.max(d.y, d.y1))}
+    //     })
+    //     .attr("height", function(d) {
+    //         return Math.abs(yScale(0)-yScale(d.height))
+    //     })
+    //     .style("fill", function(d,i) { return colours[i] })
+    //     .attr("transform",function(){
+    //         if(yAlign=="right") {
+    //             return "translate("+(margin.left)+","+(margin.top)+")"
+    //         }
+    //          else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
+    // });
+    // if (labels) {
+    //         category.selectAll("text")
+    //         .data(function(d) { return d.bands; })
+    //         .enter().append("text")
+    //         .attr("class", media+"labels")
+    //         .style("text-anchor","middle")
+    //         .text(function(d) {return d.height;})
+    //         .attr("x", function(d,i) {
+    //             console.log("xx",xScale.rangeBand()*i)
+    //             return xScale(d.name)
+    //             //return xScale(d.name)+(xScale.rangeBand()/2)
+    //         })
+    //         .attr("y", function(d) {
+    //             if(d.height>0) {
+    //                 //console.log(d.height)
+    //                 return yScale(Math.min(d.y, d.y1))+yOffset
+    //             }
+    //             else {
+    //                 return yScale(Math.max(d.y, d.y1))-(yOffset*.5)}
+    //         });
+    //         var clear = yLabel.selectAll(".tick").filter(function(d, i) {
+    //             return d!=originValue
+    //         })
+    //         clear.remove()
+    //     }
 
     // //create a legend first
-    var legendyOffset=0
-        var legend = plot.append("g")
-            .attr("id",media+"legend")
-            .on("mouseover",pointer)
-            .selectAll("g")
-            .data(seriesNames)
-            .enter()
-            .append("g")
-            .attr ("id",function(d,i){
-                return media+"l"+i
-            })
+    // var legendyOffset=0
+    //     var legend = plot.append("g")
+    //         .attr("id",media+"legend")
+    //         .on("mouseover",pointer)
+    //         .selectAll("g")
+    //         .data(seriesNames)
+    //         .enter()
+    //         .append("g")
+    //         .attr ("id",function(d,i){
+    //             return media+"l"+i
+    //         })
 
-        var drag = d3.behavior.drag().on("drag", moveLegend);
-        d3.select("#"+media+"legend").call(drag);
+    //     var drag = d3.behavior.drag().on("drag", moveLegend);
+    //     d3.select("#"+media+"legend").call(drag);
             
-        legend.append("text")
+    //     legend.append("text")
 
-            .attr("id",function(d,i){
-                return media+"t"+i
-            })
-            .attr("x",yOffset+yOffset/5)
-            .attr("y",0)
-            .attr("class",media+"subtitle")
-            .text(function(d){
-                return d;
-            })
+    //         .attr("id",function(d,i){
+    //             return media+"t"+i
+    //         })
+    //         .attr("x",yOffset+yOffset/5)
+    //         .attr("y",0)
+    //         .attr("class",media+"subtitle")
+    //         .text(function(d){
+    //             return d;
+    //         })
 
-        legend.append("rect")
-            .attr("x",0)
-            .attr("y",-yOffset+yOffset/3)
-            .attr("width",(yOffset/100)*85)
-            .attr("height",(yOffset/100)*70)
-            .style("fill", function(d,i){return colours[i]})
+    //     legend.append("rect")
+    //         .attr("x",0)
+    //         .attr("y",-yOffset+yOffset/3)
+    //         .attr("width",(yOffset/100)*85)
+    //         .attr("height",(yOffset/100)*70)
+    //         .style("fill", function(d,i){return colours[i]})
 
-        legend.attr("transform",function(d,i){
-            if (legAlign=='hori') {
-                var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
-                if (i>0) {
-                    var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
-                }
-                else {gWidth=0};
-                legendyOffset=legendyOffset+gWidth;
-                return "translate("+(legendyOffset)+","+(gHeigt)+")";  
-            }
-            else {
-                var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
-                return "translate(0,"+((i*yOffset)+yOffset/2)+")"};
-        })
+    //     legend.attr("transform",function(d,i){
+    //         if (legAlign=='hori') {
+    //             var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
+    //             if (i>0) {
+    //                 var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
+    //             }
+    //             else {gWidth=0};
+    //             legendyOffset=legendyOffset+gWidth;
+    //             return "translate("+(legendyOffset)+","+(gHeigt)+")";  
+    //         }
+    //         else {
+    //             var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
+    //             return "translate(0,"+((i*yOffset)+yOffset/2)+")"};
+    //     })
 
     function colculateTicksize(align, offset) {
         if (align=="right") {
