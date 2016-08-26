@@ -146,7 +146,7 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
                 return "translate("+(margin.left)+","+(margin.top)+")"
             }
              else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
-        });
+    });
     if (labels) {
             category.selectAll("text")
             .data(function(d) { return d.bands; })
@@ -155,17 +155,18 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
             .style("text-anchor","middle")
             .text(function(d) {return d.height;})
             .attr("x", function(d,i) {
-                return xScale.rangeBand()-xScale.rangeBand()/2.5
+                console.log("xx",xScale.rangeBand()*i)
+                return xScale(d.name)
+                //return xScale(d.name)+(xScale.rangeBand()/2)
             })
             .attr("y", function(d) {
                 if(d.height>0) {
                     //console.log(d.height)
-                    return yScale(d.y1)+yOffset
+                    return yScale(Math.min(d.y, d.y1))+yOffset
                 }
-                if (d.height<0){
-                    return yScale(d.y)+yOffset}
+                else {
+                    return yScale(Math.max(d.y, d.y1))-(yOffset*.5)}
             });
-            
             var clear = yLabel.selectAll(".tick").filter(function(d, i) {
                 return d!=originValue
             })
