@@ -1,12 +1,12 @@
 
-function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, numTicksx){
+function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, xAxisHighlight, numTicksx){
     console.log(data)
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
     // return the series names from the first row of the spreadsheet
     var seriesNames = Object.keys(data[0]);
-    console.log(seriesNames)
+    console.log("seriesNames",seriesNames)
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
     var plot=d3.select("#"+media+"plot")
@@ -48,6 +48,32 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, n
       .attr("class", media+"xAxis")
       .attr("transform", "translate("+(margin.left)+"," + (margin.top) + ")")
       .call(xAxis);
+
+    var originValue = 0;
+    var origin = plot.selectAll(".tick").filter(function(d, i) {
+            return d==originValue || d==xAxisHighlight;
+        }).classed(media+"origin",true);
+
+    var yScale = d3.scale.ordinal()
+        .rangeBands([plotHeight, margin.bottom], .1)
+        .domain(plotData.map(function(d) { return d.key; }));;
+    
+    console.log(yScale.domain())
+
+    var category = plot.selectAll("."+media+"category")
+        .data(plotData)
+        .enter()
+        .append("g")
+        .attr("transform", function (d) {return "translate(0," + yScale(d.key) + ")"; })
+        .attr("class", media+"category")
+        .call(function(parent){
+
+        parent.append('text')
+            .attr("class", media+"Subtitle")
+            .attr("y",0)
+            .text(function(d){return d.key})
+
+        })
 
 
 
