@@ -1,5 +1,5 @@
 
-function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
+function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, numTicksx){
     console.log(data)
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -30,5 +30,29 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
         .entries(data);
 
     console.log(plotData)
+    xMin=Math.min(xMin,d3.min(plotData, function(d) { return d3.min(d.values, function(d) { return d.value; })})); 
+    xMax=Math.max(xMax,d3.max(plotData, function(d) { return d3.max(d.values, function(d) { return d.value; })})); 
+    //console.log(xMin,xMax)
+
+    var xScale = d3.scale.linear()
+        .range([0, plotWidth])
+        .domain([xMin,xMax]);
+
+    var xAxis = d3.svg.axis()
+    .scale(xScale)
+    .ticks(numTicksx)
+    .tickSize(plotHeight)
+    .orient("bottom");
+
+    var xLabels=plot.append("g")
+      .attr("class", media+"xAxis")
+      .attr("transform", "translate("+(margin.left)+"," + (margin.top) + ")")
+      .call(xAxis);
+
+
+
+
+
+
 
 }
