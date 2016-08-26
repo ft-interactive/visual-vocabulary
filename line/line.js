@@ -99,9 +99,6 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     .attr("class",media+"yAxis")
     .call(yAxis);
 
-    yLabel.selectAll('text')
-        .attr("style", null)
-
     //calculate what the ticksize should be now that the text for the labels has been drawn
     var yLabelOffset=yLabel.node().getBBox().width
     //console.log("offset= ",yLabelOffset)
@@ -116,6 +113,10 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             }
             else return "translate("+(w-margin.right)+","+margin.top+")"
             })
+
+    yLabel.selectAll('text')
+        .attr("style", null)
+        .attr("x",yticksize+(yLabelOffset*.5))
 
     //identify 0 line if there is one
     var originValue = 0;
@@ -148,7 +149,6 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     xLabel.selectAll('text')
         .attr("style", null)
 
-    
 
     if(minAxis) {
         var xAxisMinor = d3.svg.axis()
