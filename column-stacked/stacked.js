@@ -28,7 +28,7 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
     // console.log(margin)
     //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
     //Basecd on https://bl.ocks.org/mbostock/3886208
-    console.log("data",data)
+    //console.log("data",data)
     //Makes copy of daa so that all calculations don't overwrite
     //the loaded data when more that one fram is needed
 
@@ -69,7 +69,7 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
        return bands
     }
 
-    console.log("plotData",plotData)
+    //console.log("plotData",plotData)
 
     if (sort=="descending") {
         plotData.sort(function(a, b) { 
@@ -78,10 +78,6 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
         else {plotData.sort(function(a, b) { 
         return a.total - b.total; })//Sorts biggest rects to the left
     }
-
-    console.log("plotData",plotData)
-
-
 
     var yScale = d3.scale.linear()
         .range([plotHeight, 0])
