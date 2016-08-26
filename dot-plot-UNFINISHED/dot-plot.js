@@ -1,5 +1,5 @@
 
-function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, xAxisHighlight, numTicksx){
+function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, xAxisHighlight, numTicksx, size){
     console.log(data)
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -55,7 +55,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         }).classed(media+"origin",true);
 
     var yScale = d3.scale.ordinal()
-        .rangeBands([plotHeight, margin.bottom], .1)
+        .rangeBands([plotHeight, margin.bottom])
         .domain(plotData.map(function(d) { return d.key; }));;
     
     console.log(yScale.domain())
@@ -70,6 +70,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
 
         parent.append('text')
             .attr("class", media+"Subtitle")
+            .attr("x",margin.left)
             .attr("y",0)
             .text(function(d){return d.key})
 
@@ -80,7 +81,10 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         .attr("class",media+"fill")
         .attr("cx",function(d){return xScale(d.value)})
         .attr("cy",yScale.rangeBand()*.4)
-        .attr("r",10)
+        .attr("r", function(d) {
+            if (size) {return d.size*(yScale.rangeBand()*.003   )}
+            else {return yOffset/2}
+        })
         .attr("transform", function (d) {return "translate("+(margin.left)+","+(0)+")"})
         .style("fill",colours[0])
 
