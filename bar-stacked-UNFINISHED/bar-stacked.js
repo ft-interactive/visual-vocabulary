@@ -124,8 +124,28 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
         .data(plotData)
         .enter().append("g")
         .attr("class", media+"category")
-        .attr("transform", function (d) {return "translate(0," + yScale(d.cat) + ")"; })
+        .attr("transform", function (d) {return "translate(0," + (yScale(d.cat))+ ")"; })
+        .call(function(parent){
+            parent.selectAll('rect')
+            .data(function(d){return d.bands})
+            .enter().append('rect')
+            .attr("height", yScale.rangeBand())
+            .attr("x", function(d) {
+                { return xScale(Math.min(d.y, d.y1))}
+            })
+            .attr("y", function(d) { return yScale(d.name)})
+            .attr("width", function(d) {
+                return Math.abs(xScale(0)-xScale(d.height))
+            })
+            .style("fill", function(d,i) { return colours[i] })
+            .attr("transform",function(){
+                if(yAlign=="right") {
+                    return "translate("+(margin.left)+","+(margin.top)+")"
+                }
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
+            });
 
+        })
     // category.selectAll("rect")
     //     .data(function(d) { return d.bands; })
     //     .enter().append("rect")
