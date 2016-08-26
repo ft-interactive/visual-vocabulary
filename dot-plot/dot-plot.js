@@ -55,7 +55,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         }).classed(media+"origin",true);
 
     var yScale = d3.scale.ordinal()
-        .rangeBands([plotHeight, margin.bottom])
+        .rangeBands([plotHeight+margin.top, margin.top])
         .domain(plotData.map(function(d) { return d.key; }));;
     
     console.log(yScale.domain())
@@ -79,6 +79,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         .enter()
         .append('circle')
         .attr("class",media+"fill")
+        .attr("id",function(d){return d.name +" "+d.value+ " "+d.size})
         .attr("cx",function(d){return xScale(d.value)})
         .attr("cy",yScale.rangeBand()*.4)
         .attr("r", function(d) {
