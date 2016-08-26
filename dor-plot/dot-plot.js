@@ -1,11 +1,12 @@
 
 function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
-
+    console.log(data)
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
     // return the series names from the first row of the spreadsheet
-    var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
+    var seriesNames = Object.keys(data[0]);
+    console.log(seriesNames)
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
     var plot=d3.select("#"+media+"plot")
