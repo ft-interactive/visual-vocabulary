@@ -73,6 +73,17 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
             .attr("y",0)
             .text(function(d){return d.key})
 
+        parent.selectAll('circles')
+        .data(function(d) {return d.values})
+        .enter()
+        .append('circle')
+        .attr("class",media+"fill")
+        .attr("cx",function(d){return xScale(d.value)})
+        .attr("cy",yScale.rangeBand()*.4)
+        .attr("r",10)
+        .attr("transform", function (d) {return "translate("+(margin.left)+","+(0)+")"})
+        .style("fill",colours[0])
+
         })
 
 
