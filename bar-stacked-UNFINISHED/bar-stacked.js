@@ -120,21 +120,21 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
             return d==originValue || d==xAxisHighlight;
         }).classed(media+"origin",true);
 
-    // var category = plot.selectAll("."+media+"category")
-    //     .data(plotData)
-    //     .enter().append("g")
-    //     .attr("class", media+"category")
-    //     .attr("transform", function(d) { return "translate(" + (xScale(d.cat)+(0)) + ",0)"; });
+    var category = plot.selectAll("."+media+"category")
+        .data(plotData)
+        .enter().append("g")
+        .attr("class", media+"category")
+        .attr("transform", function (d) {return "translate(0," + yScale(d.cat) + ")"; })
 
     // category.selectAll("rect")
     //     .data(function(d) { return d.bands; })
     //     .enter().append("rect")
-    //     .attr("width", xScale.rangeBand())
+    //     .attr("height", yScale.rangeBand())
     //     .attr("x", function(d) { return xScale(d.name)})
     //     .attr("y", function(d) {
     //         { return yScale(Math.max(d.y, d.y1))}
     //     })
-    //     .attr("height", function(d) {
+    //     .attr("width", function(d) {
     //         return Math.abs(yScale(0)-yScale(d.height))
     //     })
     //     .style("fill", function(d,i) { return colours[i] })
