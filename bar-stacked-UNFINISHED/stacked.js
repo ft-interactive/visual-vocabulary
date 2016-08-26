@@ -115,6 +115,11 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
       .attr("transform", "translate("+(margin.left)+"," + (margin.top) + ")")
       .call(xAxis);
 
+    var originValue = 0;
+    var origin = plot.selectAll(".tick").filter(function(d, i) {
+            return d==originValue || d==xAxisHighlight;
+        }).classed(media+"origin",true);
+
     // var category = plot.selectAll("."+media+"category")
     //     .data(plotData)
     //     .enter().append("g")
