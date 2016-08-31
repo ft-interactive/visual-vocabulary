@@ -31,22 +31,22 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
     var plotData=data.map(function(d) {
         return {
             cat:d.cat,
-            bands:getBands(d)
+            groups:getGroup(d)
         }
     });
 
-    function getBands(el) {
-        var bands=seriesNames.map(function(name) {
+    function getGroup(el) {
+        var groups=seriesNames.map(function(name) {
             return {
                 name: name,
                 value:+el[name]
             }
         });
-       return bands
+       return groups
     }
 
-    var yMin=Math.min(yMin,d3.min(plotData, function(d) { return d3.min(d.bands, function(d) { return d.value; })})); 
-    var yMax=Math.max(yMax,d3.max(plotData, function(d) { return d3.max(d.bands, function(d) { return d.value; })})); 
+    var yMin=Math.min(yMin,d3.min(plotData, function(d) { return d3.min(d.groups, function(d) { return d.value; })})); 
+    var yMax=Math.max(yMax,d3.max(plotData, function(d) { return d3.max(d.groups, function(d) { return d.value; })})); 
 
     yScale.domain([yMin, yMax]);
 
@@ -110,7 +110,7 @@ function columnChart(data,stylename,media,plotpadding,legAlign, logScale, logSca
         .attr("transform", function(d) { return "translate(" + (x0(d.cat)+(margin.left)) + ",0)"; });
 
     category.selectAll("rect")
-        .data(function(d) { return d.bands; })
+        .data(function(d) { return d.groups; })
         .enter().append("rect")
           .attr("width", x1.rangeBand())
           .attr("x", function(d) { return x1(d.name); })
