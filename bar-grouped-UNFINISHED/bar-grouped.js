@@ -120,54 +120,54 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
         })
 
     //create a legend first
-    // var legendyOffset=0
-    //     var legend = plot.append("g")
-    //         .attr("id",media+"legend")
-    //         .on("mouseover",pointer)
-    //         .selectAll("g")
-    //         .data(seriesNames)
-    //         .enter()
-    //         .append("g")
-    //         .attr ("id",function(d,i){
-    //             return media+"l"+i
-    //         })
+    var legendyOffset=0
+        var legend = plot.append("g")
+            .attr("id",media+"legend")
+            .on("mouseover",pointer)
+            .selectAll("g")
+            .data(seriesNames)
+            .enter()
+            .append("g")
+            .attr ("id",function(d,i){
+                return media+"l"+i
+            })
 
-    //     var drag = d3.behavior.drag().on("drag", moveLegend);
-    //     d3.select("#"+media+"legend").call(drag);
+        var drag = d3.behavior.drag().on("drag", moveLegend);
+        d3.select("#"+media+"legend").call(drag);
             
-    //     legend.append("text")
+        legend.append("text")
 
-    //         .attr("id",function(d,i){
-    //             return media+"t"+i
-    //         })
-    //         .attr("x",yOffset+yOffset/5)
-    //         .attr("y",0)
-    //         .attr("class",media+"subtitle")
-    //         .text(function(d){
-    //             return d;
-    //         })
+            .attr("id",function(d,i){
+                return media+"t"+i
+            })
+            .attr("x",yOffset+yOffset/5)
+            .attr("y",0)
+            .attr("class",media+"subtitle")
+            .text(function(d){
+                return d;
+            })
 
-    //     legend.append("rect")
-    //         .attr("x",0)
-    //         .attr("y",-yOffset+yOffset/3)
-    //         .attr("width",(yOffset/100)*85)
-    //         .attr("height",(yOffset/100)*70)
-    //         .style("fill", function(d,i){return colours[i]})
+        legend.append("rect")
+            .attr("x",0)
+            .attr("y",-yOffset+yOffset/3)
+            .attr("width",(yOffset/100)*85)
+            .attr("height",(yOffset/100)*70)
+            .style("fill", function(d,i){return colours[i]})
 
-    //     legend.attr("transform",function(d,i){
-    //         if (legAlign=='hori') {
-    //             var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
-    //             if (i>0) {
-    //                 var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
-    //             }
-    //             else {gWidth=0};
-    //             legendyOffset=legendyOffset+gWidth;
-    //             return "translate("+(legendyOffset)+","+(gHeigt)+")";  
-    //         }
-    //         else {
-    //             var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
-    //             return "translate(0,"+((i*yOffset)+yOffset/2)+")"};
-    //     })
+        legend.attr("transform",function(d,i){
+            if (legAlign=='hori') {
+                var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
+                if (i>0) {
+                    var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
+                }
+                else {gWidth=0};
+                legendyOffset=legendyOffset+gWidth;
+                return "translate("+(legendyOffset)+","+(gHeigt)+")";  
+            }
+            else {
+                var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
+                return "translate(0,"+((i*yOffset)+yOffset/2)+")"};
+        })
 
     function colculateTicksize(align, offset) {
         if (align=="right") {
