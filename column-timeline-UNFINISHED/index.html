@@ -11,7 +11,7 @@
     </style>
     <script src="d3.min.js"></script>
     <script src="drawFrame.js"></script>
-    <script src="column.js"></script>
+    <script src="column-timeline.js"></script>
     <script src="saveSvgAsPng.js"></script>
     <script>
         
@@ -24,11 +24,13 @@
         var source = "Source: Bloomberg    FT graphic";
         
         //graph options
-        var yMin=0;
-        var yMax=20;
-        var yAxisHighlight=0;
+        var yMin=-3;
+        var yMax=5;
+        var yAxisHighlight=-3;
         var labels=false;//show numbers on bars
-        var numTicksy = 4;//rough number of ticks for y axis
+        var numTicksy = 8;//rough number of ticks for y axis
+        var interval="decade";//days, months, quarters, years, lustrum or decade
+        var minAxis=true //true or false
         var ticks//=[0.2,0.3];//option to force tick values for online
 
         //Use the frames array to set unique values for each media type of frame
@@ -36,7 +38,7 @@
         var frames=[
         {name:"print",width:112,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"hori",yLabel:"right"},
         {name:"web",width:600,height:422,units:'px',margins:[{top:10,right:38,bottom:7,left:10}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
-        {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
+        //{name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
         ]
         
@@ -68,9 +70,12 @@
              */
 
             //parse the data
-            // data.forEach(function(d) {
-            //     d.date=parseDate(d.date);
-            // });
+            data.forEach(function(d) {
+                d.date=parseDate(d.date);
+            });
+
+            ticks=calculateTicks(data,interval)
+            console.log("ticks",ticks)
 
             for (var i=0;i<frames.length;i++){
                 var stylename=frames[i].stylesheet;
@@ -78,7 +83,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset;
                 var yLabel=frames[i].yLabel
-                columnChart(data, stylename, media,yMin,yMax,yAxisHighlight, chartpadding,legend,labels, numTicksy, yLabel);
+                columnChart(data, stylename, media,yMin,yMax,yAxisHighlight, chartpadding,legend,labels, numTicksy, yLabel,interval,minAxis, ticks);
             }
         })//end data load
 
@@ -108,6 +113,24 @@
                     frame.subtitle(subtitle)
                 }
                 d3.select("body").call(frame)
+            }
+        }
+
+        function calculateTicks(data,int) {
+            var dateDomain = d3.extent(data, function(d) {return d.date;});       
+            return {
+                'decade':{major: timeline(dateDomain,"year",10),minor:timeline(dateDomain,"year",1)},
+                'lustrum':{major: timeline(dateDomain,"year",5),minor:timeline(dateDomain,"year",1)},
+                'years':{major: timeline(dateDomain,"year",1),minor:timeline(dateDomain,"month",1)},
+                'quarters':{major: timeline(dateDomain,"year",1),minor:timeline(dateDomain,"month",3)},
+                'months':{major: timeline(dateDomain,"month",1 ),minor:timeline(dateDomain,"day",1)},
+                'days':{major: timeline(dateDomain,"day",1),minor:timeline(dateDomain,"hour",1)}
+            }[int];
+
+            function timeline(dateDomain,time,step) {
+                var intervals= d3.time[time].range(new Date(dateDomain[0]), new Date(dateDomain[1]),step);
+                intervals.unshift(dateDomain[0])
+            return intervals        
             }
         }
 

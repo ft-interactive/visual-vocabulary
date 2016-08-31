@@ -167,6 +167,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
                 })
             .call(xAxisMinor);
     }
+
     if(shadeAreas.length>0){
         plot.selectAll("."+media+"area")
         .data(shadeAreas)
@@ -312,7 +313,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             .attr("class",media+"lines")
 
         legend.attr("transform",function(d,i){
-            if (legAlign=='hori') {
+            if (legend=='hori') {
                 var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
                 if (i>0) {
                     var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+yOffset; 

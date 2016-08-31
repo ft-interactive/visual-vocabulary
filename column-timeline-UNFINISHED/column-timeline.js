@@ -1,5 +1,5 @@
-function columnChart(data,stylename,media,yMin,yMax,yAxisHighlight,plotpadding,legAlign, labels, numTicksy, yAlign, markers){
-
+function columnChart(data, stylename, media,yMin,yMax,yAxisHighlight, chartpadding,legAlign,labels, numTicksy, yAlign,interval,minAxis, ticks){
+    console.log(ticks)
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
@@ -20,7 +20,7 @@ function columnChart(data,stylename,media,yMin,yMax,yAxisHighlight,plotpadding,l
     //Get the width,height and the marginins unique to this plot
     var w=plot.node().getBBox().width;
     var h=plot.node().getBBox().height;
-    var margin=plotpadding.filter(function(d){
+    var margin=chartpadding.filter(function(d){
         return (d.name === media);
       });
     margin=margin[0].margin[0];
@@ -32,18 +32,19 @@ function columnChart(data,stylename,media,yMin,yMax,yAxisHighlight,plotpadding,l
     var plotWidth=w-margin.left-margin.right
     var plotHeight=h-margin.top-margin.bottom
 
-    var yScale = d3.scale.linear()
-        .range([plotHeight, 0]);
-
     yMin=Math.min(yMin,d3.min(data, function(d) { return +d.value;}))
     yMax=Math.max(yMax,d3.max(data, function(d) { return +d.value;}))
+    
+    console.log(yMin,yMax)
 
-    yScale.domain([yMin,yMax]);
+    var yScale = d3.scale.linear()
+        .range([plotHeight, 0])
+        .domain([yMin,yMax]);
 
     var yAxis = d3.svg.axis()
-    .scale(yScale)
-    .orient(yAlign)
-    .ticks(numTicksy);
+        .scale(yScale)
+        .ticks(numTicksy)
+        .orient(yAlign)
 
     var yLabel=plot.append("g")
       .attr("class", media+"yAxis")
@@ -54,6 +55,7 @@ function columnChart(data,stylename,media,yMin,yMax,yAxisHighlight,plotpadding,l
     var yticksize=colculateTicksize(yAlign, yLabelOffset);
 
     yLabel.call(yAxis.tickSize(yticksize))
+
     yLabel
         .attr("transform",function(){
             if (yAlign=="right"){
@@ -62,37 +64,63 @@ function columnChart(data,stylename,media,yMin,yMax,yAxisHighlight,plotpadding,l
             else return "translate("+(w-margin.right)+","+margin.top+")"
             })
 
+    yLabel.selectAll('text')
+        .attr("style", null)
+        .attr("x",yticksize+(yLabelOffset*.8))
+
     //identify 0 line if there is one
     var originValue = 0;
     var origin = plot.selectAll(".tick").filter(function(d, i) {
             return d==originValue || d==yAxisHighlight;
-        })
-    .classed(media+"origin",true);
+        }).classed(media+"origin",true);
 
-    var xScale = d3.scale.ordinal()
-    .rangeBands([0, plotWidth-yLabelOffset],.3);
+    var xDomain = d3.extent(data, function(d) {return d.date;});
+
+    var xScale = d3.time.scale()
+        .domain(xDomain)
+        .range([0,(plotWidth-yLabelOffset)]);
 
     var xAxis = d3.svg.axis()
-    .scale(xScale)
-    .orient("bottom");
+        .scale(xScale)
+        .tickValues(ticks.major)
+        .tickSize(yOffset/2)
+        .orient("bottom");
 
-    xScale.domain(data.map(function(d) { return d.cat;}));
+    var xLabel=plot.append("g")
+        .attr("class",media+"xAxis")
+        .attr("transform",function(){
+            if(yAlign=="right") {
+                return "translate("+(margin.left)+","+(plotHeight+margin.top)+")"
+            }
+             else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
+            })
+        .call(xAxis);
 
+    xLabel.selectAll('text')
+        .attr("style", null)
 
-    var xLabels=plot.append("g")
-      .attr("class", media+"xAxis")
-      .attr("transform",function(){
+    if(minAxis) {
+        var xAxisMinor = d3.svg.axis()
+        .scale(xScale)
+        .tickValues(ticks.minor)
+        .tickSize(yOffset/4)
+        .orient("bottom");
+
+        var xLabelMinor=plot.append("g")
+            .attr("class",media+"minorAxis")
+            .attr("transform",function(){
                 if(yAlign=="right") {
-                    return "translate("+(margin.left)+","+(h-margin.bottom)+")"
+                    return "translate("+(margin.left)+","+(plotHeight+margin.top)+")"
                 }
-                 else {return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"}
-            })      .call(xAxis);
-
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
+                })
+            .call(xAxisMinor);
+    }
     plot.selectAll("."+media+"bar")
-    .data(data)
-    .enter()
+        .data(data)
+        .enter()
         .append("g")
-        .attr("id",function(d) { return d.cat+"-"+d.value; })
+        .attr("id",function(d) { return d.date+"-"+d.value; })
         .attr("transform",function(){
                 if(yAlign=="right") {
                     return "translate("+(margin.left)+","+(margin.top)+")"
@@ -104,10 +132,10 @@ function columnChart(data,stylename,media,yMin,yMax,yAxisHighlight,plotpadding,l
                 .style("fill", function (d) {
                     return colours(d.group)
                 })
-                .attr("id",function(d) { return d.cat+"-"+d.value; })
+                .attr("id",function(d) { return d.date+"-"+d.value; })
                 .attr("class",media+"fill")
-                .attr("x", function(d) { return xScale(d.cat); })
-                .attr("width", xScale.rangeBand())
+                .attr("x", function(d) { return xScale(d.date) - (plotWidth/data.length)/2; })
+                .attr("width", plotWidth/data.length)
                 .attr("y", function(d) { return yScale(Math.max(0, d.value))})
                 .attr("height", function(d) {return (Math.abs(yScale(d.value) - yScale(0))); })
                 .on("mouseover",pointer)
@@ -123,26 +151,8 @@ function columnChart(data,stylename,media,yMin,yMax,yAxisHighlight,plotpadding,l
                         d3.select(this).style("fill",colours.range()[0])
                     }
                 })
-            if (labels) {
-                parent.append("text")
-                .attr("class", media+"labels")
-                .style("text-anchor","middle")
-                .text(function(d) {return d.value;})
-                .attr("x", function(d) { return xScale(d.cat)+(xScale.rangeBand()/2)})
-                .attr("y", function(d) {
-                    if(d.value>0) {
-                        return yScale(d.value)+yOffset
-                    }
-                    else {
-                        return yScale(d.value)-(yOffset*.5)}
-                });
-                var clear = yLabel.selectAll(".tick").filter(function(d, i) {
-                    return d!=originValue
-                })
-                clear.remove()
-            }
-        });
 
+            })
     //create a legend first
     //console.log(groupNames[0])
     if (groupNames[0]!="-") {
@@ -195,9 +205,12 @@ function columnChart(data,stylename,media,yMin,yMax,yAxisHighlight,plotpadding,l
                 return "translate(0,"+((i*yOffset)+yOffset/2)+")"};
         })
     }
-    
 
-    
+
+
+
+
+
     function colculateTicksize(align, offset) {
         if (align=="right") {
             return w-margin.left-offset
