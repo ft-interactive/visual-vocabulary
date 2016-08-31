@@ -111,6 +111,7 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
                 return xScale(Math.min(0, d.value))})
             .attr("width", function(d) {return (Math.abs(xScale(d.value) - xScale(0))); })
             .style("fill", function(d,i) { return colours[i] })
+            .attr("transform",function(){return "translate("+(margin.left)+","+(margin.top)+")"});
 
 
         })
