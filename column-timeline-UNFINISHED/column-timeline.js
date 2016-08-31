@@ -1,5 +1,5 @@
-function columnChart(data,stylename,media,yMin,yMax,yAxisHighlight,plotpadding,legAlign, labels, numTicksy, yAlign, markers,interval,minAxis){
-
+function columnChart(data, stylename, media,yMin,yMax,yAxisHighlight, chartpadding,legend,labels, numTicksy, yAlign,interval,minAxis, ticks){
+    console.log(ticks)
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
@@ -20,7 +20,7 @@ function columnChart(data,stylename,media,yMin,yMax,yAxisHighlight,plotpadding,l
     //Get the width,height and the marginins unique to this plot
     var w=plot.node().getBBox().width;
     var h=plot.node().getBBox().height;
-    var margin=plotpadding.filter(function(d){
+    var margin=chartpadding.filter(function(d){
         return (d.name === media);
       });
     margin=margin[0].margin[0];
@@ -95,6 +95,27 @@ function columnChart(data,stylename,media,yMin,yMax,yAxisHighlight,plotpadding,l
              else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
             })
         .call(xAxis);
+
+    xLabel.selectAll('text')
+        .attr("style", null)
+
+    if(minAxis) {
+        var xAxisMinor = d3.svg.axis()
+        .scale(xScale)
+        .tickValues(ticks.minor)
+        .tickSize(yOffset/4)
+        .orient("bottom");
+
+        var xLabelMinor=plot.append("g")
+            .attr("class",media+"minorAxis")
+            .attr("transform",function(){
+                if(yAlign=="right") {
+                    return "translate("+(margin.left)+","+(plotHeight+margin.top)+")"
+                }
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
+                })
+            .call(xAxisMinor);
+    }
 
 
 

@@ -30,7 +30,7 @@
         var labels=false;//show numbers on bars
         var numTicksy = 8;//rough number of ticks for y axis
         var interval="decade";//days, months, quarters, years, lustrum or decade
-        var minAxis=false //true or false
+        var minAxis=true //true or false
         var ticks//=[0.2,0.3];//option to force tick values for online
 
         //Use the frames array to set unique values for each media type of frame
@@ -75,6 +75,7 @@
             });
 
             ticks=calculateTicks(data,interval)
+            console.log("ticks",ticks)
 
             for (var i=0;i<frames.length;i++){
                 var stylename=frames[i].stylesheet;
@@ -82,7 +83,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset;
                 var yLabel=frames[i].yLabel
-                columnChart(data, stylename, media,yMin,yMax,yAxisHighlight, chartpadding,legend,labels, numTicksy, yLabel,interval,minAxis);
+                columnChart(data, stylename, media,yMin,yMax,yAxisHighlight, chartpadding,legend,labels, numTicksy, yLabel,interval,minAxis, ticks);
             }
         })//end data load
 
