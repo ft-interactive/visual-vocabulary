@@ -43,24 +43,24 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
     function getBands(el) {
         let posCumulative=0;
         let negCumulative=0;
-        let baseY=0
-        let basey1=0
+        let baseX=0
+        let baseX1=0
         var bands=seriesNames.map(function(name,i) {
             if(el[name]>0){
-                baseY1=posCumulative
+                baseX1=posCumulative
                 posCumulative = posCumulative+(+el[name]);
-                baseY=posCumulative;
+                baseX=posCumulative;
             }
             if(el[name]<0){
-                baseY1=negCumulative
+                baseX1=negCumulative
                 negCumulative = negCumulative+(+el[name]);
-                baseY=negCumulative;
-                if (i<1){baseY=0;baseY1=negCumulative}
+                baseX=negCumulative;
+                if (i<1){baseY=0;baseX1=negCumulative}
             }
             return {
                 name: name,
-                y: +baseY,
-                y1:+baseY1,
+                x: +baseX,
+                x1:+baseX1,
                 height:+el[name]
             }
         });
@@ -131,7 +131,7 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
             .enter().append('rect')
             .attr("height", yScale.rangeBand())
             .attr("x", function(d) {
-                { return xScale(Math.min(d.y, d.y1))}
+                { return xScale(Math.min(d.x, d.x1))}
             })
             .attr("y", function(d) { return yScale(d.name)})
             .attr("width", function(d) {
@@ -150,7 +150,7 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
                 .style("text-anchor","end")
                 .text(function(d) {return d.height;})
                 .attr("x", function(d,i) {
-                    return xScale(Math.max(d.y, d.y1))-(yOffset*.4)
+                    return xScale(Math.max(d.x, d.x1))-(yOffset*.4)
                 })
                 .attr("y", function(d) {
                     console.log(yScale.rangeBand())
