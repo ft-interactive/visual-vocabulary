@@ -36,41 +36,47 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
         return {
             cat:d.cat,
             bands:getBands(d),
-            total:d3.sum(getBands(d), function(d) { return d.height; })
+            total:d3.sum(getBands(d), function(d) { return d.height; }),
+            offset:(getBands(d)[Math.floor(getBands(d).length/2)].value)/2
         }
     });
 
     function getBands(el) {
         let posCumulative=0;
         let negCumulative=0;
-        let baseY=0
-        let basey1=0
+        let baseX=0
+        let baseX1=0
         var bands=seriesNames.map(function(name,i) {
             if(el[name]>0){
-                baseY1=posCumulative
+                baseX1=posCumulative
                 posCumulative = posCumulative+(+el[name]);
-                baseY=posCumulative;
+                baseX=posCumulative;
             }
             if(el[name]<0){
-                baseY1=negCumulative
+                baseX1=negCumulative
                 negCumulative = negCumulative+(+el[name]);
-                baseY=negCumulative;
-                if (i<1){baseY=0;baseY1=negCumulative}
+                baseX=negCumulative;
+                if (i<1){baseY=0;baseX1=negCumulative}
             }
             return {
                 name: name,
-                y: +baseY,
-                y1:+baseY1,
-                height:+el[name]
+                x: +baseX,
+                x1:+baseX1,
+                value:+el[name]
             }
         });
         xMin=Math.min(xMin,negCumulative)
         xMax=Math.max(xMax,posCumulative)
        return bands
     }
+    console.log("plotData",plotData)
 
-    //console.log("plotData",plotData)
-    console.log(xMin,xMax)
+    var central=plotData.map(function(d){
+        return{
+        offset:(d.bands[Math.floor(d.bands.length/2)].value)/2
+        }
+    });
+    console.log(central)
 
     var yScale = d3.scale.ordinal()
         .rangeBands([0, plotHeight],.2)
@@ -124,26 +130,28 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
             .enter().append('rect')
             .attr("height", yScale.rangeBand())
             .attr("x", function(d) {
-                { return xScale(Math.min(d.y, d.y1))}
+                { return xScale(Math.min(d.x, d.x1))}
             })
             .attr("y", function(d) { return yScale(d.name)})
             .attr("width", function(d) {
-                return Math.abs(xScale(0)-xScale(d.height))
+                return Math.abs(xScale(0)-xScale(d.value))
             })
             .style("fill", function(d,i) { return colours[i] })
-            .attr("transform",function(){return "translate("+(margin.left)+","+(margin.top)+")"});
+            .attr("transform",function(d,i){
+                return "translate("+(margin.left)+","+(margin.top)+")"});
             
             if (labels) {
                 parent.selectAll("text")
                 .data(function(d) { 
-                     console.log(d.bands)
                      return d.bands; })
                 .enter().append("text")
                 .attr("class", media+"labels")
                 .style("text-anchor","end")
                 .text(function(d) {return d.height;})
-                .attr("x", function(d,i) {
-                    return xScale(Math.max(d.y, d.y1))-(yOffset*.4)
+                .attr("x", function(d) {
+                    //var xOffset=(central[i].offset.value)/2;
+                    //console.log(xOffset);
+                    return xScale(Math.max(d.x, d.x1))-(yOffset*.4)
                 })
                 .attr("y", function(d) {
                     console.log(yScale.rangeBand())
@@ -155,8 +163,6 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
                 })
                 clear.remove()
             }
-
-
         })
 
     //create a legend first
