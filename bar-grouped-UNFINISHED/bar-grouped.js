@@ -105,10 +105,14 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
             parent.selectAll("rect")
             .data(function(d) { return d.groups; })
             .enter().append("rect")
-            .attr("width", yScale1.rangeBand())
+            .attr("height", yScale1.rangeBand())
             .attr("y", function(d) { return yScale1(d.name);})
             .attr("x", function(d,i) {
-                return xScale(Math.max(0, d.value))})
+                return xScale(Math.min(0, d.value))})
+            .attr("width", function(d) {return (Math.abs(xScale(d.value) - xScale(0))); })
+            .style("fill", function(d,i) { return colours[i] })
+
+
         })
 
     //create a legend first
