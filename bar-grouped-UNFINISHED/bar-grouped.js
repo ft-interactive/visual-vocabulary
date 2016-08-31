@@ -106,6 +106,9 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
             .data(function(d) { return d.groups; })
             .enter().append("rect")
             .attr("width", yScale1.rangeBand())
+            .attr("y", function(d) { return yScale1(d.name);})
+            .attr("x", function(d,i) {
+                return xScale(Math.max(0, d.value))})
         })
 
     //create a legend first
