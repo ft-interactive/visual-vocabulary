@@ -1,5 +1,5 @@
 
-function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xMax,xAxisHighlight, labels, numTicksx,sort){
+function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xMax,xAxisHighlight, logScale,logScaleStart,labels, numTicksx){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -35,56 +35,28 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
     var plotData=data.map(function(d) {
         return {
             cat:d.cat,
-            bands:getBands(d),
-            total:d3.sum(getBands(d), function(d) { return d.height; })
+            bands:getGroups(d),
         }
     });
 
-    function getBands(el) {
-        let posCumulative=0;
-        let negCumulative=0;
-        let baseY=0
-        let basey1=0
+    function getGroups(el) {
         var bands=seriesNames.map(function(name,i) {
-            if(el[name]>0){
-                baseY1=posCumulative
-                posCumulative = posCumulative+(+el[name]);
-                baseY=posCumulative;
-            }
-            if(el[name]<0){
-                baseY1=negCumulative
-                negCumulative = negCumulative+(+el[name]);
-                baseY=negCumulative;
-                if (i<1){baseY=0;baseY1=negCumulative}
-            }
             return {
                 name: name,
-                y: +baseY,
-                y1:+baseY1,
-                height:+el[name]
+                value:+el[name]
             }
         });
-        xMin=Math.min(xMin,negCumulative)
-        xMax=Math.max(xMax,posCumulative)
        return bands
     }
 
-    //console.log("plotData",plotData)
+    console.log("plotData",plotData)
 
-    if (sort=="descending") {
-        plotData.sort(function(a, b) { 
-        return b.total - a.total; })//Sorts biggest rects to the left
-        }
-        else {plotData.sort(function(a, b) { 
-        return a.total - b.total; })//Sorts biggest rects to the left
-    }
-
-    var yScale = d3.scale.ordinal()
+    var yScale0 = d3.scale.ordinal()
         .rangeBands([0, plotHeight],.2)
         .domain(plotData.map(function(d) { return d.cat;}));
 
     var yAxis = d3.svg.axis()
-        .scale(yScale)
+        .scale(yScale0)
         .orient("left")
         .tickSize(0);
 
@@ -124,46 +96,8 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
         .data(plotData)
         .enter().append("g")
         .attr("class", media+"category")
-        .attr("transform", function (d) {return "translate(0," + (yScale(d.cat))+ ")"; })
+        .attr("transform", function (d) {return "translate(0," + (yScale0(d.cat))+ ")"; })
         .call(function(parent){
-            parent.selectAll('rect')
-            .data(function(d){return d.bands})
-            .enter().append('rect')
-            .attr("height", yScale.rangeBand())
-            .attr("x", function(d) {
-                { return xScale(Math.min(d.y, d.y1))}
-            })
-            .attr("y", function(d) { return yScale(d.name)})
-            .attr("width", function(d) {
-                return Math.abs(xScale(0)-xScale(d.height))
-            })
-            .style("fill", function(d,i) { return colours[i] })
-            .attr("transform",function(){return "translate("+(margin.left)+","+(margin.top)+")"});
-            
-            if (labels) {
-                parent.selectAll("text")
-                .data(function(d) { 
-                     console.log(d.bands)
-                     return d.bands; })
-                .enter().append("text")
-                .attr("class", media+"labels")
-                .style("text-anchor","end")
-                .text(function(d) {return d.height;})
-                .attr("x", function(d,i) {
-                    return xScale(Math.max(d.y, d.y1))-(yOffset*.4)
-                })
-                .attr("y", function(d) {
-                    console.log(yScale.rangeBand())
-                    return yScale.rangeBand()*.6})
-                .attr("transform",function(){return "translate("+(margin.left)+","+(margin.top)+")"});
-                
-                var clear = yLabel.selectAll(".tick").filter(function(d, i) {
-                    return d!=originValue
-                })
-                clear.remove()
-            }
-
-
         })
 
     //create a legend first
