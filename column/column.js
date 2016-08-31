@@ -41,13 +41,13 @@ function columnChart(data,stylename,media,yMin,yMax,yAxisHighlight,plotpadding,l
     yScale.domain([yMin,yMax]);
 
     var yAxis = d3.svg.axis()
-    .scale(yScale)
-    .orient(yAlign)
-    .ticks(numTicksy);
+        .scale(yScale)
+        .ticks(numTicksy)
+        .orient(yAlign)
 
     var yLabel=plot.append("g")
-      .attr("class", media+"yAxis")
-      .call(yAxis)
+        .attr("class", media+"yAxis")
+        .call(yAxis)
 
     //calculate what the ticksize should be now that the text for the labels has been drawn
     var yLabelOffset=yLabel.node().getBBox().width
