@@ -35,7 +35,7 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
     var plotData=data.map(function(d) {
         return {
             cat:d.cat,
-            bands:getGroups(d),
+            groups:getGroups(d),
         }
     });
 
@@ -54,6 +54,10 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
     var yScale0 = d3.scale.ordinal()
         .rangeBands([0, plotHeight],.2)
         .domain(plotData.map(function(d) { return d.cat;}));
+
+    var yScale1 = d3.scale.ordinal()
+        .domain(seriesNames)
+        .rangeBands([0, yScale0.rangeBand()]);
 
     var yAxis = d3.svg.axis()
         .scale(yScale0)
@@ -98,6 +102,10 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
         .attr("class", media+"category")
         .attr("transform", function (d) {return "translate(0," + (yScale0(d.cat))+ ")"; })
         .call(function(parent){
+            parent.selectAll("rect")
+            .data(function(d) { return d.groups; })
+            .enter().append("rect")
+            .attr("width", yScale1.rangeBand())
         })
 
     //create a legend first
