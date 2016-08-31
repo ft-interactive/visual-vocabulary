@@ -139,33 +139,32 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
             })
             .style("fill", function(d,i) { return colours[i] })
             .attr("transform",function(){return "translate("+(margin.left)+","+(margin.top)+")"});
-        })
+            
+            if (labels) {
+                parent.selectAll("text")
+                .data(function(d) { 
+                     console.log(d.bands)
+                     return d.bands; })
+                .enter().append("text")
+                .attr("class", media+"labels")
+                .style("text-anchor","end")
+                .text(function(d) {return d.height;})
+                .attr("x", function(d,i) {
+                    return xScale(Math.max(d.y, d.y1))-(yOffset*.4)
+                })
+                .attr("y", function(d) {
+                    console.log(yScale.rangeBand())
+                    return yScale.rangeBand()*.6})
+                .attr("transform",function(){return "translate("+(margin.left)+","+(margin.top)+")"});
+                
+                var clear = yLabel.selectAll(".tick").filter(function(d, i) {
+                    return d!=originValue
+                })
+                clear.remove()
+            }
 
-    if (labels) {
-            parent.selectAll("text")
-            .data(function(d) { return d.bands; })
-            .enter().append("text")
-            .attr("class", media+"labels")
-            .style("text-anchor","end")
-            .text(function(d) {return d.height;})
-            .attr("x", function(d,i) {
-                console.log("xx",xScale.rangeBand()*i)
-                return xScale(d.name)
-                //return xScale(d.name)+(xScale.rangeBand()/2)
-            })
-            .attr("y", function(d) {
-                if(d.height>0) {
-                    //console.log(d.height)
-                    return yScale(Math.min(d.y, d.y1))+yOffset
-                }
-                else {
-                    return yScale(Math.max(d.y, d.y1))-(yOffset*.5)}
-            });
-            var clear = yLabel.selectAll(".tick").filter(function(d, i) {
-                return d!=originValue
-            })
-            clear.remove()
-    }
+
+        })
 
     // //create a legend first
     // var legendyOffset=0
