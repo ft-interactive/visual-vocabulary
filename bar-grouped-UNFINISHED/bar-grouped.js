@@ -50,6 +50,9 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
     }
 
     console.log("plotData",plotData)
+    xMin=Math.min(xMin,d3.min(plotData, function(d) { return d3.min(d.groups, function(d) { return d.value; })})); 
+    xMax=Math.max(xMax,d3.max(plotData, function(d) { return d3.max(d.groups, function(d) { return d.value; })})); 
+
 
     var yScale0 = d3.scale.ordinal()
         .rangeBands([0, plotHeight],.2)
