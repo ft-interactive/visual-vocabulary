@@ -138,13 +138,14 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
             if (labels) {
                 parent.selectAll("text")
                 .data(function(d) { 
+                     console.log(d.bands)
                      return d.bands; })
                 .enter().append("text")
                 .attr("class", media+"labels")
                 .style("text-anchor","end")
-                .text(function(d) {return d.height;})
-                .attr("x", function(d) {
-                    return xScale(Math.min(d.x, d.x1))-(yOffset*.4)
+                .text(function(d) {return d.value;})
+                .attr("x", function(d,i) {
+                    return xScale(Math.max(d.x, d.x1))-(yOffset*.4)
                 })
                 .attr("y", function(d) {
                     console.log(yScale.rangeBand())

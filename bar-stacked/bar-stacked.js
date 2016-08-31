@@ -157,7 +157,7 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
                     return yScale.rangeBand()*.6})
                 .attr("transform",function(){return "translate("+(margin.left)+","+(margin.top)+")"});
                 
-                var clear = yLabel.selectAll(".tick").filter(function(d, i) {
+                var clear = xLabels.selectAll(".tick").filter(function(d, i) {
                     return d!=originValue
                 })
                 clear.remove()
