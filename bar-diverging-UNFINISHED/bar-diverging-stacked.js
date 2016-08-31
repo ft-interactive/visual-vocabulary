@@ -69,14 +69,7 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
         xMax=Math.max(xMax,posCumulative)
        return bands
     }
-    console.log("plotData",plotData)
-
-    var central=plotData.map(function(d){
-        return{
-        offset:(d.bands[Math.floor(d.bands.length/2)].value)/2
-        }
-    });
-    console.log(central)
+    //console.log("plotData",plotData)
 
     var yScale = d3.scale.ordinal()
         .rangeBands([0, plotHeight],.2)
@@ -123,7 +116,9 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
         .data(plotData)
         .enter().append("g")
         .attr("class", media+"category")
-        .attr("transform", function (d) {return "translate(0," + (yScale(d.cat))+ ")"; })
+        .attr("transform", function (d) {
+            var xOffset=(xScale(0)-xScale(d.offset))
+            return "translate("+xOffset+"," + (yScale(d.cat))+ ")"; })
         .call(function(parent){
             parent.selectAll('rect')
             .data(function(d){return d.bands})
@@ -149,16 +144,14 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, xMin, xM
                 .style("text-anchor","end")
                 .text(function(d) {return d.height;})
                 .attr("x", function(d) {
-                    //var xOffset=(central[i].offset.value)/2;
-                    //console.log(xOffset);
-                    return xScale(Math.max(d.x, d.x1))-(yOffset*.4)
+                    return xScale(Math.min(d.x, d.x1))-(yOffset*.4)
                 })
                 .attr("y", function(d) {
                     console.log(yScale.rangeBand())
                     return yScale.rangeBand()*.6})
                 .attr("transform",function(){return "translate("+(margin.left)+","+(margin.top)+")"});
                 
-                var clear = yLabel.selectAll(".tick").filter(function(d, i) {
+                var clear = xLabels.selectAll(".tick").filter(function(d, i) {
                     return d!=originValue
                 })
                 clear.remove()
