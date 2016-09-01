@@ -1,4 +1,4 @@
-function columnChart(data, stylename, media,yMin,yMax, yMin1,yMax1, chartpadding,legAlign,labels, numTicksy, yAlign,interval,minAxis, ticks){
+function columnChart(data, stylename, media,yMin,yMax, yMin1,yMax1, chartpadding,legAlign,labels,lineSmoothing, numTicksy, yAlign,interval,minAxis, ticks){
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
@@ -155,14 +155,13 @@ function columnChart(data, stylename, media,yMin,yMax, yMin1,yMax1, chartpadding
         .call(xAxisMinor);
     }
 
-    plot.selectAll("."+media+"bar")
+    var bar=plot.append("g")
+        .attr("id","bar")
+        .attr("transform",function(){
+                return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"})  
+    bar.selectAll("."+media+"bar")
         .data(barData)
         .enter()
-        .append("g")
-        .attr("id",function(d) { return d.date+"-"+d.value; })
-        .attr("transform",function(){
-                return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"})
-
         .call(function(parent){
             parent.append('rect')
                 .style("fill",colours[1])
@@ -172,14 +171,36 @@ function columnChart(data, stylename, media,yMin,yMax, yMin1,yMax1, chartpadding
                 .attr("width", plotWidth/barData.length*.8)
                 .attr("y", function(d) { return yScaleL(Math.max(0, d.value))})
                 .attr("height", function(d) {return (Math.abs(yScaleL(d.value) - yScaleL(0))); })
-
-})
-    
-
-
+    })
+    var test= []
+    test.push(lineData)
 
 
+    var getLine = d3.svg.line()
+        .x(function(d,i) { 
+            return xScale(d.date); 
+        })
+        .y(function(d) { 
+            return yScaleR(d.value); 
+        })
+        .interpolate(lineSmoothing)
 
+    var line = plot.append("g")
+        .attr("id","line")
+        .attr("transform",function(){
+                return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"})
+        line.selectAll("."+media+"line")
+        .data(test)
+        .enter()
+        .call(function(parent){
+            parent.append("path")
+            .attr("class",media+"lines")
+            .style("stroke", colours[0])
+            .attr('d', function(d,i){
+                //console.log(d)
+                return getLine(d); })
+
+        })
 
     function colculateTicksize(align, offset) {
         if (align=="right") {

@@ -70,6 +70,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             } 
         });
     });
+    console.log(plotArrays)
 
     //Scales
 
@@ -203,6 +204,8 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         })
         .interpolate(lineSmoothing)
 
+        console.log(plotArrays)
+
     var lines = plot.append("g").attr("id","series").selectAll("g")
             .data(plotArrays)
             .enter()
@@ -215,7 +218,9 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             .attr("stroke",function(d,i){
                 return colours[i];  
             })
-            .attr('d', function(d){ return lineData(d); })
+            .attr('d', function(d){
+                console.log("line",d)
+                return lineData(d); })
             .attr("transform",function(){
                 if(yAlign=="right") {
                     return "translate("+(margin.left)+","+(margin.top)+")"
