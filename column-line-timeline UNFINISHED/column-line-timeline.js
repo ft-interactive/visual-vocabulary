@@ -1,8 +1,8 @@
-function columnChart(data, stylename, media,yMin,yMax, chartpadding,legAlign,labels, numTicksy, yAlign,interval,minAxis, ticks){
+function columnChart(data, stylename, media,yMin,yMax, yMin1,yMax1, chartpadding,legAlign,labels, numTicksy, yAlign,interval,minAxis, ticks){
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
-    var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'barDate' && d != 'highlight' ; });
+    var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'barDate'&& d != 'lineDate' && d != 'highlight' ; });
     console.log("seriesNames", seriesNames)
     //Select the plot space in the frame from which to take measurements
     var chart=d3.select("#"+media+"chart")
@@ -33,30 +33,40 @@ function columnChart(data, stylename, media,yMin,yMax, chartpadding,legAlign,lab
             value:d[e]
         }
     })
-    console.log("barData", barData)
+    var lineData=data.map(function(d) {
+        var e=seriesNames[1]
+        yMin1=Math.min(yMin1,d[e]);
+        yMax1=Math.max(yMax1,d[e]);
+        return{
+            date:d.lineDate,
+            value:d[e]
+        }
+    })
+    // console.log("barData", barData);
+    // console.log("lineData", lineData)
 
-    var yScale = d3.scale.linear()
+    var yScaleL = d3.scale.linear()
         .range([plotHeight, 0])
         .domain([yMin,yMax]);
 
-    var yAxis = d3.svg.axis()
-        .scale(yScale)
+    var yAxisL = d3.svg.axis()
+        .scale(yScaleL)
         .ticks(numTicksy)
         .tickSize(yOffset)
         .orient("left")
 
-    var yLabel=plot.append("g")
+    var yLabelL=plot.append("g")
       .attr("class", media+"yAxis")
-      .call(yAxis)
+      .call(yAxisL)
 
     //calculate what the ticksize should be now that the text for the labels has been drawn
-    var yLabelOffset=yLabel.node().getBBox().width
-    yLabel
+    var yLabelLOffset=yLabelL.node().getBBox().width
+    yLabelL
         .attr("transform",function(){
-            return "translate("+(yLabelOffset)+","+margin.top+")"
+            return "translate("+(yLabelLOffset)+","+margin.top+")"
             })
 
-    yLabel.selectAll('text')
+    yLabelL.selectAll('text')
         .attr("style", null);
 
     //identify 0 line if there is one
@@ -69,7 +79,7 @@ function columnChart(data, stylename, media,yMin,yMax, chartpadding,legAlign,lab
 
     // var xScale = d3.time.scale()
     //     .domain(xDomain)
-    //     .range([0,(plotWidth-yLabelOffset)]);
+    //     .range([0,(plotWidth-yLabelLOffset)]);
 
     // var xAxis = d3.svg.axis()
     //     .scale(xScale)
@@ -83,7 +93,7 @@ function columnChart(data, stylename, media,yMin,yMax, chartpadding,legAlign,lab
     //         if(yAlign=="right") {
     //             return "translate("+(margin.left)+","+(plotHeight+margin.top)+")"
     //         }
-    //          else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
+    //          else {return "translate("+(margin.left+yLabelLOffset)+","+(plotHeight+margin.top)+")"}
     //         })
     //     .call(xAxis);
 
@@ -103,7 +113,7 @@ function columnChart(data, stylename, media,yMin,yMax, chartpadding,legAlign,lab
     //             if(yAlign=="right") {
     //                 return "translate("+(margin.left)+","+(plotHeight+margin.top)+")"
     //             }
-    //              else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
+    //              else {return "translate("+(margin.left+yLabelLOffset)+","+(plotHeight+margin.top)+")"}
     //             })
     //         .call(xAxisMinor);
     // }
