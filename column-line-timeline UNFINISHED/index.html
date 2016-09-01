@@ -26,7 +26,8 @@
         //graph options
         var yMin=-2.5;
         var yMax=1.5;
-        var yAxisHighlight=-2.5;
+        var yMin1=1;
+        var ymax1=10
         var labels=false;//show numbers on bars
         var numTicksy = 10;//rough number of ticks for y axis
         var interval="lustrum";//days, months, quarters, years, lustrum or decade
@@ -71,11 +72,10 @@
 
             //parse the data
             data.forEach(function(d) {
-                d.date=parseDate(d.date);
+                d.barDate=parseDate(d.barDate);
             });
 
             ticks=calculateTicks(data,interval)
-            console.log("ticks",ticks)
 
             for (var i=0;i<frames.length;i++){
                 var stylename=frames[i].stylesheet;
@@ -83,7 +83,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset;
                 var yLabel=frames[i].yLabel
-                columnChart(data, stylename, media,yMin,yMax,yAxisHighlight, chartpadding,legend,labels, numTicksy, yLabel,interval,minAxis, ticks);
+                columnChart(data, stylename, media,yMin,yMax, chartpadding,legend,labels, numTicksy, yLabel,interval,minAxis, ticks);
             }
         })//end data load
 
