@@ -124,7 +124,7 @@ function columnChart(data, stylename, media,yMin,yMax, yMin1,yMax1, chartpadding
 
     var xScale = d3.time.scale()
         .domain(xDomain)
-        .range([0,(plotWidth-yLabelLOffsetL-yLabelLOffsetR)]);
+        .range([0,(plotWidth-yLabelLOffsetL-yLabelLOffsetR-margin.right)]);
 
     var xAxis = d3.svg.axis()
         .scale(xScale)
@@ -135,7 +135,7 @@ function columnChart(data, stylename, media,yMin,yMax, yMin1,yMax1, chartpadding
     var xLabel=plot.append("g")
         .attr("class",media+"xAxis")
         .attr("transform",function(){
-            return "translate("+(margin.left+yLabelLOffsetL+yLabelLOffsetR)+","+(plotHeight+margin.top)+")"})
+            return "translate("+(margin.left+yLabelLOffsetL)+","+(plotHeight+margin.top)+")"})
         .call(xAxis);
 
     xLabel.selectAll('text')
@@ -151,8 +151,8 @@ function columnChart(data, stylename, media,yMin,yMax, yMin1,yMax1, chartpadding
         var xLabelMinor=plot.append("g")
             .attr("class",media+"minorAxis")
             .attr("transform",function(){
-                return "translate("+(margin.left+yLabelLOffsetL+yLabelLOffsetR)+","+(plotHeight+margin.top)+")"})
-            .call(xAxisMinor);
+                return "translate("+(margin.left+yLabelLOffsetL)+","+(plotHeight+margin.top)+")"})
+        .call(xAxisMinor);
     }
 
     plot.selectAll("."+media+"bar")
@@ -168,12 +168,12 @@ function columnChart(data, stylename, media,yMin,yMax, yMin1,yMax1, chartpadding
                 .style("fill",colours[1])
                 .attr("id",function(d) { return d.date+"-"+d.value; })
                 .attr("class",media+"fill")
-                .attr("x", function(d) { return xScale(d.date) - (plotWidth/data.length)/2; })
-                .attr("width", plotWidth/data.length)
+                .attr("x", function(d) { return xScale(d.date) - (plotWidth/barData.length)/2; })
+                .attr("width", plotWidth/barData.length*.8)
                 .attr("y", function(d) { return yScaleL(Math.max(0, d.value))})
                 .attr("height", function(d) {return (Math.abs(yScaleL(d.value) - yScaleL(0))); })
 
-            })
+})
     
 
 
