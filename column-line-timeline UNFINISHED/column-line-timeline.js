@@ -154,6 +154,26 @@ function columnChart(data, stylename, media,yMin,yMax, yMin1,yMax1, chartpadding
                 return "translate("+(margin.left+yLabelLOffsetL+yLabelLOffsetR)+","+(plotHeight+margin.top)+")"})
             .call(xAxisMinor);
     }
+
+    plot.selectAll("."+media+"bar")
+        .data(barData)
+        .enter()
+        .append("g")
+        .attr("id",function(d) { return d.date+"-"+d.value; })
+        .attr("transform",function(){
+                return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"})
+
+        .call(function(parent){
+            parent.append('rect')
+                .style("fill",colours[1])
+                .attr("id",function(d) { return d.date+"-"+d.value; })
+                .attr("class",media+"fill")
+                .attr("x", function(d) { return xScale(d.date) - (plotWidth/data.length)/2; })
+                .attr("width", plotWidth/data.length)
+                .attr("y", function(d) { return yScaleL(Math.max(0, d.value))})
+                .attr("height", function(d) {return (Math.abs(yScaleL(d.value) - yScaleL(0))); })
+
+            })
     
 
 
