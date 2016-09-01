@@ -116,95 +116,28 @@ function columnChart(data, stylename, media,yMin,yMax,yAxisHighlight, chartpaddi
                 })
             .call(xAxisMinor);
     }
-    plot.selectAll("."+media+"bar")
-        .data(data)
-        .enter()
-        .append("g")
-        .attr("id",function(d) { return d.date+"-"+d.value; })
-        .attr("transform",function(){
-                if(yAlign=="right") {
-                    return "translate("+(margin.left)+","+(margin.top)+")"
-                }
-                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
-            })
-        .call(function(parent){
-            parent.append('rect')
-                .style("fill", function (d) {
-                    return colours(d.group)
-                })
-                .attr("id",function(d) { return d.date+"-"+d.value; })
-                .attr("class",media+"fill")
-                .attr("x", function(d) { return xScale(d.date) - (plotWidth/data.length)/2; })
-                .attr("width", plotWidth/data.length*2.5)
-                .attr("y", function(d) { return yScale(Math.max(0, d.value))})
-                .attr("height", function(d) {return (Math.abs(yScale(d.value) - yScale(0))); })
-                .on("mouseover",pointer)
-                .on("click",function(d){
-                    var elClass = d3.select(this)
-                    if (elClass.attr("class")==media+"fill") {
-                        d3.select(this).attr("class",media+"highlight");
-                        console.log(colours.range()[0])
-                        d3.select(this).style("fill",colours.range()[6])
-                    }
-                    else{var el=d3.select(this)
-                        el.attr("class",media+"fill");
-                        d3.select(this).style("fill",colours.range()[0])
-                    }
-                })
-
-            })
-    //create a legend first
-    //console.log(groupNames[0])
-    if (groupNames[0]!="-") {
-        var legendyOffset=0
-        var legend = plot.append("g")
-            .attr("id",media+"legend")
-            .on("mouseover",pointer)
-            .selectAll("g")
-            .data(groupNames)
-            .enter()
-            .append("g")
-            .attr ("id",function(d,i){
-                return media+"l"+i
-            })
-
-        var drag = d3.behavior.drag().on("drag", moveLegend);
-        d3.select("#"+media+"legend").call(drag);
-            
-        legend.append("text")
-
-            .attr("id",function(d,i){
-                return media+"t"+i
-            })
-            .attr("x",yOffset+yOffset/5)
-            .attr("y",0)
-            .attr("class",media+"subtitle")
-            .text(function(d){
-                return d;
-            })
-
-        legend.append("rect")
-            .attr("x",0)
-            .attr("y",-yOffset+yOffset/3)
-            .attr("width",(yOffset/100)*85)
-            .attr("height",(yOffset/100)*70)
-            .style("fill", function(d,i){return colours(d)})
-
-        legend.attr("transform",function(d,i){
-            if (legAlign=='hori') {
-                var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
-                if (i>0) {
-                    var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
-                }
-                else {gWidth=0};
-                legendyOffset=legendyOffset+gWidth;
-                return "translate("+(legendyOffset)+","+(gHeigt)+")";  
-            }
-            else {
-                var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
-                return "translate(0,"+((i*yOffset)+yOffset/2)+")"};
-        })
-    }
+    // plot.selectAll("."+media+"bar")
+    //     .data(data)
+    //     .enter()
+    //     .append("g")
+    //     .attr("id",function(d) { return d.date+"-"+d.value; })
+    //     .attr("transform",function(){
+    //             if(yAlign=="right") {
+    //                 return "translate("+(margin.left)+","+(margin.top)+")"
+    //             }
+    //              else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
+    //         })
+    //     .call(function(parent){
+    //         parent.append('rect')
+    //             .style("fill", colours.range()[1])
+    //             .attr("id",function(d) { return d.date+"-"+d.value; })
+    //             .attr("class",media+"fill")
+    //             .attr("x", function(d) { return xScale(d.date) - (plotWidth/data.length)/2; })
+    //             .attr("width", plotWidth/data.length)
+    //             .attr("y", function(d) { return yScale(Math.max(0, d.value))})
+    //             .attr("height", function(d) {return (Math.abs(yScale(d.value) - yScale(0))); })
+                
+    //         })
 
 
 
