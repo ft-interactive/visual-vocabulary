@@ -30,8 +30,8 @@ fillcolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0","#ddb83
 }
 
 var styleweb = {classes:
-[{class:"background{fill: #fff1e0}"},
-{class:"chartholder{fill: #ffffff;}"},
+[{class:"background{fill: none}"},
+{class:"chartholder{fill: none;}"},
 {class:"title{font-size:25.0px; font-weight: 400; fill: #3b3d3b;}"},
 {class:"subtitle{font-size:18.0px; font-weight: 400; fill: #6b6e68;}"},
 {class:"labels{font-size:18px; fill: #ffffff; font-weight: 600;}"},
