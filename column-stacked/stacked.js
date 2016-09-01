@@ -164,16 +164,11 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
             .text(function(d) {return d.height;})
             .attr("x", function(d,i) {
                 console.log("xx",xScale.rangeBand()*i)
-                return xScale(d.name)
+                return xScale.rangeBand()*.6
                 //return xScale(d.name)+(xScale.rangeBand()/2)
             })
             .attr("y", function(d) {
-                if(d.height>0) {
-                    //console.log(d.height)
-                    return yScale(Math.min(d.y, d.y1))+yOffset
-                }
-                else {
-                    return yScale(Math.max(d.y, d.y1))-(yOffset*.5)}
+                return yScale(Math.min(d.y, d.y1))
             });
             var clear = yLabel.selectAll(".tick").filter(function(d, i) {
                 return d!=originValue
