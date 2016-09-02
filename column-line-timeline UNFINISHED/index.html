@@ -11,7 +11,7 @@
     </style>
     <script src="d3.min.js"></script>
     <script src="drawFrame.js"></script>
-    <script src="column-timeline.js"></script>
+    <script src="column-line-timeline.js"></script>
     <script src="saveSvgAsPng.js"></script>
     <script>
         
@@ -26,8 +26,10 @@
         //graph options
         var yMin=-2.5;
         var yMax=1.5;
-        var yAxisHighlight=-2.5;
+        var yMin1=1400;
+        var yMax1=2800
         var labels=false;//show numbers on bars
+        var lineSmoothing="linear";//choose 'linear' for an unsmoothed line 'monotone' for smooth
         var numTicksy = 10;//rough number of ticks for y axis
         var interval="lustrum";//days, months, quarters, years, lustrum or decade
         var minAxis=true //true or false
@@ -45,7 +47,7 @@
         //sets the padding inside the chart area
         var chartpadding=[
         {name:"print",margin:[{top:20, right:0, bottom:15, left:0}]},
-        {name:"web",margin:[{top:20, right:0, bottom:20, left:0}]},
+        {name:"web",margin:[{top:20, right:15, bottom:30, left:0}]},
         {name:"social",margin:[{top:25, right:0, bottom:40, left:0}]},
         {name:"video",margin:[{top:55, right:35,bottom:68, left:0}]}
         ]
@@ -71,11 +73,11 @@
 
             //parse the data
             data.forEach(function(d) {
-                d.date=parseDate(d.date);
+                d.barDate=parseDate(d.barDate);
+                d.lineDate=parseDate(d.lineDate);
             });
 
             ticks=calculateTicks(data,interval)
-            console.log("ticks",ticks)
 
             for (var i=0;i<frames.length;i++){
                 var stylename=frames[i].stylesheet;
@@ -83,7 +85,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset;
                 var yLabel=frames[i].yLabel
-                columnChart(data, stylename, media,yMin,yMax,yAxisHighlight, chartpadding,legend,labels, numTicksy, yLabel,interval,minAxis, ticks);
+                columnChart(data, stylename, media,yMin,yMax,yMin1,yMax1,chartpadding,legend,labels, lineSmoothing,numTicksy, yLabel,interval,minAxis, ticks);
             }
         })//end data load
 
@@ -117,7 +119,10 @@
         }
 
         function calculateTicks(data,int) {
-            var dateDomain = d3.extent(data, function(d) {return d.date;});       
+            var dateDomain = d3.extent(data, function(d) {return d.barDate;});
+            var lineDomain = d3.extent(data, function(d) {return d.lineDate;});
+            dateDomain[0]=new Date(Math.min(dateDomain[0],lineDomain[0]));
+            dateDomain[1]=new Date(Math.max(dateDomain[1],lineDomain[1]));    
             return {
                 'decade':{major: timeline(dateDomain,"year",10),minor:timeline(dateDomain,"year",1)},
                 'lustrum':{major: timeline(dateDomain,"year",5),minor:timeline(dateDomain,"year",1)},

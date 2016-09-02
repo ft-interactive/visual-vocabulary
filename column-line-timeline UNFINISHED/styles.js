@@ -19,6 +19,8 @@ var styleprint = {classes:
 {class:"lines{fill:none; stroke-width:2.0px;stroke-linecap: round;}"},
 {class:"fill{fill-opacity:1.0; stroke-width: 0.0px}"},
 {class:"highlight{fill-opacity:1.0;}"},
+{class:"day{fill:none; stroke: #ffffff; stroke-width:1.0px;stroke-linecap: round;}"},
+{class:"month{fill:none; stroke: #000000; stroke-width:1.0px;stroke-linecap: round;}"}
 ],
 titleOffset:10,
 subOffset:0,
