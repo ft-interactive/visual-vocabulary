@@ -56,7 +56,7 @@ function slopeChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHighlig
     var minVal = Math.min(d3.min(data, function(d){return parseFloat(d.val1);}),d3.min(data, function(d){return parseFloat(d.val2);}));
 
     yMin=Math.min(yMin,minVal);
-    yMax=Math.min(yMax,maxVal);
+    yMax=Math.max(yMax,maxVal);
    
 
     //create scale for y axis
