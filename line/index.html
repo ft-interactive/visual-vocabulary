@@ -24,22 +24,22 @@
         var source = "Source: Now-casting.com,Aug 14";
 
         //graph options
-        var yMin=1;
-        var yMax=4;
-        var yAxisHighlight=1;
+        var yMin=-6;
+        var yMax=6;
+        var yAxisHighlight=-6;
         var lineSmoothing="linear";//choose 'linear' for an unsmoothed line 'monotone' for smooth
         var logScale=false;
         var logScaleStart=1000;
         var markers=false;//show circle markers
         var numTicksy = 8;//rough number of ticks for y axis
-        var interval="months";//days, months, quarters, years, lustrum or decade
+        var interval="years";//days, months, quarters, years, lustrum or decade
         var minAxis=false //true or false
         var ticks//Contains the tick values for the major and minor xAxis
 
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
         var frames=[
-        {name:"print",width:229.34,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"hori",yLabel:"right"},
+        {name:"print",width:112.25,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"hori",yLabel:"right"},
         {name:"web",width:600,height:275,units:'px',margins:[{top:0,right:20,bottom:5,left:10}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
         {name:"now",width:274,height:276,units:'px',margins:[{top:0,right:0,bottom:5,left:0}],stylesheet:stylenowcast,legend:"hori",yLabel:"right"},
         //{name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"hori",yLabel:"left"},
