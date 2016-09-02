@@ -172,8 +172,8 @@ function columnChart(data, stylename, media,yMin,yMax, yMin1,yMax1, chartpadding
                 .attr("y", function(d) { return yScaleL(Math.max(0, d.value))})
                 .attr("height", function(d) {return (Math.abs(yScaleL(d.value) - yScaleL(0))); })
     })
-    var test= []
-    test.push(lineData)
+    var lines= []
+    lines.push(lineData)
 
 
     var getLine = d3.svg.line()
@@ -190,7 +190,7 @@ function columnChart(data, stylename, media,yMin,yMax, yMin1,yMax1, chartpadding
         .attr("transform",function(){
                 return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"})
         line.selectAll("."+media+"line")
-        .data(test)
+        .data(lines)
         .enter()
         .call(function(parent){
             parent.append("path")

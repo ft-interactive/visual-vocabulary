@@ -38,7 +38,7 @@
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
         var frames=[
-        //{name:"print",width:112,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"hori",yLabel:"right"},
+        {name:"print",width:112,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"hori",yLabel:"right"},
         {name:"web",width:600,height:422,units:'px',margins:[{top:10,right:38,bottom:7,left:10}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
         //{name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
@@ -119,7 +119,10 @@
         }
 
         function calculateTicks(data,int) {
-            var dateDomain = d3.extent(data, function(d) {return d.barDate;});       
+            var dateDomain = d3.extent(data, function(d) {return d.barDate;});
+            var lineDomain = d3.extent(data, function(d) {return d.lineDate;});
+            dateDomain[0]=new Date(Math.min(dateDomain[0],lineDomain[0]));
+            dateDomain[1]=new Date(Math.max(dateDomain[1],lineDomain[1]));    
             return {
                 'decade':{major: timeline(dateDomain,"year",10),minor:timeline(dateDomain,"year",1)},
                 'lustrum':{major: timeline(dateDomain,"year",5),minor:timeline(dateDomain,"year",1)},
