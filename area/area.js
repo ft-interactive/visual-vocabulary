@@ -74,8 +74,7 @@ function areaChart(data, stylename ,media, yMin, yMax ,yAxisHighlight, numTicksy
             yMax=Math.max(yMax,(d.y0 + d.y))
         })
     })
-    //defines the yScale.domain with new max value
-    yScale.domain([0,yMax])
+
     //Define the yScale
     var yAxis = d3.svg.axis()
     .scale(yScale)
