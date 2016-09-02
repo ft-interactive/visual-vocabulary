@@ -202,6 +202,51 @@ function columnChart(data, stylename, media,yMin,yMax, yMin1,yMax1, chartpadding
 
         })
 
+    //create a legend first
+    var legend = plot.append("g")
+        .attr("id",media+"legend")
+        .on("mouseover",pointer)
+    var drag = d3.behavior.drag().on("drag", moveLegend);
+        d3.select("#"+media+"legend").call(drag);
+    
+    var barTextL=legend.append("text")
+        .attr("x",0)
+        .attr("y",0)
+        .attr("class",media+"subtitle")
+        .text(seriesNames[0])
+
+    var legOffset=barTextL.node().getBBox().width
+
+    legend.append("rect")
+        .attr("x",legOffset+(yOffset/2))
+        .attr("y",-yOffset+yOffset/3)
+        .attr("width",(yOffset/100)*85)
+        .attr("height",(yOffset/100)*70)
+        .style("fill", colours[1])
+
+    var barTextR=legend.append("text")
+        .attr("x",plotWidth)
+        .attr("y",0)
+        .attr("class",media+"subtitle")
+        .style("text-anchor","end")
+        .text(seriesNames[1])
+
+    var legOffset=barTextR.node().getBBox().width
+
+    legend.append("line")
+        .attr("stroke",function(d,i){
+            return colours[i];  
+        })
+        .attr("x1",plotWidth-legOffset-(yOffset/2))
+        .attr("x2",plotWidth-legOffset-(yOffset/2)-yOffset)
+        .attr("y1",-5)
+        .attr("y2",-5)
+        .attr("class",media+"lines")
+
+
+
+
+
     function colculateTicksize(align, offset) {
         if (align=="right") {
             return w-margin.left-offset
