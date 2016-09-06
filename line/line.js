@@ -238,6 +238,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
                 })
             .attr("cx",function(d){return xScale(d.date)})
             .attr("cy",function(d){return yScale(d.val)})
+        .attr("id",function(d){return yScale(d.date)})
             .attr("transform",function(){
                 if(yAlign=="right") {
                     return "translate("+(margin.left)+","+(margin.top)+")"
