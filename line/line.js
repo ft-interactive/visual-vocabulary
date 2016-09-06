@@ -255,6 +255,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             .attr("r",yOffset/4)
             .attr("cx",function(d){return xScale(d.date)})
             .attr("cy",function(d){return yScale(d.val)})
+            .attr("id",function(d){return d.date})
             .attr("transform",function(){
                 if(yAlign=="right") {
                     return "translate("+(margin.left)+","+(margin.top)+")"
