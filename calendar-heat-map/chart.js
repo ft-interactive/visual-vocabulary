@@ -248,6 +248,16 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal,break
             }
 
     })
+
+    //Add labels so that the preflight script in illustrator will work
+    d3.selectAll(".printxAxis text")
+    .attr("id","xAxisLabel")
+    .attr("id","yAxisTick")
+    d3.selectAll(".printmonth")
+    .attr("id","printmonth")
+
+    d3.selectAll(".domain").remove()
+
     var legData=[{val: minVal,text:"min value"},{val: maxVal, text: "max value"}]
 
     //create a legend first
