@@ -202,6 +202,20 @@ function columnChart(data, stylename, media,yMin,yMax, yMin1,yMax1, chartpadding
 
         })
 
+    //Add labels so that the preflight script in illustrator will work
+    d3.selectAll(".printxAxis text")
+    .attr("id","xAxisLabel")
+    d3.selectAll(".printyAxis text")
+    .attr("id","yAxisLabel")
+    d3.selectAll(".printyAxis line")
+    .attr("id","yAxisTick")
+    d3.selectAll(".printxAxis line")
+    .attr("id","xAxisTick")
+    d3.selectAll(".printminorAxis line")
+    .attr("id","minorTick")
+
+    d3.selectAll(".domain").remove()
+
     //create a legend first
     var legend = plot.append("g")
         .attr("id",media+"legend")
