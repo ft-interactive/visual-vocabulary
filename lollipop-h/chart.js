@@ -130,8 +130,6 @@ function makeChart(data,stylename,media,sort,xMin,xMax,xAxisHighlight,numTicksx,
         })
         .attr("stroke",colours[0])
         .attr("stroke-width",lineWeight);
-
-
     
     //create dots
     plot.append("g")
@@ -152,4 +150,19 @@ function makeChart(data,stylename,media,sort,xMin,xMax,xAxisHighlight,numTicksx,
         })
         .attr("r",dotSize)
         .attr("fill",colours[0])
+
+    //Add labels so that the preflight script in illustrator will work
+    d3.selectAll(".printxAxis text")
+    .attr("id","xAxisLabel")
+    d3.selectAll(".printyAxis text")
+    .attr("id","yAxisLabel")
+    d3.selectAll(".printyAxis line")
+    .attr("id","yAxisTick")
+    d3.selectAll(".printxAxis line")
+    .attr("id","xAxisTick")
+    d3.selectAll(".printminorAxis line")
+    .attr("id","minorTick")
+
+    d3.selectAll(".domain").remove()
+
 }
