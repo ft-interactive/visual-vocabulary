@@ -141,10 +141,23 @@ function makeChart(data,stylename,media,yMin,yMax,yAxisHighlight,plotpadding,leg
             .attr("x2", function(d,i) {return xScale(d.cat)+(xScale.rangeBand())})
             .attr("y2", function(d) { return yScale(d.median)})
 
-
-
-
         })
+
+    //Add labels so that the preflight script in illustrator will work
+    d3.selectAll(".printxAxis text")
+    .attr("id","xAxisLabel")
+    d3.selectAll(".printyAxis text")
+    .attr("id","yAxisLabel")
+    d3.selectAll(".printyAxis line")
+    .attr("id","yAxisTick")
+    d3.selectAll(".printxAxis line")
+    .attr("id","xAxisTick")
+    d3.selectAll(".printminorAxis line")
+    .attr("id","minorTick")
+    d3.selectAll(".printwhiskers")
+    .attr("id","whiskers")
+
+    d3.selectAll(".domain").remove()
         
 
 
