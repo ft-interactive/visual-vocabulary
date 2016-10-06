@@ -265,8 +265,6 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             });
     }
 
-    d3.selectAll(".domain").remove()
-
     //Add labels so that the preflight script in illustrator will work
     d3.selectAll(".printxAxis text")
     .attr("id","xAxisLabel")
@@ -276,6 +274,11 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     .attr("id","yAxisTick")
     d3.selectAll(".printxAxis line")
     .attr("id","xAxisTick")
+    d3.selectAll(".printminorAxis line")
+    .attr("id","minorTick")
+
+    d3.selectAll(".domain").remove()
+
 
     if (seriesNames[0]!="x"){
         // //create a legend first
