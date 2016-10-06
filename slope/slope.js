@@ -164,7 +164,8 @@ function slopeChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHighlig
 
     //create labels if needed
     if (showLabelLeft) {
-        slopes.append("text")
+            slopes.append("text")
+            .attr("id",media+"lLable")
             .attr("class",media+"subtitle")
             .attr("x",margin.left-7)
             .attr("text-anchor","end")
@@ -176,7 +177,8 @@ function slopeChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHighlig
         });
     };
     if (showLabelRight) {
-        slopes.append("text")
+            slopes.append("text")
+            .attr("id",media+"RLable")
             .attr("class",media+"subtitle")
             .attr("x",w-margin.right+7)
             .attr("text-anchor","start")
@@ -212,6 +214,14 @@ function slopeChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHighlig
             else {return "end"}
         })
         .text(labelright);
+
+    //Add labels so that the preflight script in illustrator will work
+    d3.selectAll(".printxAxis text")
+    .attr("id","xAxisLabel")
+    d3.selectAll(".printyAxis line")
+    .attr("id","yAxisTick")
+
+    d3.selectAll(".domain").remove()
 
     
 }
