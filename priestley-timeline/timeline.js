@@ -226,4 +226,18 @@ function makeChart(data,stylename,media,xMin,xMax,numTicksx,showRect,showLine,ma
         .attr("stroke-width","1px")//should use class
     }
 
+    //Add labels so that the preflight script in illustrator will work
+    d3.selectAll(".printxAxis text")
+    .attr("id","xAxisLabel")
+    d3.selectAll(".printyAxis text")
+    .attr("id","yAxisLabel")
+    d3.selectAll(".printyAxis line")
+    .attr("id","yAxisTick")
+    d3.selectAll(".printxAxis line")
+    .attr("id","xAxisTick")
+    d3.selectAll(".printminorAxis line")
+    .attr("id","minorTick")
+
+    d3.selectAll(".domain").remove()
+
 }
