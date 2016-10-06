@@ -143,6 +143,8 @@ function barChart(data,stylename,media,xMin,xMax,xAxisHighlight,plotpadding,legA
     .attr("id","yAxisTick")
     d3.selectAll(".printxAxis line")
     .attr("id","xAxisTick")
+    d3.selectAll(".printminorAxis line")
+    .attr("id","minorTick")
 
     d3.selectAll(".domain").remove()
 
