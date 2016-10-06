@@ -229,6 +229,20 @@ function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHig
 
         });
 
+    //Add labels so that the preflight script in illustrator will work
+    d3.selectAll(".printxAxis text")
+    .attr("id","xAxisLabel")
+    d3.selectAll(".printyAxis text")
+    .attr("id","yAxisLabel")
+    d3.selectAll(".printyAxis line")
+    .attr("id","yAxisTick")
+    d3.selectAll(".printxAxis line")
+    .attr("id","xAxisTick")
+    d3.selectAll(".printminorAxis line")
+    .attr("id","minorTick")
+
+    d3.selectAll(".domain").remove()
+
     //create a legend first
     if (groupNames[0]!="-") {
         var legendyOffset=0
