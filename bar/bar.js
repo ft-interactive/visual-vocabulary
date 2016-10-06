@@ -43,8 +43,9 @@ function barChart(data,stylename,media,xMin,xMax,xAxisHighlight,plotpadding,legA
     .tickSize(0);
 
     var yLabel=plot.append("g")
-      .attr("class", media+"yAxis")
-      .call(yAxis)
+    .attr("id", media+"yAxis")
+    .attr("class", media+"yAxis")
+    .call(yAxis)
 
     //calculate what the ticksize should be now that the text for the labels has been drawn
     var yLabelOffset=yLabel.node().getBBox().width

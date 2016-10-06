@@ -137,6 +137,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         .orient("bottom");
 
     var xLabel=plot.append("g")
+        .attr("id",media+"xAxis")
         .attr("class",media+"xAxis")
         .attr("transform",function(){
             if(yAlign=="right") {
