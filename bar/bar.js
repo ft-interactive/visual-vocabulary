@@ -72,6 +72,7 @@ function barChart(data,stylename,media,xMin,xMax,xAxisHighlight,plotpadding,legA
     .orient("bottom");
 
     var xLabels=plot.append("g")
+        .attr("id", media+"xAxis")
       .attr("class", media+"xAxis")
       .attr("transform", "translate("+(margin.left)+"," + (margin.top) + ")")
       .call(xAxis);
@@ -132,6 +133,18 @@ function barChart(data,stylename,media,xMin,xMax,xAxisHighlight,plotpadding,legA
                 clear.remove()
             }
         })
+
+    //Add labels so that the preflight script in illustrator will work
+    d3.selectAll(".printxAxis text")
+    .attr("id","xAxisLabel")
+    d3.selectAll(".printyAxis text")
+    .attr("id","yAxisLabel")
+    d3.selectAll(".printyAxis line")
+    .attr("id","yAxisTick")
+    d3.selectAll(".printxAxis line")
+    .attr("id","xAxisTick")
+
+    d3.selectAll(".domain").remove()
 
     
 

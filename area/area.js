@@ -82,6 +82,7 @@ function areaChart(data, stylename ,media, yMin, yMax ,yAxisHighlight, numTicksy
     .orient(yAlign)//Note that yAlign is passed rom the index to determine which side the scale is plotted
     //Roughly plot the yScale on the page without positioning it correctly
     var yLabel=plot.append("g")
+    .attr("id",media+"yAxis")
     .attr("class",media+"yAxis")
     .call(yAxis);
 
@@ -120,6 +121,7 @@ function areaChart(data, stylename ,media, yMin, yMax ,yAxisHighlight, numTicksy
         .orient("bottom");
     //Plot and position on the page
     var xLabels=plot.append("g")
+        .attr("id",media+"xAxis")
         .attr("class", media+"xAxis")
         .attr("transform",function(){
             if(yAlign=="right") {
