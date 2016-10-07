@@ -1,6 +1,6 @@
-# Graphics Examples
+# Visual Vocabulary
 Small examples of data driven graphics -- to be used as starting points for static graphics to be further refined through Illustrator.
-[viewable here](http://ft-interactive.github.io/graphics-examples/)
+[viewable here](http://ft-interactive.github.io/visual-vocabulary/)
 
 # Getting started
 For ease of use we suggest you use [`srvlr`](https://github.com/kavanagh/srvlr) to help you see your changes reflected immediately in your browser.
@@ -16,7 +16,7 @@ If you have srvlr installed using it is as simple as opening terminal, navigatin
 
 # Getting a local copy of the examples
 
-i.e. copying them to your computer. either : [Download them from here](https://github.com/ft-interactive/graphics-examples/archive/master.zip)
+i.e. copying them to your computer. either : [Download them from here](https://github.com/ft-interactive/visual-vocabulary/archive/master.zip)
 or in the terminal window type `git clone https://github.com/ft-interactive/graphics-examples.git TARGET-LOCATION`
 
 replacing `TARGET-LOCATION` with the name of the folder you wish to put the examples in.
