@@ -47,7 +47,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign){
 	.domain([0,sizeMax]);
 	
 	var squaresGroup = plot.append('g')
-	.attr('transform','translate('+0+','+margin.top+')');
+	.attr('transform','translate('+margin.left+','+margin.top+')');
 	
 	var formatComma = d3.format(',');
 
@@ -59,7 +59,7 @@ squaresGroup.append('g')
 	.append('rect')
 	.attr('class',media+'squares')
 	.attr('y',d=>yScale(+d.value))
-	.attr('x',margin.left)
+	.attr('x',0)
 	.attr('width',d=>squareScale(+d.value))
 	.attr('height',d=>squareScale(+d.value))
 	.attr('fill',d=>colours(d.name))
