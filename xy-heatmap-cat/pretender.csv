@@ -1,0 +1,11 @@
+rowname,Col 1,Col 2,Col 3,Col 4,Col 5,Col 6,Col 7,Col 8
+Row 1,,cat A,cat B,cat A,,cat B,cat B,cat A
+Row 2,cat A,cat A,cat A,cat B,cat A,cat B,cat A,cat B
+Row 3,cat A,cat A,cat B,cat B,cat A,cat B,cat A,cat B
+Row 4,cat A,cat A,cat B,cat A,cat B,cat A,cat A,cat B
+Row 5,,cat A,cat A,cat A,cat A,cat B,cat B,cat B
+Row 6,,cat A,cat A,cat A,cat B,cat B,cat A,cat B
+Row 7,cat A,cat A,cat A,cat A,cat B,,cat B,cat A
+Row 8,,cat A,cat A,cat A,cat B,,cat A,cat A
+Row 9,,cat C,,cat A,,,cat C,cat B
+Row 10,,cat C,cat C,cat C,cat C,,cat B,cat B
