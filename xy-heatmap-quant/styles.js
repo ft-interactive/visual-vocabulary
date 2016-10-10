@@ -66,30 +66,31 @@ legendyOffset:0,
 fillcolours:["#CB4759","#D57175","#E09697","#EDBFC0","#FDEDF4"]
 }
 var stylevid = {classes:
-[{class:"background{fill: #dfd0bd;}"},
-{class:"titleframe{fill: #757575;}"},
+[{class:"background{fill: #212121;}"},
+{class:"titleframe{fill: none;}"},
 {class:"chartholder{fill: none;}"},
-{class:"title{font-size: 68px; fill: #ffffff; font-weight: 600;}"},
-{class:"subtitle{font-size: 48; fill: #000000; font-weight: 600;}"},
-{class:"source{font-size: 44; fill: #000000; font-weight: 600;}"},
+{class:"title{font-size: 68px; fill: #ffffff; font-weight: 600;opacity: 0.9;}"},
+{class:"subtitle{font-size: 48; fill: #ffffff; font-weight: 400;opacity: 0.7;}"},
+{class:"source{font-size: 36; fill: #ffffff; font-weight: 400;opacity: 0.5;}"},
+{class:"labels{font-size: 48px; fill: #ffffff; opacity: 0.5; font-weight: 400;}"},
 {class:"logo{fill: #ffffff;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
-{class:"xAxis line{fill:none; stroke-width: 5.0px; stroke:#ffffff;}"},
-{class:"xAxis text{font-size: 48; fill: #000000; font-weight: 600;}"},
+{class:"xAxis line{fill:none; stroke-width: 4px; stroke:#ffffff;opacity: 0.5}"},
+{class:"xAxis text{font-size: 48; fill: #ffffff; font-weight: 400;opacity: 0.5}"},
 {class:"yAxis{fill:none; stroke: none;}"},
-{class:"yAxis line{fill:none; stroke-width: 5.0px; stroke:#ffffff;}"},
-{class:"yAxis text{font-size: 48; fill: #000000; font-weight: 600;font-feature-settings: 'tnum' 1; text-anchor: end;}"},
-{class:"origin line{fill:none; stroke:#ffffff; stroke-width: 5.0px;stroke-dasharray:1,0}"},
-{class:"lines{fill:none; stroke-width: 8.0px; stroke-linecap: round;}"}
+{class:"yAxis line{fill:none; stroke-width: 4px; stroke:#ffffff;opacity: 0.38}"},
+{class:"yAxis text{font-size: 48; fill: #ffffff; font-weight: 400;font-feature-settings: 'tnum' 1; text-anchor: end;opacity: 0.5}"},
+{class:"origin line{fill:none; stroke:#ffffff; stroke-width: 5.0px;stroke-dasharray:1,0; opacity: 0.5}"},
+{class:"whiskers{fill:none; stroke-width:2.0px;stroke:#ffffff; opacity: 0.5}"},
+{class:"lines{fill:none; stroke-width: 8.0px; stroke-linecap: round;}"},
+{class:"fill{fill-opacity:1.0; stroke-width: 0.0px}"},
+{class:"highlight{fill-opacity:1.0;}"},
+{class:"day{fill:none; stroke: #ffffff; stroke-width:4.0px; opacity: 0.5; stroke-linecap: round;}"},
+{class:"month{fill:none; stroke: #ffffff; stroke-width:4.0px; opacity: 0.5; stroke-linecap: round;}"}
+
 ],
 titleOffset:68,
 subOffset:0,
 legendyOffset:15,
-linecolours:["#b34b41","#5a8caf","#9baa6e","#eda45e","#9c5f87","#486ba0"]
+fillcolours:["#CB4759","#D57175","#E09697","#EDBFC0","#FDEDF4"]
 }
-
-
-
-    //Tabular with 
-    //-webkit-font-feature-settings: 'tnum' 1;
-       //font-feature-settings: 'tnum' 1;
