@@ -44,7 +44,7 @@ var styleweb = {classes:
 {class:"minorAxis{fill:none; stroke: none;}"},
 {class:"minorAxis line{fill:none; stroke:#9ba497; stroke-width: 1px;stroke-dasharray:1,0}"},
 {class:"origin line{fill:none; stroke:#9ba497; stroke-width: 1px;stroke-dasharray:1,0}"},
-{class:"lines{fill:none; stroke-width: 2.5px; stroke-linecap: round;}"}
+{class:"lines{fill:none; stroke-width: 2.5px; stroke-linecap: round; stroke-linejoin: round}"}
 ],
 titleOffset:21,
 subOffset:0,
