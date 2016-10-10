@@ -170,7 +170,7 @@ function makeChart(data,stylename,media,xMin,xMax,numTicksx,showRect,showLine,ma
                     return yScale(d.name)+(yScale.rangeBand()/2);;
                 })
                 .attr("stroke","#777")
-                .attr("stroke-width","2px")//should use class
+                .attr("class",media+"stalk")
         }
         //marker dots
         if (markers){
@@ -207,6 +207,7 @@ function makeChart(data,stylename,media,xMin,xMax,numTicksx,showRect,showLine,ma
         .attr("fill",function(d,i){
             return colours[i]
         })
+        .attr('class',media+'labels' )
     
     chart.append("g")
         .attr("id","keylines")

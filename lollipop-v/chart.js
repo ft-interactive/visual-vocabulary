@@ -146,7 +146,7 @@ function makeChart(data,stylename,media,sort,yMin,yMax,yAxisHighlight,numTicksy,
             }
         })
         .attr("stroke",colours[0])
-        .attr("stroke-width",plotWidth/100)
+        .attr("class", media+"stalk")
 
     function colculateTicksize(align, offset) {
         if (align=="right") {

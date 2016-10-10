@@ -104,6 +104,7 @@ function makeChart(data,stylename,media,sort,xMin,xMax,xAxisHighlight,numTicksx,
         .data(data)
         .enter()
         .append("line")
+        .attr("class", media+"stalk")
         .attr("id",function(d){
             return d.name+":"+d.value+"_line"
         })
