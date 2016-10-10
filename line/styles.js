@@ -19,7 +19,7 @@ var styleprint = {classes:
 {class:"minorAxis line{fill:none; stroke-width:0.3px; stroke:#000000;}"},
 {class:"xAxis line{fill:none; stroke-width:.3px; stroke:#000000;}"},
 {class:"origin line{fill:none; stroke-width:0.6px;}"},
-{class:"lines{fill:none; stroke-width:2.0px;stroke-linecap: round;}"}
+{class:"lines{fill:none; stroke-width:2.0px;stroke-linecap: round;stroke-linejoin: round;}"}
 ],
 titleOffset:10,
 subOffset:0,
@@ -44,7 +44,7 @@ var styleweb = {classes:
 {class:"minorAxis{fill:none; stroke: none;}"},
 {class:"minorAxis line{fill:none; stroke:#9ba497; stroke-width: 1px;stroke-dasharray:1,0}"},
 {class:"origin line{fill:none; stroke:#9ba497; stroke-width: 1px;stroke-dasharray:1,0}"},
-{class:"lines{fill:none; stroke-width: 2.5px; stroke-linecap: round; stroke-linejoin: round}"}
+{class:"lines{fill:none; stroke-width: 2.5px; stroke-linecap: round; stroke-linejoin: round;}"}
 ],
 titleOffset:21,
 subOffset:0,
@@ -69,7 +69,7 @@ var stylenowcast = {classes:
 {class:"minorAxis{fill:none; stroke: none;}"},
 {class:"minorAxis line{fill:none; stroke:#9ba497; stroke-width: 1px;stroke-dasharray:1,0}"},
 {class:"origin line{fill:none; stroke:#9ba497; stroke-width: 1px;stroke-dasharray:1,0}"},
-{class:"lines{fill:none; stroke-width: 2.5px; stroke-linecap: round;}"}
+{class:"lines{fill:none; stroke-width: 2.5px; stroke-linecap: round;stroke-linejoin: round;}"}
 ],
 titleOffset:21,
 subOffset:0,
@@ -94,7 +94,7 @@ var stylesoc = {classes:
 {class:"minorAxis{fill:none; stroke: none;}"},
 {class:"minorAxis line{fill:none; stroke:#ffffff; stroke-width: 2.0px; opacity: 0.5; stroke-dasharray: 1,0}"},
 {class:"origin line{fill:none; stroke:#ffffff; stroke-width: 2.0px; opacity: 0.5; stroke-dasharray: 1,0}"},
-{class:"lines{fill:none; stroke-width: 5px;  stroke-linecap: round;}"}
+{class:"lines{fill:none; stroke-width: 5px;  stroke-linecap: round;stroke-linejoin: round;}"}
 ],
 titleOffset:36,
 subOffset:0,
@@ -119,11 +119,11 @@ var stylevid = {classes:
 {class:"yAxis text{font-size: 48; fill: #ffffff; font-weight: 400;font-feature-settings: 'tnum' 1; text-anchor: end;opacity: 0.5}"},
 {class:"origin line{fill:none; stroke:#ffffff; stroke-width: 5.0px;stroke-dasharray:1,0; opacity: 0.5}"},
 {class:"whiskers{fill:none; stroke-width:2.0px;stroke:#ffffff; opacity: 0.5}"},
-{class:"lines{fill:none; stroke-width: 8.0px; stroke-linecap: round;}"},
+{class:"lines{fill:none; stroke-width: 8.0px; stroke-linecap: round;stroke-linejoin: round;}"},
 {class:"fill{fill-opacity:1.0; stroke-width: 0.0px}"},
 {class:"highlight{fill-opacity:1.0;}"},
-{class:"day{fill:none; stroke: #ffffff; stroke-width:4.0px; opacity: 0.5; stroke-linecap: round;}"},
-{class:"month{fill:none; stroke: #ffffff; stroke-width:4.0px; opacity: 0.5; stroke-linecap: round;}"}
+{class:"day{fill:none; stroke: #ffffff; stroke-width:4.0px; opacity: 0.5; stroke-linecap: round;stroke-linejoin: round;}"},
+{class:"month{fill:none; stroke: #ffffff; stroke-width:4.0px; opacity: 0.5; stroke-linecap: round;stroke-linejoin: round;}"}
 
 ],
 titleOffset:68,
