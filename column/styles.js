@@ -93,7 +93,7 @@ var stylevid = {classes:
 {class:"chartholder{fill: none;}"},
 {class:"title{font-size: 68px; fill: #ffffff; font-weight: 600;opacity: 0.9;}"},
 {class:"subtitle{font-size: 48; fill: #ffffff; font-weight: 400;opacity: 0.7;}"},
-{class:"source{font-size: 44; fill: #ffffff; font-weight: 400;opacity: 0.5;}"},
+{class:"source{font-size: 36; fill: #ffffff; font-weight: 400;opacity: 0.5;}"},
 {class:"logo{fill: #ffffff;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
 {class:"xAxis line{fill:none; stroke-width: 4px; stroke:#ffffff;opacity: 0.5}"},
