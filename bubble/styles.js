@@ -96,7 +96,7 @@ var stylevid = {classes:
 {class:"whiskers{fill:none; stroke-width:2.0px;stroke:#ffffff; opacity: 0.5}"},
 {class:"lines{fill:none; stroke-width: 8.0px; stroke-linecap: round;}"},
 {class:"fill{fill-opacity:0.5; stroke-width: 0.0px}"},
-{class:"highlight{fill-opacity:0.5; stroke-width: 1.0px; storoke: #000000}"}
+{class:"highlight{fill-opacity:0.5; stroke-width: 5.0px; storoke: #000000}"}
 ],
 titleOffset:68,
 subOffset:0,

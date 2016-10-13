@@ -1,12 +1,11 @@
 
 function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, xAxisHighlight, numTicksx, size){
-    console.log(data)
+    //console.log(data)
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
     // return the series names from the first row of the spreadsheet
     var seriesNames = Object.keys(data[0]);
-    console.log("seriesNames",seriesNames)
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
     var plot=d3.select("#"+media+"plot")
@@ -29,10 +28,8 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         .key(function(d) { return d.group; })
         .entries(data);
 
-    console.log(plotData)
     xMin=Math.min(xMin,d3.min(plotData, function(d) { return d3.min(d.values, function(d) { return d.value; })})); 
     xMax=Math.max(xMax,d3.max(plotData, function(d) { return d3.max(d.values, function(d) { return d.value; })})); 
-    //console.log(xMin,xMax)
 
     var xScale = d3.scale.linear()
         .range([0, plotWidth])
@@ -58,8 +55,6 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         .rangeBands([plotHeight+margin.top, margin.top])
         .domain(plotData.map(function(d) { return d.key; }));;
     
-    console.log(yScale.domain())
-
     var category = plot.selectAll("."+media+"category")
         .data(plotData)
         .enter()
@@ -78,7 +73,12 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         .data(function(d) {return d.values})
         .enter()
         .append('circle')
-        .attr("class",media+"fill")
+        .attr("class",function(d,i){
+            if(d.highlight=="yes"){
+                return media+"highlight"
+            }
+            else {return media+"fill"}
+        })
         .attr("id",function(d){return d.name +" "+d.value+ " "+d.size})
         .attr("cx",function(d){return xScale(d.value)})
         .attr("cy",yScale.rangeBand()*.4)
