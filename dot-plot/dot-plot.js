@@ -88,6 +88,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         })
         .attr("transform", function (d) {return "translate("+(margin.left)+","+(0)+")"})
         .style("fill",colours[0])
+        .on("mouseover",pointer)
 
         })
 
@@ -104,6 +105,11 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
     .attr("id","minorTick")
 
     d3.selectAll(".domain").remove()
+
+
+    function pointer() {
+        this.style.cursor='pointer'
+    }
 
 
 
