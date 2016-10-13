@@ -40,6 +40,18 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     });
     yDomain=[yMin,yMax];
 
+    //creat an array of start stop areas
+    var boundries= data.filter(function(d) {
+        return  (d.highlight==="begin" || d.highlight==="end")
+    })
+    var shadeAreas=[]
+
+    boundries.forEach(function(d,i){
+        if (d.highlight==="begin") {
+            shadeAreas.push({begin: d.date,end:boundries[i+1].date}) 
+        }
+    })
+
     //create a separate array for each series, filtering out records of each  series for which there are no data
     var plotArrays = [];
     seriesNames.forEach(function(series,i){
@@ -168,6 +180,27 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             .call(xAxisMinor);
     }
 
+    if(shadeAreas.length>0){
+        plot.selectAll("."+media+"area")
+        .data(shadeAreas)
+        .enter()
+        .call(function(parent){
+            parent.append('rect')
+                .attr("class",media+"area")
+                .attr("x", function(d) {
+                    return xScale(d.begin)})
+                .attr("width", function (d) {return xScale(d.end)-xScale(d.begin)})
+                .attr("y", yScale(yMax))
+                .attr("height",plotHeight-yScale(yMax))
+                .attr("transform",function(){
+                if(yAlign=="right") {
+                    return "translate("+(margin.left)+","+(margin.top)+")"
+                }
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
+            });
+        })
+    }
+
 
     //create a line function that can convert data[] into x and y points
     var lineData= d3.svg.line()
@@ -237,6 +270,17 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
                  else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
             });
     }
+
+    var toneBands=d3.selectAll("."+media+"area")
+    toneBands.forEach(function(d,i){
+        console.log(d)
+        d.forEach(function(el){
+            console.log(el)
+            var firstChild = el.parentNode.firstChild; 
+            el.parentNode.insertBefore(el, firstChild); 
+
+        })
+    })
 
     //Add labels so that the preflight script in illustrator will work
     d3.selectAll(".printxAxis text")
