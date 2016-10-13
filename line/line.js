@@ -262,6 +262,31 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             });
     }
 
+    // plot.selectAll('.node')
+    //     .sort(function(a, b) {
+    //       if (a.class === "."+media+"area") {
+    //         return 1;
+    //       } else {
+    //         if (b.class === "."+media+"area") {
+    //           return -1;
+    //         } else {
+    //           return 0;
+    //         }
+    //       }
+    //     });
+
+    var toneBands=d3.selectAll("."+media+"area")
+    toneBands.forEach(function(d,i){
+        console.log(d)
+        d.forEach(function(el){
+            console.log(el)
+            var firstChild = el.parentNode.firstChild; 
+            el.parentNode.insertBefore(el, firstChild); 
+
+        })
+    })
+    //toneBands.moveToBack()
+
     //Add labels so that the preflight script in illustrator will work
     d3.selectAll(".printxAxis text")
     .attr("id","xAxisLabel")
@@ -328,6 +353,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             else {
                 return "translate(0,"+((i*yOffset))+")"};
     })
+
 
     }
     
