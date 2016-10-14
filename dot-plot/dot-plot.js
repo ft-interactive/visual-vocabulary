@@ -151,6 +151,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
             return d.name+' '+d.size
         })
         .attr("class",media+"circLabel")
+        .attr("id",function(d){return (media+d.name).replace(/\s/g, '');})
 
     })
 
