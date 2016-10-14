@@ -1,6 +1,6 @@
 
 function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, xAxisHighlight, numTicksx, size){
-    //console.log(data)
+
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
@@ -28,9 +28,10 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         .key(function(d) { return d.group; })
         .entries(data);
 
-
+    console.log(plotData)
     xMin=Math.min(xMin,d3.min(plotData, function(d) { return d3.min(d.values, function(d) { return d.value; })})); 
     xMax=Math.max(xMax,d3.max(plotData, function(d) { return d3.max(d.values, function(d) { return d.value; })})); 
+    //console.log(xMin,xMax)
 
     var xScale = d3.scale.linear()
         .range([0, plotWidth])
@@ -56,33 +57,24 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         .rangeBands([plotHeight+margin.top, margin.top])
         .domain(plotData.map(function(d) { return d.key; }));;
     
-    console.log(plotData)
+
     var category = plot.selectAll("."+media+"category")
         .data(plotData)
         .enter()
         .append("g")
-        .attr("id",function(d) {return d.key})
         .attr("transform", function (d) {return "translate(0," + yScale(d.key) + ")"; })
         .attr("class", media+"category")
-
         .call(function(parent){
-            console.log(parent)
-            parent.append('text')
-                .attr("class", media+"Subtitle")
-                .attr("x",margin.left)
-                .attr("y",0)
-                .text(function(d){return d.key})
-        })
 
-    category.selectAll('circles')
-        .data(function(d) {
-                // console.log("d.values",d.values)
-                let textFiltered=d.values.filter(function(d){
-                    return d.highlight=="yes"
-                })
-                console.log(textFiltered.length)
-                //console.log("textFiltered",textFiltered)
-                return textFiltered
+        parent.append('text')
+            .attr("class", media+"Subtitle")
+            .attr("x",margin.left)
+            .attr("y",0)
+            .text(function(d){return d.key})
+
+        parent.selectAll('circles')
+        .data(function(d){
+            return d.values
         })
         .enter()
         .append('circle')
@@ -92,8 +84,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
             }
             else {return media+"fill"}
         })
-        .attr("id",function(d){
-            return d.name +" "+d.value+ " "+d.size})
+        .attr("id",function(d){return d.name +" "+d.value+ " "+d.size})
         .attr("cx",function(d){return xScale(d.value)})
         .attr("cy",yScale.rangeBand()*.4)
         .attr("r", function(d) {
@@ -102,60 +93,30 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         })
         .attr("transform", function (d) {return "translate("+(margin.left)+","+(0)+")"})
         .style("fill",colours[0])
-        .on("mouseover",pointer)
 
-    category.selectAll("text")
-            .data(function(d) {
-                // console.log("d.values",d.values)
-                let textFiltered=d.values.filter(function(d){
-                    return d.highlight=="yes"
-                })
-                console.log("textFiltered",textFiltered)
-                console.log(textFiltered.length)
-                return textFiltered
-            })
-            .enter()
-            .append("text")
-            .attr('id',function(d){
-                        return (media+d.name).replace(/\s/g, '');
-                    })
-            .attr("x",function(d){
-                return xScale(d.value);
-            })
-            .attr("y",function(d){
-                return yScale.rangeBand()*.4;
-            })
-            .attr("class",media+"subtitle")
-            .text(function(d){
-                return d.name+' '+d.size
+        // parent.selectAll('text')
+        // .data(function(d){
+        //     console.log("object= ",d)
+        //     let filtered=d.values.filter(function(d){
+        //         return d.highlight=="yes"
+        //     })
+        //     console.log("text filtered ", filtered)
+        //     return filtered
+        // })
+        // .enter()
+        // .append('text')
+        // .attr("x",function(d){
+        //             return xScale(d.value)+(margin.left);
+        //             })
+        //             .attr("y",function(d){
+        //             return yScale.rangeBand()*.4;
+        //             })
+        //             .text(function(d){
+        //                 return d.name+' '+d.size
+        //             })
+        //             .attr("class",media+"subtitle")
 
-            })
-            .on("mouseover",pointer)
-
-    //Add labels so that the preflight script in illustrator will work
-    d3.selectAll(".printxAxis text")
-    .attr("id","xAxisLabel")
-    d3.selectAll(".printyAxis text")
-    .attr("id","yAxisLabel")
-    d3.selectAll(".printyAxis line")
-    .attr("id","yAxisTick")
-    d3.selectAll(".printxAxis line")
-    .attr("id","xAxisTick")
-    d3.selectAll(".printminorAxis line")
-    .attr("id","minorTick")
-
-    d3.selectAll(".domain").remove()
-
-    d3.selection.prototype.moveToFront = function() { 
-                return this.each(function() { 
-                this.parentNode.appendChild(this); 
-                }); 
-    };
-
-
-    function pointer() {
-        this.style.cursor='pointer'
-    }
+    })
 
 
 
