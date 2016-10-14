@@ -1,6 +1,5 @@
 
 function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax,xMin,yMax,numTicksx,numTicksx, yAxisHighlight,axisLabel,xaxisLabel,yaxisLabel){
- console.log(yaxisLabel)
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
@@ -85,17 +84,32 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax
 
     if (axisLabel) {
         plot.append("text")
-                .attr("class",media+"subtitle")
-                .attr("text-anchor", "end")
-                .attr("x", plotWidth+margin.left)
-                .attr("y", plotHeight+margin.top-(yOffset/4))
-                .text(xaxisLabel);
+            .attr("class",media+"subtitle")
+            .attr("text-anchor", "end")
+            .attr("x", plotWidth+margin.left)
+            .attr("y", plotHeight+margin.top-(yOffset/4))
+            .text(xaxisLabel);
         plot.append("text")
-                .attr("class",media+"subtitle")
-                .attr("text-anchor", "start")
-                .attr("x", 0)
-                .attr("y", margin.top-yOffset/2)
-                .text(yaxisLabel);
+            .attr("class",media+"subtitle")
+            .attr("text-anchor", "start")
+            .attr("x", 0)
+            .attr("y", margin.top-yOffset/2)
+            .text(yaxisLabel);
+        }
+
+    var category = plot.selectAll("."+media+"category")
+        .data(plotData)
+        .enter()
+        .append("g")
+        .attr("id", media+(function(d) {return d.key}))
+        .attr("transform", function(d) {return "translate(0,0)"; })
+        .attr("class", media+"category")
+        .call (addDots)
+
+    function addDots(dataset) {
+        console.log(dataset)
+
+
     }
 
 
