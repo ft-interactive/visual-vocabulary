@@ -96,18 +96,31 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax
             .attr("y", margin.top-yOffset/2)
             .text(yaxisLabel);
         }
+    console.log(plotData)
 
     var category = plot.selectAll("."+media+"category")
         .data(plotData)
         .enter()
         .append("g")
         .attr("id", media+(function(d) {return d.key}))
-        .attr("transform", function(d) {return "translate(0,0)"; })
+        .attr("transform", function(d) {return "translate("+margin.left+",0)"; })
         .attr("class", media+"category")
-        .call (addDots)
+        .call(addDots)
 
-    function addDots(dataset) {
-        console.log(dataset)
+    function addDots(parent) {
+        //console.log(parent)
+        parent.selectAll('circles')
+        .data(function(d) {
+            return d.values
+        })
+        .enter()
+        .append('circle')
+        .attr("cx",function(d){return xScale(d.x)+margin.left})
+        .attr("cy",function(d){return yScale(d.y)})
+        .attr("r",yOffset/4)
+        .attr("transform", function (d) {return "translate("+(margin.left)+","+(0)+")"})
+
+        .attr("fill","#000000")
 
 
     }
