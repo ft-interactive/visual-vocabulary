@@ -99,27 +99,27 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
             else{return colours[0]}
         })
 
-        // parent.selectAll('text')
-        // .data(function(d){
-        //     console.log("object= ",d)
-        //     let filtered=d.values.filter(function(d){
-        //         return d.highlight=="yes"
-        //     })
-        //     console.log("text filtered ", filtered)
-        //     return filtered
-        // })
-        // .enter()
-        // .append('text')
-        // .attr("x",function(d){
-        //             return xScale(d.value)+(margin.left);
-        //             })
-        //             .attr("y",function(d){
-        //             return yScale.rangeBand()*.4;
-        //             })
-        //             .text(function(d){
-        //                 return d.name+' '+d.size
-        //             })
-        //             .attr("class",media+"subtitle")
+        parent.selectAll('.'+media+"circLabel")
+        .data(function(d){
+            console.log("object= ",d)
+            let filtered=d.values.filter(function(d){
+                return d.highlight=="yes"
+            })
+            console.log("text filtered ", filtered)
+            return filtered
+        })
+        .enter()
+        .append('text')
+        .attr("x",function(d){
+                    return xScale(d.value)+(margin.left);
+                    })
+                    .attr("y",function(d){
+                    return yScale.rangeBand()*.4;
+                    })
+                    .text(function(d){
+                        return d.name+' '+d.size
+                    })
+                    .attr("class",media+"circLabel")
 
     })
 
