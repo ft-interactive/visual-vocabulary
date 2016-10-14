@@ -66,6 +66,25 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax
             return d==originValue || d==yAxisHighlight;
         }).classed(media+"origin",true);
 
+    var xScale = d3.scale.linear()
+        .domain(xDomain)
+        .range([0,(plotWidth-yLabelOffset)]);
+
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .ticks(numTicksx)
+        .tickSize(yOffset/2)
+        .orient("bottom");
+
+    var xLabel=plot.append("g")
+        .attr("class",media+"xAxis")
+        .attr("transform",function(){
+            return "translate("+(margin.left+yLabelOffset)+","+(h-margin.bottom)+")"
+        })
+        .call(xAxis);
+
+    
+
 
 
 
