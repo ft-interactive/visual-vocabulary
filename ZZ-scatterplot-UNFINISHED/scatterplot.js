@@ -1,6 +1,6 @@
 
-function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax,xMin,yMax,numTicksx,numTicksx, yAxisHighlight){
-
+function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax,xMin,yMax,numTicksx,numTicksx, yAxisHighlight,axisLabel,xaxisLabel,yaxisLabel){
+ console.log(yaxisLabel)
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
@@ -83,7 +83,22 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax
         })
         .call(xAxis);
 
-    
+    if (axisLabel) {
+        plot.append("text")
+                .attr("class",media+"subtitle")
+                .attr("text-anchor", "end")
+                .attr("x", plotWidth+margin.left)
+                .attr("y", plotHeight+margin.top-(yOffset/4))
+                .text(xaxisLabel);
+        plot.append("text")
+                .attr("class",media+"subtitle")
+                .attr("text-anchor", "start")
+                .attr("x", 0)
+                .attr("y", margin.top-yOffset/2)
+                .text(yaxisLabel);
+    }
+
+
 
 
 

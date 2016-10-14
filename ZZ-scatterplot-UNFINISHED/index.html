@@ -31,8 +31,8 @@
         var numTicksy = 6;//rough number of ticks for y axis
         var numTicksx = 5;//rough number of ticks for x axis
         var axisLabel=true;//True or false to label the axis or not
-        var xLabel="x-label"//The label that is placed on the x Axix
-        var yLabel="y-label"//The label that is placed on the y Axix
+        var xAxisLabel="x-label"//The label that is placed on the x Axix
+        var yAxisLabel="y-label"//The label that is placed on the y Axix
 
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
@@ -82,7 +82,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                scatterplot(data, stylename, media, chartpadding,legend, yLabel,yMin,yMax,xMin,xMax,numTicksx,numTicksx,yAxisHighlight);
+                scatterplot(data, stylename, media, chartpadding,legend, yLabel,yMin,yMax,xMin,xMax,numTicksx,numTicksx,yAxisHighlight,axisLabel,xAxisLabel,yAxisLabel);
             }
         })//end data load
 
