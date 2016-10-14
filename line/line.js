@@ -114,9 +114,11 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             else return "translate("+(w-margin.right)+","+margin.top+")"
             })
 
-    yLabel.selectAll('text')
-        .attr("style", null)
-        .attr("x",yticksize+(yLabelOffset*.5))
+    if (yAlign=="right"){
+        yLabel.selectAll('text')
+            .attr("style", null)
+            .attr("x",yticksize+(yLabelOffset*.5))
+        }
 
     //identify 0 line if there is one
     var originValue = 0;
@@ -137,7 +139,6 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         .orient("bottom");
 
     var xLabel=plot.append("g")
-        .attr("id",media+"xAxis")
         .attr("class",media+"xAxis")
         .attr("transform",function(){
             if(yAlign=="right") {
@@ -175,7 +176,10 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         .enter()
         .call(function(parent){
             parent.append('rect')
-                .attr("class",media+"area")
+                .style("fill", function (d,i) {
+                    return colours[3]
+                })
+                .style ("opacity",0.2)
                 .attr("x", function(d) {
                     return xScale(d.begin)})
                 .attr("width", function (d) {return xScale(d.end)-xScale(d.begin)})
@@ -253,7 +257,6 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             .attr("r",yOffset/4)
             .attr("cx",function(d){return xScale(d.date)})
             .attr("cy",function(d){return yScale(d.val)})
-            .attr("id",function(d){return d.date})
             .attr("transform",function(){
                 if(yAlign=="right") {
                     return "translate("+(margin.left)+","+(margin.top)+")"
@@ -262,30 +265,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             });
     }
 
-    // plot.selectAll('.node')
-    //     .sort(function(a, b) {
-    //       if (a.class === "."+media+"area") {
-    //         return 1;
-    //       } else {
-    //         if (b.class === "."+media+"area") {
-    //           return -1;
-    //         } else {
-    //           return 0;
-    //         }
-    //       }
-    //     });
-
-    var toneBands=d3.selectAll("."+media+"area")
-    toneBands.forEach(function(d,i){
-        console.log(d)
-        d.forEach(function(el){
-            console.log(el)
-            var firstChild = el.parentNode.firstChild; 
-            el.parentNode.insertBefore(el, firstChild); 
-
-        })
-    })
-    //toneBands.moveToBack()
+    d3.selectAll(".domain").remove()
 
     //Add labels so that the preflight script in illustrator will work
     d3.selectAll(".printxAxis text")
@@ -296,11 +276,6 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     .attr("id","yAxisTick")
     d3.selectAll(".printxAxis line")
     .attr("id","xAxisTick")
-    d3.selectAll(".printminorAxis line")
-    .attr("id","minorTick")
-
-    d3.selectAll(".domain").remove()
-
 
     if (seriesNames[0]!="x"){
         // //create a legend first
@@ -341,7 +316,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             .attr("class",media+"lines")
 
         legend.attr("transform",function(d,i){
-            if (legend=='hori') {
+            if (legAlign=='hori') {
                 var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
                 if (i>0) {
                     var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+yOffset; 
@@ -353,7 +328,6 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             else {
                 return "translate(0,"+((i*yOffset))+")"};
     })
-
 
     }
     

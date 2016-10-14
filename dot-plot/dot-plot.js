@@ -1,12 +1,11 @@
 
 function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, xAxisHighlight, numTicksx, size){
-    console.log(data)
+    //console.log(data)
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
     // return the series names from the first row of the spreadsheet
     var seriesNames = Object.keys(data[0]);
-    console.log("seriesNames",seriesNames)
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
     var plot=d3.select("#"+media+"plot")
@@ -29,10 +28,9 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         .key(function(d) { return d.group; })
         .entries(data);
 
-    console.log(plotData)
+
     xMin=Math.min(xMin,d3.min(plotData, function(d) { return d3.min(d.values, function(d) { return d.value; })})); 
     xMax=Math.max(xMax,d3.max(plotData, function(d) { return d3.max(d.values, function(d) { return d.value; })})); 
-    //console.log(xMin,xMax)
 
     var xScale = d3.scale.linear()
         .range([0, plotWidth])
@@ -58,28 +56,44 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         .rangeBands([plotHeight+margin.top, margin.top])
         .domain(plotData.map(function(d) { return d.key; }));;
     
-    console.log(yScale.domain())
-
+    console.log(plotData)
     var category = plot.selectAll("."+media+"category")
         .data(plotData)
         .enter()
         .append("g")
+        .attr("id",function(d) {return d.key})
         .attr("transform", function (d) {return "translate(0," + yScale(d.key) + ")"; })
         .attr("class", media+"category")
+
         .call(function(parent){
+            console.log(parent)
+            parent.append('text')
+                .attr("class", media+"Subtitle")
+                .attr("x",margin.left)
+                .attr("y",0)
+                .text(function(d){return d.key})
+        })
 
-        parent.append('text')
-            .attr("class", media+"Subtitle")
-            .attr("x",margin.left)
-            .attr("y",0)
-            .text(function(d){return d.key})
-
-        parent.selectAll('circles')
-        .data(function(d) {return d.values})
+    category.selectAll('circles')
+        .data(function(d) {
+                // console.log("d.values",d.values)
+                let textFiltered=d.values.filter(function(d){
+                    return d.highlight=="yes"
+                })
+                console.log(textFiltered.length)
+                //console.log("textFiltered",textFiltered)
+                return textFiltered
+        })
         .enter()
         .append('circle')
-        .attr("class",media+"fill")
-        .attr("id",function(d){return d.name +" "+d.value+ " "+d.size})
+        .attr("class",function(d,i){
+            if(d.highlight=="yes"){
+                return media+"highlight"
+            }
+            else {return media+"fill"}
+        })
+        .attr("id",function(d){
+            return d.name +" "+d.value+ " "+d.size})
         .attr("cx",function(d){return xScale(d.value)})
         .attr("cy",yScale.rangeBand()*.4)
         .attr("r", function(d) {
@@ -88,8 +102,35 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         })
         .attr("transform", function (d) {return "translate("+(margin.left)+","+(0)+")"})
         .style("fill",colours[0])
+        .on("mouseover",pointer)
 
-        })
+    category.selectAll("text")
+            .data(function(d) {
+                // console.log("d.values",d.values)
+                let textFiltered=d.values.filter(function(d){
+                    return d.highlight=="yes"
+                })
+                console.log("textFiltered",textFiltered)
+                console.log(textFiltered.length)
+                return textFiltered
+            })
+            .enter()
+            .append("text")
+            .attr('id',function(d){
+                        return (media+d.name).replace(/\s/g, '');
+                    })
+            .attr("x",function(d){
+                return xScale(d.value);
+            })
+            .attr("y",function(d){
+                return yScale.rangeBand()*.4;
+            })
+            .attr("class",media+"subtitle")
+            .text(function(d){
+                return d.name+' '+d.size
+
+            })
+            .on("mouseover",pointer)
 
     //Add labels so that the preflight script in illustrator will work
     d3.selectAll(".printxAxis text")
@@ -104,6 +145,17 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
     .attr("id","minorTick")
 
     d3.selectAll(".domain").remove()
+
+    d3.selection.prototype.moveToFront = function() { 
+                return this.each(function() { 
+                this.parentNode.appendChild(this); 
+                }); 
+    };
+
+
+    function pointer() {
+        this.style.cursor='pointer'
+    }
 
 
 

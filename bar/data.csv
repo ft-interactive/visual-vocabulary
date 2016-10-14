@@ -1,7 +1,1 @@
-cat,value,group
-Lambeth,39.9,normal
-Oxford,41.5,normal
-Islington,42.1,normal
-Cambridge,45.7,normal
-City of Edinburgh,47.5,normal
-City of London,48.2,normal
+cat,value,groupLambeth,39.9,normalOxford,41.5,normalIslington,42.1,normalCambridge,45.7,normalEdinburgh,47.5,normalCity of London,48.2,normal
