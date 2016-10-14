@@ -61,6 +61,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         .data(plotData)
         .enter()
         .append("g")
+        .attr("d",media+function(d){returnd.key})
         .attr("transform", function (d) {return "translate(0," + yScale(d.key) + ")"; })
         .attr("class", media+"category")
         .call(function(parent){
@@ -92,12 +93,44 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         })
         .attr("transform", function (d) {return "translate("+(margin.left)+","+(0)+")"})
         .attr("fill", function(d) {
-            if(d.highlight=="yes"){
+            if(d.highlight){
                 return colours[4]
             }
             else{return colours[0]}
         })
         .on("mouseover",pointer)
+        .on("click",function(d){
+            var elClass = d3.select(this)
+            if (elClass.attr("class")==media+"fill") {
+                elClass.moveToFront()
+                d3.select(this).attr("class",media+"highlight")
+                .attr("fill",colours[4])
+                var group=d3.select(this.parentNode)
+                group.append("text")
+                    .datum(d)
+                    .attr('id',function(d){
+                        return (media+d.name).replace(/\s/g, '');
+                    })
+                    .attr("x",function(d){
+                    return xScale(d.value)+(margin.left);
+                    })
+                    .attr("y",function(d){
+                    return yScale.rangeBand()*.4;
+                    })
+                    .text(function(d){
+                        return d.name+' '+d.size
+                    })
+                    .attr("class",media+"circLabel")
+                    .on("mouseover",pointer)
+            }
+            else{var el=d3.select(this)
+                el.attr("class",media+"fill")
+                .attr("fill",colours[0])
+                var textEl=d3.select(("#"+media+d.name).replace(/\s/g, ''))
+                textEl.remove()
+            }
+        })
+
 
         parent.selectAll('.'+media+"circLabel")
         .data(function(d){
@@ -120,6 +153,12 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         .attr("class",media+"circLabel")
 
     })
+
+    d3.selection.prototype.moveToFront = function() { 
+                return this.each(function() { 
+                this.parentNode.appendChild(this); 
+                }); 
+    };
 
     function pointer() {
         this.style.cursor='pointer'
