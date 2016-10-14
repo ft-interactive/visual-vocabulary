@@ -1,5 +1,5 @@
 
-function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax,xMin,yMax,numTicksx,numTicksx){
+function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax,xMin,yMax,numTicksx,numTicksx, yAxisHighlight){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -58,7 +58,13 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax
     yLabel
         .attr("transform",function(){
                 return "translate("+(w-margin.right)+","+margin.top+")"
-            })
+            });
+
+    //identify 0 line if there is one
+    var originValue = 0;
+    var origin = plot.selectAll(".tick").filter(function(d, i) {
+            return d==originValue || d==yAxisHighlight;
+        }).classed(media+"origin",true);
 
 
 

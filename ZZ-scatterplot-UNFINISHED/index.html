@@ -23,12 +23,12 @@
         var source = "Thomson Reuters Datastream";
 
         //put custom graph options here
-        var yMin=2//Minimum value for the y-axis
-        var yMax=15//Maximum value for the y-axis
+        var yMin=0//Minimum value for the y-axis
+        var yMax=60//Maximum value for the y-axis
         var xMin=-10//Minimum value for the x-axis
         var xMax=50//Maximum value for the x-axis
-        var yAxisHighlight=2;
-        var numTicksy = 10;//rough number of ticks for y axis
+        var yAxisHighlight=5;
+        var numTicksy = 6;//rough number of ticks for y axis
         var numTicksx = 5;//rough number of ticks for x axis
         var axisLabel=true;//True or false to label the axis or not
         var xLabel="x-label"//The label that is placed on the x Axix
@@ -45,7 +45,7 @@
         
         //sets the padding inside the chart area
         var chartpadding=[
-        {name:"print",margin:[{top:0, right:0, bottom:15, left:10}]},
+        {name:"print",margin:[{top:0, right:0, bottom:15, left:0}]},
         {name:"web",margin:[{top:20, right:10, bottom:20, left:10}]},
         {name:"social",margin:[{top:00, right:25, bottom:62, left:12}]},
         {name:"video",margin:[{top:55, right:35,bottom:68, left:42}]}
@@ -82,7 +82,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                scatterplot(data, stylename, media, chartpadding,legend, yLabel,yMin,yMax,xMin,xMax,numTicksx,numTicksx);
+                scatterplot(data, stylename, media, chartpadding,legend, yLabel,yMin,yMax,xMin,xMax,numTicksx,numTicksx,yAxisHighlight);
             }
         })//end data load
 
