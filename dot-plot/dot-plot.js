@@ -92,7 +92,12 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
             else {return yOffset/2}
         })
         .attr("transform", function (d) {return "translate("+(margin.left)+","+(0)+")"})
-        .style("fill",colours[0])
+        .attr("fill", function(d) {
+            if(d.highlight=="yes"){
+                return colours[4]
+            }
+            else{return colours[0]}
+        })
 
         // parent.selectAll('text')
         // .data(function(d){
