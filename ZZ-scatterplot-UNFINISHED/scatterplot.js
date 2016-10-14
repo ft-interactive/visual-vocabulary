@@ -1,5 +1,5 @@
 
-function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign){
+function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax,xMin,yMax,numTicksx,numTicksx){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -28,16 +28,49 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign){
     var xDomain = d3.extent(data, function(d) {return +d.x;});
     var yDomain = d3.extent(data, function(d) {return +d.y;});
 
-    xDomain[0]=Math.min(xMin,xDomain[0])
-    xDomain[1]=Math.max(xMax,xDomain[1])
-    yDomain[0]=Math.min(xMin,yDomain[0])
-    yDomain[1]=Math.max(xMax,yDomain[1])
+    xDomain[0]=Math.min(xMin,xDomain[0]);
+    xDomain[1]=Math.max(xMax,xDomain[1]);
+    yDomain[0]=Math.min(yMin,yDomain[0]);
+    yDomain[1]=Math.max(yMax,yDomain[1]);
 
     var plotData = d3.nest()
-        .key(function(d) { return d.cat; })
+        .key(function(d) { return d.cat;})
         .entries(data);
 
-    console.log(plotData)
-    
+    var yScale=d3.scale.linear()
+        .domain(yDomain)
+        .range([plotHeight,0])
+
+    var yAxis = d3.svg.axis()
+        .scale(yScale)
+        .ticks(numTicksy)
+        .orient("left")
+
+    var yLabel=plot.append("g")
+    .attr("class",media+"yAxis")
+    .call(yAxis);
+
+    //calculate what the ticksize should be now that the text for the labels has been drawn
+    var yLabelOffset=yLabel.node().getBBox().width;
+    var yticksize=colculateTicksize(yAlign, yLabelOffset);
+
+    yLabel.call(yAxis.tickSize(yticksize))
+    yLabel
+        .attr("transform",function(){
+                return "translate("+(w-margin.right)+","+margin.top+")"
+            })
+
+
+
+
+
+
+
+    function colculateTicksize(align, offset) {
+        if (align=="right") {
+            return w-margin.left-offset
+        }
+        else {return w-margin.right-offset}
+    }
 
 }
