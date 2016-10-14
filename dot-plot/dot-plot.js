@@ -56,10 +56,12 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         .rangeBands([plotHeight+margin.top, margin.top])
         .domain(plotData.map(function(d) { return d.key; }));;
     
+    console.log(plotData)
     var category = plot.selectAll("."+media+"category")
         .data(plotData)
         .enter()
         .append("g")
+        .attr("id",function(d) {return d.key})
         .attr("transform", function (d) {return "translate(0," + yScale(d.key) + ")"; })
         .attr("class", media+"category")
 
@@ -70,20 +72,46 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
                 .attr("x",margin.left)
                 .attr("y",0)
                 .text(function(d){return d.key})
-
-            addText(parent)
-            //addCircles(parent);
-
         })
 
-    function addText(parent) {
-        parent.selectAll("text")
+    category.selectAll('circles')
+        .data(function(d) {
+                // console.log("d.values",d.values)
+                let textFiltered=d.values.filter(function(d){
+                    return d.highlight=="yes"
+                })
+                console.log(textFiltered.length)
+                //console.log("textFiltered",textFiltered)
+                return textFiltered
+        })
+        .enter()
+        .append('circle')
+        .attr("class",function(d,i){
+            if(d.highlight=="yes"){
+                return media+"highlight"
+            }
+            else {return media+"fill"}
+        })
+        .attr("id",function(d){
+            return d.name +" "+d.value+ " "+d.size})
+        .attr("cx",function(d){return xScale(d.value)})
+        .attr("cy",yScale.rangeBand()*.4)
+        .attr("r", function(d) {
+            if (size) {return d.size*(yScale.rangeBand()*.003   )}
+            else {return yOffset/2}
+        })
+        .attr("transform", function (d) {return "translate("+(margin.left)+","+(0)+")"})
+        .style("fill",colours[0])
+        .on("mouseover",pointer)
+
+    category.selectAll("text")
             .data(function(d) {
                 // console.log("d.values",d.values)
                 let textFiltered=d.values.filter(function(d){
                     return d.highlight=="yes"
                 })
                 console.log("textFiltered",textFiltered)
+                console.log(textFiltered.length)
                 return textFiltered
             })
             .enter()
@@ -103,42 +131,6 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
 
             })
             .on("mouseover",pointer)
-
-
-    };
-
-    function addCircles(parent){
-        console.log(parent)
-        parent.selectAll('circles')
-        .data(function(d) {
-                // console.log("d.values",d.values)
-                let filtered=d.values.filter(function(d){
-                    return d.highlight=="yes"
-                })
-                console.log("filtered",filtered)
-                return filtered
-            })
-        .enter()
-        .append('circle')
-        .attr("class",function(d,i){
-            if(d.highlight=="yes"){
-                return media+"highlight"
-            }
-            else {return media+"fill"}
-        })
-        .attr("id",function(d){
-            console.log(d.name);
-            return d.name +" "+d.value+ " "+d.size})
-        .attr("cx",function(d){return xScale(d.value)})
-        .attr("cy",yScale.rangeBand()*.4)
-        .attr("r", function(d) {
-            if (size) {return d.size*(yScale.rangeBand()*.003   )}
-            else {return yOffset/2}
-        })
-        .attr("transform", function (d) {return "translate("+(margin.left)+","+(0)+")"})
-        .style("fill",colours[0])
-        .on("mouseover",pointer)
-    }
 
     //Add labels so that the preflight script in illustrator will work
     d3.selectAll(".printxAxis text")
