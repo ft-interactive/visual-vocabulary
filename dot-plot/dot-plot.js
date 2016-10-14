@@ -28,7 +28,6 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         .key(function(d) { return d.group; })
         .entries(data);
 
-    console.log(plotData)
     xMin=Math.min(xMin,d3.min(plotData, function(d) { return d3.min(d.values, function(d) { return d.value; })})); 
     xMax=Math.max(xMax,d3.max(plotData, function(d) { return d3.max(d.values, function(d) { return d.value; })})); 
     //console.log(xMin,xMax)
@@ -98,30 +97,33 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
             }
             else{return colours[0]}
         })
+        .on("mouseover",pointer)
 
         parent.selectAll('.'+media+"circLabel")
         .data(function(d){
-            console.log("object= ",d)
             let filtered=d.values.filter(function(d){
                 return d.highlight=="yes"
             })
-            console.log("text filtered ", filtered)
             return filtered
         })
         .enter()
         .append('text')
         .attr("x",function(d){
-                    return xScale(d.value)+(margin.left);
-                    })
-                    .attr("y",function(d){
-                    return yScale.rangeBand()*.4;
-                    })
-                    .text(function(d){
-                        return d.name+' '+d.size
-                    })
-                    .attr("class",media+"circLabel")
+            return xScale(d.value)+(margin.left);
+        })
+        .attr("y",function(d){
+            return yScale.rangeBand()*.4;
+        })
+        .text(function(d){
+            return d.name+' '+d.size
+        })
+        .attr("class",media+"circLabel")
 
     })
+
+    function pointer() {
+        this.style.cursor='pointer'
+    }
 
 
 
