@@ -24,10 +24,15 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign){
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
     
-    // console.log(plotWidth,colours,plotHeight,data)
-    // console.log(margin)
-    //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
+    //calculate range of time series 
+    var xDomain = d3.extent(data, function(d) {return +d.x;});
+    var yDomain = d3.extent(data, function(d) {return +d.y;});
 
+    var plotData = d3.nest()
+        .key(function(d) { return d.cat; })
+        .entries(data);
+
+    console.log(plotData)
     
 
 }
