@@ -29,7 +29,6 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax
         .entries(data)
         .map(function(d){return d.key});
 
-    console.log(categories)
     
     //calculate range of time series 
     var xDomain = d3.extent(data, function(d) {return +d.x;});
@@ -42,7 +41,8 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax
 
     var plotData = d3.nest()
         .key(function(d) { return d.cat;})
-        .entries(data);
+        .sortValues(function(a,b) { return a.x - b.x})
+        .entries(data)
 
     var yScale=d3.scale.linear()
         .domain(yDomain)
@@ -104,7 +104,6 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax
             .attr("y", margin.top-yOffset/2)
             .text(yaxisLabel);
         }
-    console.log(plotData)
 
     var category = plot.selectAll("."+media+"category")
         .data(plotData)
@@ -132,12 +131,68 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax
     }
 
 
+    //Legend
+    if (categories[0]!="") {
+        var legendyOffset=0
+        var legend = plot.append("g")
+            .attr("id",media+"legend")
+            .on("mouseover",pointer)
+            .selectAll("g")
+            .data(categories)
+            .enter()
+            .append("g")
+            .attr ("id",function(d,i){
+                return media+"l"+i
+            })
+
+        var drag = d3.behavior.drag().on("drag", moveLegend);
+        d3.select("#"+media+"legend").call(drag);
+            
+        legend.append("text")
+            .attr("id",function(d,i){
+                return media+"t"+i
+            })
+            .attr("x",yOffset/2-yOffset/5+5)
+            .attr("y",yOffset/5)
+            .attr("class",media+"subtitle")
+            .text(function(d){
+                return d;
+            })
+
+        legend.append("circle")
+            .attr("cx",0)
+            .attr("cy",0)
+            .attr("r",yOffset/2-yOffset/5)
+            .style("fill", function(d,i){return colours[i]})
+
+        legend.attr("transform",function(d,i){
+            if (legAlign=='hori') {
+                var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
+                if (i>0) {
+                    var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
+                }
+                else {gWidth=0};
+                legendyOffset=legendyOffset+gWidth;
+                return "translate("+(legendyOffset)+","+(gHeigt)+")";  
+            }
+            else {
+                var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
+                return "translate(0,"+((i*yOffset+margin.top)+yOffset/2)+")"};
+        })
+
+    }
 
 
+    function pointer() {
+        this.style.cursor='pointer'
+    }
 
-
-
-
+    function moveLegend() {
+        console.log(this.getBBox().width)
+        var dX = d3.event.x-(this.getBBox().width/2);// subtract cx
+        var dY = d3.event.y-(this.getBBox().height);// subtract cy
+        d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");
+    }
 
     function colculateTicksize(align, offset) {
         if (align=="right") {
