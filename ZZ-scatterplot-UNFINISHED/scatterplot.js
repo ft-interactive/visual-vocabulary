@@ -22,6 +22,14 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax
     var colours=stylename.linecolours;
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
+
+    //determine categories
+    var categories = d3.nest()
+        .key(function(d){return d.cat})
+        .entries(data)
+        .map(function(d){return d.key});
+
+    console.log(categories)
     
     //calculate range of time series 
     var xDomain = d3.extent(data, function(d) {return +d.x;});
@@ -103,7 +111,7 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax
         .enter()
         .append("g")
         .attr("id", media+(function(d) {return d.key}))
-        .attr("transform", function(d) {return "translate("+margin.left+",0)"; })
+        .attr("transform", function(d) {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"; })
         .attr("class", media+"category")
         .call(addDots)
 
@@ -115,13 +123,11 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax
         })
         .enter()
         .append('circle')
-        .attr("cx",function(d){return xScale(d.x)+margin.left})
+        .attr("cx",function(d){return xScale(d.x)})
         .attr("cy",function(d){return yScale(d.y)})
         .attr("r",yOffset/4)
-        .attr("transform", function (d) {return "translate("+(margin.left)+","+(0)+")"})
-
-        .attr("fill","#000000")
-
+        .attr("fill",function(d) {
+            return colours[categories.indexOf(d.cat)]})
 
     }
 
