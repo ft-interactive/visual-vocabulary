@@ -139,8 +139,8 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax
         .attr("id", media+(function(d) {return d.key}))
         .attr("transform", function(d) {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"; })
         .attr("class", media+"category")
-        .call(addDots)
         .call(addLines)
+        .call(addDots)
 
     function addDots(parent) {
         //console.log(parent)
