@@ -60,7 +60,7 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax
         }
     })
 
-    console.log(plotData)
+    //console.log(plotData)
 
     var yScale=d3.scale.linear()
         .domain(yDomain)
@@ -160,21 +160,19 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax
 
     function addLines(parent) {
         var line=parent.append("g")
-        .attr("id","line")
-        // .attr("transform",function(){
-        //         return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"})
         line.selectAll("."+media+"line")
         .data(function(d) {
-            let Test=[d.lineValues]
-            return Test
+            let values=[d.lineValues]
+            return values
         })
         .enter()
         .call(function(parent){
             parent.append("path")
             .attr("class",media+"lines")
-            .style("stroke", colours[0])
+            .style("stroke", function(d,i){
+                return colours[categories.indexOf(d[i].cat)]
+            })
             .attr('d', function(d,i){
-                //console.log(d)
                 return getLine(d); })
 
         })
