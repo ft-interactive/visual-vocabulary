@@ -172,8 +172,10 @@ function columnChart(data, stylename, media,yMin,yMax, yMin1,yMax1, chartpadding
                 .attr("y", function(d) { return yScaleL(Math.max(0, d.value))})
                 .attr("height", function(d) {return (Math.abs(yScaleL(d.value) - yScaleL(0))); })
     })
+
     var lines= []
     lines.push(lineData)
+    console.log (lineData)
 
 
     var getLine = d3.svg.line()

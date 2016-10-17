@@ -1,10 +1,10 @@
 
-function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax,xMin,yMax,numTicksx,numTicksx, yAxisHighlight,axisLabel,xaxisLabel,yaxisLabel){
+function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax,xMin,yMax,numTicksx,numTicksx, yAxisHighlight,axisLabel,xaxisLabel,yaxisLabel,lineSmoothing){
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
     // return the series names from the first row of the spreadsheet
-    var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
+    var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'name'; });
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
     var plot=d3.select("#"+media+"plot")
@@ -43,6 +43,24 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax
         .key(function(d) { return d.cat;})
         .sortValues(function(a,b) { return a.x - b.x})
         .entries(data)
+
+    var lineData=plotData.map(function(d){
+            let seriesKey=d.key
+            let filtered=d.values.filter(function(d){
+                return d.cat==seriesKey
+            })
+            return filtered
+        })
+
+    plotData=plotData.map(function(d,i){
+        return{
+            key:d.key,
+            values:d.values,
+            lineValues:lineData[i]
+        }
+    })
+
+    console.log(plotData)
 
     var yScale=d3.scale.linear()
         .domain(yDomain)
@@ -105,6 +123,15 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax
             .text(yaxisLabel);
         }
 
+    var getLine = d3.svg.line()
+        .x(function(d,i) { 
+            return xScale(+d.x); 
+        })
+        .y(function(d) { 
+            return yScale(+d.y); 
+        })
+        .interpolate(lineSmoothing)
+
     var category = plot.selectAll("."+media+"category")
         .data(plotData)
         .enter()
@@ -113,6 +140,7 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax
         .attr("transform", function(d) {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"; })
         .attr("class", media+"category")
         .call(addDots)
+        .call(addLines)
 
     function addDots(parent) {
         //console.log(parent)
@@ -127,6 +155,30 @@ function scatterplot(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax
         .attr("r",yOffset/4)
         .attr("fill",function(d) {
             return colours[categories.indexOf(d.cat)]})
+
+    }
+
+    function addLines(parent) {
+        var line=parent.append("g")
+        .attr("id","line")
+        // .attr("transform",function(){
+        //         return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"})
+        line.selectAll("."+media+"line")
+        .data(function(d) {
+            let Test=[d.lineValues]
+            return Test
+        })
+        .enter()
+        .call(function(parent){
+            parent.append("path")
+            .attr("class",media+"lines")
+            .style("stroke", colours[0])
+            .attr('d', function(d,i){
+                //console.log(d)
+                return getLine(d); })
+
+        })
+
 
     }
 
