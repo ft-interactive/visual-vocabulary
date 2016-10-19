@@ -11,6 +11,7 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
 
     var yOffset=d3.select("#"+media+"Subtitle").style("font-size");
     yOffset=Number(yOffset.replace(/[^\d.-]/g, ''));
+
     
     //Get the width,height and the marginins unique to this chart
     var w=plot.node().getBBox().width;
@@ -82,7 +83,11 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
 
     console.log("plotdata",plotData)
 
-    let rowHeight=plotHeight/(allRows.length)-(yOffset/2)
+    var yScale = d3.scale.ordinal()
+        .rangeBands([plotHeight+margin.top, margin.top,yOffset])
+        .domain(plotData.map(function(d) { return d.rowName; }));
+
+    let rowHeight=plotHeight/allRows.length-(allRows.length*yOffset)
     let rowLabelOffset=d3.select("#"+media+"Subtitle").style("font-size");
     rowLabelOffset=Number(rowLabelOffset.replace(/[^\d.-]/g, ''));
 
@@ -91,48 +96,38 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
         .enter()
         .append('g')
             .attr("transform", function(d) {return "translate("+(margin.left)+","+(margin.top)+")"; })
-        .call(addRows)
-        //.call(addRowText)
-        // .call(addColumns)
+        
+    plotRows.append('rect')
+        .attr("class",media+"rows")
+        .attr("fill",colours[0])
+        .attr("width",plotWidth)
+        .attr("height",rowHeight)
+        .attr("y",function (d) {return yScale(d.rowName)})
+    plotRows.append('text')
+        .attr("class",media+"labels")
+        .attr("width",rowHeight)
+        .attr("transform", function(d,i){
+            let yAdjust=yScale(d.rowName)+(rowHeight/2)
+            return "translate("+(rowLabelOffset)+","+(yAdjust)+") rotate(-90)";
+        })
+        .text(function(d){return d.rowName})
+
 
     function addColumns(parent) {
-        let cellWidth=plotWidth/allColumns.length-(rowLabelOffset*allColumns.length);
-        let cellHeight=rowHeight-rowLabelOffset
-        parent.append('rect')
-        .attr("x",function(d,i){return (cellWidth*i)+rowLabelOffset })
-        .attr("width",cellWidth)
-        .attr("height",cellHeight)
-
-
-    }
- 
-    function addRows(parent) {
-        parent.selectAll('rect')
-        .data(plotData)
+        let cellWidth=(((plotWidth-rowLabelOffset)-(rowLabelOffset*allColumns.length-1))/allColumns.length)
+        let cellHeight=rowHeight
+        parent.selectAll("."+media+"columns")
+        .data(function(d){
+            console.log(d.columns)
+            return d.columns})
         .enter()
         .append('rect')
-            .attr("class",media+"rows")
-            .attr("fill",colours[0])
-            .attr("width",plotWidth)
-            .attr("height",rowHeight)
-            .attr("y",function(d,i){
-                console.log(i)
-                return (rowHeight+(yOffset/2))*i})
+        .attr("class",media+"columns")
+        .attr("x",function(d,i){return ((cellWidth+rowLabelOffset)*i)+rowLabelOffset })
+        .attr("y",function(d){return yScale(d.rowName)})
+        .attr("width",cellWidth)
+        .attr("height",cellHeight)
     }
-
-    function addRowText(parent) {
-        parent.append('text')
-            .attr("class",media+"labels")
-            .attr("width",rowHeight)
-            // .attr("x",rowLabelOffset)
-            // .attr("y",function(d,i){return rowHeight*i+(rowHeight/2) })
-            .attr("transform", function(d,i){
-                return "translate("+(rowLabelOffset)+","+(rowHeight*i+(rowHeight/2))+") rotate(-90)";
-            })
-            .text(function(d){return d.rowName})
-    }
-        
-
 
     function pointer() {
         this.style.cursor='pointer'
