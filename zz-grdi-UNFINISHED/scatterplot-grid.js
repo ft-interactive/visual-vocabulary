@@ -82,6 +82,40 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
 
     console.log("plotdata",plotData)
 
+    let rowHeight=plotHeight/(allRows.length)-allRows.length
+    let labelOffset=d3.select("#"+media+"Subtitle").style("font-size");
+    labelOffset=Number(labelOffset.replace(/[^\d.-]/g, ''));
+
+    var plotRows=plot.selectAll("."+media+"rows")
+        .data(plotData)
+        .enter()
+        .append('g')
+                .attr("transform", function(d) {return "translate("+(margin.left)+","+(margin.top)+")"; })
+        .append('rect')
+            .attr("class",media+"rows")
+            .attr("fill",colours[0])
+            .attr("width",plotWidth)
+            .attr("height",rowHeight)
+            .attr("y",function(d,i){return (rowHeight+allRows.length)*i})
+        // .append('text')
+        //     .attr("class",media+"labels")
+        //     .attr("width",rowHeight)
+        //     .attr("x",50)
+        //     .attr("y",function(d,i){return rowHeight*i })
+        //     .text(function(d){return d.rowName})
+            //
+
+    
+
+    function AddColumns(parent) {
+        console.log(AddColumns)
+    }
+    // plotRows.append('rect')
+    //         .attr("width",plotWidth)
+    //         .attr("height",rowHeight)
+    //         .attr("fill",colours[0])
+
+
             
     
 
