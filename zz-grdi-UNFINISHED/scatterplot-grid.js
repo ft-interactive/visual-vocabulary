@@ -92,15 +92,32 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
         .append('g')
             .attr("transform", function(d) {return "translate("+(margin.left)+","+(margin.top)+")"; })
         .call(addRows)
-        .call(addRowText)
+        //.call(addRowText)
+        // .call(addColumns)
+
+    function addColumns(parent) {
+        let cellWidth=plotWidth/allColumns.length-(rowLabelOffset*allColumns.length);
+        let cellHeight=rowHeight-rowLabelOffset
+        parent.append('rect')
+        .attr("x",function(d,i){return (cellWidth*i)+rowLabelOffset })
+        .attr("width",cellWidth)
+        .attr("height",cellHeight)
+
+
+    }
  
     function addRows(parent) {
-        parent.append('rect')
+        parent.selectAll('rect')
+        .data(plotData)
+        .enter()
+        .append('rect')
             .attr("class",media+"rows")
             .attr("fill",colours[0])
             .attr("width",plotWidth)
             .attr("height",rowHeight)
-            .attr("y",function(d,i){return (rowHeight+(yOffset/2))*i})
+            .attr("y",function(d,i){
+                console.log(i)
+                return (rowHeight+(yOffset/2))*i})
     }
 
     function addRowText(parent) {
