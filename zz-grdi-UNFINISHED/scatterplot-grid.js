@@ -82,43 +82,38 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
 
     console.log("plotdata",plotData)
 
-    let rowHeight=plotHeight/(allRows.length)-allRows.length
-    let labelOffset=d3.select("#"+media+"Subtitle").style("font-size");
-    labelOffset=Number(labelOffset.replace(/[^\d.-]/g, ''));
+    let rowHeight=plotHeight/(allRows.length)-(yOffset/2)
+    let rowLabelOffset=d3.select("#"+media+"Subtitle").style("font-size");
+    rowLabelOffset=Number(rowLabelOffset.replace(/[^\d.-]/g, ''));
 
     var plotRows=plot.selectAll("."+media+"rows")
         .data(plotData)
         .enter()
         .append('g')
-                .attr("transform", function(d) {return "translate("+(margin.left)+","+(margin.top)+")"; })
-        .append('rect')
+            .attr("transform", function(d) {return "translate("+(margin.left)+","+(margin.top)+")"; })
+        .call(addRows)
+        .call(addRowText)
+ 
+    function addRows(parent) {
+        parent.append('rect')
             .attr("class",media+"rows")
             .attr("fill",colours[0])
             .attr("width",plotWidth)
             .attr("height",rowHeight)
-            .attr("y",function(d,i){return (rowHeight+allRows.length)*i})
-        // .append('text')
-        //     .attr("class",media+"labels")
-        //     .attr("width",rowHeight)
-        //     .attr("x",50)
-        //     .attr("y",function(d,i){return rowHeight*i })
-        //     .text(function(d){return d.rowName})
-            //
-
-    
-
-    function AddColumns(parent) {
-        console.log(AddColumns)
+            .attr("y",function(d,i){return (rowHeight+(yOffset/2))*i})
     }
-    // plotRows.append('rect')
-    //         .attr("width",plotWidth)
-    //         .attr("height",rowHeight)
-    //         .attr("fill",colours[0])
 
-
-            
-    
-
+    function addRowText(parent) {
+        parent.append('text')
+            .attr("class",media+"labels")
+            .attr("width",rowHeight)
+            // .attr("x",rowLabelOffset)
+            // .attr("y",function(d,i){return rowHeight*i+(rowHeight/2) })
+            .attr("transform", function(d,i){
+                return "translate("+(rowLabelOffset)+","+(rowHeight*i+(rowHeight/2))+") rotate(-90)";
+            })
+            .text(function(d){return d.rowName})
+    }
         
 
 
