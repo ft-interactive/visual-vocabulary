@@ -31,8 +31,8 @@
         var numTicksy = 6;//rough number of ticks for y axis
         var numTicksx = 5;//rough number of ticks for x axis
         var axisLabel=true;//True or false to label the axis or not
-        var xPlot="x-label"//The label that is placed on the x Axix
-        var yPlot="y-label"//The label that is placed on the y Axix
+        var xPlot="hp"//The label that is placed on the x Axix
+        var yPlot="mpg"//The label that is placed on the y Axix
         var row="am"
         var column="cyl"
 
@@ -84,7 +84,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                scatterplotGrid(data, stylename, media, chartpadding,legend, yLabel,yMin,yMax,xMin,xMax,numTicksx,numTicksx,yAxisHighlight,axisLabel,row,column,yPlot,xPlot);
+                scatterplotGrid(data, stylename, media, chartpadding,legend, yLabel,yMin,yMax,xMin,xMax,numTicksx,numTicksx,yAxisHighlight,axisLabel,row,column,xPlot,yPlot);
             }
         })//end data load
 

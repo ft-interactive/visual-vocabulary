@@ -1,5 +1,5 @@
 
-function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax,xMin,yMax,numTicksx,numTicksx, yAxisHighlight,axisLabel, row, column,yPlot,xPlot){
+function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax,xMin,yMax,numTicksx,numTicksx, yAxisHighlight,axisLabel, row, column,xPlot,yPlot){
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
@@ -26,13 +26,17 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
 
     
     //calculate range of time series 
-    var xDomain = d3.extent(data, function(d) {return d.x;});
-    var yDomain = d3.extent(data, function(d) {return d.y;});
+    var xDomain = d3.extent(data, function(d) {return +d[xPlot];});
+    var yDomain = d3.extent(data, function(d) {return +d[yPlot];});
+
+    console.log(xDomain,yDomain)
 
     xDomain[0]=Math.min(xMin,xDomain[0]);
     xDomain[1]=Math.max(xMax,xDomain[1]);
     yDomain[0]=Math.min(yMin,yDomain[0]);
     yDomain[1]=Math.max(yMax,yDomain[1]);
+
+
 
     let allRows=d3.nest()
         .key(function(d){return d[row]})
@@ -125,32 +129,12 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
         .text(function(d){
             return d})
 
-    //plotRows.call(addCells)
-    // plotRows.call(plotCharts)
+    
 
 
-    // function addCells(parent) {
-    //     let cellWidth=(xScalePos.rangeBand()*.95)
-    //     let cellHeight=rowHeight
-    //     parent.selectAll("."+media+"cells")
-    //     .data(function(d){
-    //         console.log( d.columns)
-    //         return d.columns})
-    //     .enter()
-    //     .append('svg')
-    //     .attr("id",function(d){return d.targetCell})
-    //     .attr("fill","#ffffff")
-    //     .attr("class",media+"cells")
-    //     .attr("x",function(d,i){return (xScalePos(d.columnName))})
-    //     .attr("y",function(d,i){return(yScalePos(d.rowName))})
-    //     .attr("width",cellWidth)
-    //     .attr("height",cellHeight)
-    //     .attr("transform", function(d) {return "translate("+(margin.left+rowLabelOffset)+","+(margin.top)+")"; })
 
-    //     console.log(xDomain)
-    //     var xDomain = d3.extent(function(d) {return +d.column.values;});
-    //     console.log(xDomain)
-    // }
+
+
 
     function pointer() {
         this.style.cursor='pointer'
