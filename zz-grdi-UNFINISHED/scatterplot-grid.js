@@ -26,8 +26,8 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
 
     
     //calculate range of time series 
-    var xDomain = d3.extent(data, function(d) {return +d.x;});
-    var yDomain = d3.extent(data, function(d) {return +d.y;});
+    var xDomain = d3.extent(data, function(d) {return d.x;});
+    var yDomain = d3.extent(data, function(d) {return d.y;});
 
     xDomain[0]=Math.min(xMin,xDomain[0]);
     xDomain[1]=Math.max(xMax,xDomain[1]);
@@ -67,6 +67,7 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
             return{
                 targetCell:row+d,
                 columnName:d,
+                rowName:row,
                 values:getValues(d)
             }
         })
@@ -83,50 +84,77 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
 
     console.log("plotdata",plotData)
 
-    var yScale = d3.scale.ordinal()
-        .rangeBands([plotHeight+margin.top, margin.top,yOffset])
-        .domain(plotData.map(function(d) { return d.rowName; }));
-
-    let rowHeight=plotHeight/allRows.length-(allRows.length*yOffset)
     let rowLabelOffset=d3.select("#"+media+"Subtitle").style("font-size");
     rowLabelOffset=Number(rowLabelOffset.replace(/[^\d.-]/g, ''));
+
+    var yScalePos = d3.scale.ordinal()
+        .rangeBands([plotHeight+margin.top, margin.top+rowLabelOffset])
+        .domain(allRows);
+
+    let rowHeight=yScalePos.rangeBand()*.95
+
+    var xScalePos = d3.scale.ordinal()
+        .rangeBands([margin.left+rowLabelOffset, plotWidth-margin.right-rowLabelOffset])
+        .domain(allColumns);
+
+    console.log(xScalePos.domain(),yScalePos.domain())
 
     var plotRows=plot.selectAll("."+media+"rows")
         .data(plotData)
         .enter()
         .append('g')
-            .attr("transform", function(d) {return "translate("+(margin.left)+","+(margin.top)+")"; })
-        
+        .attr("transform", function(d) {return "translate("+(margin.left)+","+(margin.top)+")"; })
+
     plotRows.append('rect')
         .attr("class",media+"rows")
         .attr("fill",colours[0])
         .attr("width",plotWidth)
-        .attr("height",rowHeight)
-        .attr("y",function (d) {return yScale(d.rowName)})
+        .attr("height",yScalePos.rangeBand()*.95)
+        .attr("y",function (d) {return yScalePos(d.rowName)})
     plotRows.append('text')
         .attr("class",media+"labels")
         .attr("width",rowHeight)
         .attr("transform", function(d,i){
-            let yAdjust=yScale(d.rowName)+(rowHeight/2)
+            let yAdjust=yScalePos(d.rowName)+(rowHeight/2)
             return "translate("+(rowLabelOffset)+","+(yAdjust)+") rotate(-90)";
         })
         .text(function(d){return d.rowName})
 
+    var plotColumns=plot.selectAll("."+media+"columns")
+        .data(allColumns)
+        .enter()
+        .append('g')
+        .attr("transform", function(d) {return "translate("+(margin.left+rowLabelOffset)+","+(margin.top)+")"; })
 
-    function addColumns(parent) {
+    plotColumns.append('rect')
+        .attr("class",media+"columns")
+        .attr("fill",colours[0])
+        .attr("width",xScalePos.rangeBand()*.95)
+        .attr("height",plotHeight)
+        .attr("x",function (d,i) {
+            console.log(allColumns)
+            return xScalePos(allColumns[i])})
+
+    plotRows.call(addCells)
+
+
+    function addCells(parent) {
         let cellWidth=(((plotWidth-rowLabelOffset)-(rowLabelOffset*allColumns.length-1))/allColumns.length)
         let cellHeight=rowHeight
-        parent.selectAll("."+media+"columns")
+        parent.selectAll("."+media+"cells")
         .data(function(d){
-            console.log(d.columns)
+            console.log("d ",d.columns)
             return d.columns})
         .enter()
         .append('rect')
-        .attr("class",media+"columns")
-        .attr("x",function(d,i){return ((cellWidth+rowLabelOffset)*i)+rowLabelOffset })
-        .attr("y",function(d){return yScale(d.rowName)})
+        .attr("fill","#ffffff")
+        .attr("class",media+"cells")
+        .attr("x",function(d,i){return (xScalePos(d.columnName))})
+        .attr("y",function(d,i){return(yScalePos(d.rowName))})
         .attr("width",cellWidth)
         .attr("height",cellHeight)
+        .attr("transform", function(d) {return "translate("+(margin.left+rowLabelOffset)+","+(margin.top)+")"; })
+
     }
 
     function pointer() {
