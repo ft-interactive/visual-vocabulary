@@ -1,5 +1,5 @@
 
-function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax,xMin,yMax,numTicksx,numTicksx, yAxisHighlight,axisLabel,xaxisLabel,yaxisLabel, row, column){
+function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax,xMin,yMax,numTicksx,numTicksx, yAxisHighlight,axisLabel, row, column,yPlot,xPlot){
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
@@ -53,33 +53,17 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
             }
             else {return d.key}
         });
-    console.log(allRows,allColumns)
 
-    let plotData=allRows.map(function(d){
-        return {
-            rowName:d,
-            columns:getColumns(d)
-        }
-    })
+    let plotData=classify(data,row,column);
 
-    function getColumns(row) {
-        let columns=allColumns.map(function(d){
-            return{
-                targetCell:row+d,
-                columnName:d,
-                rowName:row,
-                values:getValues(d)
+    function classify(arr, key1, key2){
+        return arr.map(function(d){
+            return {
+                data:d,
+                row:d[key1],
+                column:d[key2]
             }
         })
-        return columns
-    }
-
-    function getValues(colCheck) {
-        let filtered=data.filter(function(d){
-            return d[column]==colCheck
-        })
-        return filtered
-
     }
 
     console.log("plotdata",plotData)
@@ -97,8 +81,6 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
         .rangeBands([margin.left+rowLabelOffset, plotWidth-margin.right-rowLabelOffset])
         .domain(allColumns);
 
-    console.log(xScalePos.domain(),yScalePos.domain())
-
     var plotColumns=plot.selectAll("."+media+"columns")
         .data(allColumns)
         .enter()
@@ -111,7 +93,6 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
         .attr("width",xScalePos.rangeBand()*.95)
         .attr("height",plotHeight)
         .attr("x",function (d,i) {
-            console.log(allColumns)
             return xScalePos(allColumns[i])})
     plotColumns.append('text')
         .attr("class",media+"labels")
@@ -122,10 +103,8 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
         .attr("transform", function(d) {return "translate("+(margin.left)+","+(margin.top)+")"; })
         .text(function(d,i){return allColumns[i]})
 
-
-
     var plotRows=plot.selectAll("."+media+"rows")
-        .data(plotData)
+        .data(allRows)
         .enter()
         .append('g')
         .attr("transform", function(d) {return "translate("+(margin.left)+","+(margin.top)+")"; })
@@ -135,37 +114,43 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
         .attr("fill",colours[0])
         .attr("width",plotWidth)
         .attr("height",yScalePos.rangeBand()*.95)
-        .attr("y",function (d) {return yScalePos(d.rowName)})
+        .attr("y",function (d,i) {return yScalePos(allRows[i])})
     plotRows.append('text')
         .attr("class",media+"labels")
         .attr("width",rowHeight)
         .attr("transform", function(d,i){
-            let yAdjust=yScalePos(d.rowName)+(rowHeight/2)
+            let yAdjust=(yScalePos(allRows[i]))+(rowHeight/2)
             return "translate("+(rowLabelOffset)+","+(yAdjust)+") rotate(-90)";
         })
-        .text(function(d){return d.rowName})
+        .text(function(d){
+            return d})
 
-    plotRows.call(addCells)
+    //plotRows.call(addCells)
+    // plotRows.call(plotCharts)
 
 
-    function addCells(parent) {
-        let cellWidth=(((plotWidth-rowLabelOffset)-(rowLabelOffset*allColumns.length-1))/allColumns.length)
-        let cellHeight=rowHeight
-        parent.selectAll("."+media+"cells")
-        .data(function(d){
-            console.log("d ",d.columns)
-            return d.columns})
-        .enter()
-        .append('rect')
-        .attr("fill","#ffffff")
-        .attr("class",media+"cells")
-        .attr("x",function(d,i){return (xScalePos(d.columnName))})
-        .attr("y",function(d,i){return(yScalePos(d.rowName))})
-        .attr("width",cellWidth)
-        .attr("height",cellHeight)
-        .attr("transform", function(d) {return "translate("+(margin.left+rowLabelOffset)+","+(margin.top)+")"; })
+    // function addCells(parent) {
+    //     let cellWidth=(xScalePos.rangeBand()*.95)
+    //     let cellHeight=rowHeight
+    //     parent.selectAll("."+media+"cells")
+    //     .data(function(d){
+    //         console.log( d.columns)
+    //         return d.columns})
+    //     .enter()
+    //     .append('svg')
+    //     .attr("id",function(d){return d.targetCell})
+    //     .attr("fill","#ffffff")
+    //     .attr("class",media+"cells")
+    //     .attr("x",function(d,i){return (xScalePos(d.columnName))})
+    //     .attr("y",function(d,i){return(yScalePos(d.rowName))})
+    //     .attr("width",cellWidth)
+    //     .attr("height",cellHeight)
+    //     .attr("transform", function(d) {return "translate("+(margin.left+rowLabelOffset)+","+(margin.top)+")"; })
 
-    }
+    //     console.log(xDomain)
+    //     var xDomain = d3.extent(function(d) {return +d.column.values;});
+    //     console.log(xDomain)
+    // }
 
     function pointer() {
         this.style.cursor='pointer'
