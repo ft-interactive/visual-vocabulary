@@ -99,6 +99,31 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
 
     console.log(xScalePos.domain(),yScalePos.domain())
 
+    var plotColumns=plot.selectAll("."+media+"columns")
+        .data(allColumns)
+        .enter()
+        .append('g')
+        .attr("transform", function(d) {return "translate("+(margin.left+rowLabelOffset)+","+(margin.top)+")"; })
+
+    plotColumns.append('rect')
+        .attr("class",media+"columns")
+        .attr("fill",colours[0])
+        .attr("width",xScalePos.rangeBand()*.95)
+        .attr("height",plotHeight)
+        .attr("x",function (d,i) {
+            console.log(allColumns)
+            return xScalePos(allColumns[i])})
+    plotColumns.append('text')
+        .attr("class",media+"labels")
+        .attr("width",(xScalePos.rangeBand()*.95))
+        .attr("x",function (d,i) {
+            return xScalePos(allColumns[i])+(xScalePos.rangeBand()/2)})
+        .attr("y",rowLabelOffset)
+        .attr("transform", function(d) {return "translate("+(margin.left)+","+(margin.top)+")"; })
+        .text(function(d,i){return allColumns[i]})
+
+
+
     var plotRows=plot.selectAll("."+media+"rows")
         .data(plotData)
         .enter()
@@ -119,21 +144,6 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
             return "translate("+(rowLabelOffset)+","+(yAdjust)+") rotate(-90)";
         })
         .text(function(d){return d.rowName})
-
-    var plotColumns=plot.selectAll("."+media+"columns")
-        .data(allColumns)
-        .enter()
-        .append('g')
-        .attr("transform", function(d) {return "translate("+(margin.left+rowLabelOffset)+","+(margin.top)+")"; })
-
-    plotColumns.append('rect')
-        .attr("class",media+"columns")
-        .attr("fill",colours[0])
-        .attr("width",xScalePos.rangeBand()*.95)
-        .attr("height",plotHeight)
-        .attr("x",function (d,i) {
-            console.log(allColumns)
-            return xScalePos(allColumns[i])})
 
     plotRows.call(addCells)
 

@@ -92,7 +92,6 @@ function xyHeatmap(data,stylename,media,plotpadding,legAlign,yAlign,breaks){
                 return cellWidth*i;
             })
             .attr("fill",function(d,i){
-                console.log("breaks length =",breaks.length)
                 for (j=0;j<breaks.length+1;j++){
                     console.log("j=",j)
                     if (d.value<breaks[j]){

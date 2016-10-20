@@ -156,17 +156,15 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,fiscal,break
             .attr('y', function(d) { return (d.date.getDay() * cellSize); })
             //.style("fill",function(d) {return colours(d.value)})
             .style("fill",function(d,i){
-                if (d.value<breaks[0]) {
-                    return colours[0];
-                }
-                for (i=0;i<breaks.length+1;i++){
-                    if (d.value>=breaks[i]&&d.value<breaks[i+1]){
-                        return colours[i];
+                for (j=0;j<breaks.length+1;j++){
+                    if (d.value<breaks[j]){
+                        return colours[j];
                     }
-                }
-                if (d.value>breaks.length-1){
-                    return colours[breaks.length]   
-                }   
+
+                    if (d.value>=breaks[j]&&d.value<breaks[j+1]){
+                        return colours[j+1];
+                    }
+                } 
             })//.datum(format);
 
             //add montly outlines for calendar
