@@ -36,8 +36,6 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
     yDomain[0]=Math.min(yMin,yDomain[0]);
     yDomain[1]=Math.max(yMax,yDomain[1]);
 
-
-
     let allRows=d3.nest()
         .key(function(d){return d[row]})
         .entries(data)
@@ -60,12 +58,21 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
 
     let plotData=classify(data,row,column);
 
+    function getByRowCol(arr, key1, key2){
+        return arr.filter(function(d){
+            return (d.row == key1 && d.column ==key2)
+        })
+    }
+
     function classify(arr, key1, key2){
         return arr.map(function(d){
             return {
                 data:d,
-                row:d[key1],
-                column:d[key2]
+                rowName:d[key1],
+                colName:d[key2],
+                targetCell:d[key1]+d[key2],
+                xPlot:d[xPlot],
+                yPlot:d[yPlot]
             }
         })
     }
@@ -104,7 +111,6 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
         .attr("x",function (d,i) {
             return xScalePos(allColumns[i])+(xScalePos.rangeBand()/2)})
         .attr("y",rowLabelOffset)
-        .attr("transform", function(d) {return "translate("+(margin.left)+","+(margin.top)+")"; })
         .text(function(d,i){return allColumns[i]})
 
     var plotRows=plot.selectAll("."+media+"rows")
@@ -128,6 +134,42 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
         })
         .text(function(d){
             return d})
+
+    let cellWidth=xScalePos.rangeBand()*.95
+    let cellHeight=yScalePos.rangeBand()*.95
+
+    var yScale=d3.scale.linear()
+        .domain(yDomain)
+        .range([cellHeight,0])
+
+    var yAxis = d3.svg.axis()
+        .scale(yScale)
+        .ticks(numTicksy)
+        .orient("left")
+
+    let cellData=d3.nest()
+        .key(function(d){return d.targetCell})
+        .entries(plotData)
+
+    console.log(cellData)
+
+    var cell = plot.selectAll("."+media+"cells")
+        .data(cellData)
+        .enter()
+        .append("svg")
+        .attr("id", "toCome")
+        .attr("class", media+"cells")
+        .attr("transform", function(d) {return "translate("+(margin.left+rowLabelOffset)+","+(margin.top)+")"; })
+
+    cell.append("rect")
+        .attr("width", cellWidth)
+        .attr("height", cellHeight)
+        .attr("x",function(d){
+            console.log(d.colName)
+            return xScalePos(d.values.rowName)})
+        .attr("y",function(d,i){return yScalePos(d.values.colName)})
+
+
 
     
 
