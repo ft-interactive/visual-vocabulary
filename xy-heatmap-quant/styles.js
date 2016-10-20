@@ -19,7 +19,7 @@ var styleprint = {classes:
 titleOffset:10,
 subOffset:0,
 legendyOffset:0,
-fillcolours:["#004d6d","#068cb5","#64a2c1","#c6d6cc","#d9e7ef"]
+fillcolours:["#004d6d","#64a2c1","#d9e7ef","#EFF8F5","#000000"]
 }
 
 var styleweb = {classes:
@@ -41,7 +41,7 @@ var styleweb = {classes:
 titleOffset:21,
 subOffset:0,
 legendyOffset:0,
-fillcolours:["#b46c81","#c28693","#d1a3a9","#e2c3c1","#fae9dd"]
+fillcolours:["#993355","#c28693","#fae9dd","#C1B8B9","#e2c3c1"]
 }
 
 var stylesoc = {classes:

@@ -1,5 +1,6 @@
 
 function xyHeatmap(data,stylename,media,plotpadding,legAlign,yAlign,breaks){
+    console.log(breaks)
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -21,7 +22,10 @@ function xyHeatmap(data,stylename,media,plotpadding,legAlign,yAlign,breaks){
       });
     margin=margin[0].margin[0]
 
-    var colours=stylename.fillcolours;
+    var colours=stylename.fillcolours
+    console.log(colours[0])
+
+    console.log(colours)
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
 
@@ -29,6 +33,8 @@ function xyHeatmap(data,stylename,media,plotpadding,legAlign,yAlign,breaks){
     var catData = d3.nest()
         .key(function(d){return d.category;})
         .entries(data);
+
+    console.log("catData ",catData)
 
     //Work out the height of each cell
     var cellHeight=plotHeight/catData.length
@@ -85,18 +91,19 @@ function xyHeatmap(data,stylename,media,plotpadding,legAlign,yAlign,breaks){
             .attr("x",function(d,i){
                 return cellWidth*i;
             })
-            .attr("fill",function(d,j){
-                if (d.value<breaks[0]) {
-                    return colours[0];
-                }
-                for (i=0;i<breaks.length+1;i++){
-                    if (d.value>=breaks[i]&&d.value<breaks[i+1]){
-                        return colours[i];
+            .attr("fill",function(d,i){
+                console.log("breaks length =",breaks.length)
+                for (j=0;j<breaks.length+1;j++){
+                    console.log("j=",j)
+                    if (d.value<breaks[j]){
+                        return colours[j];
                     }
-                }
-                if (d.value>breaks.length-1){
-                    return colours[breaks.length]   
-                }   
+
+                    if (d.value>=breaks[j]&&d.value<breaks[j+1]){
+                        console.log(breaks[j],d.value,breaks[j+1],j,j+1,"position= ",j+1);
+                        return colours[j+1];
+                    }
+                } 
             })
 
     //create key
@@ -128,7 +135,6 @@ function xyHeatmap(data,stylename,media,plotpadding,legAlign,yAlign,breaks){
             .text(function(d){
                 return "up to "+d;
             });
-
         
 
 

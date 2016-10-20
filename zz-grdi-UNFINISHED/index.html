@@ -10,36 +10,47 @@
     </style>
     <script src="d3.min.js"></script>
     <script src="drawFrame.js"></script>
-    <script src="xyHeatmap.js"></script>
+    <script src="scatterplot-grid.js"></script>
     <script src="saveSvgAsPng.js"></script>
     <script>
         
         //datafile
-        var dataURL = "newData.csv"
+        var dataURL = "example.csv"
         
         //titles, footnotes
-        var title = "XY heatmap";
-        var subtitle = "Some comparison involving fruit";//comment out subtitle assignment if not needed
+        var title = "Brazilian policy rate";
+        var subtitle = "Selic rate %";//comment out subtitle assignment if not needed
         var source = "Thomson Reuters Datastream";
 
         //put custom graph options here
-        var breaks=[20,40,60,80,100];
+        var yMin=0//Minimum value for the y-axis
+        var yMax=60//Maximum value for the y-axis
+        var xMin=-10//Minimum value for the x-axis
+        var xMax=50//Maximum value for the x-axis
+        var yAxisHighlight=0;
+        var numTicksy = 6;//rough number of ticks for y axis
+        var numTicksx = 5;//rough number of ticks for x axis
+        var axisLabel=true;//True or false to label the axis or not
+        var xAxisLabel="x-label"//The label that is placed on the x Axix
+        var yAxisLabel="y-label"//The label that is placed on the y Axix
+        var row="cyl"
+        var column="gear"
 
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
         var frames=[
-        {name:"print",width:229.34,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert",yLabel:"right"},
-        {name:"web",width:600,height:300,units:'px',margins:[{top:0,right:29,bottom:5,left:00}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
-        {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
-        {name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
+        //{name:"print",width:229.34,height:200,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert",yLabel:"right"},
+        {name:"web",width:800,height:600,units:'px',margins:[{top:0,right:29,bottom:5,left:00}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
+        //{name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
+        //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
         ]
         
         //sets the padding inside the chart area
         var chartpadding=[
-        {name:"print",margin:[{top:15, right:0, bottom:0, left:0}]},
-        {name:"web",margin:[{top:25, right:0, bottom:0, left:0}]},
-        {name:"social",margin:[{top:50, right:0, bottom:0, left:0}]},
-        {name:"video",margin:[{top:85, right:35,bottom:40, left:0}]}
+        {name:"print",margin:[{top:10, right:0, bottom:0, left:0}]},
+        {name:"web",margin:[{top:0, right:0, bottom:0, left:0}]},
+        {name:"social",margin:[{top:40, right:25, bottom:62, left:12}]},
+        {name:"video",margin:[{top:55, right:35,bottom:68, left:42}]}
         ]
         //Calls the functions that adds the balnk frames before loading the data 
         drawFrames()
@@ -73,7 +84,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                xyHeatmap(data, stylename, media, chartpadding,legend, yLabel,breaks);
+                scatterplotGrid(data, stylename, media, chartpadding,legend, yLabel,yMin,yMax,xMin,xMax,numTicksx,numTicksx,yAxisHighlight,axisLabel,xAxisLabel,yAxisLabel,row,column);
             }
         })//end data load
 
