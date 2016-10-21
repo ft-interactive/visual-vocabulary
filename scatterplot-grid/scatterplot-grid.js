@@ -1,5 +1,5 @@
 
-function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax,xMin,yMax,numTicksx,numTicksx, yAxisHighlight,axisLabel, row, column,xPlot,yPlot){
+function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,yMax,xMin,xMax,numTicksx,numTicksx, yAxisHighlight,axisLabel, row, column,xPlot,yPlot){
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
