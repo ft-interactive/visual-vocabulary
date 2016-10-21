@@ -30,7 +30,15 @@ function makeChart(data,seriesNames,stylename,media,plotpadding,legAlign,yAlign)
     //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
 
 
-    //should sort the data in size of total size
+    //sort the data in size of total size; comment this out if you want to preserve the original order
+    data.sort(function(a, b) {
+        return a.size-b.size;
+    });
+
+
+    //should auto-size this from label length - but for now, specify the gutters either side of bars
+    var labelMarginL = 120;
+    var labelMarginR = 40;
 
 
     //identify total size - used for y axis
@@ -63,11 +71,11 @@ function makeChart(data,seriesNames,stylename,media,plotpadding,legAlign,yAlign)
 
     var xScale = d3.scale.linear()
         .domain([0,100])
-        .range([0,plotWidth])
+        .range([labelMarginL,plotWidth-(labelMarginL+labelMarginR)])
 
     var yScale = d3.scale.linear()
         .domain([0,totalSize])
-        .range([0,plotHeight])
+        .range([0,plotHeight-20])
 
     var yData = data.map(function(d,i){
         return [{x:0,y:d.size}]
@@ -76,11 +84,7 @@ function makeChart(data,seriesNames,stylename,media,plotpadding,legAlign,yAlign)
     //stack the y axis data
     var yStack = d3.layout.stack();
     yStack(yData)
-/*
 
-    console.log(xData)
-
-    console.log(yData)*/
 
     var mergeXY;
 
@@ -88,12 +92,10 @@ function makeChart(data,seriesNames,stylename,media,plotpadding,legAlign,yAlign)
     yData.forEach(function(d,i){
         var rects = []
         xData.forEach(function(e,j){
-            rects.push({height:d[0].y,y0:d[0].y0,width:e[i].y,x0:e[i].y0})
+            rects.push({height:d[0].y,y0:d[0].y0,width:e[i].y,x0:e[i].y0,cat:data[i].cat,total:data[i].size})
         })
         rows.push(rects) 
     })
-
-    console.log(rows)
 
     var groups = plot.append("g").attr("id","groups")
         .selectAll("g")
@@ -101,12 +103,36 @@ function makeChart(data,seriesNames,stylename,media,plotpadding,legAlign,yAlign)
         .enter()
         .append("g")
         .attr("transform",function(d,i){
-            return "translate(0,"+yScale(d[0].y0)+")";
+
+            var offset = i*2;
+            return "translate(0,"+(15+yScale(d[0].y0)+offset)+")";
+        })
+
+    groups.append("text")
+        .text(function(d){
+            return d[0].cat
+        })
+        .attr("fill","black")
+        .attr("text-anchor","end")
+        .attr("x",labelMarginL-5)
+        .attr("y",function(d){
+            return yScale(d[0].height)/2+5
+        })
+
+    groups.append("text")
+        .text(function(d){
+            return d[0].total
+        })
+        .attr("fill","black")
+        .attr("x",plotWidth-5)
+        .attr("text-anchor","end")
+        .attr("y",function(d){
+            return yScale(d[0].height)/2+5
         })
 
     groups.selectAll("rect")
         .data(function(d){
-            return d
+            return d;
         })
         .enter()
         .append("rect")
@@ -123,17 +149,6 @@ function makeChart(data,seriesNames,stylename,media,plotpadding,legAlign,yAlign)
             return colours[i]
         })
 
-
-
-    //place in some basic rects
-    /*groups.append("rect")
-        .attr("width",plotWidth)
-        .attr("height",function(d){
-            return yScale(d[0].y)
-        })
-        .attr("fill",function(d,i){
-            return colours[i];
-        })*/
 
 
 
