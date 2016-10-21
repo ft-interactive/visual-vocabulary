@@ -3,6 +3,8 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
+    yAlign="left"//sets all y axis to left on the grid
+
     // return the series names from the first row of the spreadsheet
     var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
     //Select the plot space in the frame from which to take measurements
@@ -58,11 +60,11 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
 
     let plotData=classify(data,row,column);
 
-    function getByRowCol(arr, key1, key2){
-        return arr.filter(function(d){
-            return (d.row == key1 && d.column ==key2)
-        })
-    }
+    // function getByRowCol(arr, key1, key2){
+    //     return arr.filter(function(d){
+    //         return (d.row == key1 && d.column ==key2)
+    //     })
+    // }
 
     function classify(arr, key1, key2){
         return arr.map(function(d){
@@ -77,18 +79,16 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
         })
     }
 
-    console.log("plotdata",plotData)
-
     let rowLabelOffset=d3.select("#"+media+"Subtitle").style("font-size");
     rowLabelOffset=Number(rowLabelOffset.replace(/[^\d.-]/g, ''));
 
-    var yScalePos = d3.scale.ordinal()
+    var yScaleRow = d3.scale.ordinal()
         .rangeBands([plotHeight+margin.top, margin.top+rowLabelOffset])
         .domain(allRows);
 
-    let rowHeight=yScalePos.rangeBand()*.95
+    let rowHeight=yScaleRow.rangeBand()*.95
 
-    var xScalePos = d3.scale.ordinal()
+    var xScaleCol = d3.scale.ordinal()
         .rangeBands([margin.left+rowLabelOffset, plotWidth-margin.right-rowLabelOffset])
         .domain(allColumns);
 
@@ -101,15 +101,15 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
     plotColumns.append('rect')
         .attr("class",media+"columns")
         .attr("fill",colours[0])
-        .attr("width",xScalePos.rangeBand()*.95)
+        .attr("width",xScaleCol.rangeBand()*.95)
         .attr("height",plotHeight)
         .attr("x",function (d,i) {
-            return xScalePos(allColumns[i])})
+            return xScaleCol(allColumns[i])})
     plotColumns.append('text')
         .attr("class",media+"labels")
-        .attr("width",(xScalePos.rangeBand()*.95))
+        .attr("width",(xScaleCol.rangeBand()*.95))
         .attr("x",function (d,i) {
-            return xScalePos(allColumns[i])+(xScalePos.rangeBand()/2)})
+            return xScaleCol(allColumns[i])+(xScaleCol.rangeBand()/2)})
         .attr("y",rowLabelOffset)
         .text(function(d,i){return allColumns[i]})
 
@@ -123,51 +123,89 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
         .attr("class",media+"rows")
         .attr("fill",colours[0])
         .attr("width",plotWidth)
-        .attr("height",yScalePos.rangeBand()*.95)
-        .attr("y",function (d,i) {return yScalePos(allRows[i])})
+        .attr("height",yScaleRow.rangeBand()*.95)
+        .attr("y",function (d,i) { 
+            return yScaleRow(allRows[i])})
     plotRows.append('text')
         .attr("class",media+"labels")
         .attr("width",rowHeight)
         .attr("transform", function(d,i){
-            let yAdjust=(yScalePos(allRows[i]))+(rowHeight/2)
+            let yAdjust=(yScaleRow(allRows[i]))+(rowHeight/2)
             return "translate("+(rowLabelOffset)+","+(yAdjust)+") rotate(-90)";
         })
         .text(function(d){
             return d})
 
-    let cellWidth=xScalePos.rangeBand()*.95
-    let cellHeight=yScalePos.rangeBand()*.95
+    let cellWidth=xScaleCol.rangeBand()*.95
+    let cellHeight=yScaleRow.rangeBand()*.95
 
     var yScale=d3.scale.linear()
         .domain(yDomain)
-        .range([cellHeight,0])
+        .range([cellHeight-margin.top-margin.bottom,0])
 
     var yAxis = d3.svg.axis()
         .scale(yScale)
         .ticks(numTicksy)
-        .orient("left")
+        .orient(yAlign)
 
     let cellData=d3.nest()
         .key(function(d){return d.targetCell})
         .entries(plotData)
+        .map(function(e) {
+            return {
+              key: e.key,
+              values:e.values,
+              colName:e.values[0].colName,
+              rowName:e.values[0].rowName
+            }
+        })
 
-    console.log(cellData)
+    console.log("cellData",cellData)
 
     var cell = plot.selectAll("."+media+"cells")
         .data(cellData)
         .enter()
-        .append("svg")
-        .attr("id", "toCome")
+        .append("g")
+        .attr("id", function(d){return d.key})
         .attr("class", media+"cells")
         .attr("transform", function(d) {return "translate("+(margin.left+rowLabelOffset)+","+(margin.top)+")"; })
 
     cell.append("rect")
-        .attr("width", cellWidth)
-        .attr("height", cellHeight)
-        .attr("x",function(d){
-            console.log(d.colName)
-            return xScalePos(d.values.rowName)})
-        .attr("y",function(d,i){return yScalePos(d.values.colName)})
+    .attr("fill","#ffffff")
+    .attr("width", cellWidth)
+    .attr("height", cellHeight)
+    .attr("x",function(d){
+        return xScaleCol(d.colName)})
+    .attr("y",function(d,i){
+        return yScaleRow(d.rowName)})
+
+    yLabel=cell.append("g")
+        .attr("class",media+"yAxis")
+        .call(yAxis)
+
+    //calculate what the ticksize should be now that the text for the labels has been drawn
+    var yLabelOffset=yLabel.node().getBBox().width;
+    var yticksize=colculateTicksize(yAlign, yLabelOffset);
+
+    yLabel.call(yAxis.tickSize(yticksize))
+    yLabel
+        .attr("transform",function(d){
+                let colOffset=xScaleCol(d.colName)+yticksize+rowLabelOffset;
+                let rowOffset=yScaleRow(d.rowName)+margin.top
+                return "translate("+(colOffset)+","+(rowOffset)+")"
+            });
+
+        // .attr("transform",function(d){
+        //         let colOffset=xScaleCol(d.colName);
+        //         let rowOffset=yScaleRow(d.rowName)
+        //         return "translate("+(colOffset)+","+(rowOffset)+")"
+        //     });
+
+
+
+
+
+
 
 
 
@@ -191,9 +229,12 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
 
     function colculateTicksize(align, offset) {
         if (align=="right") {
-            return w-margin.left-offset
+            console.log("cellWidth",cellWidth)
+            return cellWidth-margin.left-offset
         }
-        else {return w-margin.right-offset}
+        else {
+            console.log("cellWidth",cellWidth)
+            return cellWidth-margin.right-offset}
     }
 
 }
