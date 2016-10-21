@@ -76,26 +76,57 @@ function makeChart(data,seriesNames,stylename,media,plotpadding,legAlign,yAlign)
     //stack the y axis data
     var yStack = d3.layout.stack();
     yStack(yData)
-
+/*
 
     console.log(xData)
 
-    console.log(yData)
+    console.log(yData)*/
 
+    var mergeXY;
 
+    var rows = [];
+    yData.forEach(function(d,i){
+        var rects = []
+        xData.forEach(function(e,j){
+            rects.push({height:d[0].y,y0:d[0].y0,width:e[i].y,x0:e[i].y0})
+        })
+        rows.push(rects) 
+    })
 
-  /*  var groups = plot.append("g").attr("id","groups")
+    console.log(rows)
+
+    var groups = plot.append("g").attr("id","groups")
         .selectAll("g")
-        .data(yData)
+        .data(rows)
         .enter()
         .append("g")
-        .attr("transform",function(d){
-
+        .attr("transform",function(d,i){
             return "translate(0,"+yScale(d[0].y0)+")";
         })
 
+    groups.selectAll("rect")
+        .data(function(d){
+            return d
+        })
+        .enter()
+        .append("rect")
+        .attr("width",function(d){
+            return xScale(d.width)
+        })
+        .attr("x",function(d){
+            return xScale(d.x0)
+        })
+        .attr("height",function(d){
+            return yScale(d.height);
+        })
+        .attr("fill",function(d,i){
+            return colours[i]
+        })
+
+
+
     //place in some basic rects
-    groups.append("rect")
+    /*groups.append("rect")
         .attr("width",plotWidth)
         .attr("height",function(d){
             return yScale(d[0].y)
