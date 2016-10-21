@@ -170,7 +170,7 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
             }
         })
 
-    console.log("cellData",cellData)
+    //console.log("cellData",cellData)
 
     var cell = plot.selectAll("."+media+"cells")
         .data(cellData)
@@ -219,6 +219,28 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
             })
         .call(xAxis);
 
+    cell.call(addDots)
+
+    function addDots(parent) {
+        //console.log(parent)
+        parent.selectAll('circles')
+        .data(function(d) {
+            return d.values
+        })
+        .enter()
+        .append('circle')
+        .attr("cx",function(d){return xScale(d.data[xPlot])})
+        .attr("cy",function(d){return yScale(d.data[yPlot])})
+        .attr("r",yOffset/4)
+        .attr("fill",function(d) {
+            return colours[0]})
+        .attr("transform",function(d){
+                let colOffset=xScaleCol(d.colName)+rowLabelOffset;
+                let rowOffset=yScaleRow(d.rowName)+margin.top
+                return "translate("+(colOffset)+","+(rowOffset)+")"
+            })
+
+    }
 
 
 
@@ -246,11 +268,11 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
 
     function colculateTicksize(align, offset) {
         if (align=="right") {
-            console.log("cellWidth",cellWidth)
+            //console.log("cellWidth",cellWidth)
             return cellWidth-margin.left-offset
         }
         else {
-            console.log("cellWidth",cellWidth)
+            //console.log("cellWidth",cellWidth)
             return cellWidth-margin.right-offset}
     }
 
