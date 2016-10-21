@@ -148,6 +148,16 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
         .ticks(numTicksy)
         .orient(yAlign)
 
+    var xScale = d3.scale.linear()
+        .domain(xDomain)
+        .range([0,(cellWidth-rowLabelOffset-margin.left-margin.right)]);
+
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .ticks(numTicksx)
+        .tickSize(yOffset/2)
+        .orient("bottom");
+
     let cellData=d3.nest()
         .key(function(d){return d.targetCell})
         .entries(plotData)
@@ -195,12 +205,19 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
                 return "translate("+(colOffset)+","+(rowOffset)+")"
             });
 
-        // .attr("transform",function(d){
-        //         let colOffset=xScaleCol(d.colName);
-        //         let rowOffset=yScaleRow(d.rowName)
-        //         return "translate("+(colOffset)+","+(rowOffset)+")"
-        //     });
+    var originValue = 0;
+    var origin = plot.selectAll(".tick").filter(function(d, i) {
+            return d==originValue || d==yAxisHighlight;
+        }).classed(media+"origin",true);
 
+    xLabel=cell.append("g")
+        .attr("class",media+"xAxis")
+        .attr("transform",function(d){
+                let colOffset=xScaleCol(d.colName)+rowLabelOffset;
+                let rowOffset=yScaleRow(d.rowName)+cellHeight-margin.bottom
+                return "translate("+(colOffset)+","+(rowOffset)+")"
+            })
+        .call(xAxis);
 
 
 
