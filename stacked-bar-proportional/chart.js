@@ -56,6 +56,39 @@ function makeChart(data,seriesNames,stylename,media,plotpadding,legAlign,yAlign)
         }
     })
 
+
+    //create key
+    var key = plot.append("g").attr("id","key");
+
+
+    key.selectAll("rect")
+        .data(components)
+        .enter()
+        .append("rect")
+        .attr("fill",function(d,i){
+            return colours[i];
+        })
+        .attr("width",plotWidth/10)
+        .attr("height",plotHeight/40)
+        .attr("y",20)
+        .attr("x",function(d,i){
+            return labelMarginL+(i*(plotWidth/5))
+        })
+
+    key.selectAll("text")
+        .data(components)
+        .enter()
+        .append("text")
+        .attr("fill","black")
+        .attr("y",15)
+        .attr("x",function(d,i){
+            return labelMarginL+(i*(plotWidth/5))
+        })
+        .text(function(d){
+            return d.split("prop_")[1]
+        })
+
+
     //prepare the stacks for the x axis 
    var xData = [];
    components.forEach(function(d,i){
@@ -105,7 +138,7 @@ function makeChart(data,seriesNames,stylename,media,plotpadding,legAlign,yAlign)
         .attr("transform",function(d,i){
 
             var offset = i*2;
-            return "translate(0,"+(15+yScale(d[0].y0)+offset)+")";
+            return "translate(0,"+(50+yScale(d[0].y0)+offset)+")";
         })
 
     groups.append("text")
