@@ -106,6 +106,17 @@ function makeChart(data,seriesNames,stylename,media,plotpadding,legAlign,yAlign)
         .domain([0,100])
         .range([labelMarginL,plotWidth-(labelMarginL+labelMarginR)])
 
+
+
+var xAxis = d3.svg.axis()
+    .scale(xScale);
+
+    key.append("g")
+        .attr("id","axis")
+        .attr("class",media+"xAxis")
+        .call(xAxis)
+
+
     var yScale = d3.scale.linear()
         .domain([0,totalSize])
         .range([0,plotHeight-20])
@@ -119,8 +130,6 @@ function makeChart(data,seriesNames,stylename,media,plotpadding,legAlign,yAlign)
     yStack(yData)
 
 
-    var mergeXY;
-
     var rows = [];
     yData.forEach(function(d,i){
         var rects = []
@@ -129,6 +138,8 @@ function makeChart(data,seriesNames,stylename,media,plotpadding,legAlign,yAlign)
         })
         rows.push(rects) 
     })
+
+console.log(rows)
 
     var groups = plot.append("g").attr("id","groups")
         .selectAll("g")
@@ -170,7 +181,7 @@ function makeChart(data,seriesNames,stylename,media,plotpadding,legAlign,yAlign)
         .enter()
         .append("rect")
         .attr("width",function(d){
-            return xScale(d.width)
+            return Math.abs(xScale(d.width) - xScale(0)); 
         })
         .attr("x",function(d){
             return xScale(d.x0)
