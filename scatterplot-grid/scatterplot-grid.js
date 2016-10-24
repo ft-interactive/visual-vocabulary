@@ -92,6 +92,21 @@ function scatterplotGrid(data,stylename,media,plotpadding,legAlign,yAlign, yMin,
         .rangeBands([margin.left+rowLabelOffset, plotWidth-margin.right-rowLabelOffset])
         .domain(allColumns);
 
+    plot.append('text')
+    .attr("class",media+"labels")
+    .attr("x",(plotWidth/2))
+    .attr("y",rowLabelOffset)
+    .attr("transform", function(d) {return "translate("+(margin.left+rowLabelOffset)+","+(margin.top)+")"; })
+    .text(column)
+
+    plot.append('text')
+    .attr("class",media+"labels")
+    .text(row)
+    .attr("transform", function(d,i){
+            let yAdjust=plotHeight/2+margin.top+rowLabelOffset
+            return "translate("+(rowLabelOffset)+","+(yAdjust)+") rotate(-90)";
+        })
+
     var plotColumns=plot.selectAll("."+media+"columns")
         .data(allColumns)
         .enter()
