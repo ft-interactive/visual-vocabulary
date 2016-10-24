@@ -70,7 +70,7 @@ function makeChart(data,seriesNames,stylename,media,plotpadding,legAlign,yAlign)
         })
         .attr("width",plotWidth/10)
         .attr("height",plotHeight/40)
-        .attr("y",20)
+        .attr("y",subtitleYoffset+5)
         .attr("x",function(d,i){
             return labelMarginL+(i*(plotWidth/5))
         })
@@ -80,12 +80,12 @@ function makeChart(data,seriesNames,stylename,media,plotpadding,legAlign,yAlign)
         .enter()
         .append("text")
         .attr("fill","black")
-        .attr("y",15)
+        .attr("y",subtitleYoffset)
         .attr("x",function(d,i){
             return labelMarginL+(i*(plotWidth/5))
         })
         .text(function(d){
-            return d.split("prop_")[1]
+            return d.split("prop_")[1]+(" (%)")
         })
 
 
@@ -104,22 +104,28 @@ function makeChart(data,seriesNames,stylename,media,plotpadding,legAlign,yAlign)
 
     var xScale = d3.scale.linear()
         .domain([0,100])
-        .range([labelMarginL,plotWidth-(labelMarginL+labelMarginR)])
+        .range([labelMarginL,plotWidth-(labelMarginR)])
 
 
+    //append scale
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .orient("bottom");
 
-var xAxis = d3.svg.axis()
-    .scale(xScale);
-
-    key.append("g")
+    plot.append("g")
         .attr("id","axis")
         .attr("class",media+"xAxis")
+        .attr("transform","translate(0,"+(h-30)+")")
         .call(xAxis)
+
+
+    //find out dimensions of key so that chart is offset below it
+    var vOffset = (d3.select("#key").node().getBBox().height)+(d3.select("#key").node().getBBox().y)+10
 
 
     var yScale = d3.scale.linear()
         .domain([0,totalSize])
-        .range([0,plotHeight-20])
+        .range([0,plotHeight-(vOffset+30)])
 
     var yData = data.map(function(d,i){
         return [{x:0,y:d.size}]
@@ -139,8 +145,6 @@ var xAxis = d3.svg.axis()
         rows.push(rects) 
     })
 
-console.log(rows)
-
     var groups = plot.append("g").attr("id","groups")
         .selectAll("g")
         .data(rows)
@@ -148,8 +152,8 @@ console.log(rows)
         .append("g")
         .attr("transform",function(d,i){
 
-            var offset = i*2;
-            return "translate(0,"+(50+yScale(d[0].y0)+offset)+")";
+            var offset = i*2;//creates spacing between rows
+            return "translate(0,"+(vOffset+yScale(d[0].y0)+offset)+")";
         })
 
     groups.append("text")
