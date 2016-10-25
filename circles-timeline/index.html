@@ -51,7 +51,8 @@
             //date formatter, matching the format of the incoming csv...
             //var parseDate = d3.time.format("%Y %b").parse;
             //var parseDate = d3.time.format("%Y").parse;//just full year
-            var parseDate = d3.time.format('%Y').parse;
+            var dateFormat = d3.time.format('%Y')
+            var parseDate = dateFormat.parse;
             /*
             some common formatting parsers....
             d3.time.format("%Y %b") 1986 Jan
@@ -77,7 +78,7 @@
                 var stylename=frames[i].stylesheet;
                 var media = frames[i].name;
                 var legend=frames[i].legend;
-                circlesTimelineChart(data, stylename, media, chartpadding,legend, minAxis, ticks);
+                circlesTimelineChart(data, stylename, media, chartpadding,legend, minAxis, ticks,dateFormat);
             }   
         })//end data load
 

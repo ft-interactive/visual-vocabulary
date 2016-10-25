@@ -1,6 +1,6 @@
-function circlesTimelineChart(data,stylename,media,plotpadding,legAlign,minAxis,ticks){
+function circlesTimelineChart(data,stylename,media,plotpadding,legAlign,minAxis,ticks,dateFormat){
 	//graph options
-    console.log(ticks)
+    //console.log(ticks)
     var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height
@@ -126,7 +126,9 @@ function circlesTimelineChart(data,stylename,media,plotpadding,legAlign,minAxis,
                     return colours[i];  
                 }
             })
-        .selectAll('circle')
+
+
+        circles.selectAll('circle')
             .data(function(d){ return d.values; })
             .enter()
         .append('circle')
@@ -140,6 +142,51 @@ function circlesTimelineChart(data,stylename,media,plotpadding,legAlign,minAxis,
                     return radius(d.value);
                 }
             });
+
+    //create text labels for those that need it
+
+        //text
+        timelines.append("g").selectAll("text")
+            .data(function(d){
+                return d.values.filter(function(e){
+                    return e.label=="yes"
+                })
+            })
+            .enter()
+            .append("text")
+            .attr("x",function(d){
+                return xScale(d.date)
+            })
+            .attr("y",function(d){
+                return 0-radius(d.value)-12;
+            })
+            .text(function(d){
+                return d.name+" ("+dateFormat(d.date)+")";
+            })
+            .attr("text-anchor","middle")
+            .attr("fill","black")
+
+        //connecting lines
+         circles.selectAll("line")
+            .data(function(d){
+                return d.values.filter(function(e){
+                    return e.label=="yes"
+                })
+            })
+            .enter()
+            .append("line")
+            .attr("x1",function(d){
+                return xScale(d.date)
+            })
+            .attr("x2",function(d){
+                return xScale(d.date)
+            })
+            .attr("y1",function(d){
+                return 0-radius(d.value);
+            })
+            .attr("y2",function(d){
+                return 0-radius(d.value)-10;
+            })
 
     //Add labels so that the preflight script in illustrator will work
     d3.selectAll(".printxAxis text")
