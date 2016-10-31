@@ -21,12 +21,18 @@ h2 {
 }
 p {
 	font-family:"metric";
-	font-size: 22px;
+	font-size: 20px;
 }
 p.intro-text {
 	font-size: 26px;
 }
-.categ{
-	opacity:1;
+.categ {
+	opacity:1.0;
+}
+.button {
+	opacity:1.0;
+	font-size: 22px;
+	font-weight: 300;
+	text-anchor: middle;
 }
 

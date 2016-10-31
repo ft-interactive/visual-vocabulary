@@ -25,30 +25,36 @@
     container.append("h2")
     .text("Designing with data")
     container.append("p")
-    .text("There are so many ways to visualise data – how do we know which one to pick? Use the categories across the top to decide which data relationship is most important in your story, then look at the different types of chart within the category to form some initial ideas about what might work best. This list is not meant to be exhaustive, nor a wizard, but is a useful starting point for making informative and meaningful data visualisations")
+    .text("There are so many ways to visualise data – how do we know which one to pick? Use the doloured categories across the top to decide which data relationship is most important in your story, then look at the different types of chart within the category to form some initial ideas about what might work best. This list is not meant to be exhaustive, nor a wizard, but is a useful starting point for making informative and meaningful data visualisations")
     .attr('class', 'intro-text')
     container.append("p")
     .text("Inspired by the Graphic Continuum by Jon Schwabish and Severino Ribecca")
 
-    // let plotWidth=d3.select(".container").style("width")
-    // console.log(plotWidth)
-
-    let plot=d3.selectAll("body")
+    let plotWidth=container.node().getBoundingClientRect().width;
+    let cellWidth=plotWidth/plotCategories.length
+    let menus=container.append("svg")
+      .attr("width",plotWidth)
+    let category=menus.selectAll(".categ")
     .data(plotCategories)
     .enter()
     .append("g")
     .attr("class","categ")
 
-    plot.append("rect")
-      .attr("x",function(d,i){return 20*i})
-      .attr("height",20px)
-      .attr("width",50pxs)
-      .attr("fill","#fffea4")
-    plot.append("text")
-      .attr("x",function(d,i){return 20*i})
+    category.append("rect")
+      .attr("class","button")
+      .attr("x",function(d,i){return cellWidth*i})
+      .attr("height",30)
+      .attr("width",cellWidth)
+      .attr("fill",function(d){return d.colour})
+
+    category.append("text")
+      .attr("class","button")
+      .attr("x",function(d,i){return (cellWidth*i)+(cellWidth/2)})
+      .attr("y",20)
       .attr("height",20)
       .attr("width",50)
       .text(function(d){return d.category})
+
 
 
     </script>
