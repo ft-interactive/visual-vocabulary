@@ -1,0 +1,32 @@
+
+<html>
+<head>
+    <title>Visual Vocabulary</title>
+    <link rel="stylesheet" type="text/css" href="./mani.css">
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+</head>
+<body>
+    <style>
+        text{font-family:metric}
+    </style>
+
+    <script>
+
+        
+
+    var container = d3.select("body")
+      .append("div")
+      .attr("class", 'heading')
+      .text("Visual Vocabulary")
+    container.append("h2").text("Designing with data")
+    container.append("p").text("There are so many ways to visualise data – how do we know which one to pick? Use the categories across the top to decide which data relationship is most important in your story, then look at the different types of chart within the category to form some initial ideas about what might work best. This list is not meant to be exhaustive, nor a wizard, but is a useful starting point for making informative and meaningful data visualisations")
+    .attr('class', 'intro-text')
+    container.append("h4").text("Inspired by the Graphic Continuum by Jon Schwabish and Severino Ribecca")
+
+    var cats = container.selectAll("div")
+
+
+
+    </script>
+</body>
+</html>

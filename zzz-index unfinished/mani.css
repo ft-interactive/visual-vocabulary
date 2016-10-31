@@ -1,0 +1,13 @@
+.heading {
+	font-size: 70px;
+	font-weight: 200;
+}
+
+h1:before {
+      display: block;
+      content: '';
+      height: 13px;
+      width: 500px;
+      background-color: #000000;
+      margin-bottom: 20px;
+    }
