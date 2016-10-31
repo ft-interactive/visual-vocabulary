@@ -1,13 +1,32 @@
-.heading {
-	font-size: 70px;
-	font-weight: 200;
+body {font-family:"Metric","sans-serif";}
+
+.container {
+	margin: 0 auto;
+	max-width:1000px;
+	width: 100%
+
 }
 
-h1:before {
-      display: block;
-      content: '';
-      height: 13px;
-      width: 500px;
-      background-color: #000000;
-      margin-bottom: 20px;
-    }
+h1 {
+	display: inline-block;
+	content:"";
+	font-size: 68px;
+	font-weight: 200;
+	height: 13px;
+	margin-top: 10px;
+}
+h2 {
+	font-size: 42px;
+	font-weight: 200;
+}
+p {
+	font-family:"metric";
+	font-size: 22px;
+}
+p.intro-text {
+	font-size: 26px;
+}
+.categ{
+	opacity:1;
+}
+

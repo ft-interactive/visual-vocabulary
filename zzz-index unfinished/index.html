@@ -4,27 +4,51 @@
     <title>Visual Vocabulary</title>
     <link rel="stylesheet" type="text/css" href="./mani.css">
     <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="v2-data.js"></script>
 </head>
 <body>
     <style>
         text{font-family:metric}
     </style>
 
-    <script>
+    <script>  
+    console.log(data)
+    let plotCategories=data.categories
+    console.log(plotCategories)
 
-        
+    let container = d3.select("body")
+    .append("div")
+    .attr("class", 'container')
 
-    var container = d3.select("body")
-      .append("div")
-      .attr("class", 'heading')
+    container.append("h1")
       .text("Visual Vocabulary")
-    container.append("h2").text("Designing with data")
-    container.append("p").text("There are so many ways to visualise data – how do we know which one to pick? Use the categories across the top to decide which data relationship is most important in your story, then look at the different types of chart within the category to form some initial ideas about what might work best. This list is not meant to be exhaustive, nor a wizard, but is a useful starting point for making informative and meaningful data visualisations")
+    container.append("h2")
+    .text("Designing with data")
+    container.append("p")
+    .text("There are so many ways to visualise data – how do we know which one to pick? Use the categories across the top to decide which data relationship is most important in your story, then look at the different types of chart within the category to form some initial ideas about what might work best. This list is not meant to be exhaustive, nor a wizard, but is a useful starting point for making informative and meaningful data visualisations")
     .attr('class', 'intro-text')
-    container.append("h4").text("Inspired by the Graphic Continuum by Jon Schwabish and Severino Ribecca")
+    container.append("p")
+    .text("Inspired by the Graphic Continuum by Jon Schwabish and Severino Ribecca")
 
-    var cats = container.selectAll("div")
+    // let plotWidth=d3.select(".container").style("width")
+    // console.log(plotWidth)
 
+    let plot=d3.selectAll("body")
+    .data(plotCategories)
+    .enter()
+    .append("g")
+    .attr("class","categ")
+
+    plot.append("rect")
+      .attr("x",function(d,i){return 20*i})
+      .attr("height",20px)
+      .attr("width",50pxs)
+      .attr("fill","#fffea4")
+    plot.append("text")
+      .attr("x",function(d,i){return 20*i})
+      .attr("height",20)
+      .attr("width",50)
+      .text(function(d){return d.category})
 
 
     </script>
