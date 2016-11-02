@@ -63,19 +63,35 @@
       .attr("width",50)
       .text(function(d){return d.category})
 
-    function addLink() {
-      console.log("x",this.id)
+    function addLink(d) {
+      console.log("d",d)
+      d3.selectAll(".link")
+      .remove()
       let x1=cellWidth*this.id+(cellWidth/2)
       let lineData = [
-      { "x":x1,"y":30},
-      { "x":200,"y":100}];
+      {"x":x1,"y":30},
+      {"x":x1,"y":30},
+      {"x":x1,"y":30},
+      {"x":x1,"y":30}];
+      let lineData2 = [
+      {"x":x1,"y":30},
+      {"x":x1,"y":60},
+      {"x":10,"y":60},
+      {"x":10,"y":100}];
 
+      d3.selectAll(".link")
+      .data(d)
+      .enter()
       menus.append("path")
         .attr("class","link")
+        .attr("stroke",d.colour)
         .attr("d", lineFunction(lineData))
-        .attr("stroke","#fff3a5")
+        .transition()
+        .duration(500)
+        .attr("d", lineFunction(lineData2))
 
     }
+
 
     let lineFunction = d3.svg.line()
       .x(function(d) { return d.x; })

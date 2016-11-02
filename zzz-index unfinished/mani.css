@@ -40,6 +40,7 @@ p.intro-text {
 	text-anchor: middle;
 }
 .link {
-	stroke-width: 4px;
+	stroke-width: 2.5px;
+	fill: none;
 }
 
