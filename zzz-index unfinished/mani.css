@@ -39,4 +39,7 @@ p.intro-text {
 	font-weight: 300;
 	text-anchor: middle;
 }
+.link {
+	stroke-width: 4px;
+}
 

@@ -14,6 +14,9 @@
     <script>  
     console.log(data)
     let plotCategories=data.categories
+    let diagonal = d3.svg.diagonal()
+      .projection(function(d) { return [d.y, d.x]; });
+    
     console.log(plotCategories)
 
     let container = d3.select("body")
@@ -25,22 +28,25 @@
     container.append("h1")
       .text("Visual Vocabulary")
     container.append("h2")
-    .text("Designing with data")
+      .text("Designing with data")
     container.append("p")
-    .text("There are so many ways to visualise data – how do we know which one to pick? Click on the coloured categories below to decide which data relationship is most important in your story, then look at the different types of chart within the category to form some initial ideas about what might work best. This list is not meant to be exhaustive, nor a wizard, but is a useful starting point for making informative and meaningful data visualisations")
-    .attr('class', 'intro-text')
+      .text("There are so many ways to visualise data – how do we know which one to pick? Click on the coloured categories below to decide which data relationship is most important in your story, then look at the different types of chart within the category to form some initial ideas about what might work best. This list is not meant to be exhaustive, nor a wizard, but is a useful starting point for making informative and meaningful data visualisations")
+      .attr('class', 'intro-text')
     container.append("p")
-    .text("Inspired by the Graphic Continuum by Jon Schwabish and Severino Ribecca")
+      .text("Inspired by the Graphic Continuum by Jon Schwabish and Severino Ribecca")
 
     let plotWidth=container.node().getBoundingClientRect().width;
     let cellWidth=plotWidth/plotCategories.length
     let menus=container.append("svg")
       .attr("width",plotWidth)
     let category=menus.selectAll(".categ")
-    .data(plotCategories)
-    .enter()
-    .append("g")
-    .attr("class","categ")
+      .data(plotCategories)
+      .enter()
+      .append("g")
+      .attr("class","categ")
+      .attr("id",function(d,i){return i})
+      .on("mouseover",pointer)
+      .on("mousedown",addLink)
 
     category.append("rect")
       .attr("class","button")
@@ -57,14 +63,31 @@
       .attr("width",50)
       .text(function(d){return d.category})
 
-    
+    function addLink() {
+      console.log("x",this.id)
+      let x1=cellWidth*this.id+(cellWidth/2)
+      let lineData = [
+      { "x":x1,"y":30},
+      { "x":200,"y":100}];
+
+      menus.append("path")
+        .attr("class","link")
+        .attr("d", lineFunction(lineData))
+        .attr("stroke","#fff3a5")
+
+    }
+
+    let lineFunction = d3.svg.line()
+      .x(function(d) { return d.x; })
+      .y(function(d) { return d.y; })
+      .interpolate("linear");
 
 
 
     function redraw() {
       console.log("redraw");
-      let plotWidth=container.node().getBoundingClientRect().width;
-      let cellWidth=plotWidth/plotCategories.length
+      plotWidth=container.node().getBoundingClientRect().width;
+      cellWidth=plotWidth/plotCategories.length
       menus.attr("width",plotWidth)
       d3.selectAll(".button")
         .attr("x",function(d,i){return cellWidth*i})
@@ -72,6 +95,11 @@
       d3.selectAll(".buttonText")
         .attr("x",function(d,i){return (cellWidth*i)+(cellWidth/2)})
         .attr("width",cellWidth)
+    }
+
+    function pointer() {
+        this.style.cursor='pointer'
+
     }
 
 
