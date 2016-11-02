@@ -10,7 +10,7 @@ body {font-family:"Metric","sans-serif";}
 h1 {
 	display: inline-block;
 	content:"";
-	font-size: 68px;
+	font-size: 64px;
 	font-weight: 200;
 	height: 13px;
 	margin-top: 10px;
@@ -32,7 +32,7 @@ p.intro-text {
 	opacity:1.0;
 }
 .button {
-	opacity:1.0;
+	opacity:0.7;
 }
 .buttonText {
 	font-size: 20px;
@@ -40,7 +40,36 @@ p.intro-text {
 	text-anchor: middle;
 }
 .link {
-	stroke-width: 2.5px;
+	opacity: 0.7;
+	stroke-width: 3px;
 	fill: none;
 }
+.info{
+	opacity:0.7;
+
+}
+.infoHeading {
+	color: #ffffff;
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-bottom: 5px;
+	font-size: 36px;
+	font-weight: 200;
+}
+.infoSubhead {
+	color: #ffffff;
+	padding-top: 8px;
+	padding-left: 10px;
+	font-size: 30px;
+	font-weight: 200;
+}
+.infoText {
+	color: #ffffff;
+	padding-left: 10px;
+	padding-right: 10px;
+	font-size: 22px;
+	font-weight: 200;
+}
+
+
 
