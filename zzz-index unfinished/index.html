@@ -71,6 +71,7 @@
         let chartHolder=d3.select("#chartDiv")
           .append("svg")
           .attr("width",plotWidth)
+          .attr("height",600)
         
         let chart=chartHolder.selectAll(".chart")
           .data(function(d){
@@ -82,11 +83,14 @@
           })
           .enter()
           .append("g")
-        //   .attr("class","chart")
-        // chart.append("rect")
-        // .attr("class","chart")
-        //   .attr("width",chartWidth)
-        //   .attr("height",70)
+            .attr("class","chart")
+
+          chart.append("rect")
+          .attr("class","chart")
+            .attr("width",chartWidth)
+            .attr("x",function(d,i){return (chartWidth*i)+10})
+            .attr("height",250)
+
 
 
 
