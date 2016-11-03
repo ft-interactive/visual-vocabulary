@@ -34,7 +34,7 @@
         .text("Inspired by the Graphic Continuum by Jon Schwabish and Severino Ribecca")
 
       let plotWidth=container.node().getBoundingClientRect().width;
-      let cellWidth=plotWidth/plotCategories.length
+      let cellWidth=(plotWidth)/plotCategories.length
       let menus=container.append("svg")
         .attr("width",plotWidth)
         .attr("height",100)
@@ -66,11 +66,9 @@
 
       function addCharts(lookUp){
         console.log(lookUp)
-        console.log("chartData again", chartData)
-        let chartWidth=plotWidth/5
-        let chartHolder=d3.select("#chartDiv")
-          .append("svg")
-          .attr("width",plotWidth)
+        let chartWidth=(plotWidth/5)-10
+        let chartHolder=d3.select("#charts")
+          .append("div")
           .attr("height",600)
         
         let chart=chartHolder.selectAll(".chart")
@@ -82,48 +80,49 @@
             return filtered
           })
           .enter()
-          .append("g")
+          let div=chart.append("div")
+            .style("max-width",chartWidth)
             .attr("class","chart")
+            .attr("height",200)
+            .html(function(d){return d.chartName})
 
-          chart.append("rect")
-          .attr("class","chart")
-            .attr("width",chartWidth)
-            .attr("x",function(d,i){return (chartWidth*i)+10})
-            .attr("height",250)
+          div.append("img")
+            .attr("src",function(d){return "icons/"+d.img})
+            .attr("width", chartWidth)
+            .attr("height", chartWidth)
 
-
-
-
-
+          div.append("div")
+            .html(function(d){return d.description})
 
       }
 
 
       function addInfo(el){
-        d3.selectAll(".info")
+        d3.selectAll(".panel")
           .remove()
         let loookUp=el.category
-        let infoBox=container.append("g")
-        let info = infoBox.append("div")
-          .attr("class","info")
+        let infoPanel=container.append("div")
+          .attr("class","panel")
+          .attr("id","infoPanel")
           .style("background-color",el.colour)
-        info.append("div")
+        infoPanel.append("div")
           .attr("class","infoHeading")
           .html(loookUp)
-        info.append("div")
+        infoPanel.append("div")
           .attr("class","infoText")
           .html(el.description)
-        info.append("div")
+        infoPanel.append("div")
           .attr("class","infoSubhead")
           .html("Examples of use")
-        info.append("div")
+        infoPanel.append("div")
           .attr("class","infoText")
           .html(el.example)
-        info.append("div")
+        infoPanel.append("div")
           .attr("class","infoSubhead")
           .html("Chart types")
-        info.append("div")
-          .attr("id","chartDiv")
+        infoPanel.append("div")
+          .attr("id","charts")
+          .attr("class","charts")
 
         addCharts(loookUp)
       }
