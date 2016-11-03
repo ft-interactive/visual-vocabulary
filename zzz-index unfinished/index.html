@@ -109,8 +109,6 @@
       }
 
       function addInfo(el){
-        d3.selectAll(".panel")
-          .remove()
         let loookUp=el.category
         let infoPanel=container.append("div")
           .attr("class","panel")
@@ -142,6 +140,8 @@
         //console.log("d",d)
         d3.selectAll(".link")
         .remove()
+        d3.selectAll(".panel")
+          .remove()
         let x1=cellWidth*this.id+(cellWidth/2)
         let lineData = [
         {"x":x1,"y":40},
@@ -164,8 +164,11 @@
           .transition()
           .duration(300)
           .attr("d", lineFunction(lineData2))
+          .each("end", next)
 
-        addInfo(d)
+        function next(){
+          addInfo(d)
+        }
       }
 
       let lineFunction = d3.svg.line()

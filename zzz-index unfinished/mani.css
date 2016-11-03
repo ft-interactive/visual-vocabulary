@@ -32,6 +32,9 @@ p.intro-text {
 	line-height: 28px;
 	font-weight: 200;
 }
+.container {
+	height:1000px;
+}
 .categ {
 	opacity:1.0;
 }
