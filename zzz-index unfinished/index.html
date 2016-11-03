@@ -14,7 +14,6 @@
     <script>  
 
     d3.csv("chartTypes.csv",function(error, chartData){
-      console.log("chartData", chartData)
       let plotCategories=catData.categories
 
       let container = d3.select("body")
@@ -65,7 +64,6 @@
         .attr("fill",function(d){return d.colour})
 
       function addCharts(lookUp){
-        console.log(lookUp)
         let chartWidth=((plotWidth-60)/6)-10
         let chartHolder=d3.select("#charts")
           .append("div")
@@ -73,7 +71,6 @@
         let chart=chartHolder.selectAll(".chart")
           .data(function(d){
             let filtered=chartData.filter(function(d){
-                console.log(d.category)
                 return d.category==lookUp
             })
             return filtered
@@ -93,10 +90,9 @@
             .style("background-color","#ffffff")
             .style("opacity",function (d){
               if(d.avail=="TRUE"){
-                console.log(d.avail)
                 return 0.85
               }
-              else{console.log(d.avail);return 0.2}
+              else{return 0.2}
             })
             .attr("src",function(d){return "icons/"+d.img})
             .attr("width", chartWidth-20)
