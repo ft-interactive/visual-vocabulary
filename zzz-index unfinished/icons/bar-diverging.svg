@@ -4,14 +4,14 @@
 	 viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">
 <style type="text/css">
 	.st0{opacity:0.25;}
-	.st1{fill:#FFFFFF;}
-	.st2{fill:none;stroke:#000000;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st1{fill:none;}
+	.st2{fill:none;stroke:#E5B023;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
 	.st3{fill:#E5B023;}
 </style>
 <g>
 	<g class="st0">
 		<g>
-			<rect class="st1" width="200" height="200"/>
+			<rect y="0" class="st1" width="200" height="200"/>
 		</g>
 	</g>
 	<line class="st2" x1="106.9" y1="16.7" x2="106.9" y2="183.3"/>

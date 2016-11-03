@@ -3,62 +3,58 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">
 <style type="text/css">
-	.st0{opacity:0.25;fill:none;}
-	.st1{fill:none;stroke:#000000;stroke-width:1.5565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
-	.st2{fill:#929494;}
-	.st3{fill:none;stroke:#FFFFFF;stroke-width:1.5565;stroke-miterlimit:10;}
+	.st0{fill:none;}
+	.st1{fill:none;stroke:#E4AF23;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st2{fill:#E4AF23;}
+	.st3{fill:#E4AF23;fill-opacity:0.5;}
+	.st4{fill:none;stroke:#FFFFFF;stroke-width:1.5565;stroke-miterlimit:10;}
 </style>
 <g>
 	<g>
-		<rect class="st0" width="200" height="200"/>
+		<rect y="0" class="st0" width="200" height="200"/>
 	</g>
 	<line class="st1" x1="90.5" y1="16.7" x2="90.5" y2="183.3"/>
 	<g>
-		<rect x="83.4" y="103.5" width="14.5" height="21.4"/>
-		
-			<rect x="58.3" y="103.5" transform="matrix(-1 -1.224647e-16 1.224647e-16 -1 141.7104 228.367)" class="st2" width="25.1" height="21.4"/>
-		<rect x="97.9" y="103.5" class="st2" width="52.1" height="21.4"/>
-		<line class="st3" x1="83.4" y1="124.9" x2="83.4" y2="103.5"/>
-		<line class="st3" x1="97.9" y1="124.9" x2="97.9" y2="103.5"/>
+		<rect x="83.4" y="103.5" class="st2" width="14.5" height="21.4"/>
+		<rect x="58.3" y="103.5" class="st3" width="25.1" height="21.4"/>
+		<rect x="97.9" y="103.5" class="st3" width="52.1" height="21.4"/>
+		<line class="st4" x1="83.4" y1="124.9" x2="83.4" y2="103.5"/>
+		<line class="st4" x1="97.9" y1="124.9" x2="97.9" y2="103.5"/>
 	</g>
 	<g>
-		<rect x="70.5" y="158.4" width="40.2" height="21.4"/>
-		
-			<rect x="66.6" y="158.4" transform="matrix(-1 -1.224647e-16 1.224647e-16 -1 137.0993 338.2343)" class="st2" width="4" height="21.4"/>
-		<rect x="110.7" y="158.4" class="st2" width="65.3" height="21.4"/>
-		<line class="st3" x1="110.7" y1="179.8" x2="110.7" y2="158.4"/>
-		<line class="st3" x1="70.5" y1="179.8" x2="70.5" y2="158.4"/>
+		<rect x="70.5" y="158.4" class="st2" width="40.2" height="21.4"/>
+		<rect x="66.5" y="158.4" class="st3" width="4" height="21.4"/>
+		<rect x="110.7" y="158.4" class="st3" width="65.3" height="21.4"/>
+		<line class="st4" x1="110.7" y1="179.8" x2="110.7" y2="158.4"/>
+		<line class="st4" x1="70.5" y1="179.8" x2="70.5" y2="158.4"/>
 	</g>
 	<g>
-		<rect x="76.9" y="131.1" width="27.2" height="21.2"/>
-		
-			<rect x="104" y="131.1" transform="matrix(-1 -1.224647e-16 1.224647e-16 -1 265.212 283.3007)" class="st2" width="57.1" height="21.2"/>
-		<rect x="64.7" y="131.1" class="st2" width="12.1" height="21.2"/>
-		<line class="st3" x1="76.9" y1="152.3" x2="76.9" y2="131"/>
-		<line class="st3" x1="104" y1="152.3" x2="104" y2="131"/>
+		<rect x="76.9" y="131.1" class="st2" width="27.2" height="21.2"/>
+		<rect x="104.1" y="131" class="st3" width="57.1" height="21.2"/>
+		<rect x="64.7" y="131.1" class="st3" width="12.1" height="21.2"/>
+		<line class="st4" x1="76.9" y1="152.3" x2="76.9" y2="131"/>
+		<line class="st4" x1="104" y1="152.3" x2="104" y2="131"/>
 	</g>
 	<g>
-		<rect x="79.8" y="21.1" width="21.7" height="21.4"/>
-		<rect x="23.1" y="21.1" class="st2" width="56.6" height="21.4"/>
-		<rect x="101.5" y="21.1" class="st2" width="4.2" height="21.4"/>
-		<line class="st3" x1="79.8" y1="42.5" x2="79.8" y2="21.1"/>
-		<line class="st3" x1="101.5" y1="42.5" x2="101.5" y2="21.1"/>
+		<rect x="79.8" y="21.1" class="st2" width="21.7" height="21.4"/>
+		<rect x="23.1" y="21.1" class="st3" width="56.6" height="21.4"/>
+		<rect x="101.5" y="21.1" class="st3" width="4.2" height="21.4"/>
+		<line class="st4" x1="79.8" y1="42.5" x2="79.8" y2="21.1"/>
+		<line class="st4" x1="101.5" y1="42.5" x2="101.5" y2="21.1"/>
 	</g>
 	<g>
-		<rect x="72.4" y="76" width="36.1" height="21.4"/>
-		
-			<rect x="108.5" y="76" transform="matrix(-1 -1.224647e-16 1.224647e-16 -1 239.3139 173.4331)" class="st2" width="22.3" height="21.4"/>
-		
-			<rect x="39.6" y="76" transform="matrix(-1 -1.224647e-16 1.224647e-16 -1 111.9735 173.4331)" class="st2" width="32.8" height="21.4"/>
-		<line class="st3" x1="72.4" y1="97.4" x2="72.4" y2="76"/>
-		<line class="st3" x1="108.5" y1="97.4" x2="108.5" y2="76"/>
+		<rect x="72.4" y="76" class="st2" width="36.1" height="21.4"/>
+		<rect x="108.5" y="76" class="st3" width="22.3" height="21.4"/>
+		<rect x="39.6" y="76" class="st3" width="32.8" height="21.4"/>
+		<line class="st4" x1="72.4" y1="97.4" x2="72.4" y2="76"/>
+		<line class="st4" x1="108.5" y1="97.4" x2="108.5" y2="76"/>
 	</g>
 	<g>
-		<rect x="69.2" y="48.6" width="42.9" height="21.4"/>
-		<rect x="33.4" y="48.6" class="st2" width="35.8" height="21.4"/>
-		<rect x="112.1" y="48.6" class="st2" width="7.6" height="21.4"/>
-		<line class="st3" x1="112.1" y1="69.9" x2="112.1" y2="48.6"/>
-		<line class="st3" x1="69.2" y1="69.9" x2="69.2" y2="48.6"/>
+		<rect x="69.2" y="48.6" class="st2" width="42.9" height="21.4"/>
+		<rect x="33.4" y="48.6" class="st3" width="35.8" height="21.4"/>
+		<rect x="112.1" y="48.6" class="st3" width="7.6" height="21.4"/>
+		<line class="st4" x1="112.1" y1="69.9" x2="112.1" y2="48.6"/>
+		<line class="st4" x1="69.2" y1="69.9" x2="69.2" y2="48.6"/>
 	</g>
 </g>
 </svg>

@@ -66,10 +66,9 @@
 
       function addCharts(lookUp){
         console.log(lookUp)
-        let chartWidth=(plotWidth/5)-10
+        let chartWidth=((plotWidth-60)/6)-10
         let chartHolder=d3.select("#charts")
           .append("div")
-          .attr("height",600)
         
         let chart=chartHolder.selectAll(".chart")
           .data(function(d){
@@ -81,21 +80,33 @@
           })
           .enter()
           let div=chart.append("div")
-            .style("max-width",chartWidth)
             .attr("class","chart")
-            .attr("height",200)
+            .style("max-width",chartWidth)
+
+          div.append("div")
+            .attr("class","chart")
+            .style("height",55)
             .html(function(d){return d.chartName})
 
           div.append("img")
+            .attr("class","chart")
+            .style("background-color","#ffffff")
+            .style("opacity",function (d){
+              if(d.avail=="TRUE"){
+                console.log(d.avail)
+                return 0.8
+              }
+              else{console.log(d.avail);return 0.2}
+            })
             .attr("src",function(d){return "icons/"+d.img})
-            .attr("width", chartWidth)
-            .attr("height", chartWidth)
+            .attr("width", chartWidth-20)
+            .attr("height", chartWidth-20)
 
           div.append("div")
+            .attr("class","chartDesc")
             .html(function(d){return d.description})
 
       }
-
 
       function addInfo(el){
         d3.selectAll(".panel")

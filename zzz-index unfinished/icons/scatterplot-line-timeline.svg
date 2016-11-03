@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">
+<style type="text/css">
+	.st0{opacity:0.25;fill:none;}
+	.st1{fill:none;stroke:#28903B;stroke-width:1.25;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st2{fill:none;stroke:#28903B;stroke-width:1.25;stroke-linecap:square;stroke-linejoin:round;}
+	.st3{fill:#28903B;}
+	.st4{fill:none;stroke:#28903B;stroke-width:1.25;stroke-miterlimit:10;}
+</style>
+<g>
+	<rect class="st0" width="200" height="200"/>
+</g>
+<g>
+	<line class="st1" x1="152.1" y1="64.4" x2="166.6" y2="89.6"/>
+	<g>
+		<g>
+			<polyline class="st2" points="129.6,53.3 133.6,32.3 151.8,63.8 			"/>
+			<g>
+				<path class="st3" d="M147,61.6c0.1-0.2,0.3-0.2,0.4-0.1l4.2,2.2l0.2-4.8c0-0.2,0.2-0.3,0.3-0.3s0.3,0.2,0.3,0.3l-0.2,5.3
+					c0,0.1-0.1,0.2-0.2,0.3c-0.1,0.1-0.2,0.1-0.3,0l-4.7-2.4c-0.1,0-0.1-0.1-0.1-0.1C147,61.8,147,61.7,147,61.6z"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<polyline class="st2" points="104.5,109.3 109.3,64.4 125,77.4 129.5,54 			"/>
+			<g>
+				<path class="st3" d="M131.6,58.8c-0.2,0.1-0.3,0-0.4-0.2l-1.8-4.4l-3.3,3.5c-0.1,0.1-0.3,0.1-0.4,0c-0.1-0.1-0.1-0.3,0-0.4
+					l3.6-3.8c0.1-0.1,0.2-0.1,0.3-0.1c0.1,0,0.2,0.1,0.2,0.2l1.9,4.9c0,0.1,0,0.1,0,0.2C131.8,58.7,131.7,58.8,131.6,58.8z"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<polyline class="st2" points="82.7,133.1 98.3,168.1 104.5,110.1 			"/>
+			<g>
+				<path class="st3" d="M107,114.6c-0.2,0.1-0.3,0-0.4-0.1l-2.1-4.3l-3,3.7c-0.1,0.1-0.3,0.2-0.4,0.1s-0.2-0.3,0-0.4l3.3-4.1
+					c0.1-0.1,0.2-0.1,0.3-0.1c0.1,0,0.2,0.1,0.2,0.2l2.3,4.7c0,0.1,0,0.1,0,0.2C107.2,114.5,107.1,114.6,107,114.6z"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<polyline class="st2" points="53.6,123.5 68,100 82.4,132.4 			"/>
+			<g>
+				<path class="st3" d="M77.9,129.7c0.1-0.1,0.3-0.2,0.4-0.1l4,2.6l0.7-4.7c0-0.2,0.2-0.3,0.4-0.3c0.2,0,0.3,0.2,0.3,0.4l-0.8,5.2
+					c0,0.1-0.1,0.2-0.2,0.2s-0.2,0-0.3,0l-4.4-2.9c-0.1,0-0.1-0.1-0.1-0.1C77.8,129.9,77.8,129.8,77.9,129.7z"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<line class="st2" x1="38.8" y1="147.7" x2="53.2" y2="124.1"/>
+			<g>
+				<path class="st3" d="M53.6,129.3c-0.2,0-0.3-0.1-0.3-0.3l-0.1-4.8l-4.3,2.1c-0.2,0.1-0.3,0-0.4-0.1c-0.1-0.2,0-0.3,0.1-0.4
+					l4.7-2.3c0.1,0,0.2,0,0.3,0c0.1,0.1,0.1,0.2,0.1,0.3l0.1,5.3c0,0.1,0,0.1,0,0.2C53.8,129.3,53.7,129.3,53.6,129.3z"/>
+			</g>
+		</g>
+	</g>
+	<polyline class="st4" points="16.9,18.4 16.9,185.1 183.6,185.1 	"/>
+	<circle class="st3" cx="133.6" cy="32.3" r="5.2"/>
+	<path class="st3" d="M129.8,75.5c0.9,3.9-2.5,7.3-6.3,6.3c-1.8-0.4-3.3-1.9-3.8-3.8c-0.9-3.9,2.5-7.3,6.3-6.3
+		C127.9,72.2,129.3,73.7,129.8,75.5z"/>
+	<circle class="st3" cx="109.3" cy="64.4" r="5.2"/>
+	<circle class="st3" cx="68" cy="100" r="5.2"/>
+	<circle class="st3" cx="166.6" cy="89.6" r="5.2"/>
+	<circle class="st3" cx="38.8" cy="147.7" r="5.2"/>
+	<circle class="st3" cx="97.8" cy="168.1" r="5.2"/>
+</g>
+</svg>

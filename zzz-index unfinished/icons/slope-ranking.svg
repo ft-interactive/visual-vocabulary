@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">
+<style type="text/css">
+	.st0{opacity:0.25;fill:none;}
+	.st1{fill:none;stroke:#008EB0;stroke-width:2.5;}
+	.st2{fill:#008EB0;}
+	.st3{opacity:0.5;}
+	.st4{fill:none;stroke:#008EB0;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+</style>
+<g>
+	<g>
+		<rect class="st0" width="200" height="200"/>
+	</g>
+	<g>
+		<g>
+			<line class="st1" x1="20" y1="20" x2="180" y2="151.4"/>
+			<g>
+				<ellipse transform="matrix(0.6345 -0.7729 0.7729 0.6345 -8.1484 22.7676)" class="st2" cx="20" cy="20" rx="4.7" ry="4.7"/>
+			</g>
+			<g>
+				
+					<ellipse transform="matrix(0.6345 -0.7729 0.7729 0.6345 -51.1961 194.4389)" class="st2" cx="180" cy="151.4" rx="4.7" ry="4.7"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g class="st3">
+			<line class="st4" x1="20" y1="141.1" x2="180" y2="180"/>
+			<g>
+				
+					<ellipse transform="matrix(0.236 -0.9717 0.9717 0.236 -121.8721 127.2626)" class="st2" cx="20" cy="141.1" rx="4.7" ry="4.7"/>
+			</g>
+			<g>
+				<ellipse transform="matrix(0.236 -0.9717 0.9717 0.236 -37.398 312.4316)" class="st2" cx="180" cy="180" rx="4.7" ry="4.7"/>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>
