@@ -100,6 +100,20 @@ function pyramid(data,stylename,media,plotpadding,legAlign,yAlign,xmin,xmax,numT
             return d==originValue || d==xAxisHighlight;
         }).classed(media+"origin",true);
 
+    let labelLeft=plot.append("text")
+        .attr("x",xScaleR(0)+margin.left)
+        .attr("y",yOffset)
+        .attr("class",media+"subtitle")
+        .style("text-anchor","start")
+        .text(seriesNames[1])
+
+    let labelRight=plot.append("text")
+        .attr("x",xScaleL(0)+margin.left)
+        .attr("y",yOffset)
+        .attr("class",media+"subtitle")
+        .style("text-anchor","end")
+        .text(seriesNames[0])
+
     plot.selectAll("."+media+"fill")
     .data(plotData)
     .enter()
@@ -110,6 +124,8 @@ function pyramid(data,stylename,media,plotpadding,legAlign,yAlign,xmin,xmax,numT
             })
         .call(addBarsL)
         .call(addBarsR)
+
+
 
     function addBarsL(parent) {
         parent.selectAll("."+media+"fill")
