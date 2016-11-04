@@ -213,7 +213,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
                 return seriesNames[i];  
             })
 
-//add annotation
+    //add annotation
     var annotations = data.filter(function(d){
         return d.annotate !="";
     })
@@ -231,26 +231,24 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         .data(annotations)
         .enter()
         .append("line")
+        .attr("class",media+"annotationLine")
         .attr("x1",function(d){return xScale(d.date)})
         .attr("x2",function(d){return xScale(d.date)})
         .attr("y1",yScale.range()[0])
         .attr("y2",yScale.range()[1])
-        .attr("stroke","pink")
-        .attr("stroke-width","2px")
 
     anno.selectAll("text")
         .data(annotations)
         .enter()
         .append("text")
+        .attr("class",media+"annotationText")
         .attr("text-anchor","middle")
         .attr("x",function(d){return xScale(d.date)})
         .attr("y",yScale.range()[1]-10)
-        .attr("fill","pink")
         .text(function(d){
             return d.annotate
         })
 
-            
         lines.append("path")
             .attr("class",media+"lines")
             .attr("stroke",function(d,i){
@@ -264,27 +262,6 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
                 }
                  else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
             })
-
-        lines.append("g").attr("fill",function(d,i){return colours[i]})
-            .selectAll("circle")
-            .data(function(d){
-                return d;})
-            .enter()
-            .append("circle")
-            .attr("r", function(d) {
-                if(d.highlight=="yes") {
-                    return yOffset/4
-                    }
-                    else {return 0}
-                })
-            .attr("cx",function(d){return xScale(d.date)})
-            .attr("cy",function(d){return yScale(d.val)})
-            .attr("transform",function(){
-                if(yAlign=="right") {
-                    return "translate("+(margin.left)+","+(margin.top)+")"
-                }
-                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
-            });
 
     //if needed, create markers
     if (markers){
