@@ -269,7 +269,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             .append("circle")
             .attr("r",yOffset/4)
             .attr("id",function(d){
-                return d.date+":"+d.va1;
+                return d.date+":"+d.val;
             })
             .attr("cx",function(d){return xScale(d.date)})
             .attr("cy",function(d){return yScale(d.val)})
