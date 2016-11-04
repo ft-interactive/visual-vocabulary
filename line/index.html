@@ -16,7 +16,7 @@
     <script>
         
         //datafile
-        var dataURL = "2lines.csv"
+        var dataURL = "linedata.csv"
         
         //titles, footnotes
         var title = "Predicted quarterly growth";
@@ -61,8 +61,11 @@
             //date formatter, matching the format of the incoming csv...
             //var parseDate = d3.time.format("%Y %b").parse;
             //var parseDate = d3.time.format("%Y").parse;//just full year
-            var parseDate = d3.time.format("%d-%b-%y").parse;
+            var parseDate = d3.time.format("%d/%m/%y").parse;
             /*
+
+03/08/14
+
             some common formatting parsers....
             d3.time.format("%Y %b") 1986 Jan
             d3.time.format("%d-%b-%y")  28-Jan-86
