@@ -100,5 +100,19 @@ function pyramid(data,stylename,media,plotpadding,legAlign,yAlign,xmin,xmax,numT
             return d==originValue || d==xAxisHighlight;
         }).classed(media+"origin",true);
 
+    plot.selectAll("."+media+"fill")
+    .data(plotData)
+    .enter()
+        .append("g")
+        .attr("id", function(d) {return d.category})
+        .attr("transform",function(){
+                return "translate("+(margin.left)+","+margin.top+")"
+            })
+        .call (addBars)
+
+    function addBars() {
+
+    }
+
 
 }
