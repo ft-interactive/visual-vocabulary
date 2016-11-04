@@ -255,6 +255,9 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             .enter()
             .append("circle")
             .attr("r",yOffset/4)
+            .attr("id",function(d){
+                return d.date+":"+d.value;
+            })
             .attr("cx",function(d){return xScale(d.date)})
             .attr("cy",function(d){return yScale(d.val)})
             .attr("transform",function(){
@@ -264,13 +267,6 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
                  else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
             });
     }
-
-    //if needed add annotations
-    var annotations = data.filter(function(d){
-        return d.annotate != "";
-    })
-
-    console.log(annotations)
 
     d3.selectAll(".domain").remove()
 
