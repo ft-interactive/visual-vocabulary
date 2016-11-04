@@ -108,20 +108,35 @@ function pyramid(data,stylename,media,plotpadding,legAlign,yAlign,xmin,xmax,numT
         .attr("transform",function(){
                 return "translate("+(margin.left)+","+margin.top+")"
             })
-        .call(addBars)
+        .call(addBarsL)
+        .call(addBarsR)
 
-    function addBars(parent) {
+    function addBarsL(parent) {
         parent.selectAll("."+media+"fill")
-            .data(plotData)
+        .data(plotData)
             .enter()
             .append("rect")
             .attr("class",media+"bars")
             .attr("id", function(d) {return d.category +"-"+d[seriesNames[0]]})
             .attr("fill",colours[0])
             .attr("height", function(d) {  return yScale.rangeBand()})
+            .attr("x",function(d) {return xScaleL(d[seriesNames[0]])})
+            .attr("y", function(d) { return yScale(d.category)})
+            .attr("width",function (d) {return Math.abs(xScaleL(d[seriesNames[0]])-xScaleL(0))})
+    }
+
+    function addBarsR(parent) {
+        parent.selectAll("."+media+"fill")
+            .data(plotData)
+            .enter()
+            .append("rect")
+            .attr("class",media+"bars")
+            .attr("id", function(d) {return d.category +"-"+d[seriesNames[1]]})
+            .attr("fill",colours[1])
+            .attr("height", function(d) {  return yScale.rangeBand()})
             .attr("x",xScaleR(0))
             .attr("y", function(d) { return yScale(d.category)})
-            .attr("width",function (d) {return xScaleR(d[seriesNames[0]])-xScaleR(0)})
+            .attr("width",function (d) {return xScaleR(d[seriesNames[1]])-xScaleR(0)})
 
     }
 
