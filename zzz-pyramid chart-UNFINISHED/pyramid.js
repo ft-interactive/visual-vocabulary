@@ -1,5 +1,5 @@
 
-function pyramid(data,stylename,media,plotpadding,legAlign,yAlign,xmin,xmax,numTicksx){
+function pyramid(data,stylename,media,plotpadding,legAlign,yAlign,xmin,xmax,numTicksx, xAxisHighlight){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -43,11 +43,14 @@ function pyramid(data,stylename,media,plotpadding,legAlign,yAlign,xmin,xmax,numT
     .call(yAxis)
 
     var yLabelOffset=yLabel.node().getBBox().width;
+    yLabel
+        .attr("transform",function(){
+                    return "translate("+(plotWidth/2+margin.left)+","+margin.top+")"
+                })
 
     yLabel.selectAll('text')
         .attr("style", null)
         .style("text-anchor","middle")
-        .attr("x",plotWidth/2+margin.left)
 
     // console.log(yLabelOffset)
     plotData.forEach(function(d,i){
@@ -91,5 +94,11 @@ function pyramid(data,stylename,media,plotpadding,legAlign,yAlign,xmin,xmax,numT
       .attr("class", media+"xAxis")
       .attr("transform", "translate("+(margin.left)+"," + (margin.top) + ")")
       .call(xAxis);
+
+    var originValue = 0;
+    var origin = plot.selectAll(".tick").filter(function(d, i) {
+            return d==originValue || d==xAxisHighlight;
+        }).classed(media+"origin",true);
+
 
 }
