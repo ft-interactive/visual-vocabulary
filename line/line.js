@@ -6,7 +6,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
     // return the series names from the first row of the spreadsheet
-    var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date' && d != 'highlight' ; });
+    var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date' && d != 'highlight'&& d != 'annotate' ; });
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
     var plot=d3.select("#"+media+"plot")
