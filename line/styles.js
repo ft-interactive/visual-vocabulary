@@ -1,6 +1,9 @@
 
 var styleprint = {classes:
 [{class:"background{fill: none}"},
+{class:"annotationText{fill:#000000;font-size:9.6px;}"},
+{class:"annotationLine{fill:none;stroke:#000000;stroke-width:1px}"},
+{class:"Shade{fill:#55a2c7;opacity:0.2;stroke:none}"},
 {class:"chartholder{fill: none}"},
 {class:"title{font-size:12px; fill: #000000; font-weight: 600;}"},
 {class:"subtitle{fill:#000000; font-size: 9.6px; font-weight: 400;}"},
@@ -31,6 +34,9 @@ fillcolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"]
 
 var styleweb = {classes:
 [{class:"background{fill: none}"},
+{class:"annotationText{fill:#6b6e68;font-size:18px;}"},
+{class:"annotationLine{fill:none;stroke:#6b6e68;stroke-width:1px}"},
+{class:"Shade{fill:#69A1AA;opacity:0.2;stroke:none}"},
 {class:"chartholder{fill: none;}"},
 {class:"title{font-size:25.0px; font-weight: 400; fill: #3b3d3b;}"},
 {class:"subtitle{font-size:18.0px; font-weight: 400; fill: #6b6e68;}"},
@@ -57,6 +63,9 @@ fillcolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 
 var stylenowcast = {classes:
 [{class:"background{fill: none}"},
+{class:"annotationText{fill:#6b6e68;font-size:14px;}"},
+{class:"annotationLine{fill:none;stroke:#6b6e68;stroke-width:1px}"},
+{class:"Shade{fill:#69A1AA;opacity:0.2;stroke:none}"},
 {class:"chartholder{fill: none}"},
 {class:"title{font-size:21.0px; font-weight: 400; fill: #3b3d3b;}"},
 {class:"subtitle{font-size:14.0px; font-weight: 400; fill: #6b6e68;}"},
@@ -83,7 +92,10 @@ fillcolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"]
 
 var stylesoc = {classes:
 [{class:"background{fill: #212121;}"},
-{class:"chartholder{fill: #6b6e68;}"},
+{class:"annotationText{fill:#ffffff;font-size:18px;}"},
+{class:"annotationLine{fill:none;stroke:#ffffff;stroke-width:1px}"},
+{class:"Shade{fill:#ffffff;opacity:0.2;stroke:none}"},
+{class:"chartholder{fill: none;}"},
 {class:"title{font-size: 38px; fill: #ffffff; font-weight: 600; opacity: 0.9;}"},
 {class:"subtitle{font-size: 28px; fill: #ffffff; font-weight: 400; opacity: 0.7;}"},
 {class:"source{font-size: 25px; fill: #ffffff; font-weight: 400; opacity: 0.5;}"},
@@ -110,6 +122,9 @@ fillcolours:["#EB3F50","#00D9CA","#BF9413","#1F5E99","#A7FF59","#FF9B96","#81838
 var stylevid = {classes:
 [{class:"background{fill: #212121;}"},
 {class:"titleframe{fill: none;}"},
+{class:"annotationText{fill:#ffffff;font-size:48px;}"},
+{class:"annotationLine{fill:none;stroke:#ffffff;stroke-width:1px}"},
+{class:"Shade{fill:#ffffff;opacity:0.2;stroke:none}"},
 {class:"chartholder{fill: none;}"},
 {class:"title{font-size: 68px; fill: #ffffff; font-weight: 600;opacity: 0.9;}"},
 {class:"subtitle{font-size: 48; fill: #ffffff; font-weight: 400;opacity: 0.7;}"},

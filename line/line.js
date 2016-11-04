@@ -6,7 +6,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
 
     // return the series names from the first row of the spreadsheet
-    var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date' && d != 'highlight' ; });
+    var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date' && d != 'highlight'&& d != 'annotate' ; });
     //Select the plot space in the frame from which to take measurements
     var frame=d3.select("#"+media+"chart")
     var plot=d3.select("#"+media+"plot")
@@ -117,7 +117,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     if (yAlign=="right"){
         yLabel.selectAll('text')
             .attr("style", null)
-            .attr("x",yticksize+(yLabelOffset*.5))
+            .attr("x",yticksize+(yLabelOffset*.8))
         }
 
     //identify 0 line if there is one
@@ -176,10 +176,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         .enter()
         .call(function(parent){
             parent.append('rect')
-                .style("fill", function (d,i) {
-                    return colours[3]
-                })
-                .style ("opacity",0.2)
+                .attr("class",media+"Shade")
                 .attr("x", function(d) {
                     return xScale(d.begin)})
                 .attr("width", function (d) {return xScale(d.end)-xScale(d.begin)})
@@ -193,6 +190,42 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             });
         })
     }
+
+        //add annotation
+    var annotations = data.filter(function(d){
+        return d.annotate !="";
+    })
+
+    var anno = plot.append("g")
+        .attr("id","annotations")
+        .attr("transform",function(){
+                if(yAlign=="right") {
+                    return "translate("+(margin.left)+","+(margin.top)+")"
+                }
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
+        })
+
+    anno.selectAll("line")
+        .data(annotations)
+        .enter()
+        .append("line")
+        .attr("class",media+"annotationLine")
+        .attr("x1",function(d){return xScale(d.date)})
+        .attr("x2",function(d){return xScale(d.date)})
+        .attr("y1",yScale.range()[0])
+        .attr("y2",yScale.range()[1]-5)
+
+    anno.selectAll("text")
+        .data(annotations)
+        .enter()
+        .append("text")
+        .attr("class",media+"annotationText")
+        .attr("text-anchor","middle")
+        .attr("x",function(d){return xScale(d.date)})
+        .attr("y",yScale.range()[1]-10)
+        .text(function(d){
+            return d.annotate
+        })
 
 
     //create a line function that can convert data[] into x and y points
@@ -212,6 +245,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             .attr("id",function(d,i){
                 return seriesNames[i];  
             })
+
         lines.append("path")
             .attr("class",media+"lines")
             .attr("stroke",function(d,i){
@@ -226,27 +260,6 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
                  else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
             })
 
-        lines.append("g").attr("fill",function(d,i){return colours[i]})
-            .selectAll("circle")
-            .data(function(d){
-                return d;})
-            .enter()
-            .append("circle")
-            .attr("r", function(d) {
-                if(d.highlight=="yes") {
-                    return yOffset/4
-                    }
-                    else {return 0}
-                })
-            .attr("cx",function(d){return xScale(d.date)})
-            .attr("cy",function(d){return yScale(d.val)})
-            .attr("transform",function(){
-                if(yAlign=="right") {
-                    return "translate("+(margin.left)+","+(margin.top)+")"
-                }
-                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
-            });
-
     //if needed, create markers
     if (markers){
         lines.append("g").attr("fill",function(d,i){return colours[i]})
@@ -255,6 +268,9 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             .enter()
             .append("circle")
             .attr("r",yOffset/4)
+            .attr("id",function(d){
+                return d.date+":"+d.va1;
+            })
             .attr("cx",function(d){return xScale(d.date)})
             .attr("cy",function(d){return yScale(d.val)})
             .attr("transform",function(){
@@ -264,6 +280,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
                  else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
             });
     }
+
 
     d3.selectAll(".domain").remove()
 
