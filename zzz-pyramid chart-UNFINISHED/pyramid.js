@@ -29,7 +29,7 @@ function pyramid(data,stylename,media,plotpadding,legAlign,yAlign,xmin,xmax,numT
     console.log(seriesNames);
 
     var yScale = d3.scale.ordinal()
-    .rangeBands([0, plotHeight],.3)
+    .rangeBands([0, plotHeight],.05)
     .domain(data.map(function(d) { return d.category;}));
     
     var yAxis = d3.svg.axis()
@@ -108,9 +108,20 @@ function pyramid(data,stylename,media,plotpadding,legAlign,yAlign,xmin,xmax,numT
         .attr("transform",function(){
                 return "translate("+(margin.left)+","+margin.top+")"
             })
-        .call (addBars)
+        .call(addBars)
 
-    function addBars() {
+    function addBars(parent) {
+        parent.selectAll("."+media+"fill")
+            .data(plotData)
+            .enter()
+            .append("rect")
+            .attr("class",media+"bars")
+            .attr("id", function(d) {return d.category +"-"+d[seriesNames[0]]})
+            .attr("fill",colours[0])
+            .attr("height", function(d) {  return yScale.rangeBand()})
+            .attr("x",xScaleR(0))
+            .attr("y", function(d) { return yScale(d.category)})
+            .attr("width",function (d) {return xScaleR(d[seriesNames[0]])-xScaleR(0)})
 
     }
 
