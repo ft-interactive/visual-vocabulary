@@ -212,6 +212,45 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             .attr("id",function(d,i){
                 return seriesNames[i];  
             })
+
+//add annotation
+    var annotations = data.filter(function(d){
+        return d.annotate !="";
+    })
+
+    var anno = lines.append("g")
+        .attr("id","annotations")
+        .attr("transform",function(){
+                if(yAlign=="right") {
+                    return "translate("+(margin.left)+","+(margin.top)+")"
+                }
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
+        })
+
+    anno.selectAll("line")
+        .data(annotations)
+        .enter()
+        .append("line")
+        .attr("x1",function(d){return xScale(d.date)})
+        .attr("x2",function(d){return xScale(d.date)})
+        .attr("y1",yScale.range()[0])
+        .attr("y2",yScale.range()[1])
+        .attr("stroke","pink")
+        .attr("stroke-width","2px")
+
+    anno.selectAll("text")
+        .data(annotations)
+        .enter()
+        .append("text")
+        .attr("text-anchor","middle")
+        .attr("x",function(d){return xScale(d.date)})
+        .attr("y",yScale.range()[1]-10)
+        .attr("fill","pink")
+        .text(function(d){
+            return d.annotate
+        })
+
+            
         lines.append("path")
             .attr("class",media+"lines")
             .attr("stroke",function(d,i){
@@ -256,7 +295,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             .append("circle")
             .attr("r",yOffset/4)
             .attr("id",function(d){
-                return d.date+":"+d.value;
+                return d.date+":"+d.va1;
             })
             .attr("cx",function(d){return xScale(d.date)})
             .attr("cy",function(d){return yScale(d.val)})
@@ -267,6 +306,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
                  else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
             });
     }
+
 
     d3.selectAll(".domain").remove()
 
