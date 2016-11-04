@@ -117,7 +117,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     if (yAlign=="right"){
         yLabel.selectAll('text')
             .attr("style", null)
-            .attr("x",yticksize+(yLabelOffset*.5))
+            .attr("x",yticksize+(yLabelOffset*.8))
         }
 
     //identify 0 line if there is one
@@ -176,11 +176,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         .enter()
         .call(function(parent){
             parent.append('rect')
-                .style("fill", function (d,i) {
-                    return colours[3
-                    ]
-                })
-                .style ("opacity",0.2)
+                .attr("class",media+"Shade")
                 .attr("x", function(d) {
                     return xScale(d.begin)})
                 .attr("width", function (d) {return xScale(d.end)-xScale(d.begin)})
