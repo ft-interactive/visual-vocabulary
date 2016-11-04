@@ -265,6 +265,13 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             });
     }
 
+    //if needed add annotations
+    var annotations = data.filter(function(d){
+        return d.annotate != "";
+    })
+
+    console.log(annotations)
+
     d3.selectAll(".domain").remove()
 
     //Add labels so that the preflight script in illustrator will work
