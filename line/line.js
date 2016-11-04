@@ -177,7 +177,8 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         .call(function(parent){
             parent.append('rect')
                 .style("fill", function (d,i) {
-                    return colours[3]
+                    return colours[3
+                    ]
                 })
                 .style ("opacity",0.2)
                 .attr("x", function(d) {
@@ -193,6 +194,42 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             });
         })
     }
+
+        //add annotation
+    var annotations = data.filter(function(d){
+        return d.annotate !="";
+    })
+
+    var anno = plot.append("g")
+        .attr("id","annotations")
+        .attr("transform",function(){
+                if(yAlign=="right") {
+                    return "translate("+(margin.left)+","+(margin.top)+")"
+                }
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
+        })
+
+    anno.selectAll("line")
+        .data(annotations)
+        .enter()
+        .append("line")
+        .attr("class",media+"annotationLine")
+        .attr("x1",function(d){return xScale(d.date)})
+        .attr("x2",function(d){return xScale(d.date)})
+        .attr("y1",yScale.range()[0])
+        .attr("y2",yScale.range()[1]-5)
+
+    anno.selectAll("text")
+        .data(annotations)
+        .enter()
+        .append("text")
+        .attr("class",media+"annotationText")
+        .attr("text-anchor","middle")
+        .attr("x",function(d){return xScale(d.date)})
+        .attr("y",yScale.range()[1]-10)
+        .text(function(d){
+            return d.annotate
+        })
 
 
     //create a line function that can convert data[] into x and y points
@@ -212,42 +249,6 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             .attr("id",function(d,i){
                 return seriesNames[i];  
             })
-
-    //add annotation
-    var annotations = data.filter(function(d){
-        return d.annotate !="";
-    })
-
-    var anno = lines.append("g")
-        .attr("id","annotations")
-        .attr("transform",function(){
-                if(yAlign=="right") {
-                    return "translate("+(margin.left)+","+(margin.top)+")"
-                }
-                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
-        })
-
-    anno.selectAll("line")
-        .data(annotations)
-        .enter()
-        .append("line")
-        .attr("class",media+"annotationLine")
-        .attr("x1",function(d){return xScale(d.date)})
-        .attr("x2",function(d){return xScale(d.date)})
-        .attr("y1",yScale.range()[0])
-        .attr("y2",yScale.range()[1])
-
-    anno.selectAll("text")
-        .data(annotations)
-        .enter()
-        .append("text")
-        .attr("class",media+"annotationText")
-        .attr("text-anchor","middle")
-        .attr("x",function(d){return xScale(d.date)})
-        .attr("y",yScale.range()[1]-10)
-        .text(function(d){
-            return d.annotate
-        })
 
         lines.append("path")
             .attr("class",media+"lines")
