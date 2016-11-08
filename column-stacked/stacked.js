@@ -69,14 +69,23 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
        return bands
     }
 
-    //console.log("plotData",plotData)
+    console.log("plotData",plotData)
 
     if (sort=="descending") {
         plotData.sort(function(a, b) { 
         return b.total - a.total; })//Sorts biggest rects to the left
-        }
-        else {plotData.sort(function(a, b) { 
+    }
+    if (sort=="ascending") {
+        plotData.sort(function(a, b) { 
         return a.total - b.total; })//Sorts biggest rects to the left
+    }
+    if (sort=="alpha") {
+        plotData.sort(function(a, b) {
+   return a.cat.localeCompare(b.cat);
+});
+    }
+    if (sort=="none") {
+        //no sorting applied
     }
 
     var yScale = d3.scale.linear()
