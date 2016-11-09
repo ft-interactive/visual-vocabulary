@@ -134,10 +134,14 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     var xAxis = d3.svg.axis()
         .scale(xScale)
         .tickValues(xScale.domain().filter(function (d, i) {
-            return (d.getHours() == 12 && d.getMinutes() == 00);
+            var checkDate
+            if(i==0){checkDate=d}
+            if(i>0){checkDate=new Date (data[i-1].date)}
+            console.log(d,d.getDay(),checkDate.getDay())
+            return (d.getDay()!= checkDate.getDay());
         }))
        .tickFormat(function (d) {
-             var dateFormat=d3.time.format("%d");
+             var dateFormat=d3.time.format("%d %b");
              return dateFormat(d);
        })
         // .tickFormat(function (d,i) {
