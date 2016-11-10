@@ -137,7 +137,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             var checkDate
             if(i==0){checkDate=d}
             if(i>0){checkDate=new Date (data[i-1].date)}
-            console.log(d,d.getDay(),checkDate.getDay())
+            //console.log(d,d.getDay(),checkDate.getDay())
             return (d.getDay()!= checkDate.getDay());
         }))
        .tickFormat(function (d) {
@@ -170,6 +170,10 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     if(minAxis) {
         var xAxisMinor = d3.svg.axis()
         .scale(xScale)
+        .tickValues(xScale.domain().filter(function (d, i) {
+            //console.log(d,d.getDay(),checkDate.getDay())
+            return (d.getMinutes()==0);
+        }))
         .tickSize(yOffset/4)
         .orient("bottom");
 
@@ -277,7 +281,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
 
     var toneBands=d3.selectAll("."+media+"area")
     toneBands.forEach(function(d,i){
-        console.log(d)
+        //console.log(d)
         d.forEach(function(el){
             console.log(el)
             var firstChild = el.parentNode.firstChild; 
