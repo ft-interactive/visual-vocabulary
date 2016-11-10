@@ -193,7 +193,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
 
         //add annotation
     var annotations = data.filter(function(d){
-        return d.annotate !="";
+        return d.annotate !="" && d.annotate !=undefined;
     })
 
     var anno = plot.append("g")
