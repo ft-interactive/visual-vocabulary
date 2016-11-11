@@ -1,4 +1,4 @@
-function bubbleChart(data, stylename, media,yMin,yMax,xMin,xMax,numTicksy, numTicksyx,chartpadding,legAlign, smallCircle, largeCircle,subYoffset,yAxisHighlight,axisLabel,xaxisLabel,yaxisLabel,yAlign){
+function bubbleChart(data, stylename, media,yMin,yMax,xMin,xMax,numTicksy, numTicksyx,chartpadding,legAlign,largeCircle,subYoffset,yAxisHighlight,axisLabel,xaxisLabel,yaxisLabel,yAlign){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -63,11 +63,11 @@ function bubbleChart(data, stylename, media,yMin,yMax,xMin,xMax,numTicksy, numTi
 
     //analyse stage space to determine appropriate sizes for circles
     var minDimension = Math.min(h,w)
-    var minCircleRadius = minDimension/smallCircle;
     var maxCircleRadius = minDimension/largeCircle;
+
     var circleScale = d3.scale.sqrt()
-        .domain(sizeExtent)
-        .range([minCircleRadius,maxCircleRadius]);
+        .domain([0,sizeExtent[1]])
+        .range([0,maxCircleRadius]);
 
     var yAxis = d3.svg.axis()
         .scale(yScale)
@@ -113,7 +113,7 @@ function bubbleChart(data, stylename, media,yMin,yMax,xMin,xMax,numTicksy, numTi
         })
         .call(xAxis);
 
-    console.log(xLabel,yLabel)
+    //console.log(xLabel,yLabel)
 
     if (axisLabel) {
         plot.append("text")
