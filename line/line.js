@@ -246,19 +246,41 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
                 return seriesNames[i];  
             })
 
-        lines.append("path")
-            .attr("class",media+"lines")
-            .attr("stroke",function(d,i){
-                return colours[i];  
-            })
-            .attr('d', function(d){
-                return lineData(d); })
-            .attr("transform",function(){
-                if(yAlign=="right") {
-                    return "translate("+(margin.left)+","+(margin.top)+")"
-                }
-                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
-            })
+    lines.append("path")
+        .attr("class",media+"lines")
+        .attr("stroke",function(d,i){
+            return colours[i];  
+        })
+        .attr('d', function(d){
+            return lineData(d); })
+        .attr("transform",function(){
+            if(yAlign=="right") {
+                return "translate("+(margin.left)+","+(margin.top)+")"
+            }
+             else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
+        })
+
+    lines.append("g").attr("fill",function(d,i){return colours[i]})
+    .selectAll("circle")
+    .data(function(d){
+        return d;})
+    .enter()
+    .append("circle")
+    .attr("r", function(d) {
+        if(d.highlight=="yes") {
+            return yOffset/4
+            }
+            else {return 0}
+        })
+    .attr("cx",function(d){return xScale(d.date)})
+    .attr("cy",function(d){return yScale(d.val)})
+    .attr("transform",function(){
+        if(yAlign=="right") {
+            return "translate("+(margin.left)+","+(margin.top)+")"
+        }
+         else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
+    });
+    
 
     //if needed, create markers
     if (markers){
