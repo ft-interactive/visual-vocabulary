@@ -39,7 +39,6 @@ function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHig
     var plotHeight=h-margin.top-margin.bottom
     //Work out xdomain
 
-    console.log(yMin,yMax)
     var cumulative =0;
 
     function extents(last,value) {
@@ -63,12 +62,13 @@ function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHig
         return value < 0 ? 'negative' : 'positive';
     }
 
-    var plotData=data.map(function(d) {
+    var plotData=data.map(function(d,i) {
         yMin=Math.min(cumulative,yMin);
         yMax=Math.max(cumulative,yMax);
 
 
         var extent = extents(cumulative,+d.value);
+        console.log(i,extent)
         cumulative=extent[1];
 
         if(d.value<0){
@@ -76,6 +76,13 @@ function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHig
         }
         else {
             cumulative=extent[1]};
+
+        if(i==0 && d.value<0) {
+            console.log("begin negative")
+            cumulative=extent[1];
+            extent[0]=d.value;
+            extent[1]=0;
+        };
 
         return {
             cat:d.cat,
@@ -95,6 +102,8 @@ function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHig
         }),
         group: null
     })
+
+    console.log(plotData)
 
     var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
