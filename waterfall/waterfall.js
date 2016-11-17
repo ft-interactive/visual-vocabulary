@@ -68,7 +68,6 @@ function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHig
 
 
         var extent = extents(cumulative,+d.value);
-        console.log(i,extent)
         cumulative=extent[1];
 
         if(d.value<0){
