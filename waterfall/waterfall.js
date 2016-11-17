@@ -78,7 +78,6 @@ function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHig
             cumulative=extent[1]};
 
         if(i==0 && d.value<0) {
-            console.log("begin negative")
             cumulative=extent[1];
             extent[0]=d.value;
             extent[1]=0;
@@ -102,8 +101,6 @@ function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHig
         }),
         group: null
     })
-
-    console.log(plotData)
 
     var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
