@@ -199,7 +199,12 @@ function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHig
                     }
                 })
              
-             parent.filter(function(d,i) {return d.cat != "Total" && i<(plotData.length-2)})
+             parent.filter(function(d,i) {
+                if(invertScale) {
+                    return d.cat != "Total" && i<(plotData.length-1)
+                }
+                else {return d.cat != "Total" && i<(plotData.length-2)}
+            })
              .append("line")
                 .attr("class", media+"whiskers")
                 .attr("x1", function(d,i) {return xScale(d.cat)})
