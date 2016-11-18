@@ -1,4 +1,4 @@
-function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHighlight, labels, numTicksy, yAlign){
+function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHighlight, labels, numTicksy, yAlign,invertScale,total){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -91,7 +91,8 @@ function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHig
         }
     })
 
-    plotData.push({
+    if(total) {
+        plotData.push({
         cat: 'Total',
         value:cumulative,
         start: 0,
@@ -101,10 +102,15 @@ function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHig
         group: null
     })
 
+    }
+
     var yScale = d3.scale.linear()
         .range([plotHeight, 0]);
     //var max=d3.max(data, function(d,i) { return +d.value;});
-    yScale.domain([yMin, yMax]);
+    if(invertScale){
+        yScale.domain([yMax, yMin])
+    }
+    else {yScale.domain([yMin, yMax])};
 
     var yAxis = d3.svg.axis()
     .scale(yScale)
@@ -150,6 +156,8 @@ function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHig
       .attr("transform", "translate("+(margin.left)+"," + (h-margin.bottom) + ")")
       .call(xAxis);
 
+    console.log(plotData)
+
     plot.selectAll("."+media+"fill")
     .data(plotData)
     .enter()
@@ -167,8 +175,17 @@ function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHig
                 .attr("class",media+"fill")
                 .attr("x", function(d) { return xScale(d.cat); })
                 .attr("width", xScale.rangeBand())
-                .attr("y", function(d) { return yScale(d.start)-(yScale(d.start)-yScale(d.end))})
-                .attr("height", function(d){return yScale(d.start)-yScale(d.end); })
+                .attr("y", function(d) {
+                    if(invertScale){
+                        return yScale(d.end)-(yScale(d.end)-yScale(d.start))
+                    }
+                    else {return yScale(d.start)-(yScale(d.start)-yScale(d.end))}
+                })
+                .attr("height", function(d){
+                    if(invertScale){
+                        return Math.abs(yScale(d.end)-yScale(d.start)); 
+                    }
+                    return yScale(d.start)-yScale(d.end); })
                 .on("mouseover",pointer)
                 .on("click",function(d){
                     var elClass = d3.select(this)
