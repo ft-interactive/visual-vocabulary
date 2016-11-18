@@ -156,8 +156,6 @@ function waterfallChart(data,stylename,media,yMin,yMax,plotpadding,legAlign,yHig
       .attr("transform", "translate("+(margin.left)+"," + (h-margin.bottom) + ")")
       .call(xAxis);
 
-    console.log(plotData)
-
     plot.selectAll("."+media+"fill")
     .data(plotData)
     .enter()
