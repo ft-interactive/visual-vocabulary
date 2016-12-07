@@ -24,9 +24,9 @@
         var source = "Sed do eiusmod tempor incididunt ut";
 
         //graph options
-        var yMin=96;
-        var yMax=106;
-        var yAxisHighlight=100;
+        var yMin=85;
+        var yMax=110;
+        var yAxisHighlight=85;
         var lineSmoothing="linear";//choose 'linear' for an unsmoothed line 'monotone' for smooth
         var logScale=false;
         var logScaleStart=1000;
@@ -60,7 +60,7 @@
             //date formatter, matching the format of the incoming csv...
             //var parseDate = d3.time.format("%Y %b").parse;
             //var parseDate = d3.time.format("%Y").parse;//just full year
-            var parseDate = d3.time.format("%d/%m/%y").parse;
+            var parseDate = d3.time.format("%d/%m/%Y").parse;
             /*
 
             some common formatting parsers....
