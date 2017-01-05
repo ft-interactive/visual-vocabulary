@@ -1,5 +1,5 @@
 
-function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
+function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,grouping){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -29,6 +29,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     // console.log(plotWidth,colours,plotHeight,data)
     // console.log(margin)
     //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
+    console.log(data);
     var dataset=nest(data);
     console.log(dataset);
 
@@ -106,8 +107,20 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
         });//End of call function
 
     //create a legend first
-    var legdata=dataset.children.filter(function(el){return el.key});
-    legdata.sort(function(a, b) { return b.value - a.value; })
+    if (grouping) {
+        var legdata=dataset.children.filter(function(el){return el.key});
+        legdata.sort(function(a, b) { return b.value - a.value; })
+    }
+    else {
+        var tempArray=d3.nest()
+                .key(function (d) { return d.group})
+                .entries(data)
+        console.log("tempArray",tempArray )
+        var legdata=tempArray
+    }
+    console.log(legdata)
+    // var legdata=dataset.children.filter(function(el){return el.key});
+    // legdata.sort(function(a, b) { return b.value - a.value; })
 
     var legendyOffset=0
     var legend = plot.append("g")
@@ -170,12 +183,22 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     }
 
     function nest(data) {
-        return {
+        if (grouping) {
+            return {
             "key":"Groups", 
             "values":d3.nest()
                 .key(function (d) { return d.group})
                 .entries(data)
+            };
+        }
+        else {
+            return {
+            "key":"Groups", 
+            "values":d3.nest()
+                .key(function (d) { return d.items})
+                .entries(data)
         };
+        }
     }
     
 
