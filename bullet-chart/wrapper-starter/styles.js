@@ -42,6 +42,7 @@ var styleweb = {classes:
 {class:"logo{fill: #dacfc5;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
 {class:"xAxis line{fill:none; stroke-width: 1.0px; stroke:#c3bcb0;}"},
+{class:"xAxis path{fill:none; stroke-width: 1.0px; stroke:#c3bcb0;}"},
 {class:"xAxis text{fill:#6b6e68; font-size: 18.0px; font-weight: 400;}"},
 {class:"yAxis{fill:none; stroke: none;}"},
 {class:"yAxis line{fill:none; stroke-width: 1.0px; stroke:#c3bcb0; stroke-dasharray:1,2}"},
@@ -61,7 +62,7 @@ titleOffset:21,
 subOffset:0,
 legendyOffset:0,
 linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"],
-fillcolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0","#F19F9E"]
+fillcolours:["#772840","#F19F9E","#A7ACC2","#DDD5CE","#B38780","#486ba0","#F19F9E"]
 }
 
 var stylesoc = {classes:
