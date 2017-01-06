@@ -1,0 +1,47 @@
+.button {
+	border-radius: 10px;
+	color: #ffffff;
+  	font-size: 1.1em;
+  	line-height: 1.1em;
+    height: 25px;
+	margin-top: 2px;
+	margin-bottom: 10px;
+	background-color: #b8b1a9;
+	border-width: 0px;
+	padding-top: 3px;
+}
+.state {
+  display: inline-block;
+}
+.domain{
+  fill: none;
+  stroke: #a7a59b;
+}
+.name {
+  fill: black;
+  display: block;
+}
+.axis line, 
+.axis path { 
+  fill: none;
+  stroke: #a7a59b;
+  stroke-opacity: .8;
+  shape-rendering: crispEdges;
+}
+.tick.major line {
+  stroke: steelblue;
+}
+.lines {
+  stroke-width: 2;
+  fill: none;
+}
+.x.axis text {
+	fill: black;
+  display: block;
+  text-anchor: middle;
+}
+.y.axis .tick text {
+  fill: #74736c;
+  display: block;
+  text-anchor: end;
+}
