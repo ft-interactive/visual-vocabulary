@@ -13,19 +13,19 @@
     <script src="bump.js"></script>
     <script src="saveSvgAsPng.js"></script>
     <script>
-
+        
         //datafile
         var dataURL = "data.csv"
-
+        
         //titles, footnotes
-        var title = "Brazilian policy rate";
-        var subtitle = "Selic rate %";//comment out subtitle assignment if not needed
-        var source = "Thomson Reuters Datastream";
+        var title = "Lorem ipsum dolor sit amet";
+        var subtitle = "Consectetur adipiscing elit";//comment out subtitle assignment if not needed
+        var source = "Source: Sed do eiusmod tempor";
 
         //put custom graph options here
         var yMin=1;
         var yMax=20;
-        var numbers=true;
+        var numbers=false;
 
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
@@ -35,7 +35,7 @@
         //{name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
         ]
-
+        
         //sets the padding inside the chart area
         var chartpadding=[
         {name:"print",margin:[{top:10, right:0, bottom:0, left:0}]},
@@ -43,7 +43,7 @@
         {name:"social",margin:[{top:00, right:25, bottom:62, left:12}]},
         {name:"video",margin:[{top:55, right:35,bottom:68, left:42}]}
         ]
-        //Calls the functions that adds the balnk frames before loading the data
+        //Calls the functions that adds the balnk frames before loading the data 
         drawFrames()
         //Load the data
         d3.csv(dataURL,function(error, data){
@@ -112,7 +112,7 @@
             var px = mm*2.83464480558843;
             return px;
         }
-
+            
     </script>
 </body>
 </html>

@@ -22,7 +22,7 @@ var styleprint = {classes:
 {class:"highlight{fill-opacity:1.0;}"},
 {class:"day{fill:none; stroke: #ffffff; stroke-width:1.0px;stroke-linecap: round;}"},
 {class:"month{fill:none; stroke: #000000; stroke-width:1.0px;stroke-linecap: round;}"},
-{class:"link{fill:none; stroke:#b8b1a9; opacity: .4;}"},
+{class:"link{fill:none; stroke:#b8b1a9; opacity: .3;}"},
 {class:"node{fill:#000000;}"}
 ],
 titleOffset:10,

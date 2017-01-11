@@ -12,7 +12,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
 
     var yOffset=d3.select("#"+media+"Subtitle").style("font-size");
     yOffset=Number(yOffset.replace(/[^\d.-]/g, ''));
-
+    
     //Get the width,height and the marginins unique to this chart
     var w=plot.node().getBBox().width;
     var h=plot.node().getBBox().height;
@@ -23,7 +23,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
     var colours=stylename.linecolours;
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
-
+    
     yMin=Math.min(yMin,d3.min(data, function(d) { return +d.pos;}))
     yMax=Math.max(yMax,d3.max(data, function(d) { return +d.pos;}))
 
@@ -46,7 +46,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             column.item=el[group]
             column.prev=getPrev(el[group], index)
             column.status=column.prev-column.pos
-        rankings.push(column)
+        rankings.push(column)   
         });
         return rankings
     }
@@ -73,7 +73,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
     .scale(yScale)
     .orient("left")
     .tickSize(0);
-
+    
     var yLabel=plot.append("g")
     .attr("id", media+"yAxis")
     .attr("class", media+"yAxis")
@@ -116,6 +116,13 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             })
             .enter()
             .append("rect")
+            .attr("id", function(d){
+                var reg = new RegExp("[ ]+","g");
+                return d.item.replace(reg,"");
+                })
+            .on("click",function(d) {
+                highlightBar(this.id);
+                })
             .attr("class",media+"fill")
             .attr("width", xScale.rangeBand())
             .attr("height", yScale.rangeBand())
@@ -173,7 +180,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             .attr("transform",function(){
                 return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
             })
-
+    
         parent.selectAll("."+media+'link')
             .data(function(d){
                     console.log("data",d.rankings.filter(function(el){return el.status}))
@@ -182,6 +189,9 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             .enter()
             .append("path")
           .attr("class",media+"link")
+          .attr("id",function(d) {
+                var reg = new RegExp("[ ]+","g");
+                return "link"+ d.item.replace(reg,"")})
           .attr("stroke-width",function (d){return (yScale.rangeBand()/1.3)})
           .attr("d", function(d) {
             let x = xScale(d.prevGroup)+(xScale.rangeBand());
@@ -199,6 +209,21 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
 
         })
 
+    function highlightBar(barName) {
+        console.log(barName)
+        let selected=d3.selectAll("#"+barName)
+        selected.style("opacity",1.0)
+        highlightlink(barName)
 
+    }
+
+    function highlightlink(linkName) {
+        console.log("link",linkName)
+        let selected=d3.selectAll("#link"+linkName)
+        selected.style("opacity",.82)
+
+    }
+
+        
 
 }
