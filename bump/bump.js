@@ -210,9 +210,13 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         })
 
     function highlightBar(barName) {
-        console.log(barName)
         let selected=d3.selectAll("#"+barName)
-        selected.style("opacity",1.0)
+        var elClass = selected[0];
+        var el=d3.select(elClass[0])
+        if (el.attr("class")==media+"fill") {
+                selected.attr("class",media+"highlight")
+            }
+        else {selected.attr("class",media+"fill")}
         highlightlink(barName)
 
     }
@@ -220,7 +224,12 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
     function highlightlink(linkName) {
         console.log("link",linkName)
         let selected=d3.selectAll("#link"+linkName)
-        selected.style("opacity",.82)
+        var elClass = selected[0];
+        var el=d3.select(elClass[0])
+        if (el.attr("class")==media+"link") {
+                selected.attr("class",media+"linkhighlight")
+            }
+        else {selected.attr("class",media+"link")}
 
     }
 
