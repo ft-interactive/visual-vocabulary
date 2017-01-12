@@ -99,7 +99,9 @@ function drawBars(datum){
                         parent.call(colourAxis);
                         
                         parent.append('text')
-                            .text(d=>d[textLabel])
+                            .text(d=> {if(d[textLabel]!='key')
+                                {return d[textLabel]}
+                            })
                             .attr('y', (barHeight *.625))
                             .attr('text-anchor','end')
                             .attr('class',media+'subtitle')
@@ -127,7 +129,7 @@ function drawBars(datum){
                                 return 'scale('+scaleFactor+') translate('+margin.left*(1/scaleFactor)+','+0+')';}})
 
                     parent.append('text')
-                    .attr('class',media+'subtitle')
+                    .attr('class',media+'legend')
                     .attr('x',d=> barScale(Math.min(0,d[valueLabel])))
                     .style('fill',colours[0])
                     .text(d=> { if (d.region=='key') { return valueLabel}})
@@ -136,7 +138,7 @@ function drawBars(datum){
                                 return 'translate('+(margin.left*.98)+','+(barHeight*scaleFactor*.9)+')';}});
 
                     parent.append('text')
-                    .attr('class',media+'subtitle')
+                    .attr('class',media+'legend')
                     .attr('x',d=> barScale(Math.min(0-scaleFactor/2,(d[valueLabel]))))
                     .style('fill','#000')
                     .text(d=> { if (d.region=='key') { return targetLabel}})
@@ -216,15 +218,16 @@ if(swatch) {
                                 return 'scale('+scaleFactor+') translate('+margin.left*(1/scaleFactor)+','+0+')';}});
 
                     
-                    parent.selectAll('label')
+                    parent.selectAll('swatchlabel')
                     .data(d=>accumulate( colourDomain, linearScale.domain()[1],d.region))
                     .enter()
                     .filter(function(d){
                         return d.name == 'key'
                     })
                     .append('text')
-                    .attr('class',media+'subtitle')
+                    .attr('class',media+'legend')
                     .attr('x', d => linearScale(d.start)*scaleFactor)
+                    .attr('text-anchor',(d,i)=> {if(media=='social'){return['end','middle','beginning'][i]}})
                     .text((d,i)=>scaleBands[i])
                     .attr('transform',d=> { if (d.name== 'key'){
                                 return 'translate('+margin.left+','+(barHeight*-.075)+')';}});
