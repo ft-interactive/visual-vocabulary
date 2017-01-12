@@ -25,6 +25,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
 
+
     //calculate range of time series 
     var xDomain = d3.extent(data, function(d) {return d.date;});
     var yDomain;
@@ -136,7 +137,17 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         .scale(xScale)
         .tickValues(ticks.major)
         .tickSize(yOffset/2)
+        .tickFormat(d3.time.format(formatTick(interval)))
         .orient("bottom");
+
+    function formatTick(int) {
+        return {
+            "months":"%b",
+            "years": "%Y",
+            "decade": "%Y",
+            "lustrum": "%Y",
+            "days": "%d"}[int]
+    };
 
     var xLabel=plot.append("g")
         .attr("class",media+"xAxis")
@@ -150,6 +161,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
 
     xLabel.selectAll('text')
         .attr("style", null)
+        .attr("x",(plotWidth/ticks.major.length)/2)
 
 
     if(minAxis) {
