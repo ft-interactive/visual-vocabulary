@@ -22,7 +22,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     margin=margin[0].margin[0]
     const colours=stylename.fillcolours;
     let plotWidth = w-(margin.left+margin.right);
-    let plotHeight = h-(margin.top+margin.bottom+keyHeight);
+    let plotHeight = h-(margin.top+margin.bottom+margin.top);
     
 
     //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
@@ -32,23 +32,12 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
     const barHeight = (plotHeight/data.length)*.8;
 
 
-    let scaleFactor = .3;
-
-
-    let keyWidth = 0;
-
-    console.log(media)
-
-    if(media!='social') {
-         keyWidth = (plotWidth/data.length)*2;
-    } else {
-        keyWidth = (plotWidth/data.length)*2.75
-    };
+        let scaleFactor = .3;
 
         
 
 
-        let keyOffset = keyHeight*2 +margin.top
+        
 
         
         let allVals = [];
@@ -61,7 +50,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
 
        let xAxisLabels = plot.append('g')
                 .attr('class',media+'xAxis')
-                .attr('transform','translate('+margin.left+','+(plotHeight+keyOffset)+')')
+                .attr('transform','translate('+margin.left+','+(plotHeight+margin.top)+')')
                 .call(d3.axisBottom(barScale)
                     .ticks(numTicksX)
                     .tickSize(-plotHeight));
@@ -89,7 +78,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
                     .data(data)
                     .enter()
                 .append('g')
-                    .attr('transform',(d,i)=>'translate('+margin.left+',' + (i*(plotHeight/data.length)+keyOffset) + ')')
+                    .attr('transform',(d,i)=>'translate('+margin.left+',' + (i*(plotHeight/data.length)+margin.top) + ')')
                     .attr('class','bar')
                     .each(drawBars);
 
@@ -111,8 +100,8 @@ function drawBars(datum){
                             .attr('x',d=>barScale(Math.min(0,d[valueLabel])))
                             .attr('class','bar')
                             .attr('width',d=> barScale(Math.abs(d[valueLabel])) - barScale(0))
-                            .attr('height', barHeight/2)
-                            .attr('y', barHeight/4)
+                            .attr('height', barHeight/3)
+                            .attr('y', barHeight/3)
                             .attr('fill',colours[0])
                             .attr('transform',d=> { if (d.region== 'key'){
                                 return 'scale('+scaleFactor+') translate('+margin.left*(1/scaleFactor)+','+0+')';}})
@@ -137,14 +126,19 @@ function drawBars(datum){
                     .attr('transform',d=> { if (d.region== 'key'){
                                 return 'translate('+(margin.left*.98)+','+(barHeight*scaleFactor*.9)+')';}});
 
+                    
                     parent.append('text')
                     .attr('class',media+'legend')
                     .attr('x',d=> barScale(Math.min(0-scaleFactor/2,(d[valueLabel]))))
-                    .style('fill','#000')
+                    .style('fill',function(){
+                        if( media != 'social' )
+                        { return '#000' }
+                        })
                     .text(d=> { if (d.region=='key') { return targetLabel}})
                     .attr('text-anchor','beginning')
-                    .attr('transform',d=> { if (d.region== 'key'){
-                                return 'translate('+barScale(d[targetLabel])+','+(barHeight*scaleFactor+barHeight/3.2)+')';}});
+                    .attr('transform',d=> { if (d.region == 'key'){
+                                return 'translate('+(margin.left*1.1)+','+(barHeight*scaleFactor+barHeight/3.2)+')';}});
+
 
                 }
 
@@ -214,6 +208,8 @@ if(swatch) {
                     .attr('height', barHeight)
                     .attr('x', d => linearScale(d.start))
                     .attr('fill', d=> colourScale(d.start))
+                    .attr('stroke','#fff')
+                    .attr('stroke-width',2)
                     .attr('transform',d=> { if (d.name== 'key'){
                                 return 'scale('+scaleFactor+') translate('+margin.left*(1/scaleFactor)+','+0+')';}});
 
@@ -299,7 +295,7 @@ plot.append('line')
                 .attr('x2',barScale(xAxisHighlight))
                 .attr('y1',0)
                 .attr('y2',plotHeight)
-                .attr('transform','translate('+margin.left+','+keyOffset+')')
+                .attr('transform','translate('+margin.left+','+margin.top+')')
                 
 
 };

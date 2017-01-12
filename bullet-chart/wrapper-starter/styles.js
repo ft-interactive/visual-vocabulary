@@ -73,7 +73,7 @@ fillcolours:["#772840","#F19F9E","#A7ACC2","#DDD5CE","#B38780","#486ba0","#F19F9
 
 var stylesoc = {classes:
 [{class:"background{fill: #212121;}"},
-{class:"chartholder{fill: #6b6e68;}"},
+{class:"chartholder{fill: #212121;}"},
 {class:"title{font-size: 38px; fill: #ffffff; font-weight: 600; opacity: 0.9;}"},
 {class:"subtitle{font-size: 28px; fill: #ffffff; font-weight: 400; opacity: 0.7;}"},
 {class:"labels{font-size: 38px; fill: #ffffff; opacity: 0.95; font-weight: 400;}"},
@@ -82,7 +82,8 @@ var stylesoc = {classes:
 {class:"logo{fill: #ffffff; opacity: 0.38;}"},
 {class:"axisHighlight{fill:none; stroke-width:2px;stroke-linecap: round; stroke:#ffffff;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
-{class:"xAxis line{fill:none; stroke:#ffffff; stroke-width: 2.0px; opacity: 0.5;}"},
+{class:"xAxis line{fill:none; stroke:#ffffff; stroke-width: 2.0px; opacity: 0.5; stroke-dasharray: 2,8;}"},
+{class:"xAxis path{fill:none; stroke:none;}"},
 {class:"xAxis text{font-size: 28px; fill: #ffffff; font-weight: 400; opacity: 0.5;}"},
 {class:"yAxis{fill:none; stroke: none;}"},
 {class:"yAxis line{fill:none; stroke-width: 2.0px; stroke-dasharray:2,8; opacity: 0.38; stroke:#ffffff;}"},
@@ -103,7 +104,7 @@ titleOffset:36,
 subOffset:0,
 legendyOffset:0,
 linecolours:["#EB3F50","#00D9CA","#BF9413","#1F5E99","#A7FF59","#FF9B96","#81838F"],
-fillcolours:["#EB3F50","#00D9CA","#BF9413","#1F5E99","#A7FF59","#FF9B96","#81838F"]
+fillcolours:["#eb3f50","#00D9CA","#616161","#9e9e9e","#e0e0e0","#FF9B96","#81838F"]
 }
 
 var stylevid = {classes:
