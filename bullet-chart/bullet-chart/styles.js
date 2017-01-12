@@ -5,9 +5,11 @@ var styleprint = {classes:
 {class:"title{font-size:12px; fill: #000000; font-weight: 600;}"},
 {class:"subtitle{fill:#000000; font-size: 9.6px; font-weight: 400;}"},
 {class:"labels{font-size:10px; fill: #ffffff; font-weight: 300;}"},
+{class:"legend{fill:#000000; font-size: 9.6px; font-weight: 400;}"},
 {class:"source{fill: #000000; font-size: 7.2px; font-weight: 400;}"},
 {class:"logo{fill: #dacfc5;}"},
 {class:"hat{fill:none; stroke-width:0.3px; stroke:#22190f;}"},
+{class:"axisHighlight{fill:none; stroke-width:1px;stroke-linecap: round; stroke:#000000}"},
 {class:"xAxis{fill:none; stroke-width:0px; stroke:none;}"},
 {class:"xAxis line{fill:none; stroke-width:.3px; stroke:#000000;}"},
 {class:"xAxis text{fill:#000000; font-size: 9.6px; font-weight: 400; font-feature-settings:'tnum' 1;}"},
@@ -19,6 +21,7 @@ var styleprint = {classes:
 {class:"lines{fill:none; stroke-width:2.0px;stroke-linecap: round;}"},
 {class:"linesHighlight{fill:none; stroke-width:.8px;stroke-linecap: round;}"},
 {class:"fill{opacity: .38}"},
+{class:"swatch{opacity: .6}"},
 {class:"highlight{fill-opacity:1.0;}"},
 {class:"day{fill:none; stroke: #ffffff; stroke-width:1.0px;stroke-linecap: round;}"},
 {class:"month{fill:none; stroke: #000000; stroke-width:1.0px;stroke-linecap: round;}"},
@@ -29,7 +32,7 @@ titleOffset:10,
 subOffset:0,
 legendyOffset:0,
 linecolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"],
-fillcolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0","#ddb831"]
+fillcolours:["#006791","#bac9b8","#d3e2eb","#bac9b8","#80a9ac"]
 }
 
 var styleweb = {classes:
@@ -39,9 +42,12 @@ var styleweb = {classes:
 {class:"subtitle{font-size:18.0px; font-weight: 400; fill: #6b6e68;}"},
 {class:"source{fill: #6b6e68; font-size: 14.0px; font-weight: 400;}"},
 {class:"labels{font-size:12px; fill: #ffffff; font-weight: 600;}"},
+{class:"legend{font-size:18.0px; font-weight: 400; fill: #6b6e68;}"},
 {class:"logo{fill: #dacfc5;}"},
+{class:"axisHighlight{fill:none; stroke-width:2px;stroke-linecap: round; stroke:#000000;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
 {class:"xAxis line{fill:none; stroke-width: 1.0px; stroke:#c3bcb0;}"},
+{class:"xAxis path{fill:none; stroke-width: 1.0px; stroke:#c3bcb0;}"},
 {class:"xAxis text{fill:#6b6e68; font-size: 18.0px; font-weight: 400;}"},
 {class:"yAxis{fill:none; stroke: none;}"},
 {class:"yAxis line{fill:none; stroke-width: 1.0px; stroke:#c3bcb0; stroke-dasharray:1,2}"},
@@ -51,6 +57,7 @@ var styleweb = {classes:
 {class:"lines{fill:none; stroke-width: 2.5px; stroke-linecap: round;}"},
 {class:"linesHighlight{fill:none; stroke-width:.8px;stroke-linecap: round;}"},
 {class:"fill{opacity: .38}"},
+{class:"swatch{opacity: .8}"},
 {class:"highlight{fill-opacity:1.0;}"},
 {class:"day{fill:none;stroke: #fff1e0; stroke-width:1.0px;stroke-linecap: round;}"},
 {class:"month{fill:none;stroke: #000000; stroke-width:1.0px;stroke-linecap: round;}"},
@@ -61,7 +68,7 @@ titleOffset:21,
 subOffset:0,
 legendyOffset:0,
 linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"],
-fillcolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0","#F19F9E"]
+fillcolours:["#772840","#F19F9E","#A7ACC2","#DDD5CE","#B38780","#486ba0","#F19F9E"]
 }
 
 var stylesoc = {classes:
@@ -70,8 +77,10 @@ var stylesoc = {classes:
 {class:"title{font-size: 38px; fill: #ffffff; font-weight: 600; opacity: 0.9;}"},
 {class:"subtitle{font-size: 28px; fill: #ffffff; font-weight: 400; opacity: 0.7;}"},
 {class:"labels{font-size: 38px; fill: #ffffff; opacity: 0.95; font-weight: 400;}"},
+{class:"legend{font-size: 21px; fill: #ffffff; opacity: 0.95; font-weight: 400;}"},
 {class:"source{font-size: 25px; fill: #ffffff; font-weight: 400; opacity: 0.5;}"},
 {class:"logo{fill: #ffffff; opacity: 0.38;}"},
+{class:"axisHighlight{fill:none; stroke-width:2px;stroke-linecap: round; stroke:#ffffff;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
 {class:"xAxis line{fill:none; stroke:#ffffff; stroke-width: 2.0px; opacity: 0.5;}"},
 {class:"xAxis text{font-size: 28px; fill: #ffffff; font-weight: 400; opacity: 0.5;}"},
@@ -83,6 +92,7 @@ var stylesoc = {classes:
 {class:"lines{fill:none; stroke-width: 5px;  stroke-linecap: round;}"},
 {class:"linesHighlight{fill:none; stroke-width:.8px;stroke-linecap: round;}"},
 {class:"fill{opacity: .38}"},
+{class:"swatch{opacity: .4}"},
 {class:"highlight{fill-opacity:1.0;}"},
 {class:"day{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"},
 {class:"month{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"},
@@ -116,6 +126,7 @@ var stylevid = {classes:
 {class:"lines{fill:none; stroke-width: 8.0px; stroke-linecap: round;}"},
 {class:"linesHighlight{fill:none; stroke-width:.8px;stroke-linecap: round;}"},
 {class:"fill{opacity: .38}"},
+{class:"swatch{opacity: .4}"},
 {class:"highlight{fill-opacity:1.0;}"},
 {class:"day{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"},
 {class:"month{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"},
