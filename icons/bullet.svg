@@ -1,144 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="socialchart" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" viewBox="0 0 453.5 453.5" style="enable-background:new 0 0 453.5 453.5;" xml:space="preserve">
+<!-- Generator: Adobe Illustrator 19.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#E0E0E0;enable-background:new    ;}
-	.st1{fill:#9E9E9E;enable-background:new    ;}
-	.st2{fill:#616161;}
-	.st3{fill:none;stroke:#000000;stroke-width:5;}
-	.st4{display:none;opacity:0.38;enable-background:new    ;}
-	.st5{display:inline;}
-	.st6{fill:none;stroke:#FFFFFF;stroke-width:2;}
-	.st7{fill:none;stroke:#FFFFFF;stroke-width:2;stroke-dasharray:1.9913,7.9651;}
+	.st0{fill:none;}
+	.st1{fill:#E0CBDB;}
+	.st2{fill:#C9A0BD;}
+	.st3{opacity:0.8;fill:#A3488C;}
+	.st4{fill:#A3488C;}
+	.st5{fill:none;stroke:#A3488C;stroke-width:2;stroke-miterlimit:10;}
 </style>
-<defs  xmlns="http://www.w3.org/1999/xhtml">
-	<style  type="text/css">
-		<![CDATA[
-.button { border-radius: 10px; color: rgb(255, 255, 255); font-size: 1.1em; line-height: 1.1em; height: 25px; margin-top: 2px; margin-bottom: 10px; background-color: rgb(184, 177, 169); border-width: 0px; padding-top: 3px; }
-.printbackground { fill: none; }
-.printchartholder { fill: rgb(255, 241, 224); }
-.printtitle { font-size: 12px; fill: rgb(0, 0, 0); font-weight: 600; }
-.printsubtitle { fill: rgb(0, 0, 0); font-size: 9.6px; font-weight: 400; }
-.printlabels { font-size: 10px; fill: rgb(255, 255, 255); font-weight: 300; }
-.printsource { fill: rgb(0, 0, 0); font-size: 7.2px; font-weight: 400; }
-.printlogo { fill: rgb(218, 207, 197); }
-.printhat { fill: none; stroke-width: 0.3px; stroke: rgb(34, 25, 15); }
-.printaxisHighlight { fill: none; stroke-width: 1px; stroke-linecap: round; stroke: rgb(0, 0, 0); }
-.printxAxis { fill: none; stroke-width: 0px; stroke: none; }
-.printxAxis line { fill: none; stroke-width: 0.3px; stroke: rgb(0, 0, 0); }
-.printxAxis text { fill: rgb(0, 0, 0); font-size: 9.6px; font-weight: 400; font-feature-settings: 'tnum' 1; }
-.printyAxis { fill: none; stroke-width: 0px; stroke: none; }
-.printyAxis line { fill: none; stroke-width: 0.3px; stroke: rgb(0, 0, 0); }
-.printyAxis text { fill: rgb(0, 0, 0); font-size: 9.6px; font-weight: 400; font-feature-settings: 'tnum' 1; }
-.printorigin line { fill: none; stroke-width: 0.6px; }
-.printwhiskers { fill: none; stroke-width: 1px; stroke: rgb(34, 25, 15); }
-.printlines { fill: none; stroke-width: 2px; stroke-linecap: round; }
-.printlinesHighlight { fill: none; stroke-width: 0.8px; stroke-linecap: round; }
-.printfill { opacity: 0.38; }
-.printswatch { opacity: 0.6; }
-.printhighlight { fill-opacity: 1; }
-.printday { fill: none; stroke: rgb(255, 255, 255); stroke-width: 1px; stroke-linecap: round; }
-.printmonth { fill: none; stroke: rgb(0, 0, 0); stroke-width: 1px; stroke-linecap: round; }
-.printlink { fill: none; stroke: rgb(0, 0, 0); opacity: 0.2; }
-.printnode { fill: rgb(0, 0, 0); }
-.webbackground { fill: none; }
-.webchartholder { fill: none; }
-.webtitle { font-size: 25px; font-weight: 400; fill: rgb(59, 61, 59); }
-.websubtitle { font-size: 18px; font-weight: 400; fill: rgb(107, 110, 104); }
-.websource { fill: rgb(107, 110, 104); font-size: 14px; font-weight: 400; }
-.weblabels { font-size: 12px; fill: rgb(255, 255, 255); font-weight: 600; }
-.weblogo { fill: rgb(218, 207, 197); }
-.webaxisHighlight { fill: none; stroke-width: 2px; stroke-linecap: round; stroke: rgb(0, 0, 0); }
-.webxAxis { fill: none; stroke: none; }
-.webxAxis line { fill: none; stroke-width: 1px; stroke: rgb(195, 188, 176); }
-.webxAxis path { fill: none; stroke-width: 1px; stroke: rgb(195, 188, 176); }
-.webxAxis text { fill: rgb(107, 110, 104); font-size: 18px; font-weight: 400; }
-.webyAxis { fill: none; stroke: none; }
-.webyAxis line { fill: none; stroke-width: 1px; stroke: rgb(195, 188, 176); stroke-dasharray: 1, 2; }
-.webyAxis text { fill: rgb(107, 110, 104); font-size: 18px; font-weight: 400; font-feature-settings: 'tnum' 1; text-anchor: end; }
-.weborigin line { fill: none; stroke: rgb(155, 164, 151); stroke-width: 1px; stroke-dasharray: 1, 0; }
-.webwhiskers { fill: none; stroke-width: 1px; stroke: rgb(34, 25, 15); }
-.weblines { fill: none; stroke-width: 2.5px; stroke-linecap: round; }
-.weblinesHighlight { fill: none; stroke-width: 0.8px; stroke-linecap: round; }
-.webfill { opacity: 0.38; }
-.webswatch { opacity: 0.8; }
-.webhighlight { fill-opacity: 1; }
-.webday { fill: none; stroke: rgb(255, 241, 224); stroke-width: 1px; stroke-linecap: round; }
-.webmonth { fill: none; stroke: rgb(0, 0, 0); stroke-width: 1px; stroke-linecap: round; }
-.weblink { fill: none; stroke: rgb(0, 0, 0); opacity: 0.2; }
-.webnode { fill: rgb(0, 0, 0); }
-.socialbackground { fill: rgb(33, 33, 33); }
-.socialchartholder { fill: rgb(107, 110, 104); }
-.socialtitle { font-size: 38px; fill: rgb(255, 255, 255); font-weight: 600; opacity: 0.9; }
-.socialsubtitle { font-size: 28px; fill: rgb(255, 255, 255); font-weight: 400; opacity: 0.7; }
-.sociallabels { font-size: 38px; fill: rgb(255, 255, 255); opacity: 0.95; font-weight: 400; }
-.socialsource { font-size: 25px; fill: rgb(255, 255, 255); font-weight: 400; opacity: 0.5; }
-.sociallogo { fill: rgb(255, 255, 255); opacity: 0.38; }
-.socialaxisHighlight { fill: none; stroke-width: 2px; stroke-linecap: round; stroke: rgb(255, 255, 255); }
-.socialxAxis { fill: none; stroke: none; }
-.socialxAxis line { fill: none; stroke: rgb(255, 255, 255); stroke-width: 2px; opacity: 0.5; }
-.socialxAxis text { font-size: 28px; fill: rgb(255, 255, 255); font-weight: 400; opacity: 0.5; }
-.socialyAxis { fill: none; stroke: none; }
-.socialyAxis line { fill: none; stroke-width: 2px; stroke-dasharray: 2, 8; opacity: 0.38; stroke: rgb(255, 255, 255); }
-.socialyAxis text { font-size: 28px; fill: rgb(255, 255, 255); font-weight: 400; opacity: 0.5; font-feature-settings: 'tnum' 1; text-anchor: end; }
-.socialorigin line { fill: none; stroke: rgb(255, 255, 255); stroke-width: 2px; opacity: 0.5; stroke-dasharray: 1, 0; }
-.socialwhiskers { fill: none; stroke-width: 2px; stroke: rgb(255, 255, 255); opacity: 0.5; }
-.sociallines { fill: none; stroke-width: 5px; stroke-linecap: round; }
-.sociallinesHighlight { fill: none; stroke-width: 0.8px; stroke-linecap: round; }
-.socialfill { opacity: 0.38; }
-.socialswatch { opacity: 0.4; }
-.socialhighlight { fill-opacity: 1; }
-.socialday { fill: none; stroke: rgb(255, 255, 255); stroke-width: 1px; opacity: 0.5; stroke-linecap: round; }
-.socialmonth { fill: none; stroke: rgb(255, 255, 255); stroke-width: 1px; opacity: 0.5; stroke-linecap: round; }
-.sociallink { fill: none; stroke: rgb(255, 255, 255); opacity: 0.2; }
-.socialnode { fill: rgb(0, 0, 0); }
-text { font-family: metric; }
-			]]>
-	</style>
-</defs>
-<rect x="354.3" y="15.8" class="st0" width="85" height="70.9"/>
-<rect x="226.8" y="104.4" class="st0" width="212.6" height="70.9"/>
-<rect x="354.3" y="193" class="st0" width="85" height="70.9"/>
-<rect x="269.3" y="281.6" class="st0" width="170.1" height="70.9"/>
-<rect x="311.8" y="370.2" class="st0" width="127.6" height="70.9"/>
-<rect x="56.7" y="15.8" class="st1" width="297.6" height="70.9"/>
-<rect x="99.2" y="104.4" class="st1" width="127.6" height="70.9"/>
-<rect x="184.3" y="193" class="st1" width="170.1" height="70.9"/>
-<rect x="226.8" y="281.6" class="st1" width="42.5" height="70.9"/>
-<rect x="99.2" y="370.2" class="st1" width="212.6" height="70.9"/>
-<rect x="14.2" y="15.8" class="st2" width="42.5" height="70.9"/>
-<rect x="14.2" y="281.6" class="st2" width="212.6" height="70.9"/>
-<rect x="14.2" y="104.4" class="st2" width="85" height="70.9"/>
-<rect x="14.2" y="193" class="st2" width="170.1" height="70.9"/>
-<rect x="14.2" y="370.2" class="st2" width="85" height="70.9"/>
 <g>
-	<g transform="translate(125,70)">
-		<rect x="-110.8" y="-36.4" width="212.6" height="35.4"/>
-		<line class="st3" x1="-25.8" y1="-47.1" x2="-25.8" y2="9.6"/>
+	<g>
+		<rect y="0" class="st0" width="200" height="200"/>
 	</g>
-	<g transform="translate(125,161.6)">
-		<rect x="-110.8" y="-39.5" width="127.6" height="35.4"/>
-		<line class="st3" x1="-25.8" y1="-50.1" x2="-25.8" y2="6.6"/>
-	</g>
-	<g transform="translate(125,253.2)">
-		<g class="st4">
-			<g class="st5">
-				<line class="st6" x1="9.3" y1="213.4" x2="9.3" y2="212.4"/>
-				<line class="st7" x1="9.3" y1="204.4" x2="9.3" y2="-239.6"/>
-				<line class="st6" x1="9.3" y1="-243.6" x2="9.3" y2="-244.6"/>
-			</g>
-		</g>
-		<rect x="-110.8" y="-42.5" width="297.6" height="35.4"/>
-		<line class="st3" x1="144.3" y1="-53.1" x2="144.3" y2="3.6"/>
-	</g>
-	<g transform="translate(125,344.79999999999995)">
-		<rect x="-110.8" y="-45.5" width="212.6" height="35.4"/>
-		<line class="st3" x1="16.7" y1="-56.1" x2="16.7" y2="0.6"/>
-	</g>
-	<g transform="translate(125,436.4)">
-		<rect x="-110.8" y="-48.5" width="85" height="35.4"/>
-		<line class="st3" x1="-68.3" y1="-59.1" x2="-68.3" y2="-2.4"/>
-	</g>
+</g>
+<rect x="150" y="19.6" class="st1" width="33.2" height="27.2"/>
+<rect x="100.1" y="53.6" class="st1" width="83.1" height="27.2"/>
+<rect x="150" y="87.7" class="st1" width="33.2" height="27.2"/>
+<rect x="116.7" y="121.7" class="st1" width="66.5" height="27.2"/>
+<rect x="133.3" y="155.7" class="st1" width="49.9" height="27.2"/>
+<rect x="33.6" y="19.6" class="st2" width="116.3" height="27.2"/>
+<rect x="50.2" y="53.6" class="st2" width="49.9" height="27.2"/>
+<rect x="83.5" y="87.7" class="st2" width="66.5" height="27.2"/>
+<rect x="100.1" y="121.7" class="st2" width="16.6" height="27.2"/>
+<rect x="50.2" y="155.7" class="st2" width="83.1" height="27.2"/>
+<rect x="17" y="19.6" class="st3" width="16.6" height="27.2"/>
+<rect x="17" y="121.7" class="st3" width="83.1" height="27.2"/>
+<rect x="17" y="53.6" class="st3" width="33.2" height="27.2"/>
+<rect x="17" y="87.7" class="st3" width="66.5" height="27.2"/>
+<rect x="17" y="155.7" class="st3" width="33.2" height="27.2"/>
+<g transform="translate(125,70)">
+	<rect x="-108" y="-43.5" class="st4" width="83.1" height="13.6"/>
+	<line class="st5" x1="-74.8" y1="-47.6" x2="-74.8" y2="-25.9"/>
+</g>
+<g transform="translate(125,161.6)">
+	<rect x="-108" y="-101.2" class="st4" width="49.9" height="13.6"/>
+	<line class="st5" x1="-74.8" y1="-105.2" x2="-74.8" y2="-83.5"/>
+</g>
+<rect x="17" y="94.4" class="st4" width="116.3" height="13.6"/>
+<line class="st5" x1="116.7" y1="90.4" x2="116.7" y2="112.1"/>
+<g transform="translate(125,344.79999999999995)">
+	<rect x="-108" y="-216.3" class="st4" width="83.1" height="13.6"/>
+	<line class="st5" x1="-58.2" y1="-220.4" x2="-58.2" y2="-198.6"/>
+</g>
+<g transform="translate(125,436.4)">
+	<rect x="-108" y="-273.9" class="st4" width="33.2" height="13.6"/>
+	<line class="st5" x1="-91.4" y1="-278" x2="-91.4" y2="-256.2"/>
 </g>
 </svg>
