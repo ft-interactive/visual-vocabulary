@@ -1,5 +1,5 @@
 
-function areaChart(data, stylename ,media, yMin, yMax ,yAxisHighlight, numTicksy, plotpadding,legAlign,yAlign, ticks,minAxis){
+function areaChart(data, stylename ,media, yMin, yMax ,yAxisHighlight, numTicksy, plotpadding,legAlign,yAlign, ticks,minAxis,interval){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -118,7 +118,19 @@ function areaChart(data, stylename ,media, yMin, yMax ,yAxisHighlight, numTicksy
         .scale(xScale)
         .tickValues(ticks.major)
         .tickSize(yOffset/2)//Half the size of the Subtitle text
+        .tickFormat(d3.time.format(formatTick(interval)))
         .orient("bottom");
+
+    function formatTick(int) {
+        return {
+            "months":"%b",
+            "years": "%Y",
+            "decade": "%Y",
+            "lustrum": "%Y",
+            "days": "%d"}[int]
+    };
+
+
     //Plot and position on the page
     var xLabels=plot.append("g")
         .attr("id",media+"xAxis")
