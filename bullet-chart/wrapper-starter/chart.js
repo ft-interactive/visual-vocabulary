@@ -29,22 +29,21 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
 
          
         
-        const barHeight = (plotHeight/data.length)*.8;
+    const barHeight = (plotHeight/data.length)*.8;
 
 
-        let keyWidth = 0;
+    let scaleFactor = .3;
 
-        console.log(media)
 
-        if(media!='social') {
+    let keyWidth = 0;
 
+    console.log(media)
+
+    if(media!='social') {
          keyWidth = (plotWidth/data.length)*2;
-
-     } else {
-
+    } else {
         keyWidth = (plotWidth/data.length)*2.75
-
-     };
+    };
 
         
 
@@ -58,7 +57,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
 
         let barScale = d3.scaleLinear()
             .range([0, plotWidth])
-            .domain([xMin, XMax]);
+            .domain([xMin, xMax]);
 
        let xAxisLabels = plot.append('g')
                 .attr('class',media+'xAxis')
@@ -67,7 +66,6 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
                     .ticks(numTicksX)
                     .tickSize(-plotHeight));
 
-       
        let swatchColours = colours.slice(0).splice(2,3);   
 
        
@@ -85,12 +83,18 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
                 .attr('width', plotWidth)
                 .attr('height', plotHeight)
             .selectAll('.bar')
-                .data(data)
+                // .data(data.filter(function(d){
+                //     return d.region != 'key'
+                // }))
+                    .data(data)
                     .enter()
                 .append('g')
                     .attr('transform',(d,i)=>'translate('+margin.left+',' + (i*(plotHeight/data.length)+keyOffset) + ')')
                     .attr('class','bar')
-                    .each(function(datum){
+                    .each(drawBars);
+
+
+function drawBars(datum){
                         let parent = d3.select(this);
                         parent.call(colourAxis);
                         
@@ -103,10 +107,14 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
 
                         parent.append('rect')
                             .attr('x',d=>barScale(Math.min(0,d[valueLabel])))
+                            .attr('class','bar')
                             .attr('width',d=> barScale(Math.abs(d[valueLabel])) - barScale(0))
                             .attr('height', barHeight/2)
                             .attr('y', barHeight/4)
-                            .attr('fill',colours[0]);
+                            .attr('fill',colours[0])
+                            .attr('transform',d=> { if (d.region== 'key'){
+                                return 'scale('+scaleFactor+') translate('+margin.left*(1/scaleFactor)+','+0+')';}})
+
 
                         parent.append('line')
                             .attr('x1', d => barScale(d[targetLabel]))
@@ -114,8 +122,41 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
                             .attr('y1', barHeight*.1)
                             .attr('y2', barHeight*.9)
                             .attr('stroke','#000')
-                            .attr('stroke-width',5);
-                    });
+                            .attr('stroke-width',5)
+                            .attr('transform',d=> { if (d.region== 'key'){
+                                return 'scale('+scaleFactor+') translate('+margin.left*(1/scaleFactor)+','+0+')';}})
+
+                    parent.append('text')
+                    .attr('class',media+'subtitle')
+                    .attr('x',d=> barScale(Math.min(0,d[valueLabel])))
+                    .style('fill',colours[0])
+                    .text(d=> { if (d.region=='key') { return valueLabel}})
+                    .attr('text-anchor','end')
+                    .attr('transform',d=> { if (d.region== 'key'){
+                                return 'translate('+(margin.left*.98)+','+(barHeight*scaleFactor*.9)+')';}});
+
+                    parent.append('text')
+                    .attr('class',media+'subtitle')
+                    .attr('x',d=> barScale(Math.min(0-scaleFactor/2,(d[valueLabel]))))
+                    .style('fill','#000')
+                    .text(d=> { if (d.region=='key') { return targetLabel}})
+                    .attr('text-anchor','beginning')
+                    .attr('transform',d=> { if (d.region== 'key'){
+                                return 'translate('+barScale(d[targetLabel])+','+(barHeight*scaleFactor+barHeight/3.2)+')';}});
+
+                }
+
+
+    console.log(keyData.region)
+
+
+    plot.selectAll('key')
+    .data([keyData])
+    .enter()
+    .each(drawBars)
+    .selectAll('.bar')
+
+
  
 
     function colourAxisLayout(){
@@ -123,11 +164,16 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
         let colourRange = [];
         let linearScale = d3.scaleLinear();
         let barHeight = 10;
+        
 
+        
 
         function axisLayout(parent){
             
             let data = parent.datum();
+
+            let region = data.region;
+
 
             
             let colourDomain = domainLabels.map(function(d){
@@ -145,8 +191,13 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign){
             
             
 if(swatch) {
+
+
+
+
             parent.selectAll('.swatch')
-                .data(accumulate( colourDomain, linearScale.domain()[1] ))
+            .attr('class',d=>media+d.region)
+                .data(d=>accumulate( colourDomain, linearScale.domain()[1],d.region))
                 .enter()
                     .append('rect')
                     .attr('class',media+'swatch')
@@ -160,7 +211,23 @@ if(swatch) {
                     })
                     .attr('height', barHeight)
                     .attr('x', d => linearScale(d.start))
-                    .attr('fill', d=> colourScale(d.start));
+                    .attr('fill', d=> colourScale(d.start))
+                    .attr('transform',d=> { if (d.name== 'key'){
+                                return 'scale('+scaleFactor+') translate('+margin.left*(1/scaleFactor)+','+0+')';}});
+
+                    
+                    parent.selectAll('label')
+                    .data(d=>accumulate( colourDomain, linearScale.domain()[1],d.region))
+                    .enter()
+                    .filter(function(d){
+                        return d.name == 'key'
+                    })
+                    .append('text')
+                    .attr('class',media+'subtitle')
+                    .attr('x', d => linearScale(d.start)*scaleFactor)
+                    .text((d,i)=>scaleBands[i])
+                    .attr('transform',d=> { if (d.name== 'key'){
+                                return 'translate('+margin.left+','+(barHeight*-.075)+')';}});
 
                 }      
         
@@ -194,15 +261,18 @@ if(swatch) {
 
     };
 
-    function accumulate(a, endValue){
+    function accumulate(a, endValue, name){
         return a.reduce(function(accumulator, value, index, array){ 
             let start = value;
             let end = endValue;
+            let id = name;
+
+            console.log(name)
             
             if(index < array.length - 1 ){
                 end = array[index+1];   
             }
-            accumulator.push({ start:start, end:end });
+            accumulator.push({ start:start, end:end, name:id});
             return accumulator;
         }, []);
     }
@@ -229,151 +299,18 @@ plot.append('line')
                 .attr('transform','translate('+margin.left+','+keyOffset+')')
                 
 
-}
-   
-
-
-
-swatchKey(data.columns,swatchColours,keyWidth,barHeight*.2);
-
-
-
-function swatchKey(array,swatchColourRange,keyWidth,keyHeight) {
-
-    let swatchNames = array.filter(function(d){
-
-        return d != valueLabel & d != targetLabel & d != textLabel; 
-    });
-
-    let valNames = array.filter(function(d){
-    
-        return d == valueLabel |
-        d== targetLabel;
-
-    });
-
-
-    swatchNames.reverse();
-    swatchColourRange.reverse();
-
-    let swatchWidth = keyWidth/swatchNames.length;
-
-    
-
-
-
-    let colourScale = d3.scaleOrdinal()
-        .range(swatchColourRange)
-        .domain(swatchNames);
-
-    let valColourScale = d3.scaleOrdinal()
-        .range([colours[0],'#000'])
-        .domain(valNames)
-
-
-
-
-    plot.selectAll('.swatchkey')
-    .data(swatchNames)
-    .enter()
-    .append('g')
-    .attr('transform','translate('+(w-margin.right)+','+keyOffset/2+')')
-    .call(function(parent){
-
-        parent.append('rect')
-        .style('fill',d=> colourScale(d))
-        .attr('height',keyHeight)
-        .attr('width',swatchWidth)
-        .attr('x',(d,i)=>0-((i+1)*swatchWidth))
-        .attr('y',0)
-
-        parent.append('text')
-        .attr('class',media+'subtitle')
-        .attr('x',(d,i)=>0-((i+1)*swatchWidth))
-        .attr('y',-5)
-        .attr('text-anchor','beginning')
-        .text(d=>d)
-    });
-
-targetValue(valNames);
-
-function targetValue(array) {
-
-    let target = array.filter(function(d){
-
-            return d == targetLabel;
-
-    });
-
-    let value =  array.filter(function(d){
-
-            return d == valueLabel;
-
-    });
-
-plot.selectAll('.valueKey')
-    .data(array)
-    .enter()
-    .append('g')
-    .attr('transform',function(){
-        if(media=='social'){
-        return "translate("+0+","+keyOffset/2+")"
-    } else {
-
-        return "translate("+margin.left+","+keyOffset/2+")"
-
-    }})
-    .call(function(parent){
-
-let valueGroup = parent.selectAll('.valueGroup')
-    .attr('class','valueKey')
-    .data(value)
-    .enter()
-    .append('g');
-
-    valueGroup
-    .append('text')
-    .attr('class',media+'subtitle')
-    .text(d=>d)
-    .attr('dy',keyHeight)
-    .attr('dx',swatchWidth*1.1)
-    .style('fill',d=>valColourScale(d));
-
-valueGroup
-    .append('rect')
-    .style('fill',d=>valColourScale(d))
-    .attr('height',keyHeight)
-    .attr('width',swatchWidth);
-
-let targetGroup = parent.selectAll('targetGroup')
-    .attr('class','targetKey')
-    .data(target)
-    .enter()
-    .append('g');
-    
-
-  targetGroup
-    .append('line')
-    .attr('x1', swatchWidth*.66)
-    .attr('x2', swatchWidth*.66)
-    .attr('y1', keyHeight*-.2)
-    .attr('y2',keyHeight*1.2)
-    .attr('stroke',d=>valColourScale(d))
-    .attr('stroke-width',3);
-
-    targetGroup
-    .append('text')
-    .attr('class',media+'subtitle')
-    .text(d=>d)
-    .attr('dy',-keyHeight*.6)
-    .style('fill',d=>valColourScale(d))
-
-
-
- });
 };
 
 
-}
+
+
+
+
+
+
+
+   
+
+
 
 }
