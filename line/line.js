@@ -161,7 +161,6 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
 
     xLabel.selectAll('text')
         .attr("style", null)
-        .attr("x",(plotWidth/ticks.major.length)/2)
 
 
     if(minAxis) {
