@@ -81,16 +81,30 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         terminus=terminus.filter(function(d){
             return (d.next!=undefined)
         })
-    console.log(terminus)
+
     let paths=terminus.map(function(d) {
         return {
             item: d.item,
             indexStart: seriesNames.indexOf(d.group),
             indexEnd: endindex(d.item,seriesNames.indexOf(d.group)),
-            pathData: "tc"
+            pathData: getPaths(d.item,seriesNames.indexOf(d.group),endindex(d.item,seriesNames.indexOf(d.group)))
         }
     })
-    console.log(paths)
+    console.log("paths",paths)
+
+    function getPaths(item, indexStart,indexEnd) {
+        //console.log(item,indexStart,indexEnd)
+        let plotArray=[]
+        for (var i = indexStart; i < indexEnd; i++) {
+            //console.log("seriesNames",seriesNames[i])
+            //console.log("plotData",plotData[i])
+            let points=plotData[i].rankings.filter(function(d){
+                return(d.item==item)
+            })
+            plotArray.push.apply(plotArray, points);
+        }
+        return (plotArray)
+    }
 
     function endindex(item, start) {
         var end=0
@@ -151,137 +165,132 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         .attr("id",function(d) { return d.group; })
         .attr("class", media+"category")
         .call(function(parent){
-
-        if(rects) {
-            parent.selectAll('rect')
-            .data(function(d){
-                return d.rankings
-            })
-            .enter()
-            .append("rect")
-            .attr("id", function(d){
-                var reg = new RegExp("[ ]+","g");
-                return d.item.replace(reg,"");
-                })
-            .on("click",function(d) {
-                highlightBar(this.id);
-                })
-            .attr("class",media+"fill")
-            .attr("width", xScale.rangeBand())
-            .attr("height", yScale.rangeBand())
-            .attr("y", function(d){return yScale(d.pos)})
-            .attr("x", function(d){return xScale(d.group)})
-            .attr("fill",function(d){
-                if(d.status>0){
-                    return "#76ACB8"
-                }
-                if(d.status<0){
-                    return "#BB6D82"
-                }
-                else {return "#B8B1A9"}
-            })
-            .attr("transform",function(){
-                return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
-            })
-
-        }
-        
-
-        parent.selectAll('text')
-            .data(function(d){
+            
+            if(rects) {
+                parent.selectAll('rect')
+                .data(function(d){
                     return d.rankings
                 })
-            .enter()
-            .append("text")
-            .attr("class", media+"labels")
-            .style("text-anchor",function(d){
-                if (d.group==seriesNames[0]) {
-                    return "start"
-                }
-                else {return "middle"}
-            })
-            .attr("y", function(d){return yScale(d.pos)+(yScale.rangeBand()*.7)})
-            .attr("x", function(d){
-                if(d.group==seriesNames[0]) {
-                    return xScale(d.group)+(xScale.rangeBand()/8)
-                }
-                else {return xScale(d.group)+(xScale.rangeBand()/2)}
-                })
-            .text(function(d){
-                if(d.status>0){
-
-                    if (numbers) {
-                         return "+"+d.status
+                .enter()
+                .append("rect")
+                .attr("id", function(d){
+                    var reg = new RegExp("[ ]+","g");
+                    return d.item.replace(reg,"");
+                    })
+                .on("click",function(d) {
+                    highlightBar(this.id);
+                    })
+                .attr("class",media+"fill")
+                .attr("width", xScale.rangeBand())
+                .attr("height", yScale.rangeBand())
+                .attr("y", function(d){return yScale(d.pos)})
+                .attr("x", function(d){return xScale(d.group)})
+                .attr("fill",function(d){
+                    if(d.status>0){
+                        return "#76ACB8"
                     }
-                    else {return d.item+" +"+d.status}
-                }
-                if(d.status<0){
-                    if (numbers) {
-                         return d.status
+                    if(d.status<0){
+                        return "#BB6D82"
                     }
-                    else {return d.item+" "+d.status}
-                }
-                else {return d.item}
-            })
-            .attr("transform",function(){
-                return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
-            })
-
-    
-        parent.selectAll("."+media+'link')
-            .data(function(d){
-                    return d.rankings.filter(function(el){return el.status>=0 || el.status<=0})
+                    else {return "#B8B1A9"}
                 })
-            .enter()
-            .append("path")
-          .attr("class",media+"link")
-          .attr("id",function(d) {
-                var reg = new RegExp("[ ]+","g");
-                return "link"+ d.item.replace(reg,"")})
-          .on("click",function(d) {
-                var reg = new RegExp("[ ]+","g");
-                highlightlink(d.item.replace(reg,""));
+                .attr("transform",function(){
+                    return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
                 })
-          .attr("stroke-width",function (d){return (yScale.rangeBand()/3)})
-          .attr("d", function(d) {
-            let x = xScale(d.prevGroup)+(xScale.rangeBand());
-            let y = yScale(d.prev)+(yScale.rangeBand()/2);
-            let x1 = xScale(d.group);
-            let y1 = yScale(d.pos)+(yScale.rangeBand()/2);
-            return "M" + x + "," + y
-                + "C" + (x+(xScale.rangeBand()/4)) + "," +y
-                + " " + (x1-(xScale.rangeBand()/4)) + "," + y1
-                + " " + x1 + "," + y1;
-          })
-          .attr("transform",function(){
-                return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
-            });
-
-        })
-
-
-    function highlightBar(barName) {
-        let selected=d3.selectAll("#"+barName)
-        var elClass = selected[0];
-        var el=d3.select(elClass[0])
-        if (el.attr("class")==media+"fill") {
-                selected.attr("class",media+"highlight")
             }
-        else {selected.attr("class",media+"fill")}
-        highlightlink(barName)
-    }
+        
 
-    function highlightlink(linkName) {
-        console.log("link",linkName)
-        let selected=d3.selectAll("#link"+linkName)
-        var elClass = selected[0];
-        var el=d3.select(elClass[0])
-        if (el.attr("class")==media+"link") {
-                selected.attr("class",media+"linkhighlight")
+            parent.selectAll('text')
+                .data(function(d){
+                        return d.rankings
+                    })
+                .enter()
+                .append("text")
+                .attr("class", media+"labels")
+                .style("text-anchor",function(d){
+                    if (d.group==seriesNames[0]) {
+                        return "start"
+                    }
+                    else {return "middle"}
+                })
+                .attr("y", function(d){return yScale(d.pos)+(yScale.rangeBand()*.7)})
+                .attr("x", function(d){
+                    if(d.group==seriesNames[0]) {
+                        return xScale(d.group)+(xScale.rangeBand()/8)
+                    }
+                    else {return xScale(d.group)+(xScale.rangeBand()/2)}
+                    })
+                .text(function(d){
+                    if(d.status>0){
+
+                        if (numbers) {
+                             return "+"+d.status
+                        }
+                        else {return d.item+" +"+d.status}
+                    }
+                    if(d.status<0){
+                        if (numbers) {
+                             return d.status
+                        }
+                        else {return d.item+" "+d.status}
+                    }
+                    else {return d.item}
+                })
+                .attr("transform",function(){
+                    return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
+                })
+
+
+            function highlightBar(barName) {
+                let selected=d3.selectAll("#"+barName)
+                var elClass = selected[0];
+                var el=d3.select(elClass[0])
+                if (el.attr("class")==media+"fill") {
+                        selected.attr("class",media+"highlight")
+                    }
+                else {selected.attr("class",media+"fill")}
+                highlightlink(barName)
             }
-        else {selected.attr("class",media+"link")}
 
-    }
+            function highlightlink(linkName) {
+                console.log("link",linkName)
+                let selected=d3.selectAll("#link"+linkName)
+                var elClass = selected[0];
+                var el=d3.select(elClass[0])
+                if (el.attr("class")==media+"link") {
+                        selected.attr("class",media+"linkhighlight")
+                    }
+                else {selected.attr("class",media+"link")}
+            }
+    })
+
+    plot.selectAll("."+media+"link")
+    .data(paths)
+    .enter()
+    .append("g")
+    .attr("id",function(d) { return d.item; })
+    .attr("class",media+"link")
+    // .call(function(parent){
+    //     parent.append("path")
+    //     .attr("stroke-width",function (d){return (yScale.rangeBand()/3)})
+    //     .attr('d', function(d){
+    //         return lineData(d);
+    //     })
+    //     .attr("transform",function(){
+    //         return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
+    //     });
+
+    //     //create a line function that can convert data[] into x and y points
+    //     var lineData= d3.svg.line()
+    //         .x(function(d,i) { 
+    //             return xScale(d.group); 
+    //         })
+    //         .y(function(d) { 
+    //             return yScale(d.pos)+(yScale.rangeBand()/2); 
+    //         })
+    //         .interpolate("linear")
+
+    // })
 
         
 

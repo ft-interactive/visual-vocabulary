@@ -71,6 +71,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             } 
         });
     });
+    console.log(plotArrays)
 
     //Scales
 
