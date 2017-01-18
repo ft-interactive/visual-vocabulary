@@ -69,18 +69,43 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
 
     console.log("Build links")
         let terminus=[]
+        let items=[]
         plotData.forEach(function(d){
-            let filtered=d.rankings.filter(function (el){
-                return (el.next==undefined)
+            let start=d.rankings.filter(function (el){
+                items.push(el.item)
+                return (el.prev==undefined)
             })
-            terminus.push.apply(terminus, filtered);
+            terminus.push.apply(terminus, start);
 
         })
         terminus=terminus.filter(function(d){
-            return (d.prev!=undefined)
+            return (d.next!=undefined)
         })
+    console.log(terminus)
+    let paths=terminus.map(function(d) {
+        return {
+            item: d.item,
+            indexStart: seriesNames.indexOf(d.group),
+            indexEnd: endindex(d.item,seriesNames.indexOf(d.group)),
+            pathData: "tc"
+        }
+    })
+    console.log(paths)
 
-        let linkData=[]
+    function endindex(item, start) {
+        var end=0
+        for (var i = start; i < plotData.length; i++) {
+            let lookup = plotData[i]
+            lookup.rankings.forEach(function(el){
+                if(el.item==item && el.next==undefined) {
+                    end=i
+                }
+            })
+        }
+        return end
+
+    }
+
 
     var yScale = d3.scale.ordinal()
     .rangeBands([0, plotHeight],.2)
