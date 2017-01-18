@@ -1,5 +1,5 @@
 
-function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax, numbers){
+function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax, numbers,rects){
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
     var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -43,8 +43,10 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             column.pos= +el.pos
             column.group=group
             column.prevGroup=seriesNames[index-1]
+            column.nextGroup=seriesNames[index+1]
             column.item=el[group]
-            column.prev=getPrev(el[group], index)
+            column.prev=relPositions("prev",el[group], index-1)
+            column.next=relPositions("next",el[group], index+1)
             column.status=column.prev-column.pos
         rankings.push(column)   
         });
@@ -52,18 +54,33 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
     }
 
     //finds the items previous ranking
-    function getPrev(item,i) {
-        //console.log(item,seriesNames[i-1])
-        let ref = seriesNames[i-1]
+    function relPositions(trace,item,i) {
+        //console.log(trace,item,seriesNames[i])
+        let lookup = seriesNames[i]
         const prev = data.find(function(d){
-            return d[ref]==item;
+                return d[lookup]==item;
         });
         //checks to see if undefined Nan etc
         if(!prev) return prev;
         return +prev.pos;
     }
 
-    console.log("plotData", plotData)
+    console.log("plotData", plotData);
+
+    console.log("Build links")
+        let terminus=[]
+        plotData.forEach(function(d){
+            let filtered=d.rankings.filter(function (el){
+                return (el.next==undefined)
+            })
+            terminus.push.apply(terminus, filtered);
+
+        })
+        terminus=terminus.filter(function(d){
+            return (d.prev!=undefined)
+        })
+
+        let linkData=[]
 
     var yScale = d3.scale.ordinal()
     .rangeBands([0, plotHeight],.2)
@@ -110,7 +127,8 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         .attr("class", media+"category")
         .call(function(parent){
 
-        parent.selectAll('rect')
+        if(rects) {
+            parent.selectAll('rect')
             .data(function(d){
                 return d.rankings
             })
@@ -140,6 +158,9 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             .attr("transform",function(){
                 return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
             })
+
+        }
+        
 
         parent.selectAll('text')
             .data(function(d){
@@ -180,10 +201,10 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             .attr("transform",function(){
                 return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
             })
+
     
         parent.selectAll("."+media+'link')
             .data(function(d){
-                    console.log("data",d.rankings.filter(function(el){return el.status}))
                     return d.rankings.filter(function(el){return el.status>=0 || el.status<=0})
                 })
             .enter()
@@ -192,7 +213,11 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
           .attr("id",function(d) {
                 var reg = new RegExp("[ ]+","g");
                 return "link"+ d.item.replace(reg,"")})
-          .attr("stroke-width",function (d){return (yScale.rangeBand()/1.3)})
+          .on("click",function(d) {
+                var reg = new RegExp("[ ]+","g");
+                highlightlink(d.item.replace(reg,""));
+                })
+          .attr("stroke-width",function (d){return (yScale.rangeBand()/3)})
           .attr("d", function(d) {
             let x = xScale(d.prevGroup)+(xScale.rangeBand());
             let y = yScale(d.prev)+(yScale.rangeBand()/2);
@@ -209,6 +234,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
 
         })
 
+
     function highlightBar(barName) {
         let selected=d3.selectAll("#"+barName)
         var elClass = selected[0];
@@ -218,7 +244,6 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             }
         else {selected.attr("class",media+"fill")}
         highlightlink(barName)
-
     }
 
     function highlightlink(linkName) {

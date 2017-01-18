@@ -24,7 +24,7 @@ var styleprint = {classes:
 {class:"day{fill:none; stroke: #ffffff; stroke-width:1.0px;stroke-linecap: round;}"},
 {class:"month{fill:none; stroke: #000000; stroke-width:1.0px;stroke-linecap: round;}"},
 {class:"link{fill:none; stroke:#b8b1a9; opacity: .3;}"},
-{class:"linkhighlight{fill:none; stroke:#000000; opacity: 0.20;}"},
+{class:"linkhighlight{fill:none; stroke:#000000; opacity: 1.0;}"},
 {class:"node{fill:#000000;}"}
 ],
 titleOffset:10,
@@ -57,7 +57,7 @@ var styleweb = {classes:
 {class:"day{fill:none;stroke: #fff1e0; stroke-width:1.0px;stroke-linecap: round;}"},
 {class:"month{fill:none;stroke: #000000; stroke-width:1.0px;stroke-linecap: round;}"},
 {class:"link{fill:none; stroke:#000000; opacity: 0.20;}"},
-{class:"linkhighlight{fill:none; stroke:#000000; opacity: 0.20;}"},
+{class:"linkhighlight{fill:none; stroke:#000000; opacity: 1.0;}"},
 {class:"node{fill:#000000;}"}
 ],
 titleOffset:21,
