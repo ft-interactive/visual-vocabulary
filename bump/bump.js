@@ -35,12 +35,12 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             rankings:getGroups(d,i)
         }
     })
+    let drawData=
 
     function getGroups(group,index) {
         //console.log(group,index)
         let rankings=[]
         data.forEach(function(el,i){
-            console.log(el)
             let column=new Object();
             column.pos= +el.pos
             column.group=group
