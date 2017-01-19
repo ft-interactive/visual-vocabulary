@@ -26,12 +26,13 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
     
     yMin=Math.min(yMin,d3.min(data, function(d) { return +d.pos;}))
     yMax=Math.max(yMax,d3.max(data, function(d) { return +d.pos;}))
+    console.log(data)
 
     let plotData=seriesNames.map(function(d,i){
         return {
             group:d,
-            index:i,
-            rankings:getGroups(d,i),
+            index:i+1,
+            rankings:getGroups(d,i)
         }
     })
 
@@ -39,6 +40,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         //console.log(group,index)
         let rankings=[]
         data.forEach(function(el,i){
+            console.log(el)
             let column=new Object();
             column.pos= +el.pos
             column.group=group
@@ -123,7 +125,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
 
     var yScale = d3.scale.ordinal()
     .rangeBands([0, plotHeight],.2)
-    .domain(data.map(function(d) { return d.pos;}));
+    .domain(data.map(function(d) { return d.pos      ;}));
 
     var yAxis = d3.svg.axis()
     .scale(yScale)
@@ -166,45 +168,33 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         .attr("class", media+"category")
         .call(function(parent){
             
-            parent.selectAll('text')
-                .data(function(d){
-                        return d.rankings
-                    })
-                .enter()
-                .append("text")
-                .attr("class", media+"labels")
-                .style("text-anchor",function(d){
-                    if (d.group==seriesNames[0]) {
-                        return "start"
-                    }
-                    else {return "middle"}
-                })
-                .attr("y", function(d){return yScale(d.pos)+(yScale.rangeBand()*.7)})
-                .attr("x", function(d){
-                    if(d.group==seriesNames[0]) {
-                        return xScale(d.group)+(xScale.rangeBand()/8)
-                    }
-                    else {return xScale(d.group)+(xScale.rangeBand()/2)}
-                    })
-                .text(function(d){
-                    if(d.status>0){
-
-                        if (numbers) {
-                             return "+"+d.status
-                        }
-                        else {return d.item+" +"+d.status}
-                    }
-                    if(d.status<0){
-                        if (numbers) {
-                             return d.status
-                        }
-                        else {return d.item+" "+d.status}
-                    }
-                    else {return d.item}
-                })
-                .attr("transform",function(){
-                    return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
-                })
+        // parent.selectAll('text')
+        //     .data(function(d){
+        //             return d.rankings
+        //         })
+        //     .enter()
+        //     .append("text")
+        //     .attr("class", media+"subtitle")
+        //     .style("text-anchor",function(d){
+        //         if (d.group==seriesNames[0]) {
+        //             return "start"
+        //         }
+        //         else {return "middle"}
+        //     })
+        //     .attr("y", function(d){return yScale(d.pos)+(yScale.rangeBand()*.6)})
+        //     .attr("x", function(d){
+        //         if(d.group==seriesNames[0]) {
+        //             return xScale(d.group)+(xScale.rangeBand()/8)
+        //         }
+        //         else {return xScale(d.group)+(xScale.rangeBand()/2)}
+        //         })
+        //     .text(function(d){
+        //         if(d.status>=0 && d.status<=0) {}
+        //         else {return d.item}
+        //     })
+        //     .attr("transform",function(){
+        //         return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
+        //     })
 
 
             function highlightBar(barName) {
@@ -233,7 +223,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
     //create a line function that can convert data[] into x and y points
     var lineData= d3.svg.line()
         .x(function(d,i) { 
-            return xScale(d.group); 
+            return xScale(d.group)-(xScale.rangeBand()/2); 
         })
         .y(function(d) { 
             return yScale(d.pos); 
@@ -253,7 +243,6 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
 
             parent.selectAll('path')
                     .data(function(d){
-                        console.log("PD",d.pathData)
                         return [d.pathData]
                     })
                     .enter()
