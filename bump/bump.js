@@ -166,40 +166,6 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         .attr("class", media+"category")
         .call(function(parent){
             
-            if(rects) {
-                parent.selectAll('rect')
-                .data(function(d){
-                    return d.rankings
-                })
-                .enter()
-                .append("rect")
-                .attr("id", function(d){
-                    var reg = new RegExp("[ ]+","g");
-                    return d.item.replace(reg,"");
-                    })
-                .on("click",function(d) {
-                    highlightBar(this.id);
-                    })
-                .attr("class",media+"fill")
-                .attr("width", xScale.rangeBand())
-                .attr("height", yScale.rangeBand())
-                .attr("y", function(d){return yScale(d.pos)})
-                .attr("x", function(d){return xScale(d.group)})
-                .attr("fill",function(d){
-                    if(d.status>0){
-                        return "#76ACB8"
-                    }
-                    if(d.status<0){
-                        return "#BB6D82"
-                    }
-                    else {return "#B8B1A9"}
-                })
-                .attr("transform",function(){
-                    return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
-                })
-            }
-        
-
             parent.selectAll('text')
                 .data(function(d){
                         return d.rankings
@@ -279,6 +245,9 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         .enter()
         .append("g")
         .attr("id",function(d) { return d.item; })
+        .attr("transform",function(){
+                    return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
+                })
         .attr("class",media+"link")
         .call(function(parent){
 
