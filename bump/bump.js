@@ -35,7 +35,6 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             endlabel: d.pos+": "+d[seriesNames[last]]
         }
     })
-    //console.log("terminusLabels",terminusLabels)
 
     let plotData=seriesNames.map(function(d,i){
         return {
@@ -44,11 +43,8 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             rankings:getGroups(d,i)
         }
     })
-    
-    //console.log("plotData", plotData)
 
     function getGroups(group,index) {
-        //console.log(group,index)
         let rankings=[]
         data.forEach(function(el,i){
             let column=new Object();
@@ -67,7 +63,6 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
 
     //finds the items previous ranking
     function relPositions(trace,item,i) {
-        //console.log(trace,item,seriesNames[i])
         let lookup = seriesNames[i]
         const prev = data.find(function(d){
                 return d[lookup]==item;
@@ -77,23 +72,20 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         return +prev.pos;
     }
 
-    //console.log("plotData", plotData);
-
-    console.log("Build links")
-        let terminus=[]
-        let items=[]
-        plotData.forEach(function(d){
-            let start=d.rankings.filter(function (el){
-                items.push(el.item)
-                return (el.prev==undefined)
-            })
-            terminus.push.apply(terminus, start);
-
+    let terminus=[]
+    let items=[]
+    plotData.forEach(function(d){
+        let start=d.rankings.filter(function (el){
+            items.push(el.item)
+            return (el.prev==undefined)
         })
-        terminus=terminus.filter(function(d){
-            return (d.next!=undefined)
-        })
-    console.log("terminus",terminus)
+        terminus.push.apply(terminus, start);
+
+    })
+    terminus=terminus.filter(function(d){
+        return (d.next!=undefined)
+    })
+
 
     let paths=terminus.map(function(d) {
         return {
@@ -103,7 +95,8 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             pathData: getPaths(d.item,seriesNames.indexOf(d.group),endindex(d.item,seriesNames.indexOf(d.group))+1)
         }
     })
-    console.log("paths",paths)
+
+    console.log(paths)
 
     function getPaths(item, indexStart,indexEnd) {
         //console.log(item,indexStart,indexEnd)
@@ -133,7 +126,6 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             if(!test) { break}
         }
         return end
-
     }
 
 
@@ -236,58 +228,42 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
                 return d.status})
         })
 
+    //create a line function that can convert data[] into x and y points
+    var lineData= d3.svg.line()
+        .x(function(d,i) { 
+            return xScale(d.group); 
+        })
+        .y(function(d) { 
+            return yScale(d.pos); 
+        })
+        .interpolate("monotone")
 
-    //         function highlightBar(barName) {
-    //             let selected=d3.selectAll("#"+barName)
-    //             var elClass = selected[0];
-    //             var el=d3.select(elClass[0])
-    //             if (el.attr("class")==media+"fill") {
-    //                     selected.attr("class",media+"highlight")
-    //                 }
-    //             else {selected.attr("class",media+"fill")}
-    //             highlightlink(barName)
-    //         }
+    var reg = new RegExp("[ ]+","g");
 
-    //         function highlightlink(linkName) {
-    //             console.log("link",linkName)
-    //             let selected=d3.selectAll("#link"+linkName)
-    //             var elClass = selected[0];
-    //             var el=d3.select(elClass[0])
-    //             if (el.attr("class")==media+"link") {
-    //                     selected.attr("class",media+"linkhighlight")
-    //                 }
-    //             else {selected.attr("class",media+"link")}
-    //         }
-    // })
-
-//create a line function that can convert data[] into x and y points
-var lineData= d3.svg.line()
-    .x(function(d,i) { 
-        return xScale(d.group); 
-    })
-    .y(function(d) { 
-        return yScale(d.pos); 
-    })
-    .interpolate("linear")
-
-plot.selectAll("."+media+"link")
-    .data(paths)
-    .enter()
-    .append("g")
-    .attr("id",function(d) { return d.item; })
-    .attr("transform",function(){
-                return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
-            })
-    .attr("class",media+"link")
-    .call(function(parent){
+    plot.selectAll("."+media+"linkGroup")
+        .data(paths)
+        .enter()
+        .append("g")
+        .attr("id",function(d) { return d.item; })
+        .attr("transform",function(){
+                    return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
+                })
+        .attr("class",media+"linkGroup")
+        .call(function(parent){
 
         parent.selectAll('path')
-            .data(function(d){
-                return [d.pathData]
-            })
-            .enter()
-            .append("path")
-        .attr("id",function(d) { return d.item; })
+        .data(function(d){
+            return [d.pathData]
+        })
+        .enter()
+        .append("path")
+        .attr("class",media+"link")
+        .attr("id",function(d) {
+            let id=d[0].item.replace(reg,"");
+            return "link"+id; })
+        .on("click",function(d) {
+            let id=this.id.replace(reg,"");
+            return highlightlink(id)})
         .attr("stroke-width",yOffset)
         .attr('d', function(d){
             return lineData(d);
@@ -295,6 +271,17 @@ plot.selectAll("."+media+"link")
         .attr("transform",function(){
             return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
         });
+
+        function highlightlink(linkName) {
+                console.log("link",linkName)
+                let selected=d3.selectAll("#"+linkName)
+                var elClass = selected[0];
+                var el=d3.select(elClass[0])
+                if (el.attr("class")==media+"link") {
+                        selected.attr("class",media+"linkhighlight")
+                    }
+                else {selected.attr("class",media+"link")}
+            }
 
     })
 

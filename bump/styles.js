@@ -23,8 +23,9 @@ var styleprint = {classes:
 {class:"highlight{fill-opacity:1.0;}"},
 {class:"day{fill:none; stroke: #ffffff; stroke-width:1.0px;stroke-linecap: round;}"},
 {class:"month{fill:none; stroke: #000000; stroke-width:1.0px;stroke-linecap: round;}"},
+{class:"linkGroup{fill:none; stroke:#000000; opacity: 0.20;}"},
 {class:"link{fill:none; stroke:#b8b1a9; opacity: .3;}"},
-{class:"linkhighlight{fill:none; stroke:#000000; opacity: 1.0;}"},
+{class:"linkhighlight{fill:none; stroke:#006a93; opacity: 1.0;}"},
 {class:"node{fill:#000000;}"}
 ],
 titleOffset:10,
@@ -56,8 +57,9 @@ var styleweb = {classes:
 {class:"highlight{fill-opacity:1.0;}"},
 {class:"day{fill:none;stroke: #fff1e0; stroke-width:1.0px;stroke-linecap: round;}"},
 {class:"month{fill:none;stroke: #000000; stroke-width:1.0px;stroke-linecap: round;}"},
-{class:"link{fill:none; stroke:#000000; opacity: 0.20;}"},
-{class:"linkhighlight{fill:none; stroke:#000000; opacity: 1.0;}"},
+{class:"linkGroup{fill:none; stroke:#000000; opacity: 0.20;}"},
+{class:"link{fill:none; stroke:#000000; opacity: 0.40;}"},
+{class:"linkhighlight{fill:none; stroke:#A5526A; opacity: 1.0;}"},
 {class:"node{fill:#000000;}"}
 ],
 titleOffset:21,
@@ -90,8 +92,9 @@ var stylesoc = {classes:
 {class:"highlight{fill-opacity:1.0;}"},
 {class:"day{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"},
 {class:"month{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"},
+{class:"linkGroup{fill:none; stroke:#000000; opacity: 0.20;}"},
 {class:"link{fill:none; stroke:#ffffff; opacity: 0.20;}"},
-{class:"linkhighlight{fill:none; stroke:#000000; opacity: 0.20;}"},
+{class:"linkhighlight{fill:none; stroke:#EB3F50; opacity: 1.0;}"},
 {class:"node{fill:#000000; }"}
 ],
 titleOffset:36,
@@ -125,7 +128,9 @@ var stylevid = {classes:
 {class:"highlight{fill-opacity:1.0;}"},
 {class:"day{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"},
 {class:"month{fill:none; stroke: #ffffff; stroke-width:1.0px; opacity: 0.5; stroke-linecap: round;}"},
+{class:"linkGroup{fill:none; stroke:#000000; opacity: 0.20;}"},
 {class:"link{fill:none; stroke:#ffffff; opacity: 0.20;}"},{class:"linkhighlight{fill:none; stroke:#000000; opacity: 0.20;}"},
+{class:"linkhighlight{fill:none; stroke:#b34b41; opacity: 1.0;}"},
 {class:"node{fill:#000000; }"}
 
 ],
