@@ -86,8 +86,8 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         return {
             item: d.item,
             indexStart: seriesNames.indexOf(d.group),
-            indexEnd: endindex(d.item,seriesNames.indexOf(d.group)),
-            pathData: getPaths(d.item,seriesNames.indexOf(d.group),endindex(d.item,seriesNames.indexOf(d.group)))
+            indexEnd: endindex(d.item,seriesNames.indexOf(d.group)+1),
+            pathData: getPaths(d.item,seriesNames.indexOf(d.group),endindex(d.item,seriesNames.indexOf(d.group))+1)
         }
     })
     console.log("paths",paths)
@@ -264,33 +264,41 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             }
     })
 
+    //create a line function that can convert data[] into x and y points
+    var lineData= d3.svg.line()
+        .x(function(d,i) { 
+            return xScale(d.group); 
+        })
+        .y(function(d) { 
+            return yScale(d.pos); 
+        })
+        .interpolate("linear")
+
     plot.selectAll("."+media+"link")
-    .data(paths)
-    .enter()
-    .append("g")
-    .attr("id",function(d) { return d.item; })
-    .attr("class",media+"link")
-    // .call(function(parent){
-    //     parent.append("path")
-    //     .attr("stroke-width",function (d){return (yScale.rangeBand()/3)})
-    //     .attr('d', function(d){
-    //         return lineData(d);
-    //     })
-    //     .attr("transform",function(){
-    //         return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
-    //     });
+        .data(paths)
+        .enter()
+        .append("g")
+        .attr("id",function(d) { return d.item; })
+        .attr("class",media+"link")
+        .call(function(parent){
 
-    //     //create a line function that can convert data[] into x and y points
-    //     var lineData= d3.svg.line()
-    //         .x(function(d,i) { 
-    //             return xScale(d.group); 
-    //         })
-    //         .y(function(d) { 
-    //             return yScale(d.pos)+(yScale.rangeBand()/2); 
-    //         })
-    //         .interpolate("linear")
+            parent.selectAll('path')
+                    .data(function(d){
+                        console.log("PD",d.pathData)
+                        return [d.pathData]
+                    })
+                    .enter()
+                    .append("path")
 
-    // })
+            .attr("stroke-width",3)
+            .attr('d', function(d){
+                return lineData(d);
+            })
+            .attr("transform",function(){
+                return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
+            });
+
+        })
 
         
 
