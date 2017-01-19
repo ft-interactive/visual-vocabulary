@@ -26,7 +26,18 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
     
     yMin=Math.min(yMin,d3.min(data, function(d) { return +d.pos;}))
     yMax=Math.max(yMax,d3.max(data, function(d) { return +d.pos;}))
+    console.log(seriesNames)
     console.log(data)
+
+    let terminusLabels=data.map(function(d){
+    let last=seriesNames.length-1
+        return{
+            pos:d.pos,
+            startLabel: d.pos+": "+d[seriesNames[0]],
+            endlabel: d.pos+": "+d[seriesNames[last]]
+        }
+    })
+    console.log("terminusLabels",terminusLabels)
 
     let plotData=seriesNames.map(function(d,i){
         return {
@@ -35,7 +46,8 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             rankings:getGroups(d,i)
         }
     })
-    let drawData=
+    
+    console.log("plotData", plotData)
 
     function getGroups(group,index) {
         //console.log(group,index)
@@ -125,7 +137,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
 
     var yScale = d3.scale.ordinal()
     .rangeBands([0, plotHeight],.2)
-    .domain(data.map(function(d) { return d.pos      ;}));
+    .domain(terminusLabels.map(function(d) { return d.pos;}));
 
     var yAxis = d3.svg.axis()
     .scale(yScale)
@@ -144,8 +156,30 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             return "translate("+(yLabelOffset+margin.left)+","+margin.top+")"
             })
 
+    var yScaleR = d3.scale.ordinal()
+    .rangeBands([0, plotHeight],.2)
+    .domain(terminusLabels.map(function(d) { return d.endlabel;}));
+    console.log(yScaleR.domain)
+    var yAxisR = d3.svg.axis()
+    .scale(yScaleR)
+    .orient("right")
+    .tickSize(0);
+
+    var yLabelR=plot.append("g")
+    .attr("id", media+"yAxis")
+    .attr("class", media+"yAxis")
+    .call(yAxisR)
+
+    var yLabelOffsetR=yLabelR.node().getBBox().width
+    plotWidth=plotWidth-yLabelOffsetR
+    yLabelR
+        .attr("transform",function(){
+            return "translate("+(plotWidth+margin.left)+","+margin.top+")"
+            })
+
+
     var xScale = d3.scale.ordinal()
-    .rangeBands([0, plotWidth-yLabelOffset],.4)
+    .rangeBands([0, plotWidth-yLabelOffset],.2)
     .domain(seriesNames.map(function(d) { return d;}));
 
     var xAxis = d3.svg.axis()
@@ -160,103 +194,102 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             })
       .call(xAxis);
 
-    plot.selectAll("."+media+"bar")
+    let columns=plot.selectAll("."+media+"category")
     .data(plotData)
     .enter()
         .append("g")
         .attr("id",function(d) { return d.group; })
         .attr("class", media+"category")
-        .call(function(parent){
-            
-        // parent.selectAll('text')
-        //     .data(function(d){
-        //             return d.rankings
-        //         })
-        //     .enter()
-        //     .append("text")
-        //     .attr("class", media+"subtitle")
-        //     .style("text-anchor",function(d){
-        //         if (d.group==seriesNames[0]) {
-        //             return "start"
-        //         }
-        //         else {return "middle"}
-        //     })
-        //     .attr("y", function(d){return yScale(d.pos)+(yScale.rangeBand()*.6)})
-        //     .attr("x", function(d){
-        //         if(d.group==seriesNames[0]) {
-        //             return xScale(d.group)+(xScale.rangeBand()/8)
-        //         }
-        //         else {return xScale(d.group)+(xScale.rangeBand()/2)}
-        //         })
-        //     .text(function(d){
-        //         if(d.status>=0 && d.status<=0) {}
-        //         else {return d.item}
-        //     })
-        //     .attr("transform",function(){
-        //         return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
-        //     })
-
-
-            function highlightBar(barName) {
-                let selected=d3.selectAll("#"+barName)
-                var elClass = selected[0];
-                var el=d3.select(elClass[0])
-                if (el.attr("class")==media+"fill") {
-                        selected.attr("class",media+"highlight")
-                    }
-                else {selected.attr("class",media+"fill")}
-                highlightlink(barName)
-            }
-
-            function highlightlink(linkName) {
-                console.log("link",linkName)
-                let selected=d3.selectAll("#link"+linkName)
-                var elClass = selected[0];
-                var el=d3.select(elClass[0])
-                if (el.attr("class")==media+"link") {
-                        selected.attr("class",media+"linkhighlight")
-                    }
-                else {selected.attr("class",media+"link")}
-            }
-    })
-
-    //create a line function that can convert data[] into x and y points
-    var lineData= d3.svg.line()
-        .x(function(d,i) { 
-            return xScale(d.group)-(xScale.rangeBand()/2); 
-        })
-        .y(function(d) { 
-            return yScale(d.pos); 
-        })
-        .interpolate("linear")
-
-    plot.selectAll("."+media+"link")
-        .data(paths)
-        .enter()
-        .append("g")
-        .attr("id",function(d) { return d.item; })
-        .attr("transform",function(){
-                    return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
-                })
-        .attr("class",media+"link")
-        .call(function(parent){
-
-            parent.selectAll('path')
-                    .data(function(d){
-                        return [d.pathData]
-                    })
-                    .enter()
-                    .append("path")
-
-            .attr("stroke-width",3)
-            .attr('d', function(d){
-                return lineData(d);
-            })
-            .attr("transform",function(){
+        .attr("transform",function(i){
                 return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
-            });
-
+            })
+    
+    columns.append("rect")
+                .style("fill","#000000")
+                .attr("class", media+"column")
+                .attr("x",function (d) {return xScale(d.group)})
+                .attr("y",0)
+                .attr("width",function (d) {return xScale.rangeBand()})
+                .attr("height",plotHeight)
+    
+    columns.call(function(parent){
+                
+        parent.selectAll('text')
+            .data(function(d){
+                    return d.rankings
+                })
+            .enter()
+            .append("text")
+            .attr("class", media+"subtitle")
+            .style("text-anchor", "middle")
+            .attr("y", function(d){
+                console.log(d.pos)
+                return yScale(d.pos)+yOffset*1.4})
+            .attr("x", function(d){return xScale(d.group)+(xScale.rangeBand()/2)})
+            .text(function(d){return d.status})
         })
+
+
+    //         function highlightBar(barName) {
+    //             let selected=d3.selectAll("#"+barName)
+    //             var elClass = selected[0];
+    //             var el=d3.select(elClass[0])
+    //             if (el.attr("class")==media+"fill") {
+    //                     selected.attr("class",media+"highlight")
+    //                 }
+    //             else {selected.attr("class",media+"fill")}
+    //             highlightlink(barName)
+    //         }
+
+    //         function highlightlink(linkName) {
+    //             console.log("link",linkName)
+    //             let selected=d3.selectAll("#link"+linkName)
+    //             var elClass = selected[0];
+    //             var el=d3.select(elClass[0])
+    //             if (el.attr("class")==media+"link") {
+    //                     selected.attr("class",media+"linkhighlight")
+    //                 }
+    //             else {selected.attr("class",media+"link")}
+    //         }
+    // })
+
+    // //create a line function that can convert data[] into x and y points
+    // var lineData= d3.svg.line()
+    //     .x(function(d,i) { 
+    //         return xScale(d.group)-(xScale.rangeBand()/2); 
+    //     })
+    //     .y(function(d) { 
+    //         return yScale(d.pos); 
+    //     })
+    //     .interpolate("linear")
+
+    // plot.selectAll("."+media+"link")
+    //     .data(paths)
+    //     .enter()
+    //     .append("g")
+    //     .attr("id",function(d) { return d.item; })
+    //     .attr("transform",function(){
+    //                 return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
+    //             })
+    //     .attr("class",media+"link")
+    //     .call(function(parent){
+
+    //         parent.selectAll('path')
+    //                 .data(function(d){
+    //                     return [d.pathData]
+    //                 })
+    //                 .enter()
+    //                 .append("path")
+
+    //         .attr("stroke-width",3)
+    //         .attr('d', function(d){
+    //             return lineData(d);
+    //         })
+    //         .attr("transform",function(){
+    //             return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
+    //         });
+
+    //     })
 
         
 
