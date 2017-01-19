@@ -133,7 +133,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         .domain(xDomain)
         .range([0,(plotWidth-yLabelOffset)])
 
-    
+    console.log("ticls",ticks.major)
     var xAxis = d3.svg.axis()
         .scale(xScale)
         .tickValues(ticks.major)

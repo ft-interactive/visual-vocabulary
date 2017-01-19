@@ -26,8 +26,6 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
     
     yMin=Math.min(yMin,d3.min(data, function(d) { return +d.pos;}))
     yMax=Math.max(yMax,d3.max(data, function(d) { return +d.pos;}))
-    console.log(seriesNames)
-    console.log(data)
 
     let terminusLabels=data.map(function(d){
     let last=seriesNames.length-1
@@ -37,7 +35,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             endlabel: d.pos+": "+d[seriesNames[last]]
         }
     })
-    console.log("terminusLabels",terminusLabels)
+    //console.log("terminusLabels",terminusLabels)
 
     let plotData=seriesNames.map(function(d,i){
         return {
@@ -47,7 +45,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         }
     })
     
-    console.log("plotData", plotData)
+    //console.log("plotData", plotData)
 
     function getGroups(group,index) {
         //console.log(group,index)
@@ -79,7 +77,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         return +prev.pos;
     }
 
-    console.log("plotData", plotData);
+    //console.log("plotData", plotData);
 
     console.log("Build links")
         let terminus=[]
@@ -95,6 +93,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         terminus=terminus.filter(function(d){
             return (d.next!=undefined)
         })
+    console.log("terminus",terminus)
 
     let paths=terminus.map(function(d) {
         return {
@@ -124,11 +123,14 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         var end=0
         for (var i = start; i < plotData.length; i++) {
             let lookup = plotData[i]
-            lookup.rankings.forEach(function(el){
+            test=lookup.rankings.every(function(el){
+                end=i
                 if(el.item==item && el.next==undefined) {
-                    end=i
+                    return false;
                 }
+                else return true;
             })
+            if(!test) { break}
         }
         return end
 
@@ -143,7 +145,10 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
     .scale(yScale)
     .orient("left")
     .tickSize(0);
-    
+
+    let ticks=terminusLabels.map(function(d) { return d.startLabel;})
+    //console.log(ticks)
+
     var yLabel=plot.append("g")
     .attr("id", media+"yAxis")
     .attr("class", media+"yAxis")
@@ -159,7 +164,6 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
     var yScaleR = d3.scale.ordinal()
     .rangeBands([0, plotHeight],.2)
     .domain(terminusLabels.map(function(d) { return d.endlabel;}));
-    console.log(yScaleR.domain)
     var yAxisR = d3.svg.axis()
     .scale(yScaleR)
     .orient("right")
@@ -223,10 +227,13 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             .attr("class", media+"subtitle")
             .style("text-anchor", "middle")
             .attr("y", function(d){
-                console.log(d.pos)
                 return yScale(d.pos)+yOffset*1.4})
             .attr("x", function(d){return xScale(d.group)+(xScale.rangeBand()/2)})
-            .text(function(d){return d.status})
+            .text(function(d){
+                if(d.prev==undefined){
+                    return d.item
+                }
+                return d.status})
         })
 
 
@@ -253,43 +260,43 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
     //         }
     // })
 
-    // //create a line function that can convert data[] into x and y points
-    // var lineData= d3.svg.line()
-    //     .x(function(d,i) { 
-    //         return xScale(d.group)-(xScale.rangeBand()/2); 
-    //     })
-    //     .y(function(d) { 
-    //         return yScale(d.pos); 
-    //     })
-    //     .interpolate("linear")
+//create a line function that can convert data[] into x and y points
+var lineData= d3.svg.line()
+    .x(function(d,i) { 
+        return xScale(d.group); 
+    })
+    .y(function(d) { 
+        return yScale(d.pos); 
+    })
+    .interpolate("linear")
 
-    // plot.selectAll("."+media+"link")
-    //     .data(paths)
-    //     .enter()
-    //     .append("g")
-    //     .attr("id",function(d) { return d.item; })
-    //     .attr("transform",function(){
-    //                 return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
-    //             })
-    //     .attr("class",media+"link")
-    //     .call(function(parent){
+plot.selectAll("."+media+"link")
+    .data(paths)
+    .enter()
+    .append("g")
+    .attr("id",function(d) { return d.item; })
+    .attr("transform",function(){
+                return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
+            })
+    .attr("class",media+"link")
+    .call(function(parent){
 
-    //         parent.selectAll('path')
-    //                 .data(function(d){
-    //                     return [d.pathData]
-    //                 })
-    //                 .enter()
-    //                 .append("path")
+        parent.selectAll('path')
+            .data(function(d){
+                return [d.pathData]
+            })
+            .enter()
+            .append("path")
+        .attr("id",function(d) { return d.item; })
+        .attr("stroke-width",yOffset)
+        .attr('d', function(d){
+            return lineData(d);
+        })
+        .attr("transform",function(){
+            return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
+        });
 
-    //         .attr("stroke-width",3)
-    //         .attr('d', function(d){
-    //             return lineData(d);
-    //         })
-    //         .attr("transform",function(){
-    //             return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
-    //         });
-
-    //     })
+    })
 
         
 
