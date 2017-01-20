@@ -244,14 +244,14 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         .data(paths)
         .enter()
         .append("g")
-        .attr("id",function(d) { return d.item; })
+        .attr("id",function(d) { return "group"+d.item; })
         .attr("transform",function(){
                     return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
                 })
         .attr("class",media+"linkGroup")
         .call(function(parent){
 
-        parent.selectAll('path')
+        parent.selectAll("."+media+"link")
         .data(function(d){
             return [d.pathData]
         })
@@ -259,8 +259,8 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         .append("path")
         .attr("class",media+"link")
         .attr("id",function(d) {
-            let id=d[0].item.replace(reg,"");
-            return "link"+id; })
+            let id=media+d[0].item.replace(reg,"");
+            return id; })
         .on("click",function(d) {
             let id=this.id.replace(reg,"");
             return highlightlink(id)})
