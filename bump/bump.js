@@ -132,14 +132,14 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
     var yScale = d3.scale.ordinal()
     .rangeBands([0, plotHeight],.2)
     .domain(terminusLabels.map(function(d) { return d.pos;}));
+    
+    let ticks=terminusLabels.map(function(d) { return d.startLabel;})
 
     var yAxis = d3.svg.axis()
     .scale(yScale)
     .orient("left")
-    .tickSize(0);
-
-    let ticks=terminusLabels.map(function(d) { return d.startLabel;})
-    //console.log(ticks)
+    .tickSize(0)
+    .tickFormat(function (d){return ticks[d-1]});
 
     var yLabel=plot.append("g")
     .attr("id", media+"yAxis")
@@ -269,9 +269,6 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         .attr('d', function(d){
             return lineData(d);
         })
-        .attr("transform",function(){
-                    return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
-                })
 
         function highlightlink(linkName) {
                 console.log("link",linkName)
