@@ -92,11 +92,18 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             item: d.item,
             indexStart: seriesNames.indexOf(d.group),
             indexEnd: endindex(d.item,seriesNames.indexOf(d.group)+1),
-            pathData: getPaths(d.item,seriesNames.indexOf(d.group),endindex(d.item,seriesNames.indexOf(d.group))+1)
+            pathData: getPaths(d.item,seriesNames.indexOf(d.group),endindex(d.item,seriesNames.indexOf(d.group))+1),
+            pos: d.pos,
+            posEnd: ""
         }
     })
+    paths.forEach(function(d) {
+        let last = +d.pathData.length-1
+        d.posEnd=d.pathData[last].pos
+    })
 
-    console.log(paths)
+    // console.log(plotData)
+    // console.log("paths",paths)
 
     function getPaths(item, indexStart,indexEnd) {
         //console.log(item,indexStart,indexEnd)
@@ -221,9 +228,12 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             .attr("y", function(d){
                 return yScale(d.pos)+yOffset*1.4})
             .attr("x", function(d){return xScale(d.group)+(xScale.rangeBand()/2)})
-            .text(function(d){
-                if(d.prev==undefined){
+            .text(function(d,i){
+                if(d.prev==undefined && d.group!=seriesNames[0]){
                     return d.item
+                }
+                if(d.group==seriesNames[0]){
+                    return ""
                 }
                 return d.status})
         })
@@ -231,10 +241,10 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
     //create a line function that can convert data[] into x and y points
     var lineData= d3.svg.line()
         .x(function(d,i) { 
-            return xScale(d.group); 
+            return xScale(d.group)+xScale.rangeBand()/2; 
         })
         .y(function(d) { 
-            return yScale(d.pos); 
+            return yScale(d.pos)+yScale.rangeBand()/2; 
         })
         .interpolate("monotone")
 
@@ -249,6 +259,35 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         .attr("transform",function(){
                     return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
                 })
+
+        .call(function(parent){
+        parent.append('circle')
+        .attr("class",media+"fill")
+        .attr("id",function(d) {
+            let id=media+"circle"+d.item.replace(reg,"");
+            return id; })
+        .attr("r",yOffset/1.8)
+        .attr("cx",function(d){
+            let x=d.indexStart
+            return xScale(seriesNames[x])+xScale.rangeBand()/2})
+        .attr("cy",function(d){
+            let y=d.pos
+            return yScale(y)+yScale.rangeBand()/2})
+        parent.append('circle')
+        .attr("class",media+"fill")
+        .attr("id",function(d) {
+            let id=media+"circle"+d.item.replace(reg,"");
+            return id; })
+        .attr("r",yOffset/1.8)
+        .attr("cx",function(d){
+            let x=d.indexEnd
+            return xScale(seriesNames[x])+xScale.rangeBand()/2})
+        .attr("cy",function(d){
+            let y=d.posEnd
+            return yScale(y)+yScale.rangeBand()/2})
+
+        })
+        
         .call(function(parent){
 
         parent.selectAll("."+media+"link")
@@ -271,15 +310,14 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         })
 
         function highlightlink(linkName) {
-                console.log("link",linkName)
-                let selected=d3.selectAll("#"+linkName)
-                var elClass = selected[0];
-                var el=d3.select(elClass[0])
-                if (el.attr("class")==media+"link") {
-                        selected.attr("class",media+"linkhighlight")
-                    }
-                else {selected.attr("class",media+"link")}
-            }
+            let selected=d3.selectAll("#"+linkName)
+            var elClass = selected[0];
+            var el=d3.select(elClass[0])
+            if (el.attr("class")==media+"link") {
+                    selected.attr("class",media+"linkhighlight")
+                }
+            else {selected.attr("class",media+"link")}
+        }
 
     })
 
