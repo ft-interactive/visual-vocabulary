@@ -264,7 +264,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         parent.append('circle')
         .attr("class",media+"fill")
         .attr("id",function(d) {
-            let id=media+"circle"+d.item.replace(reg,"");
+            let id="circle"+media+d.item.replace(reg,"");
             return id; })
         .attr("r",yOffset/1.8)
         .attr("cx",function(d){
@@ -276,7 +276,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         parent.append('circle')
         .attr("class",media+"fill")
         .attr("id",function(d) {
-            let id=media+"circle"+d.item.replace(reg,"");
+            let id="circle"+media+d.item.replace(reg,"");
             return id; })
         .attr("r",yOffset/1.8)
         .attr("cx",function(d){
@@ -317,6 +317,14 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
                     selected.attr("class",media+"linkhighlight")
                 }
             else {selected.attr("class",media+"link")}
+
+            selected=d3.selectAll("#"+"circle"+linkName)
+            elClass = selected[0];
+            el=d3.select(elClass[0])
+            if (el.attr("class")==media+"fill") {
+                    selected.attr("class",media+"highlight")
+                }
+            else {selected.attr("class",media+"fill")}
         }
 
     })
