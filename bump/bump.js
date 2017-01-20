@@ -245,10 +245,10 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         .enter()
         .append("g")
         .attr("id",function(d) { return "group"+d.item; })
+        .attr("class",media+"linkGroup")
         .attr("transform",function(){
                     return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
                 })
-        .attr("class",media+"linkGroup")
         .call(function(parent){
 
         parent.selectAll("."+media+"link")
@@ -257,6 +257,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         })
         .enter()
         .append("path")
+        .classed(media+"linkGroup",false)
         .attr("class",media+"link")
         .attr("id",function(d) {
             let id=media+d[0].item.replace(reg,"");
@@ -269,8 +270,8 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
             return lineData(d);
         })
         .attr("transform",function(){
-            return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
-        });
+                    return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"
+                })
 
         function highlightlink(linkName) {
                 console.log("link",linkName)
