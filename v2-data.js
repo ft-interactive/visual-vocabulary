@@ -10,7 +10,7 @@ let catData={"categories":[
 	"example":"Trade surplus/deficit, climate change"},
 {"category":"Ranking", "colour":"#008EB0",
     "description":"Use where an item’s position in an ordered list is more important than its absolute or relative value. Don’t be afraid to highlight the points of interest.",
-    "example":"Trade surplus/deficit, climate change"},
+    "example":"Wealth, deprivatioon, leaugue table, constituency election results"},
 {"category":"Distribution", "colour":"#F26522",
 	"description":"Show values in a dataset and how often they occur. The shape (or ‘skew’) of a distribution can be a memorable way of highlighting the lack of uniformity or equality in the data",
 	"example":"Trade surplus/deficit, climate change"},
