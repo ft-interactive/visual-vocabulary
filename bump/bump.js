@@ -266,7 +266,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         .attr("id",function(d) {
             let id="circle"+media+d.item.replace(reg,"");
             return id; })
-        .attr("r",5)
+        .attr("r",3)
         .attr("cx",function(d){
             let x=d.indexStart
             return xScale(seriesNames[x])+xScale.rangeBand()/2})
@@ -278,7 +278,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         .attr("id",function(d) {
             let id="circle"+media+d.item.replace(reg,"");
             return id; })
-        .attr("r",5)
+        .attr("r",3)
         .attr("cx",function(d){
             let x=d.indexEnd
             return xScale(seriesNames[x])+xScale.rangeBand()/2})
@@ -304,7 +304,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         .on("click",function(d) {
             let id=this.id.replace(reg,"");
             return highlightlink(id)})
-        .attr("stroke-width",yOffset/3)
+        .attr("stroke-width",yOffset/5)
         .attr('d', function(d){
             return lineData(d);
         })
