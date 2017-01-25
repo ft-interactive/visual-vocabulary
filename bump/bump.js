@@ -215,28 +215,28 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
                 .attr("width",function (d) {return xScale.rangeBand()})
                 .attr("height",plotHeight)
     
-    columns.call(function(parent){
+    // columns.call(function(parent){
                 
-        parent.selectAll('text')
-            .data(function(d){
-                    return d.rankings
-                })
-            .enter()
-            .append("text")
-            .attr("class", media+"subtitle")
-            .style("text-anchor", "middle")
-            .attr("y", function(d){
-                return yScale(d.pos)+yOffset*1.4})
-            .attr("x", function(d){return xScale(d.group)+(xScale.rangeBand()/2)})
-            .text(function(d,i){
-                if(d.prev==undefined && d.group!=seriesNames[0]){
-                    return d.item
-                }
-                if(d.group==seriesNames[0]){
-                    return ""
-                }
-                return d.status})
-        })
+    //     parent.selectAll('text')
+    //         .data(function(d){
+    //                 return d.rankings
+    //             })
+    //         .enter()
+    //         .append("text")
+    //         .attr("class", media+"subtitle")
+    //         .style("text-anchor", "middle")
+    //         .attr("y", function(d){
+    //             return yScale(d.pos)+yOffset*1.4})
+    //         .attr("x", function(d){return xScale(d.group)+(xScale.rangeBand()/2)})
+    //         .text(function(d,i){
+    //             if(d.prev==undefined && d.group!=seriesNames[0]){
+    //                 return d.item
+    //             }
+    //             if(d.group==seriesNames[0]){
+    //                 return ""
+    //             }
+    //             return d.status})
+    //     })
 
     //create a line function that can convert data[] into x and y points
     var lineData= d3.svg.line()
@@ -266,7 +266,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         .attr("id",function(d) {
             let id="circle"+media+d.item.replace(reg,"");
             return id; })
-        .attr("r",3)
+        .attr("r",yOffset/6)
         .attr("cx",function(d){
             let x=d.indexStart
             return xScale(seriesNames[x])+xScale.rangeBand()/2})
@@ -278,7 +278,7 @@ function bumpChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yMax,
         .attr("id",function(d) {
             let id="circle"+media+d.item.replace(reg,"");
             return id; })
-        .attr("r",3)
+        .attr("r",yOffset/6)
         .attr("cx",function(d){
             let x=d.indexEnd
             return xScale(seriesNames[x])+xScale.rangeBand()/2})
