@@ -172,8 +172,13 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         .scale(xScale)
         .tickValues(xScale.domain().filter(function (d, i) {
             //console.log(d,d.getDay(),checkDate.getDay())
+            d = new Date(d)
             return (d.getMinutes()==0);
         }))
+        .tickFormat(function (d) {
+             var dateFormat=d3.time.format("%H");
+             return dateFormat(d);
+       })
         .tickSize(yOffset/4)
         .orient("bottom");
 
