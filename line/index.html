@@ -126,7 +126,7 @@
             var dateDomain = d3.extent(data, function(d) {return d.date;});       
             return {
                 'decade':{major: timeline(dateDomain,"year",10),minor:timeline(dateDomain,"year",1)},
-                'lutrrum':{major: timeline(dateDomain,"year",5),minor:timeline(dateDomain,"year",1)},
+                'lustrum':{major: timeline(dateDomain,"year",5),minor:timeline(dateDomain,"year",1)},
                 'years':{major: timeline(dateDomain,"year",1),minor:timeline(dateDomain,"month",1)},
                 'quarters':{major: timeline(dateDomain,"year",1),minor:timeline(dateDomain,"month",3)},
                 'months':{major: timeline(dateDomain,"month",1 ),minor:timeline(dateDomain,"day",1)},
