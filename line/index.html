@@ -30,7 +30,7 @@
         var lineSmoothing="linear";//choose 'linear' for an unsmoothed line 'monotone' for smooth
         var logScale=false;
         var logScaleStart=1000;
-        var markers=true;//show circle markers
+        var markers=false;//show circle markers
         var numTicksy = 4;//rough number of ticks for y axis
         var interval="months";//days, months, quarters, years, lustrum or decade
         var minAxis=false //true or false
@@ -81,6 +81,7 @@
             });
         //YOU SHOULD'NT HAVE TO DO MUCH AFTER THIS
             ticks=calculateTicks(data,interval)
+            console.log(ticks)
 
             for (var i=0;i<frames.length;i++){
                 var stylename=frames[i].stylesheet;
@@ -129,7 +130,8 @@
                 'years':{major: timeline(dateDomain,"year",1),minor:timeline(dateDomain,"month",1)},
                 'quarters':{major: timeline(dateDomain,"year",1),minor:timeline(dateDomain,"month",3)},
                 'months':{major: timeline(dateDomain,"month",1 ),minor:timeline(dateDomain,"day",1)},
-                'days':{major: timeline(dateDomain,"day",1),minor:timeline(dateDomain,"hour",1)}
+                'days':{major: timeline(dateDomain,"day",1),minor:timeline(dateDomain,"hour",1)},
+                'hours':{major: timeline(dateDomain,"hour",1),minor:timeline(dateDomain,"minute",1)},
             }[int];
 
             function timeline(dateDomain,time,step) {

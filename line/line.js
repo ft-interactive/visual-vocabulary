@@ -71,7 +71,6 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             } 
         });
     });
-    console.log(plotArrays)
 
     //Scales
 
@@ -133,12 +132,11 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         .domain(xDomain)
         .range([0,(plotWidth-yLabelOffset)])
 
-    console.log("ticls",ticks.major)
     var xAxis = d3.svg.axis()
         .scale(xScale)
         .tickValues(ticks.major)
         .tickSize(yOffset/2)
-        .tickFormat(d3.time.format(formatTick(interval)))
+        //.tickFormat(d3.time.format(formatTick(interval)))
         .orient("bottom");
 
     function formatTick(int) {
@@ -147,7 +145,9 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             "years": "%Y",
             "decade": "%Y",
             "lustrum": "%Y",
-            "days": "%d"}[int]
+            "days": "%d",
+            "hours":"%H:%M"
+        }[int]
     };
 
     var xLabel=plot.append("g")
