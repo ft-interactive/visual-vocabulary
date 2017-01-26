@@ -176,7 +176,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
             return (d.getMinutes()==0);
         }))
         .tickFormat(function (d) {
-             var dateFormat=d3.time.format("%H");
+             var dateFormat=d3.time.format("%H:%M");
              return dateFormat(d);
        })
         .tickSize(yOffset/4)
