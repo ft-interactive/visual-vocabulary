@@ -29,13 +29,14 @@
         var yMin = undefined;    //set this to mark the minimum value of the y axis
         var yMax = undefined;    //set this to mark the maximum value of the y axis
         var numTicksy = 5;//rough number of ticks for y axis
-        // var xAxisTickFormat = d3.time.format("%m %y") // change the x axis label format to what you want see url above for list of options
+        var ticks;
+        var xAxisTickFormat = d3.time.format("%Y") // change the x axis label format to what you want see url above for list of options
 
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
         var frames=[
         {name:"print",width:112.25,height:120,units:'mm',margins:[{top:5,right:5,bottom:15, left:0}],stylesheet:styleprint,legend:"vert",yLabel:"right"},
-        {name:"web",width:600,height:800,units:'px',margins:[{top:0,right:29,bottom:20,left:0}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
+        {name:"web",width:600,height:800,units:'px',margins:[{top:0,right:0,bottom:20,left:0}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
         {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
         {name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
         ]
@@ -52,7 +53,7 @@
         //Load the data
         d3.csv(dataURL,function(error, data){
             //date formatter, matching the format of the incoming csv...
-            var parseDate = d3.time.format("%d/%m/%y").parse;
+            var parseDate = d3.time.format("%d/%m/%Y").parse;
             /*
             some common formatting parsers....
             d3.time.format("%Y %b") 1986 Jan
@@ -66,9 +67,9 @@
              */
 
             //parse the data if needed
-            /*data.forEach(function(d) {
+            data.forEach(function(d) {
                 d.date=parseDate(d.date);
-            });*/
+            });
 
 
          /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
@@ -79,7 +80,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                makeChart(data, stylename, media, chartpadding, legend, yLabel, numberOfColumns, numberOfRows, yMin, yMax, numTicksy);
+                makeChart(data, stylename, media, chartpadding, legend, yLabel, numberOfColumns, numberOfRows, yMin, yMax, numTicksy, xAxisTickFormat);
             }
         })//end data load
 

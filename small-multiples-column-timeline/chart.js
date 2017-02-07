@@ -1,5 +1,5 @@
 
-function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, numberOfColumns, numberOfRows, yMin, yMax, numTicksy){
+function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, numberOfColumns, numberOfRows, yMin, yMax, numTicksy, xAxisTickFormat){
 
   var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
   var subtitleYoffset = d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -18,7 +18,7 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
   
   //Get the width,height and the marginins unique to this chart
   var w = plot.node().getBBox().width;
-  var h = plot.node().getBBox().height;
+  var h = plot.node().getBBox().height - yOffset;
   var margin = plotpadding.filter(function(d){
       return (d.name === media);
     });
@@ -42,17 +42,12 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
     });
   }
 
-  var xScale = d3.time.scale()
-      .range([0, plotWidth]);
+  var xDomain = d3.extent(data, function(d) {return d.date;});
+
 
   var yScale = d3.scale.linear()
       .range([plotHeight, 0])
       .domain([yMin,yMax])
-
-  var xAxis = d3.svg.axis()
-      .scale(xScale)
-      .orient("bottom")
-      // .tickFormat(xAxisTickFormat);
 
   var yAxis = d3.svg.axis()
       .scale(yScale)
@@ -66,7 +61,7 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
   var minDate = data[0].date,
       maxDate = data[data.length - 1].date;
 
-  xAxis.tickValues([minDate,maxDate]);
+  
 
  var smallMultiple = plot.selectAll('g')
     .data(seriesNames)
@@ -76,7 +71,7 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
         'transform': function(d, i) { 
           var yPos = yOffset + Number((Math.floor( i / numberOfColumns) * (plotHeight + margin.top + margin.bottom) + margin.top));
           var xPos = i % numberOfColumns;
-          return 'translate(' + ((plotWidth + margin.left) * xPos + margin.right) + ',' + yPos + ')';
+          return 'translate(' + ((plotWidth +10) * xPos) + ',' + yPos + ')';
         },
         'id':function(d){ return d; }
       });
@@ -95,7 +90,6 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
   // calculate what the ticksize should be now that the text for the labels has been drawn
   var yLabelOffset=yLabel.node().getBBox().width
   var yticksize=colculateTicksize(yAlign,yLabelOffset);
-  console.log(yLabelOffset)
 
   yLabel.call(yAxis.tickSize(yticksize))
 
@@ -110,6 +104,27 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
   yLabel.selectAll('text')
       .attr("style", null)
       .attr("x",yticksize+(yLabelOffset*.8))
+
+  var xScale = d3.time.scale()
+      .domain(xDomain)
+      .range([0, plotWidth-yLabelOffset]);
+
+  var xAxis = d3.svg.axis()
+      .scale(xScale)
+      .tickSize(yOffset/2)
+      .orient("bottom")
+      .tickFormat(xAxisTickFormat)
+      .tickValues([minDate,maxDate]);
+
+  var xLabel=smallMultiple.append("g")
+      .attr("class",media+"xAxis")
+      .attr("transform",function(){
+          if(yAlign=="right") {
+              return "translate(0,"+(plotHeight+margin.top)+")"
+          }
+           else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
+          })
+      .call(xAxis);
   
   //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
 
