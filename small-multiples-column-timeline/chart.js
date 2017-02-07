@@ -29,7 +29,7 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
 
 
   //CREATE THE PLOT WIDTHS, BUT FOR EACH INDIVIDUAL GRAPH
-  var plotWidth = (w/numberOfColumns)-(margin.left + (margin.right * numberOfColumns));
+  var plotWidth = ((w - (yOffset * numberOfColumns))/numberOfColumns);
   var plotHeight = (h/numberOfRows)-(margin.top + margin.bottom);
   
   console.log(w,plotWidth, w/plotWidth);
@@ -71,9 +71,9 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
     .append('g')
       .attr({
         'transform': function(d, i) { 
-          var yPos = yOffset + Number((Math.floor( i / numberOfColumns) * (plotHeight + margin.top + margin.bottom) + margin.top));
+          var yPos = yOffset + Number((Math.floor( i / numberOfColumns) * (plotHeight + margin.top + margin.bottom + 4) + margin.top));
           var xPos = i % numberOfColumns;
-          return 'translate(' + ((plotWidth +10) * xPos) + ',' + yPos + ')';
+          return 'translate(' + ((plotWidth + yOffset *1.3) * xPos) + ',' + yPos + ')';
         },
         'id':function(d){ return d; }
       });
