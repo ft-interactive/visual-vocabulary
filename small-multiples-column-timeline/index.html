@@ -23,6 +23,10 @@
         var source = "Thomson Reuters Datastream";
 
         //put custom graph options here
+        var numberOfColumns = 4;//how many columns of graphs
+        var numberOfRows = 3;//how many rows of graphs
+        var yMin = undefined;    //set this to mark the minimum value of the y axis
+        var yMax = undefined;    //set this to mark the maximum value of the y axis
 
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
@@ -72,7 +76,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                makeChart(data, stylename, media, chartpadding,legend, yLabel);
+                makeChart(data, stylename, media, chartpadding, legend, yLabel, numberOfColumns, numberOfRows, yMin, yMax);
             }
         })//end data load
 
