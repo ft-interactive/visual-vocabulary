@@ -40,7 +40,7 @@ var styleweb = {classes:
 {class:"subtitle{font-size:18.0px; font-weight: 400; fill: #6b6e68;}"},
 {class:"source{fill: #6b6e68; font-size: 14.0px; font-weight: 400;}"},
 {class:"labels{font-size:12px; fill: #ffffff; font-weight: 600;}"},
-{class:"item-title{font-size:16px; fill: #3b3d3b; font-weight: 400; text-anchor: middle}"},
+{class:"item-title{font-size:16px; fill: #6b6e68; font-weight: 400; text-anchor: middle}"},
 {class:"logo{fill: #dacfc5;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
 {class:"xAxis line{fill:none; stroke-width: 1.0px; stroke:#c3bcb0;}"},
