@@ -1,5 +1,5 @@
 
-function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, numberOfColumns, numberOfRows, yMin, yMax){
+function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, numberOfColumns, numberOfRows, yMin, yMax, numTicksy){
 
   var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
   var subtitleYoffset = d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -13,6 +13,8 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
 
   var yOffset = d3.select("#" + media + "Subtitle").style("font-size");
   yOffset = Number(yOffset.replace(/[^\d.-]/g, ''));
+
+  // console.log(yOffset)
   
   //Get the width,height and the marginins unique to this chart
   var w = plot.node().getBBox().width;
@@ -23,24 +25,42 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
   margin = margin[0].margin[0]
   var colours = stylename.linecolours;
 
+
   //CREATE THE PLOT WIDTHS, BUT FOR EACH INDIVIDUAL GRAPH
   var plotWidth = (w/numberOfColumns)-(margin.left + margin.right);
-  var plotHeight = (h/numberOfRows)-(margin.top + (margin.bottom/(numberOfRows/1.1)));
+  var plotHeight = (h/numberOfRows)-(margin.top + margin.bottom);
   
+  console.log(w,plotWidth, w/plotWidth);
+  // calculate maximum and minimum for the y-axis
+  if(!yMin || !yMax){
+    data.forEach(function(d,i){
+      seriesNames.forEach(function(e){
+        if(i==0) yMin = yMax = Number(d[e]);
+        yMin = Math.min(yMin, Number(d[e]));
+        yMax = Math.max(yMax, Number(d[e]));
+      });     
+    });
+  }
+
   var xScale = d3.time.scale()
       .range([0, plotWidth]);
 
   var yScale = d3.scale.linear()
-      .range([plotHeight, 0]);
+      .range([plotHeight, 0])
+      .domain([yMin,yMax])
 
   var xAxis = d3.svg.axis()
       .scale(xScale)
-      .orient("bottom");
+      .orient("bottom")
+      // .tickFormat(xAxisTickFormat);
 
   var yAxis = d3.svg.axis()
       .scale(yScale)
-      .ticks(3)
-      .orient("left");   
+      .ticks(numTicksy)
+      .orient("right")
+      .tickFormat(function(d){
+        return d/divisor;
+      });   
 
   // set the first and last date ticks for the x-axis
   var minDate = data[0].date,
@@ -48,10 +68,56 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
 
   xAxis.tickValues([minDate,maxDate]);
 
-  // console.log(plotWidth,colours,plotHeight,data)
-  // console.log(margin)
+ var smallMultiple = plot.selectAll('g')
+    .data(seriesNames)
+    .enter()
+    .append('g')
+      .attr({
+        'transform': function(d, i) { 
+          var yPos = yOffset + Number((Math.floor( i / numberOfColumns) * (plotHeight + margin.top + margin.bottom) + margin.top));
+          var xPos = i % numberOfColumns;
+          return 'translate(' + ((plotWidth + margin.left) * xPos + margin.right) + ',' + yPos + ')';
+        },
+        'id':function(d){ return d; }
+      });
+
+  smallMultiple.append('text')
+    .attr({
+      'class':media + 'item-title',
+        'dx': function() {return ((plotWidth)/2)-margin.left;},
+        'dy': function() {return yOffset/2;},
+    })
+      .text(function(d) {return d.toUpperCase(); });
+
+  var yLabel = smallMultiple.append("g")
+      .attr("class", media+"yAxis")
+      .call(yAxis)
+  // calculate what the ticksize should be now that the text for the labels has been drawn
+  var yLabelOffset=yLabel.node().getBBox().width
+  var yticksize=colculateTicksize(yAlign,yLabelOffset);
+  console.log(yLabelOffset)
+
+  yLabel.call(yAxis.tickSize(yticksize))
+
+  yLabel
+      .attr("transform",function(){
+          if (yAlign=="right"){
+              return "translate(0,"+margin.top+")"
+          }
+          else return "translate("+(plotWidth-margin.right)+","+margin.top+")"
+          })
+
+  yLabel.selectAll('text')
+      .attr("style", null)
+      .attr("x",yticksize+(yLabelOffset*.8))
+  
   //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
 
-  
+ function colculateTicksize(align, offset) {
+      if (align=="right") {
+          return plotWidth-margin.left - offset
+      }
+      else {return plotWidth-margin.right - offset}
+  }
 
 }
