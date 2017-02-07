@@ -1,5 +1,5 @@
 
-function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, numberOfColumns, numberOfRows, yMin, yMax, numTicksy, xAxisTickFormat){
+function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, numberOfColumns, numberOfRows, yMin, yMax, yAxisHighlight, numTicksy, xAxisTickFormat){
 
   var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
   var subtitleYoffset = d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -23,11 +23,13 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
       return (d.name === media);
     });
   margin = margin[0].margin[0]
-  var colours = stylename.linecolours;
+  var colours= d3.scale.ordinal()
+      .domain([0,0])
+      .range(stylename.fillcolours);
 
 
   //CREATE THE PLOT WIDTHS, BUT FOR EACH INDIVIDUAL GRAPH
-  var plotWidth = (w/numberOfColumns)-(margin.left + margin.right);
+  var plotWidth = (w/numberOfColumns)-(margin.left + (margin.right * numberOfColumns));
   var plotHeight = (h/numberOfRows)-(margin.top + margin.bottom);
   
   console.log(w,plotWidth, w/plotWidth);
@@ -79,8 +81,8 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
   smallMultiple.append('text')
     .attr({
       'class':media + 'item-title',
-        'dx': function() {return ((plotWidth)/2)-margin.left;},
-        'dy': function() {return yOffset/2;},
+        'dx': function() {return (plotWidth-((yOffset/2) * numberOfColumns))/2;},
+        'dy': function() {return -yOffset/numberOfColumns;},
     })
       .text(function(d) {return d.toUpperCase(); });
 
@@ -105,9 +107,15 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
       .attr("style", null)
       .attr("x",yticksize+(yLabelOffset*.8))
 
+  //identify 0 line if there is one
+  var originValue = 0;
+  var origin = plot.selectAll(".tick").filter(function(d, i) {
+          return d==originValue || d==yAxisHighlight;
+      }).classed(media+"origin",true);
+
   var xScale = d3.time.scale()
       .domain(xDomain)
-      .range([0, plotWidth-yLabelOffset]);
+      .range([0, (plotWidth-yLabelOffset)]);
 
   var xAxis = d3.svg.axis()
       .scale(xScale)
@@ -125,12 +133,34 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
            else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
           })
       .call(xAxis);
-  
+  console.log(yOffset)
+    smallMultiple.append('g')
+    .each(function(seriesNames){
+      var bars = d3.select(this).selectAll('rect');
+      bars.data(data)
+          .enter()
+          .append('rect')
+            .style("fill", function (d) {
+                return colours(0)
+            })
+            .attr("id",function(d) { return d.date+"-"+d[seriesNames]; })
+            .attr("class",media+"fill")
+            .attr("x", function(d) { return xScale(d.date) - (plotWidth/data.length)/2; })
+            .attr("width", (plotWidth-((yOffset/2) * numberOfColumns))/data.length)
+            .attr("y", function(d) { return yScale(Math.max(0, d[seriesNames]))})
+            .attr("height", function(d) {return (Math.abs(yScale(d[seriesNames]) - yScale(0))); })
+            .attr("transform",function(){
+                if(yAlign=="right") {
+                    return "translate("+(margin.left)+","+(margin.top)+")"
+                }
+                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
+            })
+    })
   //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
 
  function colculateTicksize(align, offset) {
       if (align=="right") {
-          return plotWidth-margin.left - offset
+          return plotWidth-margin.left - offset + 2
       }
       else {return plotWidth-margin.right - offset}
   }
