@@ -25,13 +25,12 @@
         //put custom graph options here
         var numberOfColumns = 4;//how many columns of graphs
         var numberOfRows = 3;//how many rows of graphs
-        var yMin = -10000;    //set this to mark the minimum value of the y axis
-        var yMax = 15000;    //set this to mark the maximum value of the y axis
-        var divisor = 1000; //use this number to divide data values to a sensible amount
+        var yMin = 0;    //set this to mark the minimum value of the y axis
+        var yMax = 25;    //set this to mark the maximum value of the y axis
+        var divisor = 1; //use this number to divide data values to a sensible amount
         var yAxisHighlight= 0;
-        var numTicksy = 6;//rough number of ticks for y axis
+        var numTicksy = 5;//rough number of ticks for y axis
         var ticks;
-        var xAxisTickFormat = d3.time.format("%Y") // change the x axis label format to what you want see url above for list of options
 
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
@@ -44,8 +43,8 @@
         
         //sets the padding inside the chart area
         var chartpadding=[
-        {name:"print",margin:[{top:5, right:2, bottom:30, left:2}]},
-        {name:"web",margin:[{top:10, right:2, bottom:60, left:0}]},
+        {name:"print",margin:[{top:5, right:2, bottom:20, left:2}]},
+        {name:"web",margin:[{top:10, right:2, bottom:40, left:0}]},
         // {name:"social",margin:[{top:0, right:2, bottom:62, left:12}]},
         {name:"video",margin:[{top:55, right:2,bottom:100, left:0}]}
         ]
@@ -54,7 +53,7 @@
         //Load the data
         d3.csv(dataURL,function(error, data){
             //date formatter, matching the format of the incoming csv...
-            var parseDate = d3.time.format("%d/%m/%Y").parse;
+            // var parseDate = d3.time.format("%d/%m/%Y").parse;
             /*
             some common formatting parsers....
             d3.time.format("%Y %b") 1986 Jan
@@ -68,9 +67,7 @@
              */
 
             //parse the data if needed
-            data.forEach(function(d) {
-                d.date=parseDate(d.date);
-            });
+          
 
 
          /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
@@ -81,7 +78,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                makeChart(data, stylename, media, chartpadding, legend, yLabel, numberOfColumns, numberOfRows, yMin, yMax, yAxisHighlight, numTicksy, xAxisTickFormat);
+                makeChart(data, stylename, media, chartpadding, legend, yLabel, numberOfColumns, numberOfRows, yMin, yMax, yAxisHighlight, numTicksy);
             }
         })//end data load
 

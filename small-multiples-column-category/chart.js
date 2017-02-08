@@ -1,11 +1,11 @@
 
-function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, numberOfColumns, numberOfRows, yMin, yMax, yAxisHighlight, numTicksy, xAxisTickFormat){
+function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, numberOfColumns, numberOfRows, yMin, yMax, yAxisHighlight, numTicksy){
 
   var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
   var subtitleYoffset = d3.select("#"+media+"Subtitle").node().getBBox().height;
 
   // return the series names from the first row of the spreadsheet
-  var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
+  var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'cat'; });
 
   //Select the plot space in the frame from which to take measurements
   var frame = d3.select("#" + media + "chart");
@@ -34,7 +34,8 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
   
   console.log(w,plotWidth, w/plotWidth);
   // calculate maximum and minimum for the y-axis
-  if(!yMin || !yMax){
+    console.log(yMin,yMax)
+  if(yMin === null || yMax === null){
     data.forEach(function(d,i){
       seriesNames.forEach(function(e){
         if(i==0) yMin = yMax = Number(d[e]);
@@ -44,8 +45,8 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
     });
   }
 
-  var xDomain = d3.extent(data, function(d) {return d.date;});
-
+  // override min value if > 0
+  if (yMin > 0) yMin = 0;
 
   var yScale = d3.scale.linear()
       .range([plotHeight, 0])
@@ -58,12 +59,6 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
       .tickFormat(function(d){
         return d/divisor;
       });   
-
-  // set the first and last date ticks for the x-axis
-  var minDate = data[0].date,
-      maxDate = data[data.length - 1].date;
-
-  
 
  var smallMultiple = plot.selectAll('g')
     .data(seriesNames)
@@ -117,16 +112,19 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
           return d==originValue || d==yAxisHighlight;
       }).classed(media+"origin",true);
 
-  var xScale = d3.time.scale()
-      .domain(xDomain)
-      .range([0, (plotWidth - (yLabelOffset * 1.4))]);
+  var x0 = d3.scale.ordinal()
+    .rangeBands([0, plotWidth-yLabelOffset], 0.1, 0.2);
+
+  var x1 = d3.scale.ordinal();
 
   var xAxis = d3.svg.axis()
-      .scale(xScale)
-      .tickSize(yOffset/2)
+      .scale(x0)
+      .tickSize(0)
       .orient("bottom")
-      .tickFormat(xAxisTickFormat)
-      .tickValues([minDate,maxDate]);
+
+  x0.domain(data.map(function(d) { return d.cat; }));
+  x1.domain(data.map(function(d) { return d.cat; }))
+    .rangeBands([0, x0.rangeBand()]);    
 
     smallMultiple.append('g')
     .each(function(seriesNames){
@@ -134,13 +132,13 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
       bars.data(data)
           .enter()
           .append('rect')
-            .style("fill", function (d) {
-                return colours(0)
+            .style("fill", function (d, i) {
+                return colours(i)
             })
             .attr("id",function(d) { return d.date+"-"+d[seriesNames]; })
             .attr("class",media+"fill")
-            .attr("width", (plotWidth - ((yOffset/2) * numberOfColumns))/data.length - 2)
-            .attr("x", function(d) { return xScale(d.date); })
+            .attr("width", x0.rangeBand())
+            .attr("x", function(d) { return x0(d.cat); })
             .attr("y", function(d) { return yScale(Math.max(0, d[seriesNames]))})
             .attr("height", function(d) {return (Math.abs(yScale(d[seriesNames]) - yScale(0))); })
             .attr("transform",function(){
@@ -154,7 +152,7 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
       .attr("class",media+"xAxis")
       .attr("transform",function(){
           if(yAlign=="right") {
-              return "translate("+d3.select('.' + media + 'fill').node().getBBox().width/1.3+","+(plotHeight+margin.top)+")"
+              return "translate("+(margin.left)+","+(plotHeight+margin.top)+")"
           }
            else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
           })

@@ -34,6 +34,7 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
   
   console.log(w,plotWidth, w/plotWidth);
   // calculate maximum and minimum for the y-axis
+  console.log(yMin,yMax)
   if(!yMin || !yMax){
     data.forEach(function(d,i){
       seriesNames.forEach(function(e){
@@ -43,6 +44,9 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
       });     
     });
   }
+
+  // override min value if > 0
+  if (yMin > 0) yMin = 0;
 
   var xDomain = d3.extent(data, function(d) {return d.date;});
 
