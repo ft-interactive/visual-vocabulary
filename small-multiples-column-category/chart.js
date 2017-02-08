@@ -138,7 +138,7 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
             .attr("id",function(d) { return d.date+"-"+d[seriesNames]; })
             .attr("class",media+"fill")
             .attr("width", x0.rangeBand())
-            .attr("x", function(d) { return x0(d.cat); })
+            .attr("x", function(d) { return x0(d.cat) -2; })
             .attr("y", function(d) { return yScale(Math.max(0, d[seriesNames]))})
             .attr("height", function(d) {return (Math.abs(yScale(d[seriesNames]) - yScale(0))); })
             .attr("transform",function(){
