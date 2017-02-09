@@ -9,7 +9,8 @@ function makeChart(data, stylename, media, plotpadding, frames, legAlign, yAlign
   var frame=d3.select("#"+media+"chart")
   var plot=d3.select("#"+media+"plot")
 
-  var header=d3.select("#"+media+"header")
+  var headerTitle = d3.select("#"+media+"Title");
+  var headerSubtitle = d3.select("#"+media+"Subtitle");
 
   var yOffset=d3.select("#"+media+"Subtitle").style("font-size");
   yOffset=Number(yOffset.replace(/[^\d.-]/g, ''));
@@ -29,7 +30,8 @@ function makeChart(data, stylename, media, plotpadding, frames, legAlign, yAlign
   console.log(labelPadding)
 
   // reposition header
-  header.attr('transform', 'translate(' + -labelPadding.left + ',' + 0 + ')')
+  headerTitle.attr('transform', 'translate(' + (-labelPadding.left + margin.left) +',' + 0 + ')')
+  headerSubtitle.attr('transform', 'translate(' + (-labelPadding.left + margin.left) +',' + 0 + ')')
   
   var colours= d3.scale.ordinal()
     .domain([0,0])

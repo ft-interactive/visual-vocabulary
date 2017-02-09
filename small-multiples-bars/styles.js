@@ -25,13 +25,13 @@ var styleprint = {classes:
 {class:"month{fill:none; stroke: #000000; stroke-width:1.0px;stroke-linecap: round;}"},
 {class:"link{fill:none; stroke:#000000; opacity: 0.20;}"},
 {class:"node{fill:#000000;}"},
-{class:"tint{fill:#d3e2eb;}"}
+{class:"tint{fill:#dde7ee;}"}
 ],
 titleOffset:10,
 subOffset:0,
 legendyOffset:0,
 linecolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0"],
-fillcolours:["#006a93","#ddb831","#c6d6cc","#55a2c7","#ad1c21","#486ba0","#ddb831"]
+fillcolours:["#006791","#80a9ac","#5288a5","#bac9b8","#ad1c21","#486ba0","#ddb831"]
 }
 
 var styleweb = {classes:
