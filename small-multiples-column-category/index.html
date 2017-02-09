@@ -31,6 +31,7 @@
         var yAxisHighlight= 0;
         var numTicksy = 5;//rough number of ticks for y axis
         var ticks;
+        var coloursOverride  = []; // use this to change default colours, ie politcal parties ['#6da8e1','#e25050','#f0a330']
 
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
@@ -78,7 +79,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                makeChart(data, stylename, media, chartpadding, legend, yLabel, numberOfColumns, numberOfRows, yMin, yMax, yAxisHighlight, numTicksy);
+                makeChart(data, stylename, media, chartpadding, legend, yLabel, numberOfColumns, numberOfRows, yMin, yMax, yAxisHighlight, numTicksy, coloursOverride);
             }
         })//end data load
 

@@ -1,5 +1,5 @@
 
-function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, numberOfColumns, numberOfRows, yMin, yMax, yAxisHighlight, numTicksy){
+function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, numberOfColumns, numberOfRows, yMin, yMax, yAxisHighlight, numTicksy, coloursOverride){
 
   var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
   var subtitleYoffset = d3.select("#"+media+"Subtitle").node().getBBox().height;
@@ -25,7 +25,13 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
   margin = margin[0].margin[0]
   var colours= d3.scale.ordinal()
       .domain([0,0])
-      .range(stylename.fillcolours);
+  
+  if (coloursOverride.length === 0) {
+    colours.range(stylename.fillcolours);
+  } else {
+    colours.range(coloursOverride);
+  }
+    
 
 
   //CREATE THE PLOT WIDTHS, BUT FOR EACH INDIVIDUAL GRAPH
