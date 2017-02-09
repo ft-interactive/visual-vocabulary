@@ -31,8 +31,12 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
   //CREATE THE PLOT WIDTHS, BUT FOR EACH INDIVIDUAL GRAPH
   var plotWidth = ((w - (yOffset * numberOfColumns))/numberOfColumns);
   var plotHeight = (h/numberOfRows)-(margin.top + margin.bottom);
-  
-  console.log(w,plotWidth, w/plotWidth);
+
+  var plotCats=data.map(function(d) {
+    return {
+        cat:d.cat,
+    }
+  });
   // calculate maximum and minimum for the y-axis
     console.log(yMin,yMax)
   if(yMin === null || yMax === null){
@@ -148,18 +152,78 @@ function makeChart(data, stylename, media, plotpadding, legAlign, yAlign, number
                  else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
             })
     })
-    var xLabel=smallMultiple.append("g")
-      .attr("class",media+"xAxis")
-      .attr("transform",function(){
-          if(yAlign=="right") {
-              return "translate("+(margin.left)+","+(plotHeight+margin.top)+")"
-          }
-           else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
-          })
-      .call(xAxis);
+  var xLabel=smallMultiple.append("g")
+    .attr("class",media+"xAxis")
+    .attr("transform",function(){
+        if(yAlign=="right") {
+            return "translate("+(margin.left)+","+(plotHeight+margin.top)+")"
+        }
+         else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
+        })
+    .call(xAxis);
   //you now have a chart area, inner margin data and colour palette - with titles pre-rendered
 
- function colculateTicksize(align, offset) {
+   // //create a legend first
+  var legendyOffset=0
+    var legend = plot.append("g")
+        .attr("id",media+"legend")
+        .on("mouseover",pointer)
+        .selectAll("g")
+        .data(plotCats)
+        .enter()
+        .append("g")
+        .attr ("id",function(d,i){
+            return media+"l"+i
+        })
+
+    var drag = d3.behavior.drag().on("drag", moveLegend);
+    d3.select("#"+media+"legend").call(drag);
+        
+    legend.append("text")
+
+        .attr("id",function(d,i){
+            return media+"t"+i
+        })
+        .attr("x",yOffset+yOffset/2)
+        .attr("y",-1)
+        .attr("class",media+"subtitle")
+        .text(function(d){
+            return d.cat;
+        })
+
+    legend.append("rect")
+        .attr("x",0)
+        .attr("y",-yOffset+yOffset/3)
+        .attr("width",(yOffset/100)*120)
+        .attr("height",(yOffset/100)*60)
+        .style("fill", function(d,i){return colours(i)})
+
+    legend.attr("transform",function(d,i){
+        if (legAlign=='hori') {
+            var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
+            if (i>0) {
+                var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+15; 
+            }
+            else {gWidth=0};
+            legendyOffset=legendyOffset+gWidth;
+            return "translate("+(legendyOffset)+","+(gHeigt)+")";  
+        }
+        else {
+            var gHeight=d3.select("#"+media+"l"+(i)).node().getBBox().height
+            return "translate(0,"+((i*yOffset)+yOffset/2)+")"};
+    })
+
+  function pointer() {
+    this.style.cursor='pointer'
+  }
+
+  function moveLegend() {
+    var dX = d3.event.x; // subtract cx
+    var dY = d3.event.y; // subtract cy
+    d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");
+
+  }
+  function colculateTicksize(align, offset) {
       if (align=="right") {
           return plotWidth-margin.left - offset + 2
       }
