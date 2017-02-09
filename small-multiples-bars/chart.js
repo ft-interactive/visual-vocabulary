@@ -9,6 +9,8 @@ function makeChart(data, stylename, media, plotpadding, frames, legAlign, yAlign
   var frame=d3.select("#"+media+"chart")
   var plot=d3.select("#"+media+"plot")
 
+  var header=d3.select("#"+media+"header")
+
   var yOffset=d3.select("#"+media+"Subtitle").style("font-size");
   yOffset=Number(yOffset.replace(/[^\d.-]/g, ''));
   
@@ -25,6 +27,10 @@ function makeChart(data, stylename, media, plotpadding, frames, legAlign, yAlign
     });
   labelPadding=labelPadding[0].margins[0]
   console.log(labelPadding)
+
+  // reposition header
+  header.attr('transform', 'translate(' + -labelPadding.left + ',' + 0 + ')')
+  
   var colours= d3.scale.ordinal()
     .domain([0,0])
 
@@ -155,4 +161,33 @@ function makeChart(data, stylename, media, plotpadding, frames, legAlign, yAlign
   var origin = plot.selectAll(".tick").filter(function(d, i) {
           return d==originValue || d==yAxisHighlight;
       }).classed(media+"origin",true);
+
+  smallMultiple.append('g')
+    .each(function(seriesNames){
+      var bars = d3.select(this).selectAll('rect');
+      bars.data(data)
+        .enter()
+        .append('rect')
+        .style("fill", function (d, i) {
+            return colours(i)
+        })
+        .attr({
+          'class': function(d){
+            return d[seriesNames] < 0 ? 'negative' : 'positive';
+          },
+          'y': function(d) { 
+            return yScale(d.cat);
+          },
+          'x': function(d) { 
+            return xScale(Math.min(0, d[seriesNames]) );
+          },
+          'width': function(d) { 
+            return Math.abs(xScale( d[seriesNames] ) - xScale(0) ); 
+          },
+          'id':function(d){
+            return seriesNames + ' ' + d.cat + ' value: ' + d[seriesNames];
+          },
+          'height': yScale.rangeBand()
+        });
+    });
 }
