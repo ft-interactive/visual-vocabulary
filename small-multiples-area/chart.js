@@ -68,7 +68,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numberOfCol
     .append('g')
       .attr({
         'transform': function(d, i) { 
-          var yPos = yOffset + Number((Math.floor( i / numberOfColumns) * (plotHeight + margin.top + margin.bottom + 4) + margin.top));
+          var yPos = (yOffset * 1.8) + Number((Math.floor( i / numberOfColumns) * (plotHeight + margin.top + margin.bottom + 4) + margin.top));
           var xPos = i % numberOfColumns;
           return 'translate(' + ((plotWidth + yOffset *1.3) * xPos) + ',' + yPos + ')';
         },
@@ -83,7 +83,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numberOfCol
     .attr({
       'class':media + 'item-title',
         'dx': function() {return (plotWidth-((yOffset/2) * numberOfColumns))/2;},
-        'dy': function() {return -yOffset/2;},
+        'dy': function() {return -yOffset/1.5;},
     })
     .text(function(d) {return d.toUpperCase(); });
 
@@ -116,7 +116,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numberOfCol
 
   var xScale = d3.time.scale()
       .domain(xDomain)
-      .range([0, (plotWidth - (yLabelOffset * 1.4))]);
+      .range([0, (plotWidth - (yLabelOffset * 1.6))]);
 
   var xAxis = d3.svg.axis()
       .scale(xScale)
@@ -138,14 +138,20 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign, numberOfCol
         .attr('d', function(d){ return area(d); })
          .style("fill", function (d) {
               return colours(0)
-    });
+         })
+        .attr("transform",function(){
+        if(yAlign=="right") {
+            return "translate(" + (yLabelOffset*0.1) + ",0)"
+        }
+         else {return "translate("+(margin.left+yLabelOffset)+",0)"}
+        });
   });
 
   var xLabel=smallMultiple.append("g")
     .attr("class",media+"xAxis")
     .attr("transform",function(){
         if(yAlign=="right") {
-            return "translate(0,"+(plotHeight+margin.top)+")"
+            return "translate(" + (yLabelOffset*0.1) + ","+(plotHeight+margin.top)+")"
         }
          else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
         })
