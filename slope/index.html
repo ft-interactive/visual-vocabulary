@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Visual Vocabulary</title>
+    <title>Slope chart - Visual Vocabulary</title>
     <script src="/shared/d3.v4.js"></script>
     <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
     <script src="/shared/js/g-chartframe.js"></script>
     <link rel="stylesheet" href="https://build.origami.ft.com/v2/bundles/css?modules=o-fonts@^2.2.0" />
+    <style type="text/css">
+        body{
+            font-family: sans-serif;
+        }
+    </style>
 </head>
 <body>
 
     <h1>Slope chart</h1>
     <p>Good for showing changing data as long as the data can be simplified into 2 or 3 points without missing a key part of story</p>
     <hr>
-    <figure class="web"><svg></svg></figure>
-    <figure class="print"><svg></svg></figure>
-    <figure class="social"><svg></svg></figure>
-    <figure class="video"><svg></svg></figure>
+    <figure class="web saveable"><svg></svg></figure>
+    <figure class="print saveable"><svg></svg></figure>
+    <figure class="social saveable"><svg></svg></figure>
+    <figure class="video saveable"><svg></svg></figure>
 
 </body>
 
@@ -29,48 +34,79 @@
     d3.csv('data.csv',function(data){
         const valueColumns = ['val1','val2'];
 
-        const valueScale = d3.scaleLinear()
-            .domain(extentMulti(data,valueColumns))
-            .range([0, webframe.dimension().height]);
+        const mySlope = slopeChart()
+            .xDomain( valueColumns )
+            .yDomain( extentMulti(data, valueColumns) )
+            .xRange( [0, webframe.dimension().width] )
+            .yRange( [0, webframe.dimension().height] );
 
-        const timeScale = d3.scaleOrdinal()
-            .domain(valueColumns)
-            .range([0, webframe.dimension().width]);
+        console.log(mySlope)
 
         webframe.plot()
             .selectAll('g.slope')
             .data(data)
             .enter()
             .append('g').attr('class','slope')
-            .call((parent)=>{
-                parent.append('line')
-                    .attrs({
-                        'x1':timeScale(valueColumns[0]),
-                        'x2':timeScale(valueColumns[1]),
-                        'y1':d=>valueScale(d[valueColumns[0]]),
-                        'y2':d=>valueScale(d[valueColumns[1]]),
-                        'stroke':'#000',
-                        'stroke-opacity':0.2
-                    });
-
-//start circle...
-                parent.append('circle')
-                    .attrs({
-                        'cx':timeScale(valueColumns[0]),
-                        'cy':d=>valueScale(d[valueColumns[0]]),
-                        'r':5,
-                    })
-//end circle...
-                parent.append('circle')
-                    .attrs({
-                        'cx':timeScale(valueColumns[1]),
-                        'cy':d=>valueScale(d[valueColumns[1]]),
-                        'r':5,
-                    })
-
-            });
+            .call(mySlope);
     });
 
+
+//the slopechart factory
+    function slopeChart(){
+        const yScale = d3.scaleLinear();
+        const xScale = d3.scaleOrdinal();
+
+        function chart(parent){
+            console.log(xScale.domain());
+
+            parent.append('line')
+                .attrs({
+                    'x1':xScale(xScale.domain()[0]),
+                    'x2':xScale(xScale.domain()[1]),
+                    'y1':d=>yScale(d[xScale.domain()[0]]),
+                    'y2':d=>yScale(d[xScale.domain()[1]]),
+                    'stroke':'#000',
+                    'stroke-opacity':0.2
+                });
+
+//start circle...
+            parent.append('circle')
+                .attrs({
+                    'cx':xScale(xScale.domain()[0]),
+                    'cy':d=>yScale(d[xScale.domain()[0]]),
+                    'r':5,
+                })
+//end circle...
+            parent.append('circle')
+                .attrs({
+                    'cx':xScale(xScale.domain()[1]),
+                    'cy':d=>yScale(d[xScale.domain()[1]]),
+                    'r':5,
+                })
+        }
+
+        chart.xDomain = (x)=>{
+            xScale.domain(x);
+            return chart;
+        };
+
+        chart.yDomain = (x)=>{
+            yScale.domain(x);
+            return chart;
+        };
+
+        chart.xRange = (x)=>{
+            xScale.range(x);
+            return chart;
+        };
+
+        chart.yRange = (x)=>{
+            yScale.range(x);
+            return chart;
+        };
+
+        return chart;
+    }
 
 
 //a function to work out the extent of values in an array accross multiple properties...
