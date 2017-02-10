@@ -153,7 +153,7 @@ function makeChart(data, stylename, media, plotpadding, frames, legAlign, yAlign
   
   smallMultiple.append('g')
   .attr({
-    'class': media+"xAxis",
+    'class': function() { return xMin < 0 ?  media+"xAxisTint" :  media+"xAxis";},
       'transform': 'translate(0,0)'
   })
   .call(xAxis);

@@ -11,6 +11,7 @@ var styleprint = {classes:
 {class:"hat{fill:none; stroke-width:0.3px; stroke:#22190f;}"},
 {class:"xAxis{fill:none; stroke-width:0px; stroke:none;}"},
 {class:"xAxis line{fill:none; stroke-width:.3px; stroke:#000000;}"},
+{class:"xAxisTint line{fill:none; stroke-width:.3px; stroke:#000000;}"},
 {class:"xAxis text{fill:#000000; font-size: 9.6px; font-weight: 400; font-feature-settings:'tnum' 1;}"},
 {class:"yAxis{fill:none; stroke-width:0px; stroke:none;}"},
 {class:"yAxis line{fill:none; stroke-width:0.3px; stroke:#000000;}"},
@@ -45,6 +46,7 @@ var styleweb = {classes:
 {class:"logo{fill: #dacfc5;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
 {class:"xAxis line{fill:none; stroke-width: 1.0px; stroke:#c3bcb0; stroke-dasharray:1,2}"},
+{class:"xAxisTint line{fill:none; stroke-width: 1.0px; stroke:#74736C; stroke-dasharray:1,2}"},
 {class:"xAxis text{fill:#6b6e68; font-size: 18.0px; font-weight: 400;}"},
 {class:"yAxis{fill:none; stroke: none;}"},
 {class:"yAxis line{fill:none; stroke-width: 1.0px; stroke:#c3bcb0; stroke-dasharray:1,2}"},
@@ -112,6 +114,7 @@ var stylevid = {classes:
 {class:"logo{fill: #ffffff;}"},
 {class:"xAxis{fill:none; stroke: none;}"},
 {class:"xAxis line{fill:none; stroke-width: 4px; stroke:#ffffff;opacity: 0.5}"},
+{class:"xAxisTint line{fill:none; stroke-width: 4px; stroke:#ffffff;opacity: 0.5}"},
 {class:"xAxis text{font-size: 48; fill: #ffffff; font-weight: 400;opacity: 0.5}"},
 {class:"yAxis{fill:none; stroke: none;}"},
 {class:"yAxis line{fill:none; stroke-width: 4px; stroke:#ffffff;opacity: 0.38}"},
@@ -122,7 +125,9 @@ var stylevid = {classes:
 {class:"fill{fill-opacity:1.0; stroke-width: 0.0px}"},
 {class:"highlight{fill-opacity:1.0;}"},
 {class:"day{fill:none; stroke: #ffffff; stroke-width:4.0px; opacity: 0.5; stroke-linecap: round;}"},
-{class:"month{fill:none; stroke: #ffffff; stroke-width:4.0px; opacity: 0.5; stroke-linecap: round;}"}
+{class:"month{fill:none; stroke: #ffffff; stroke-width:4.0px; opacity: 0.5; stroke-linecap: round;}"},
+{class:"tint{fill:#ffffff; fill-opacity:0.1}"}
+
 
 ],
 titleOffset:68,
