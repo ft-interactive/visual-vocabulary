@@ -26,7 +26,8 @@
 
 <script type="text/javascript">
 
-    const webframe = gChartframe.webFrame;
+    const webframe = gChartframe.webFrame
+        .margin({left:200,right:200});
 
     d3.select('.web svg')
         .call(webframe);
@@ -38,7 +39,10 @@
             .xDomain( valueColumns )
             .yDomain( extentMulti(data, valueColumns) )
             .xRange( [0, webframe.dimension().width] )
-            .yRange( [0, webframe.dimension().height] );
+            .yRange( [0, webframe.dimension().height] )
+            .includeLabel((row)=>(row.label === 'yes'))
+            .labelTextStart((row)=>(row.name + ' ' + row.val1))
+            .labelTextEnd((row)=>(row.name + ' ' + row.val2));
 
         console.log(mySlope)
 
@@ -51,10 +55,14 @@
     });
 
 
+
 //the slopechart factory
     function slopeChart(){
         const yScale = d3.scaleLinear();
         const xScale = d3.scaleOrdinal();
+        let includeLabel = (d)=>true;
+        let labelTextStart = (d) => 'start text';
+        let labelTextEnd = (d) => 'end text';
 
         function chart(parent){
             console.log(xScale.domain());
@@ -69,20 +77,51 @@
                     'stroke-opacity':0.2
                 });
 
+            const labeled = parent.filter(includeLabel)
 //start circle...
-            parent.append('circle')
+            labeled.append('circle')
                 .attrs({
                     'cx':xScale(xScale.domain()[0]),
                     'cy':d=>yScale(d[xScale.domain()[0]]),
                     'r':5,
+                });
+
+            labeled.append('text')
+                .attrs({
+                    'text-anchor':'end',
+                    'y':d=>yScale(d[xScale.domain()[0]])
                 })
+                .text(labelTextStart);
+
 //end circle...
-            parent.append('circle')
+            labeled.append('circle')
                 .attrs({
                     'cx':xScale(xScale.domain()[1]),
                     'cy':d=>yScale(d[xScale.domain()[1]]),
                     'r':5,
+                });
+
+            labeled.append('text')
+                .attrs({
+                    'y':d=>yScale(d[xScale.domain()[1]]),
+                    'x':xScale(xScale.domain()[1]),
                 })
+                .text(labelTextEnd);
+        }
+
+        chart.labelTextStart = (f)=>{
+            labelTextStart = f;
+            return chart;
+        }
+
+        chart.labelTextEnd = (f)=>{
+            labelTextEnd = f;
+            return chart;
+        }
+
+        chart.includeLabel = (f)=>{
+            includeLabel = f;
+            return chart;
         }
 
         chart.xDomain = (x)=>{
