@@ -3,6 +3,7 @@
 <head>
     <title>Visual Vocabulary</title>
     <script src="/shared/d3.v4.js"></script>
+    <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
     <script src="/shared/js/g-chartframe.js"></script>
     <link rel="stylesheet" href="https://build.origami.ft.com/v2/bundles/css?modules=o-fonts@^2.2.0" />
 </head>
@@ -43,13 +44,31 @@
             .append('g').attr('class','slope')
             .call((parent)=>{
                 parent.append('line')
-                    .attr('x1', timeScale(valueColumns[0]))
-                    .attr('x2', timeScale(valueColumns[1]))
-                    .attr('y1', d=>valueScale(d[valueColumns[0]]))
-                    .attr('y2', d=>valueScale(d[valueColumns[1]]))
-                    .attr('stroke','#000')
-                    .attr('stroke-opacity',0.2);
-            })
+                    .attrs({
+                        'x1':timeScale(valueColumns[0]),
+                        'x2':timeScale(valueColumns[1]),
+                        'y1':d=>valueScale(d[valueColumns[0]]),
+                        'y2':d=>valueScale(d[valueColumns[1]]),
+                        'stroke':'#000',
+                        'stroke-opacity':0.2
+                    });
+
+//start circle...
+                parent.append('circle')
+                    .attrs({
+                        'cx':timeScale(valueColumns[0]),
+                        'cy':d=>valueScale(d[valueColumns[0]]),
+                        'r':5,
+                    })
+//end circle...
+                parent.append('circle')
+                    .attrs({
+                        'cx':timeScale(valueColumns[1]),
+                        'cy':d=>valueScale(d[valueColumns[1]]),
+                        'r':5,
+                    })
+
+            });
     });
 
 
