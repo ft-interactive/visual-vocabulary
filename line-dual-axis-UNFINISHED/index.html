@@ -27,14 +27,15 @@
         let doubleScale=2
         var yMinL=85;
         var yMaxL=110;
-        var yMinR=1400;
+        var yMinR=0;
         var yMaxR=2800
         var yAxisHighlight=100;
         var lineSmoothing="linear";//choose 'linear' for an unsmoothed line 'monotone' for smooth
         var logScale=false;
         var logScaleStart=1000;
         var markers=false;//show circle markers
-        var numTicksy = 4;//rough number of ticks for y axis
+        var numTicksy = 5;//rough number of ticks for y axis
+        var numTicksyR = 5;//rough number of ticks for y axis
         var interval="months";//days, months, quarters, years, lustrum or decade
         var minAxis=false //true or false
         var ticks//Contains the tick values for the major and minor xAxis
@@ -42,7 +43,7 @@
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
         var frames=[
         //{name:"print",width:112.25,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"hori",yLabel:"left"},
-        {name:"web",width:600,height:400,units:'px',margins:[{top:0,right:10,bottom:5,left:10}],stylesheet:styleweb,legend:"vert",yLabel:"right"},
+        {name:"web",width:600,height:400,units:'px',margins:[{top:0,right:17,bottom:5,left:10}],stylesheet:styleweb,legend:"vert",yLabel:"right"},
         //{name:"now",width:274,height:276,units:'px',margins:[{top:0,right:0,bottom:5,left:0}],stylesheet:stylenowcast,legend:"vert",yLabel:"right"},
         //{name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"hori",yLabel:"left"},
         //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
@@ -51,7 +52,7 @@
         //sets the padding inside the chart area
         var chartpadding=[
         {name:"print",margin:[{top:20, right:10, bottom:15, left:0}]},
-        {name:"web",margin:[{top:25, right:0,bottom:30,left:15}]},
+        {name:"web",margin:[{top:25, right:0,bottom:30,left:0}]},
         {name:"now",margin:[{top:20, right:0,bottom:20,left:20}]},
         {name:"social",margin:[{top:70, right:10, bottom:40, left:12}]},
         {name:"video",margin:[{top:55, right:35,bottom:80, left:42}]}
@@ -92,7 +93,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                lineChart(data,stylename,media,doubleScale,yMinL,yMaxL,yMinR, yMaxR, yAxisHighlight,chartpadding,legend, lineSmoothing,logScale,logScaleStart,markers, numTicksy,ticks,minAxis,interval);
+                lineChart(data,stylename,media,doubleScale,yMinL,yMaxL,yMinR, yMaxR, yAxisHighlight,chartpadding,legend, lineSmoothing,logScale,logScaleStart,markers, numTicksy,numTicksyR,ticks,minAxis,interval);
             }
         })//end data load
 

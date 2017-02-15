@@ -1,5 +1,5 @@
 
-function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMaxR, yAxisHighlight, plotpadding,legAlign,lineSmoothing, logScale, logScaleStart, markers, numTicksy, ticks,minAxis,interval){
+function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMaxR, yAxisHighlight, plotpadding,legAlign,lineSmoothing, logScale, logScaleStart, markers, numTicksy, numTicksyR, ticks,minAxis,interval){
 
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
@@ -135,13 +135,55 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
             return yScaleL.tickFormat(1,d3.format(",d"))(d)
         })   
     }
-    var yLabel=plot.append("g")
+
+    var yScaleR;
+        if (logScale) {
+            yScaleL = d3.scale.log()
+            .domain([logScaleStart,yMaxR])
+            .range([plotHeight,0]);
+        }
+        else {
+            yScaleR = d3.scale.linear()
+            .domain(yDomainR)
+            .range([plotHeight,0]);
+        }
+    var yAxisR = d3.svg.axis()
+        .scale(yScaleR)
+        .ticks(numTicksyR)
+        .tickSize(yOffset)
+        .orient("right")
+
+    if (logScale){
+        yAxisR.tickFormat(function (d) {
+            return yScaleR.tickFormat(1,d3.format(",d"))(d)
+        })   
+    }
+
+    var yLabelL=plot.append("g")
     .attr("class",media+"yAxis")
     .call(yAxisL);
+    var yLabelR=plot.append("g")
+    .attr("class",media+"yAxis")
+    .call(yAxisR);
+
+    yLabelL.selectAll('text')
+        .attr("style", null);
+    yLabelR.selectAll('text')
+        .attr("style", null)
+        .attr("x", yOffset*2)
 
     //calculate what the ticksize should be now that the text for the labels has been drawn
-    var yLabelOffsetL=yLabel.node().getBBox().width
-    yLabel.attr("transform",function(){ return "translate("+(margin.left+yLabelOffsetL)+","+margin.top+")"})
+    var yLabelLOffsetL=yLabelL.node().getBBox().width
+    yLabelL
+        .attr("transform",function(){
+            return "translate("+(yLabelLOffsetL)+","+margin.top+")"
+            })
+
+    var yLabelLOffsetR=yLabelR.node().getBBox().width
+    yLabelR
+        .attr("transform",function(){
+            return "translate("+(w-yLabelLOffsetR)+","+margin.top+")"
+            })
 
     //identify 0 line if there is one
     var originValue = 0;
@@ -149,41 +191,38 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
             return d==originValue || d==yAxisHighlight;
         }).classed(media+"origin",true);
 
-    // var xScale = d3.time.scale()
-    // //var xScale = scaleWeekday()
-    //     .domain(xDomain)
-    //     .range([0,(plotWidth-yLabelOffsetL)])
+    var xScale = d3.time.scale()
+    //var xScale = scaleWeekday()
+        .domain(xDomain)
+        .range([0,plotWidth-(yLabelLOffsetL+yLabelLOffsetR)])
 
-    // var xAxis = d3.svg.axis()
-    //     .scale(xScale)
-    //     .tickValues(ticks.major)
-    //     .tickSize(yOffset/2)
-    //     //.tickFormat(d3.time.format(formatTick(interval)))
-    //     .orient("bottom");
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .tickValues(ticks.major)
+        .tickSize(yOffset/2)
+        .tickFormat(d3.time.format(formatTick(interval)))
+        .orient("bottom");
 
-    // function formatTick(int) {
-    //     return {
-    //         "months":"%b",
-    //         "years": "%Y",
-    //         "decade": "%Y",
-    //         "lustrum": "%Y",
-    //         "days": "%d",
-    //         "hours":"%H:%M"
-    //     }[int]
-    // };
+    function formatTick(int) {
+        return {
+            "months":"%b",
+            "years": "%Y",
+            "decade": "%Y",
+            "lustrum": "%Y",
+            "days": "%d",
+            "hours":"%H:%M"
+        }[int]
+    };
 
-    // var xLabel=plot.append("g")
-    //     .attr("class",media+"xAxis")
-    //     .attr("transform",function(){
-    //         if(yAlign=="right") {
-    //             return "translate("+(margin.left)+","+(plotHeight+margin.top)+")"
-    //         }
-    //          else {return "translate("+(margin.left+yLabelOffsetL)+","+(plotHeight+margin.top)+")"}
-    //         })
-    //     .call(xAxis);
+    var xLabel=plot.append("g")
+        .attr("class",media+"xAxis")
+        .attr("transform",function(){
+            return "translate("+(margin.left+yLabelLOffsetL)+","+(plotHeight+margin.top)+")"
+        })
+        .call(xAxis);
 
-    // xLabel.selectAll('text')
-    //     .attr("style", null)
+    xLabel.selectAll('text')
+        .attr("style", null)
 
 
     // if(minAxis) {
@@ -199,7 +238,7 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
     //             if(yAlign=="right") {
     //                 return "translate("+(margin.left)+","+(plotHeight+margin.top)+")"
     //             }
-    //              else {return "translate("+(margin.left+yLabelOffsetL)+","+(plotHeight+margin.top)+")"}
+    //              else {return "translate("+(margin.left+yLabelLOffsetL)+","+(plotHeight+margin.top)+")"}
     //             })
     //         .call(xAxisMinor);
     // }
@@ -220,7 +259,7 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
     //             if(yAlign=="right") {
     //                 return "translate("+(margin.left)+","+(margin.top)+")"
     //             }
-    //              else {return "translate("+(margin.left+yLabelOffsetL)+","+(margin.top)+")"}
+    //              else {return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"}
     //         });
     //     })
     // }
@@ -236,7 +275,7 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
     //             if(yAlign=="right") {
     //                 return "translate("+(margin.left)+","+(margin.top)+")"
     //             }
-    //              else {return "translate("+(margin.left+yLabelOffsetL)+","+(margin.top)+")"}
+    //              else {return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"}
     //     })
 
     // anno.selectAll("line")
@@ -291,7 +330,7 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
     //         if(yAlign=="right") {
     //             return "translate("+(margin.left)+","+(margin.top)+")"
     //         }
-    //          else {return "translate("+(margin.left+yLabelOffsetL)+","+(margin.top)+")"}
+    //          else {return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"}
     //     })
 
     // lines.append("g").attr("fill",function(d,i){return colours[i]})
@@ -312,7 +351,7 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
     //     if(yAlign=="right") {
     //         return "translate("+(margin.left)+","+(margin.top)+")"
     //     }
-    //      else {return "translate("+(margin.left+yLabelOffsetL)+","+(margin.top)+")"}
+    //      else {return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"}
     // });
     
 
@@ -333,7 +372,7 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
     //             if(yAlign=="right") {
     //                 return "translate("+(margin.left)+","+(margin.top)+")"
     //             }
-    //              else {return "translate("+(margin.left+yLabelOffsetL)+","+(margin.top)+")"}
+    //              else {return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"}
     //         });
     // }
 
