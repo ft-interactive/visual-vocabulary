@@ -5,11 +5,22 @@
     <script src="/shared/d3.v4.js"></script>
     <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
     <script src="/shared/js/g-chartframe.js"></script>
+    <script src="/shared/js/g-chartcolour.js"></script>
     <link rel="stylesheet" href="https://build.origami.ft.com/v2/bundles/css?modules=o-fonts@^2.2.0" />
     <style type="text/css">
         body{
             font-family: sans-serif;
         }
+
+        .web .highlighted-label{
+            fill:#000;
+            stroke:none;
+        }
+
+        .web .highlighted-line{
+            stroke:#000;
+        }
+
     </style>
 </head>
 <body>
@@ -33,9 +44,19 @@
         .call(webframe);
 
     d3.csv('data.csv',function(data){
+        
+        //define the start and end columns
         const valueColumns = ['val1','val2'];
+        
+        //Sort the data so that the labeled items are drawn on top
+        data.sort((a,b)=>{
+            if(a.label === 'yes') return 1;
+            return -1;
+        });
 
         const mySlope = slopeChart()
+            .colourProperty('label')
+            .colourDomain(['yes',''])
             .xDomain( valueColumns )
             .yDomain( extentMulti(data, valueColumns) )
             .xRange( [0, webframe.dimension().width] )
@@ -43,8 +64,6 @@
             .includeLabel((row)=>(row.label === 'yes'))
             .labelTextStart((row)=>(row.name + ' ' + row.val1))
             .labelTextEnd((row)=>(row.name + ' ' + row.val2));
-
-        console.log(mySlope)
 
         webframe.plot()
             .selectAll('g.slope')
@@ -60,12 +79,17 @@
     function slopeChart(){
         const yScale = d3.scaleLinear();
         const xScale = d3.scaleOrdinal();
+        const colourScale = d3.scaleOrdinal()
+            .range(gChartcolour.basic)
+            .domain(['highlight','']);
+
+        let colourProperty = 'group';
         let includeLabel = (d)=>true;
         let labelTextStart = (d) => 'start text';
         let labelTextEnd = (d) => 'end text';
+        let highlightColour = '#F00';
 
         function chart(parent){
-            console.log(xScale.domain());
 
             parent.append('line')
                 .attrs({
@@ -73,21 +97,24 @@
                     'x2':xScale(xScale.domain()[1]),
                     'y1':d=>yScale(d[xScale.domain()[0]]),
                     'y2':d=>yScale(d[xScale.domain()[1]]),
-                    'stroke':'#000',
-                    'stroke-opacity':0.2
+                    'stroke':d=>colourScale(d[colourProperty]),
                 });
 
             const labeled = parent.filter(includeLabel)
+
 //start circle...
             labeled.append('circle')
                 .attrs({
                     'cx':xScale(xScale.domain()[0]),
                     'cy':d=>yScale(d[xScale.domain()[0]]),
                     'r':5,
+                    'fill':d=>colourScale(d[colourProperty]),
+                    'stroke':'none',
                 });
 
             labeled.append('text')
                 .attrs({
+                    'class':'highlighted-label',
                     'text-anchor':'end',
                     'y':d=>yScale(d[xScale.domain()[0]])
                 })
@@ -96,13 +123,17 @@
 //end circle...
             labeled.append('circle')
                 .attrs({
+                    'class':'highlighted-circle',
                     'cx':xScale(xScale.domain()[1]),
                     'cy':d=>yScale(d[xScale.domain()[1]]),
                     'r':5,
+                    'fill':d=>colourScale(d[colourProperty]),
+                    'stroke':'none',
                 });
 
             labeled.append('text')
                 .attrs({
+                    'class':'highlighted-label',
                     'y':d=>yScale(d[xScale.domain()[1]]),
                     'x':xScale(xScale.domain()[1]),
                 })
@@ -112,17 +143,17 @@
         chart.labelTextStart = (f)=>{
             labelTextStart = f;
             return chart;
-        }
+        };
 
         chart.labelTextEnd = (f)=>{
             labelTextEnd = f;
             return chart;
-        }
+        };
 
         chart.includeLabel = (f)=>{
             includeLabel = f;
             return chart;
-        }
+        };
 
         chart.xDomain = (x)=>{
             xScale.domain(x);
@@ -143,6 +174,21 @@
             yScale.range(x);
             return chart;
         };
+
+        chart.colourRange = (x)=>{
+            colourScale.range(x);
+            return chart;
+        }
+
+        chart.colourDomain = (x)=>{
+            colourScale.domain(x);
+            return chart;
+        }
+
+        chart.colourProperty = (x)=>{
+            colourProperty = x;
+            return chart;
+        }
 
         return chart;
     }
