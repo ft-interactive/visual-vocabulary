@@ -296,7 +296,6 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
                     .append("path")
                     .attr("class",media+"lines")
                     .attr("stroke",function(d,i){
-                        console.log("line",d[0].index)
                         return colours[(d[0].index-1)];  
                     })
                     .attr('d', function(d){
@@ -313,7 +312,6 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
                     dots=dots.filter(function(d){
                         return d.highlight=="yes"
                     })
-                    console.log(dots)
                     return dots
                 })
                 .enter()
