@@ -12,7 +12,7 @@
   	clean:'#FFF',
   };
 
-  var basic = ['#000','#FFF'];
+  var basic = ['#00000080','#045787'];
 
   var categorical = [
   	'#045787',
