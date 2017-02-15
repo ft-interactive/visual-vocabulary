@@ -19,16 +19,16 @@
         var dataURL = "linedata.csv"
         
         //titles, footnotes
-        var title = "Lorem ipsum dolor sit amet";
-        var subtitle = "Consectetur adipiscing elit";//comment out subtitle assignment if not needed
-        var source = "Sed do eiusmod tempor incididunt ut";
+        var title = "Change in number of EU-born employees ";
+        var subtitle = "Per cent";//comment out subtitle assignment if not needed
+        var source = "Source: ONS";
 
         //graph options
         let doubleScale=2
         var yMinL=85;
         var yMaxL=110;
-        var yMinR=0;
-        var yMaxR=2800
+        var yMinR=10000;
+        var yMaxR=10
         var yAxisHighlight=100;
         var lineSmoothing="linear";//choose 'linear' for an unsmoothed line 'monotone' for smooth
         var logScale=false;
@@ -52,7 +52,7 @@
         //sets the padding inside the chart area
         var chartpadding=[
         {name:"print",margin:[{top:20, right:10, bottom:15, left:0}]},
-        {name:"web",margin:[{top:25, right:0,bottom:30,left:0}]},
+        {name:"web",margin:[{top:25, right:25,bottom:30,left:0}]},
         {name:"now",margin:[{top:20, right:0,bottom:20,left:20}]},
         {name:"social",margin:[{top:70, right:10, bottom:40, left:12}]},
         {name:"video",margin:[{top:55, right:35,bottom:80, left:42}]}

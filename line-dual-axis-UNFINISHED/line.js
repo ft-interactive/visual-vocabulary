@@ -38,13 +38,20 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
         return {
             name:d,
             index:i+1,
-            lineDate:getlines(d)
+            lineData:getlines(d,i+1)
         }
     })
+    let plotLeft=plotData.filter(function(d){
+        return d.index <= doubleScale
+    })
+    let plotRight=plotData.filter(function(d){
+        return d.index > doubleScale
+    })
+
 
     console.log("plotData",plotData)
 
-    function getlines(group) {
+    function getlines(group,index) {
         let lineData=[]
         data.forEach(function(el,i){
             //console.log(el,i)
@@ -53,6 +60,7 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
             column.value = +el[group]
             column.highlight = el.highlight
             column.annotate = el.annotate
+            column.index = index
             lineData.push(column)   
         });
         return lineData
@@ -90,25 +98,6 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
             shadeAreas.push({begin: d.date,end:boundries[i+1].date}) 
         }
     })
-
-    //create a separate array for each series, filtering out records of each  series for which there are no data
-    var plotArrays = [];
-    seriesNames.forEach(function(series,i){
-        plotArrays[i] = [];
-    });
-    data.forEach(function(d,i){
-        seriesNames.forEach(function(series,e){
-            var myRow = new Object();
-            myRow.date=d.date;
-            myRow.highlight=d.highlight;
-            myRow.val=d[series];
-            if (myRow.val){
-                plotArrays[e].push(myRow);
-            }   else    {
-                //console.log('skipped a value:'+i);   
-            } 
-        });
-    });
 
     //Scales
 
@@ -224,7 +213,6 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
     xLabel.selectAll('text')
         .attr("style", null)
 
-
     if(minAxis) {
         var xAxisMinor = d3.svg.axis()
         .scale(xScale)
@@ -240,95 +228,96 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
             .call(xAxisMinor);
     }
 
-    // if(shadeAreas.length>0){
-    //     plot.selectAll("."+media+"area")
-    //     .data(shadeAreas)
-    //     .enter()
-    //     .call(function(parent){
-    //         parent.append('rect')
-    //             .attr("class",media+"Shade")
-    //             .attr("x", function(d) {
-    //                 return xScale(d.begin)})
-    //             .attr("width", function (d) {return xScale(d.end)-xScale(d.begin)})
-    //             .attr("y", yScaleL(yMaxL))
-    //             .attr("height",plotHeight-yScaleL(yMaxL))
-    //             .attr("transform",function(){
-    //             if(yAlign=="right") {
-    //                 return "translate("+(margin.left)+","+(margin.top)+")"
-    //             }
-    //              else {return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"}
-    //         });
-    //     })
-    // }
+    if(shadeAreas.length>0){
+        plot.selectAll("."+media+"area")
+        .data(shadeAreas)
+        .enter()
+        .call(function(parent){
+            parent.append('rect')
+                .attr("class",media+"Shade")
+                .attr("x", function(d) {
+                    return xScale(d.begin)})
+                .attr("width", function (d) {return xScale(d.end)-xScale(d.begin)})
+                .attr("y", yScaleL(yMaxL))
+                .attr("height",plotHeight-yScaleL(yMaxL))
+                .attr("transform",function(){
+                    return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"
+                });
+        })
+    }
 
-    //     //add annotation
-    // var annotations = data.filter(function(d){
-    //     return d.annotate !="" && d.annotate !=undefined;
-    // })
+    //add annotation
+    var annotations = data.filter(function(d){
+        return d.annotate !="" && d.annotate !=undefined;
+    })
 
-    // var anno = plot.append("g")
-    //     .attr("id","annotations")
-    //     .attr("transform",function(){
-    //             if(yAlign=="right") {
-    //                 return "translate("+(margin.left)+","+(margin.top)+")"
-    //             }
-    //              else {return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"}
-    //     })
+    var anno = plot.append("g")
+        .attr("id","annotations")
+        .attr("transform",function(){
+                return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"
+        })
 
-    // anno.selectAll("line")
-    //     .data(annotations)
-    //     .enter()
-    //     .append("line")
-    //     .attr("class",media+"annotationLine")
-    //     .attr("x1",function(d){return xScale(d.date)})
-    //     .attr("x2",function(d){return xScale(d.date)})
-    //     .attr("y1",yScaleL.range()[0])
-    //     .attr("y2",yScaleL.range()[1]-5)
+    anno.selectAll("line")
+        .data(annotations)
+        .enter()
+        .append("line")
+        .attr("class",media+"annotationLine")
+        .attr("x1",function(d){return xScale(d.date)})
+        .attr("x2",function(d){return xScale(d.date)})
+        .attr("y1",yScaleL.range()[0])
+        .attr("y2",yScaleL.range()[1]-5)
 
-    // anno.selectAll("text")
-    //     .data(annotations)
-    //     .enter()
-    //     .append("text")
-    //     .attr("class",media+"annotationText")
-    //     .attr("text-anchor","middle")
-    //     .attr("x",function(d){return xScale(d.date)})
-    //     .attr("y",yScaleL.range()[1]-10)
-    //     .text(function(d){
-    //         return d.annotate
-    //     })
+    anno.selectAll("text")
+        .data(annotations)
+        .enter()
+        .append("text")
+        .attr("class",media+"annotationText")
+        .attr("text-anchor","middle")
+        .attr("x",function(d){return xScale(d.date)})
+        .attr("y",yScaleL.range()[1]-10)
+        .text(function(d){
+            return d.annotate
+        })
 
 
-    // //create a line function that can convert data[] into x and y points
-    // var lineData= d3.svg.line()
-    //     .x(function(d,i) { 
-    //         return xScale(d.date); 
-    //     })
-    //     .y(function(d) { 
-    //         return yScaleL(d.val); 
-    //     })
-    //     .interpolate(lineSmoothing)
+    //create a line function that can convert data[] into x and y points
+    var lineData= d3.svg.line()
+        .x(function(d) { 
+            return xScale(d.date); 
+        })
+        .y(function(d) { 
+            if(d.index <= doubleScale){
+                return yScaleL(d.value);
+            }
+            else {return yScaleR(d.value);}
+        })
+        .interpolate(lineSmoothing)
 
-    // var lines = plot.append("g").attr("id","series").selectAll("g")
-    //         .data(plotArrays)
-    //         .enter()
-    //         .append("g")
-    //         .attr("id",function(d,i){
-    //             return seriesNames[i];  
-    //         })
-
-    // lines.append("path")
-    //     .attr("class",media+"lines")
-    //     .attr("stroke",function(d,i){
-    //         return colours[i];  
-    //     })
-    //     .attr('d', function(d){
-    //         return lineData(d); })
-    //     .attr("transform",function(){
-    //         if(yAlign=="right") {
-    //             return "translate("+(margin.left)+","+(margin.top)+")"
-    //         }
-    //          else {return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"}
-    //     })
+    var lines = plot.append("g").attr("id","series").selectAll("g")
+            .data(plotData)
+            .enter()
+            .append("g")
+            .attr("id",function(d){return d.name;})
+            .call(function(parent){
+                console.log("parent")
+                parent.selectAll("."+media+"lines")
+                    .data(function(d){
+                        return [d.lineData]
+                    })
+                    .enter()
+                    .append("path")
+                    .attr("class",media+"lines")
+                    .attr("stroke",function(d,i){
+                        return colours[i];  
+                    })
+                    .attr('d', function(d){
+                        return lineData(d);
+                    })
+                    .attr("transform",function(){
+                        return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"
+                    })
+            })
+  
 
     // lines.append("g").attr("fill",function(d,i){return colours[i]})
     // .selectAll("circle")
