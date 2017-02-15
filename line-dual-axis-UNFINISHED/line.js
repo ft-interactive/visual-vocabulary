@@ -225,23 +225,20 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
         .attr("style", null)
 
 
-    // if(minAxis) {
-    //     var xAxisMinor = d3.svg.axis()
-    //     .scale(xScale)
-    //     .tickValues(ticks.minor)
-    //     .tickSize(yOffset/4)
-    //     .orient("bottom");
+    if(minAxis) {
+        var xAxisMinor = d3.svg.axis()
+        .scale(xScale)
+        .tickValues(ticks.minor)
+        .tickSize(yOffset/4)
+        .orient("bottom");
 
-    //     var xLabelMinor=plot.append("g")
-    //         .attr("class",media+"minorAxis")
-    //         .attr("transform",function(){
-    //             if(yAlign=="right") {
-    //                 return "translate("+(margin.left)+","+(plotHeight+margin.top)+")"
-    //             }
-    //              else {return "translate("+(margin.left+yLabelLOffsetL)+","+(plotHeight+margin.top)+")"}
-    //             })
-    //         .call(xAxisMinor);
-    // }
+        var xLabelMinor=plot.append("g")
+            .attr("class",media+"minorAxis")
+            .attr("transform",function(){
+                return "translate("+(margin.left+yLabelLOffsetL)+","+(plotHeight+margin.top)+")"
+            })
+            .call(xAxisMinor);
+    }
 
     // if(shadeAreas.length>0){
     //     plot.selectAll("."+media+"area")
