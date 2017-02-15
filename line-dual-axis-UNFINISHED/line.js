@@ -1,5 +1,5 @@
 
-function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpadding,legAlign,lineSmoothing, logScale, logScaleStart, markers, numTicksy, yAlign, ticks,minAxis,interval){
+function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMaxR, yAxisHighlight, plotpadding,legAlign,lineSmoothing, logScale, logScaleStart, markers, numTicksy, yAlign, ticks,minAxis,interval){
 
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
@@ -28,18 +28,40 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
 
     //calculate range of time series 
     var xDomain = d3.extent(data, function(d) {return d.date;});
-    var yDomain;
+    var yDomainL;
+    var yDomainR;
+
+    console.log(seriesNames)
+    console.log("data",data)
+
+    let plotData=seriesNames.map(function(d,i){
+        let returnVal = Object.assign({},{d});
+        returnVal.doubleScale=i+1;
+        returnVal.lineData="tc"
+        return returnVal;
+    })
+    console.log("plotData",plotData)
 
     //calculate range of y axis series data
     data.forEach(function(d,i){
-        seriesNames.forEach(function(e){
-            if (d[e]){
-                yMin=Math.min(yMin,d[e]);
-                yMax=Math.max(yMax,d[e]);
+        seriesNames.forEach(function(e,i){
+            if((i+1)<=doubleScale) {
+                if (d[e]){
+                    yMinL=Math.min(yMinL,d[e]);
+                    yMaxL=Math.max(yMaxL,d[e]);
+                }
+            }
+            else {
+                if (d[e]){
+                    yMinR=Math.min(yMinR,d[e]);
+                    yMaxR=Math.max(yMaxR,d[e]);
+                }
             }
         });			
     });
-    yDomain=[yMin,yMax];
+    yDomainL=[yMinL,yMaxL];
+    yDomainR=[yMinR,yMaxR];
+    console.log(yDomainL,yDomainR)
 
     //creat an array of start stop areas
     var boundries= data.filter(function(d) {
@@ -77,12 +99,12 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     var yScale;
         if (logScale) {
 			yScale = d3.scale.log()
-			.domain([logScaleStart,yMax])
+			.domain([logScaleStart,yMaxL])
 			.range([plotHeight,0]);
 		}
         else {
 			yScale = d3.scale.linear()
-			.domain(yDomain)
+			.domain(yDomainL)
 			.range([plotHeight,0]);
 		}
 
@@ -192,8 +214,8 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
                 .attr("x", function(d) {
                     return xScale(d.begin)})
                 .attr("width", function (d) {return xScale(d.end)-xScale(d.begin)})
-                .attr("y", yScale(yMax))
-                .attr("height",plotHeight-yScale(yMax))
+                .attr("y", yScale(yMaxL))
+                .attr("height",plotHeight-yScale(yMaxL))
                 .attr("transform",function(){
                 if(yAlign=="right") {
                     return "translate("+(margin.left)+","+(margin.top)+")"
