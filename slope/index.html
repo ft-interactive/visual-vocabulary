@@ -8,17 +8,11 @@
     <script src="/shared/js/g-chartcolour.js"></script>
     <link rel="stylesheet" href="https://build.origami.ft.com/v2/bundles/css?modules=o-fonts@^2.2.0" />
     <style type="text/css">
-        body{
-            font-family: sans-serif;
-        }
+
 
         .web .highlighted-label{
             fill:#000;
             stroke:none;
-        }
-
-        .web .highlighted-line{
-            stroke:#000;
         }
 
     </style>
@@ -26,7 +20,7 @@
 <body>
 
     <h1>Slope chart</h1>
-    <p>Good for showing changing data as long as the data can be simplified into 2 or 3 points without missing a key part of story</p>
+    <p>Good for showing changing data as long as the data can be simplified into 2 points without missing a key part of story</p>
     <hr>
     <figure class="web saveable"><svg></svg></figure>
     <figure class="print saveable"><svg></svg></figure>
@@ -38,7 +32,12 @@
 <script type="text/javascript">
 
     const webframe = gChartframe.webFrame
-        .margin({left:200,right:200});
+        .margin({left:200,right:200, top:100});
+
+    const dataSorter = (a,b)=> {    //Sort the data so that the labeled items are drawn on top
+        if(a.label === 'yes') return 1;
+        return -1;
+    };
 
     d3.select('.web svg')
         .call(webframe);
@@ -48,28 +47,34 @@
         //define the start and end columns
         const valueColumns = ['val1','val2'];
         
-        //Sort the data so that the labeled items are drawn on top
-        data.sort((a,b)=>{
-            if(a.label === 'yes') return 1;
-            return -1;
-        });
+        data.sort(dataSorter);
 
         const mySlope = slopeChart()
-            .colourProperty('label')
-            .colourDomain(['yes',''])
+            .colourProperty( 'label' )
+            .colourDomain( ['','yes'] )
             .xDomain( valueColumns )
-            .yDomain( extentMulti(data, valueColumns) )
+            .yDomain( extentMulti(data, valueColumns).reverse() )
             .xRange( [0, webframe.dimension().width] )
             .yRange( [0, webframe.dimension().height] )
-            .includeLabel((row)=>(row.label === 'yes'))
-            .labelTextStart((row)=>(row.name + ' ' + row.val1))
-            .labelTextEnd((row)=>(row.name + ' ' + row.val2));
+            .includeLabel( (row)=> (row.label === 'yes') )
+            .labelTextStart( (row)=> (row.name + ' ' + row.val1) )
+            .labelTextEnd( (row)=> (row.name + ' ' + row.val2) );
+
+        const myAxes = slopeAxes()
+            .xScale( mySlope.xScale() )
+            .yScale( mySlope.yScale() )
+            .startLabel('Start')
+            .endLabel('End');
 
         webframe.plot()
-            .selectAll('g.slope')
-            .data(data)
+            .call( myAxes );
+
+        webframe.plot()
+            .selectAll( 'g.slope' )
+            .data( data )
             .enter()
-            .append('g').attr('class','slope')
+            .append( 'g' )
+                .attr('class','slope')
             .call(mySlope);
     });
 
@@ -77,17 +82,18 @@
 
 //the slopechart factory
     function slopeChart(){
-        const yScale = d3.scaleLinear();
-        const xScale = d3.scaleOrdinal();
+        let yScale = d3.scaleLinear();
+        let xScale = d3.scaleOrdinal();
         const colourScale = d3.scaleOrdinal()
-            .range(gChartcolour.basic)
-            .domain(['highlight','']);
+            .range(['#00000020', gChartcolour.basic[1]])
+            .domain(['','highlight']);
 
         let colourProperty = 'group';
         let includeLabel = (d)=>true;
         let labelTextStart = (d) => 'start text';
         let labelTextEnd = (d) => 'end text';
         let highlightColour = '#F00';
+        let dotRadius = 5;
 
         function chart(parent){
 
@@ -107,7 +113,7 @@
                 .attrs({
                     'cx':xScale(xScale.domain()[0]),
                     'cy':d=>yScale(d[xScale.domain()[0]]),
-                    'r':5,
+                    'r':dotRadius,
                     'fill':d=>colourScale(d[colourProperty]),
                     'stroke':'none',
                 });
@@ -116,7 +122,9 @@
                 .attrs({
                     'class':'highlighted-label',
                     'text-anchor':'end',
-                    'y':d=>yScale(d[xScale.domain()[0]])
+                    'y':d=>yScale(d[xScale.domain()[0]]),
+                    'dy':5,
+                    'dx':-dotRadius*1.5,
                 })
                 .text(labelTextStart);
 
@@ -126,7 +134,7 @@
                     'class':'highlighted-circle',
                     'cx':xScale(xScale.domain()[1]),
                     'cy':d=>yScale(d[xScale.domain()[1]]),
-                    'r':5,
+                    'r':dotRadius,
                     'fill':d=>colourScale(d[colourProperty]),
                     'stroke':'none',
                 });
@@ -136,8 +144,13 @@
                     'class':'highlighted-label',
                     'y':d=>yScale(d[xScale.domain()[1]]),
                     'x':xScale(xScale.domain()[1]),
+                    'dy':5,
+                    'dx':dotRadius*1.5,
                 })
                 .text(labelTextEnd);
+
+            parent.append('text')
+
         }
 
         chart.labelTextStart = (f)=>{
@@ -175,6 +188,11 @@
             return chart;
         };
 
+        chart.dotRadius = (x)=>{
+            dotRadius = x;
+            return chart;
+        }
+
         chart.colourRange = (x)=>{
             colourScale.range(x);
             return chart;
@@ -190,7 +208,107 @@
             return chart;
         }
 
+        chart.xScale = (x)=>{
+            if(!x) return xScale;
+            xScale = x;
+            return chart;
+        }
+
+        chart.yScale = (x)=>{
+            if(!x) return yScale;
+            yScale = x;
+            return chart;
+        }
+
         return chart;
+    }
+
+
+    function slopeAxes(){
+
+        let xScale = d3.scaleOrdinal();
+        let yScale = d3.scaleLinear();
+        let startLabel = 'start';
+        let endLabel = 'end';
+        let tickFormatter = d=>d3.format(',')(d);
+
+
+        function axes(parent){
+
+            const container = parent.append('g')
+                .attr('class','axes')
+
+            container.append('text')
+                .text(startLabel)
+                .attrs({
+                    'text-anchor': 'end',
+                    'dx':-5,
+                    'dy':-10,
+                    'class': 'xaxis-label',
+                });
+
+            container.append('text')
+                .text(endLabel)
+                .attrs({
+                    'x':xScale.range()[1],
+                    'dx':5,
+                    'dy':-10,
+                    'class': 'xaxis-label',
+                });
+
+            container.selectAll('g.tick')
+                .data(yScale.ticks())
+                    .enter()
+                .append('g')
+                    .attrs({
+                        'class':'tick',
+                        'transform':(d)=>'translate(0,'+yScale(d)+')',
+                    })
+                .call(function(tick){
+                    tick.append('line')
+                        .attrs({
+                            'x1':0,
+                            'y1':0,
+                            'x2':xScale.range()[1],
+                            'y2':0,
+                            'stroke':'#000'
+                        })
+
+                    tick.append('text')
+                        .attrs({
+                            'text-anchor':'end',
+                            'x':xScale.range()[1],
+                            'dy':-5,
+                            'dx':-10,
+                        })
+                        .text(tickFormatter)
+                        
+
+                });
+        }
+
+        axes.startLabel = (x)=>{
+            startLabel = x;
+            return axes;
+        }
+
+        axes.endLabel = (x)=>{
+            endLabel = x;
+            return axes;
+        }
+
+        axes.xScale = (x)=>{
+            xScale = x;
+            return axes;
+        }
+
+        axes.yScale = (x)=>{
+            yScale = x;
+            return axes;
+        }
+
+
+        return axes;
     }
 
 
