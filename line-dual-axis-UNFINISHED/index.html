@@ -27,15 +27,15 @@
         let doubleScale=2
         var yMinL=85;
         var yMaxL=110;
-        var yMinR=10000;
-        var yMaxR=10
+        var yMinR=9000;
+        var yMaxR=11000
         var yAxisHighlight=100;
         var lineSmoothing="linear";//choose 'linear' for an unsmoothed line 'monotone' for smooth
         var logScale=false;
         var logScaleStart=1000;
         var markers=false;//show circle markers
         var numTicksy = 5;//rough number of ticks for y axis
-        var numTicksyR = 5;//rough number of ticks for y axis
+        var numTicksyR = 6;//rough number of ticks for y axis
         var interval="months";//days, months, quarters, years, lustrum or decade
         var minAxis=false //true or false
         var ticks//Contains the tick values for the major and minor xAxis
@@ -85,7 +85,6 @@
             });
         //YOU SHOULD'NT HAVE TO DO MUCH AFTER THIS
             ticks=calculateTicks(data,interval)
-            console.log(ticks)
 
             for (var i=0;i<frames.length;i++){
                 var stylename=frames[i].stylesheet;

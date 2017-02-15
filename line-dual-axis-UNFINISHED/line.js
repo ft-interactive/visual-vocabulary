@@ -31,9 +31,6 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
     var yDomainL;
     var yDomainR;
 
-    console.log(seriesNames)
-    console.log("data",data)
-
     let plotData=seriesNames.map(function(d,i){
         return {
             name:d,
@@ -41,15 +38,6 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
             lineData:getlines(d,i+1)
         }
     })
-    let plotLeft=plotData.filter(function(d){
-        return d.index <= doubleScale
-    })
-    let plotRight=plotData.filter(function(d){
-        return d.index > doubleScale
-    })
-
-
-    console.log("plotData",plotData)
 
     function getlines(group,index) {
         let lineData=[]
@@ -85,7 +73,6 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
     });
     yDomainL=[yMinL,yMaxL];
     yDomainR=[yMinR,yMaxR];
-    console.log(yDomainL,yDomainR)
 
     //creat an array of start stop areas
     var boundries= data.filter(function(d) {
@@ -293,7 +280,8 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
         })
         .interpolate(lineSmoothing)
 
-    var lines = plot.append("g").attr("id","series").selectAll("g")
+    var lines = plot.append("g")
+    .attr("id","series").selectAll("g")
             .data(plotData)
             .enter()
             .append("g")
@@ -308,7 +296,8 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
                     .append("path")
                     .attr("class",media+"lines")
                     .attr("stroke",function(d,i){
-                        return colours[i];  
+                        console.log("line",d[0].index)
+                        return colours[(d[0].index-1)];  
                     })
                     .attr('d', function(d){
                         return lineData(d);
@@ -317,12 +306,34 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
                         return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"
                     })
             })
+            .call(function(parent){
+                parent.selectAll("circle")
+                .data(function(d){
+                    let dots=d.lineData
+                    dots=dots.filter(function(d){
+                        return d.highlight=="yes"
+                    })
+                    console.log(dots)
+                    return dots
+                })
+                .enter()
+                .append("circle")
+                .attr("fill",function(d){
+                    return colours[(d.index-1)]
+                })
+                .attr("r",yOffset/4)
+                .attr("cx",function(d){return xScale(d.date)})
+                .attr("cy",function(d){return yScaleL(d.value)})
+                .attr("transform",function(){
+                    return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"
+                })
+
+            })
   
 
     // lines.append("g").attr("fill",function(d,i){return colours[i]})
     // .selectAll("circle")
-    // .data(function(d){
-    //     return d;})
+    // .data(plotData)
     // .enter()
     // .append("circle")
     // .attr("r", function(d) {
