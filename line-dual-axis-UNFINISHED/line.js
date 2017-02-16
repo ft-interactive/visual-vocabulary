@@ -321,7 +321,12 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
                 })
                 .attr("r",yOffset/4)
                 .attr("cx",function(d){return xScale(d.date)})
-                .attr("cy",function(d){return yScaleL(d.value)})
+                .attr("cy",function(d){
+                    if(d.index <= doubleScale) {
+                        return yScaleL(d.value)
+                    }
+                    else {return yScaleR(d.value)}
+                })
                 .attr("transform",function(){
                     return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"
                 })
