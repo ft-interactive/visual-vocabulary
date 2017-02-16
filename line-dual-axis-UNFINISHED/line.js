@@ -304,6 +304,36 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
                     .attr("transform",function(){
                         return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"
                     })
+
+            })
+            .call(function(parent){
+                //if needed, create markers
+                    if (markers){
+                        parent.selectAll("circle")
+                        .data(function (d){
+                            return d.lineData
+                        })
+                        .enter()
+                        .append("circle")
+                        .attr("fill",function(d){
+                            return colours[(d.index-1)]
+                        })
+                        .attr("r",yOffset/4)
+                        .attr("id",function(d){
+                            console.log(d.date+":"+d.value);
+                            return d.date+":"+d.value;
+                        })
+                        .attr("cx",function(d){return xScale(d.date)})
+                        .attr("cy",function(d){
+                            if(d.index <= doubleScale) {
+                                return yScaleL(d.value)
+                            }
+                            else {return yScaleR(d.value)}
+                        })
+                        .attr("transform",function(){
+                            return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"
+                        })
+                    }
             })
             .call(function(parent){
                 parent.selectAll("circle")
@@ -332,116 +362,72 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
                 })
 
             })
-  
 
-    // lines.append("g").attr("fill",function(d,i){return colours[i]})
-    // .selectAll("circle")
-    // .data(plotData)
-    // .enter()
-    // .append("circle")
-    // .attr("r", function(d) {
-    //     if(d.highlight=="yes") {
-    //         return yOffset/4
-    //         }
-    //         else {return 0}
-    //     })
-    // .attr("cx",function(d){return xScale(d.date)})
-    // .attr("cy",function(d){return yScaleL(d.val)})
-    // .attr("transform",function(){
-    //     if(yAlign=="right") {
-    //         return "translate("+(margin.left)+","+(margin.top)+")"
-    //     }
-    //      else {return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"}
-    // });
-    
+    d3.selectAll(".domain").remove()
 
-    // //if needed, create markers
-    // if (markers){
-    //     lines.append("g").attr("fill",function(d,i){return colours[i]})
-    //         .selectAll("circle")
-    //         .data(function(d){return d;})
-    //         .enter()
-    //         .append("circle")
-    //         .attr("r",yOffset/4)
-    //         .attr("id",function(d){
-    //             return d.date+":"+d.val;
-    //         })
-    //         .attr("cx",function(d){return xScale(d.date)})
-    //         .attr("cy",function(d){return yScaleL(d.val)})
-    //         .attr("transform",function(){
-    //             if(yAlign=="right") {
-    //                 return "translate("+(margin.left)+","+(margin.top)+")"
-    //             }
-    //              else {return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"}
-    //         });
-    // }
+    //Add labels so that the preflight script in illustrator will work
+    d3.selectAll(".printxAxis text")
+    .attr("id","xAxisLabel")
+    d3.selectAll(".printyAxis text")
+    .attr("id","yAxisLabel")
+    d3.selectAll(".printyAxis line")
+    .attr("id","yAxisTick")
+    d3.selectAll(".printxAxis line")
+    .attr("id","xAxisTick")
 
+    if (seriesNames[0]!="x"){
+        // //create a legend first
+        var legendyOffset=0
+        var legend = plot.append("g")
+            .attr("id",media+"legend")
+            .on("mouseover",pointer)
+            .selectAll("g")
+            .data(seriesNames)
+            .enter()
+            .append("g")
+            .attr ("id",function(d,i){
+                return media+"l"+i
+            })
 
-    // d3.selectAll(".domain").remove()
-
-    // //Add labels so that the preflight script in illustrator will work
-    // d3.selectAll(".printxAxis text")
-    // .attr("id","xAxisLabel")
-    // d3.selectAll(".printyAxis text")
-    // .attr("id","yAxisLabel")
-    // d3.selectAll(".printyAxis line")
-    // .attr("id","yAxisTick")
-    // d3.selectAll(".printxAxis line")
-    // .attr("id","xAxisTick")
-
-    // if (seriesNames[0]!="x"){
-    //     // //create a legend first
-    //     var legendyOffset=0
-    //     var legend = plot.append("g")
-    //         .attr("id",media+"legend")
-    //         .on("mouseover",pointer)
-    //         .selectAll("g")
-    //         .data(seriesNames)
-    //         .enter()
-    //         .append("g")
-    //         .attr ("id",function(d,i){
-    //             return media+"l"+i
-    //         })
-
-    //     var drag = d3.behavior.drag().on("drag", moveLegend);
-    //     d3.select("#"+media+"legend").call(drag);
+        var drag = d3.behavior.drag().on("drag", moveLegend);
+        d3.select("#"+media+"legend").call(drag);
             
-    //     legend.append("text")
+        legend.append("text")
 
-    //         .attr("id",function(d,i){
-    //             return media+"t"+i
-    //         })
-    //         .attr("x",yOffset+yOffset/2)
-    //         .attr("y",yOffset/2)
-    //         .attr("class",media+"subtitle")
-    //         .text(function(d){
-    //             return d;
-    //         })
-    //     legend.append("line")
-    //         .attr("stroke",function(d,i){
-    //             return colours[i];  
-    //         })
-    //         .attr("x1",0)
-    //         .attr("x2",yOffset)
-    //         .attr("y1",yOffset/4)
-    //         .attr("y2",yOffset/4)
-    //         .attr("class",media+"lines")
+            .attr("id",function(d,i){
+                return media+"t"+i
+            })
+            .attr("x",yOffset+yOffset/2)
+            .attr("y",yOffset/2)
+            .attr("class",media+"subtitle")
+            .text(function(d){
+                return d;
+            })
+        legend.append("line")
+            .attr("stroke",function(d,i){
+                return colours[i];  
+            })
+            .attr("x1",0)
+            .attr("x2",yOffset)
+            .attr("y1",yOffset/4)
+            .attr("y2",yOffset/4)
+            .attr("class",media+"lines")
 
-    //     legend.attr("transform",function(d,i){
-    //         if (legAlign=='hori') {
-    //             var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
-    //             if (i>0) {
-    //                 var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+yOffset; 
-    //             }
-    //             else {gWidth=0};
-    //             legendyOffset=legendyOffset+gWidth;
-    //             return "translate("+(legendyOffset)+","+(gHeigt/2)+")";  
-    //         }
-    //         else {
-    //             return "translate(0,"+((i*yOffset))+")"};
-    // })
+        legend.attr("transform",function(d,i){
+            if (legAlign=='hori') {
+                var gHeigt=d3.select("#"+media+"l0").node().getBBox().height;
+                if (i>0) {
+                    var gWidth=d3.select("#"+media+"l"+(i-1)).node().getBBox().width+yOffset; 
+                }
+                else {gWidth=0};
+                legendyOffset=legendyOffset+gWidth;
+                return "translate("+(legendyOffset)+","+(gHeigt/2)+")";  
+            }
+            else {
+                return "translate(0,"+((i*yOffset))+")"};
+    })
 
-    // }
+    }
     
 
     function colculateTicksize(align, offset) {

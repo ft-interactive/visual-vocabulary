@@ -25,9 +25,9 @@
 
         //graph options
         let doubleScale=1
-        var yMinL=85;
+        var yMinL=0;
         var yMaxL=5000;
-        var yMinR=9000;
+        var yMinR=0;
         var yMaxR=20000
         var yAxisHighlight=100;
         var lineSmoothing="linear";//choose 'linear' for an unsmoothed line 'monotone' for smooth
@@ -42,11 +42,11 @@
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
         var frames=[
-        //{name:"print",width:112.25,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"hori",yLabel:"left"},
-        {name:"web",width:600,height:400,units:'px',margins:[{top:0,right:17,bottom:5,left:10}],stylesheet:styleweb,legend:"vert",yLabel:"right"},
+        {name:"print",width:112.25,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"hori",yLabel:"left"},
+        {name:"web",width:600,height:400,units:'px',margins:[{top:0,right:17,bottom:5,left:10}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
         //{name:"now",width:274,height:276,units:'px',margins:[{top:0,right:0,bottom:5,left:0}],stylesheet:stylenowcast,legend:"vert",yLabel:"right"},
-        //{name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"hori",yLabel:"left"},
-        //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
+        {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
+        {name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"vert",yLabel:"right"}
         ]
         
         //sets the padding inside the chart area
