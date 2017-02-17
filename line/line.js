@@ -275,15 +275,13 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     lines.append("g").attr("fill",function(d,i){return colours[i]})
     .selectAll("circle")
     .data(function(d){
-        return d;})
+        let filtered=d.filter(function(d) {
+            return d.highlight=="yes"
+        })
+        return filtered})
     .enter()
     .append("circle")
-    .attr("r", function(d) {
-        if(d.highlight=="yes") {
-            return yOffset/4
-            }
-            else {return 0}
-        })
+    .attr("r", yOffset/4)
     .attr("cx",function(d){return xScale(d.date)})
     .attr("cy",function(d){return yScale(d.val)})
     .attr("transform",function(){
