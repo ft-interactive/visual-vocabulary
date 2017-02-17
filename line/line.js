@@ -275,7 +275,10 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     lines.append("g").attr("fill",function(d,i){return colours[i]})
     .selectAll("circle")
     .data(function(d){
-        return d;})
+        let filtered=d.filter(function(d) {
+            return d.highlight=="yes"
+        })
+        return filtered})
     .enter()
     .append("circle")
     .attr("r", function(d) {
