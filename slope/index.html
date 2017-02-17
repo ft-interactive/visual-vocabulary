@@ -2,17 +2,22 @@
 <html>
 <head>
     <title>Slope chart - Visual Vocabulary</title>
-    <script src="/shared/d3.v4.js"></script>
-    <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
-    <script src="/shared/js/g-chartframe.js"></script>
-    <script src="/shared/js/g-chartcolour.js"></script>
+    <script src="//d3js.org/d3.v4.js"></script>
+    <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
+    <script src="//financial-times.github.io/g-chartframe/build/g-chartframe.js"></script>
+    <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
+    <script src="/shared/svg2png.js"></script>
     <link rel="stylesheet" href="https://build.origami.ft.com/v2/bundles/css?modules=o-fonts@^2.2.0" />
     <style type="text/css">
-
-
         .web .highlighted-label{
             fill:#000;
             stroke:none;
+        }
+
+        svg text{
+            font-feature-settings: 'tnum';
+            -webkit-font-feature-settings: 'tnum';
+            -moz-font-feature-settings: 'tnum';`
         }
 
     </style>
