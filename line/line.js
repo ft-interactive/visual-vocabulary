@@ -281,12 +281,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         return filtered})
     .enter()
     .append("circle")
-    .attr("r", function(d) {
-        if(d.highlight=="yes") {
-            return yOffset/4
-            }
-            else {return 0}
-        })
+    .attr("r", yOffset/4)
     .attr("cx",function(d){return xScale(d.date)})
     .attr("cy",function(d){return yScale(d.val)})
     .attr("transform",function(){
