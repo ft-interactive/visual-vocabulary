@@ -49,7 +49,9 @@ function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMax
             column.highlight = el.highlight
             column.annotate = el.annotate
             column.index = index
-            lineData.push(column)   
+            if(el[group]) {
+                lineData.push(column)  
+            } 
         });
         return lineData
     }
