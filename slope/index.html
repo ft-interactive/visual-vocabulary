@@ -58,10 +58,6 @@ const dataSorter = (a,b)=> {    //Sort the data so that the labeled items are dr
 };
 
 
-
-
-
-
 d3.csv('data.csv',function(data){
 
     const valueColumns = ['val1','val2'];    //define the start and end columns
@@ -78,30 +74,35 @@ d3.csv('data.csv',function(data){
         .labelTextStart( (row)=> (row.name + ' ' + row.val1) )
         .labelTextEnd( (row)=> (row.name + ' ' + row.val2) );
     
-
-    //specific slope configuration
-
-    const currentFrame = frame.web;
-
-    mySlope.xRange( [0, currentFrame.dimension().width] )
-        .yRange( [0, currentFrame.dimension().height] );
-
+    //general axes configuration    
     const myAxes = slopeAxes()
-        .xScale( mySlope.xScale() )
-        .yScale( mySlope.yScale() )
         .startLabel('Start')
         .endLabel('End');
 
-    currentFrame.plot()
-        .call( myAxes );
 
-    currentFrame.plot()
-        .selectAll( 'g.slope' )
-        .data( data )
-        .enter()
-        .append( 'g' )
-            .attr('class','slope')
-        .call(mySlope);
+    //specific slope configuration
+    Object.keys(frame).forEach(frameName=>{
+        const currentFrame = frame[frameName];
+
+        mySlope.xRange( [0, currentFrame.dimension().width] )
+            .yRange( [0, currentFrame.dimension().height] );
+
+        myAxes.xScale( mySlope.xScale() )
+            .yScale( mySlope.yScale() );
+            
+        currentFrame.plot()
+            .call( myAxes );
+
+        currentFrame.plot()
+            .selectAll( 'g.slope' )
+            .data( data )
+            .enter()
+            .append( 'g' )
+                .attr('class','slope')
+            .call(mySlope);
+    });
+
+    
 });
 
 //a function to work out the extent of values in an array accross multiple properties...
