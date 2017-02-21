@@ -116,8 +116,6 @@ d3.csv('data.csv',function(data){
         myAxes.colourInverse((frameName === 'social' || frameName === 'video'));
 
         //do the actual drawing...
-        currentFrame.plot()
-            .call( myAxes );
 
         currentFrame.plot()
             .selectAll( 'g.slope' )
@@ -126,6 +124,9 @@ d3.csv('data.csv',function(data){
             .append( 'g' )
                 .attr('class','slope')
             .call(mySlope);
+
+        currentFrame.plot()
+            .call( myAxes );
     });
 
     

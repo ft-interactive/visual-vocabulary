@@ -3,7 +3,7 @@ function slopeChart(){
     let yScale = d3.scaleLinear();
     let xScale = d3.scaleOrdinal();
     const colourScale = d3.scaleOrdinal()
-        .range(gChartcolour.basic)
+        .range(gChartcolour.basicLine)
         .domain(['','highlight']);
 
     let colourProperty = 'group';
@@ -120,9 +120,9 @@ function slopeChart(){
 
     chart.colourInverse = (x) =>{
     	if(x===true){
-    		colourScale.range(gChartcolour.basicInverse);
+    		colourScale.range(gChartcolour.basicLineSocial);
     	}else{
-    		colourScale.range(gChartcolour.basic);
+    		colourScale.range(gChartcolour.basicLine);
     	};
     	return chart;
     }
