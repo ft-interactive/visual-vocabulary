@@ -3,7 +3,7 @@ function slopeChart(){
     let yScale = d3.scaleLinear();
     let xScale = d3.scaleOrdinal();
     const colourScale = d3.scaleOrdinal()
-        .range(['#00000020', gChartcolour.basic[1]])
+        .range(gChartcolour.basic)
         .domain(['','highlight']);
 
     let colourProperty = 'group';
@@ -12,6 +12,12 @@ function slopeChart(){
     let labelTextEnd = (d) => 'end text';
     let highlightColour = '#F00';
     let dotRadius = 5;
+    let lineClasser = (d)=>{
+    	if(d[colourProperty]){
+    		return 'highlight-line';
+    	}
+    	return 'background-line';
+    };
 
     function chart(parent){
 
@@ -22,6 +28,7 @@ function slopeChart(){
                 'y1':d=>yScale(d[xScale.domain()[0]]),
                 'y2':d=>yScale(d[xScale.domain()[1]]),
                 'stroke':d=>colourScale(d[colourProperty]),
+                'class':lineClasser
             });
 
         const labeled = parent.filter(includeLabel)
@@ -49,21 +56,21 @@ function slopeChart(){
 //end circle...
         labeled.append('circle')
             .attrs({
-                'class':'highlighted-circle',
-                'cx':xScale(xScale.domain()[1]),
-                'cy':d=>yScale(d[xScale.domain()[1]]),
-                'r':dotRadius,
-                'fill':d=>colourScale(d[colourProperty]),
-                'stroke':'none',
+                'class': 'highlighted-circle',
+                'cx': xScale(xScale.domain()[1]),
+                'cy': d=>yScale(d[xScale.domain()[1]]),
+                'r': dotRadius,
+                'fill': d=>colourScale(d[colourProperty]),
+                'stroke': 'none',
             });
 
         labeled.append('text')
             .attrs({
-                'class':'highlighted-label',
-                'y':d=>yScale(d[xScale.domain()[1]]),
-                'x':xScale(xScale.domain()[1]),
-                'dy':5,
-                'dx':dotRadius*1.5,
+                'class': 'highlighted-label',
+                'y': d=>yScale(d[xScale.domain()[1]]),
+                'x': xScale(xScale.domain()[1]),
+                'dy': 5,
+                'dx': dotRadius*1.5,
             })
             .text(labelTextEnd);
 
@@ -111,6 +118,15 @@ function slopeChart(){
         return chart;
     }
 
+    chart.colourInverse = (x) =>{
+    	if(x===true){
+    		colourScale.range(gChartcolour.basicInverse);
+    	}else{
+    		colourScale.range(gChartcolour.basic);
+    	};
+    	return chart;
+    }
+
     chart.colourRange = (x)=>{
         colourScale.range(x);
         return chart;
@@ -146,6 +162,7 @@ function slopeAxes(){
 
     let xScale = d3.scaleOrdinal();
     let yScale = d3.scaleLinear();
+    let yTicks;
     let startLabel = 'start';
     let endLabel = 'end';
     let tickFormatter = d=>d3.format(',')(d);
@@ -174,8 +191,12 @@ function slopeAxes(){
                 'class': 'xaxis-label',
             });
 
+        if(yTicks === undefined){
+        	yTicks = yScale.ticks();
+        }
+
         container.selectAll('g.tick')
-            .data(yScale.ticks())
+            .data(yTicks)
                 .enter()
             .append('g')
                 .attrs({
@@ -223,6 +244,16 @@ function slopeAxes(){
     axes.yScale = (x)=>{
         yScale = x;
         return axes;
+    }
+
+    axes.yTicks = (x)=>{
+    	yTicks = x;
+    	return axes;
+    }
+
+    axes.labelFormatter = (x)=>{
+    	labelFormatter = x;
+    	return axes;
     }
 
 
