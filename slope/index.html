@@ -112,8 +112,10 @@ d3.csv('data.csv',function(data){
             .yScale( mySlope.yScale() );
             
         // specifics based on frame type
-        mySlope.colourInverse( (frameName === 'social' || frameName === 'video') );
+        mySlope.colourInverse((frameName === 'social' || frameName === 'video'));
+        myAxes.colourInverse((frameName === 'social' || frameName === 'video'));
 
+        //do the actual drawing...
         currentFrame.plot()
             .call( myAxes );
 
