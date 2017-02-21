@@ -6,7 +6,8 @@
     <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
     <script src="//financial-times.github.io/g-chartframe/build/g-chartframe.js"></script>
     <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
-    <script src="/shared/svg2png.js"></script>
+    <script src="slope.js"></script>
+
     <link rel="stylesheet" href="https://build.origami.ft.com/v2/bundles/css?modules=o-fonts@^2.2.0" />
     <style type="text/css">
         .web .highlighted-label{
@@ -27,312 +28,98 @@
     <h1>Slope chart</h1>
     <p>Good for showing changing data as long as the data can be simplified into 2 points without missing a key part of story</p>
     <hr>
-    <figure class="web saveable"><svg></svg></figure>
-    <figure class="print saveable"><svg></svg></figure>
-    <figure class="social saveable"><svg></svg></figure>
-    <figure class="video saveable"><svg></svg></figure>
+    <figure class="framed web saveable" data-frame="web"><svg></svg></figure>
+    <figure class="framed print saveable" data-frame="print"><svg></svg></figure>
+    <figure class="framed social saveable" data-frame="social"><svg></svg></figure>
+    <figure class="framed video saveable" data-frame="video"><svg></svg></figure>
 
 </body>
 
 <script type="text/javascript">
+const frame = {
+    web: gChartframe.webFrame
+        .margin({left:200,right:200, top:100}),
+    print: gChartframe.printFrame,
+    social: gChartframe.socialFrame,
+    video: gChartframe.videoFrame,
+};
 
-    const webframe = gChartframe.webFrame
-        .margin({left:200,right:200, top:100});
-
-    const dataSorter = (a,b)=> {    //Sort the data so that the labeled items are drawn on top
-        if(a.label === 'yes') return 1;
-        return -1;
-    };
-
-    d3.select('.web svg')
-        .call(webframe);
-
-    d3.csv('data.csv',function(data){
-        
-        //define the start and end columns
-        const valueColumns = ['val1','val2'];
-        
-        data.sort(dataSorter);
-
-        const mySlope = slopeChart()
-            .colourProperty( 'label' )
-            .colourDomain( ['','yes'] )
-            .xDomain( valueColumns )
-            .yDomain( extentMulti(data, valueColumns).reverse() )
-            .xRange( [0, webframe.dimension().width] )
-            .yRange( [0, webframe.dimension().height] )
-            .includeLabel( (row)=> (row.label === 'yes') )
-            .labelTextStart( (row)=> (row.name + ' ' + row.val1) )
-            .labelTextEnd( (row)=> (row.name + ' ' + row.val2) );
-
-        const myAxes = slopeAxes()
-            .xScale( mySlope.xScale() )
-            .yScale( mySlope.yScale() )
-            .startLabel('Start')
-            .endLabel('End');
-
-        webframe.plot()
-            .call( myAxes );
-
-        webframe.plot()
-            .selectAll( 'g.slope' )
-            .data( data )
-            .enter()
-            .append( 'g' )
-                .attr('class','slope')
-            .call(mySlope);
+d3.selectAll('.framed')
+    .each(function(){
+        const figure = d3.select(this);
+        figure.select('svg')
+            .call(frame[figure.node().dataset.frame]);
     });
 
 
-
-//the slopechart factory
-    function slopeChart(){
-        let yScale = d3.scaleLinear();
-        let xScale = d3.scaleOrdinal();
-        const colourScale = d3.scaleOrdinal()
-            .range(['#00000020', gChartcolour.basic[1]])
-            .domain(['','highlight']);
-
-        let colourProperty = 'group';
-        let includeLabel = (d)=>true;
-        let labelTextStart = (d) => 'start text';
-        let labelTextEnd = (d) => 'end text';
-        let highlightColour = '#F00';
-        let dotRadius = 5;
-
-        function chart(parent){
-
-            parent.append('line')
-                .attrs({
-                    'x1':xScale(xScale.domain()[0]),
-                    'x2':xScale(xScale.domain()[1]),
-                    'y1':d=>yScale(d[xScale.domain()[0]]),
-                    'y2':d=>yScale(d[xScale.domain()[1]]),
-                    'stroke':d=>colourScale(d[colourProperty]),
-                });
-
-            const labeled = parent.filter(includeLabel)
-
-//start circle...
-            labeled.append('circle')
-                .attrs({
-                    'cx':xScale(xScale.domain()[0]),
-                    'cy':d=>yScale(d[xScale.domain()[0]]),
-                    'r':dotRadius,
-                    'fill':d=>colourScale(d[colourProperty]),
-                    'stroke':'none',
-                });
-
-            labeled.append('text')
-                .attrs({
-                    'class':'highlighted-label',
-                    'text-anchor':'end',
-                    'y':d=>yScale(d[xScale.domain()[0]]),
-                    'dy':5,
-                    'dx':-dotRadius*1.5,
-                })
-                .text(labelTextStart);
-
-//end circle...
-            labeled.append('circle')
-                .attrs({
-                    'class':'highlighted-circle',
-                    'cx':xScale(xScale.domain()[1]),
-                    'cy':d=>yScale(d[xScale.domain()[1]]),
-                    'r':dotRadius,
-                    'fill':d=>colourScale(d[colourProperty]),
-                    'stroke':'none',
-                });
-
-            labeled.append('text')
-                .attrs({
-                    'class':'highlighted-label',
-                    'y':d=>yScale(d[xScale.domain()[1]]),
-                    'x':xScale(xScale.domain()[1]),
-                    'dy':5,
-                    'dx':dotRadius*1.5,
-                })
-                .text(labelTextEnd);
-
-            parent.append('text')
-
-        }
-
-        chart.labelTextStart = (f)=>{
-            labelTextStart = f;
-            return chart;
-        };
-
-        chart.labelTextEnd = (f)=>{
-            labelTextEnd = f;
-            return chart;
-        };
-
-        chart.includeLabel = (f)=>{
-            includeLabel = f;
-            return chart;
-        };
-
-        chart.xDomain = (x)=>{
-            xScale.domain(x);
-            return chart;
-        };
-
-        chart.yDomain = (x)=>{
-            yScale.domain(x);
-            return chart;
-        };
-
-        chart.xRange = (x)=>{
-            xScale.range(x);
-            return chart;
-        };
-
-        chart.yRange = (x)=>{
-            yScale.range(x);
-            return chart;
-        };
-
-        chart.dotRadius = (x)=>{
-            dotRadius = x;
-            return chart;
-        }
-
-        chart.colourRange = (x)=>{
-            colourScale.range(x);
-            return chart;
-        }
-
-        chart.colourDomain = (x)=>{
-            colourScale.domain(x);
-            return chart;
-        }
-
-        chart.colourProperty = (x)=>{
-            colourProperty = x;
-            return chart;
-        }
-
-        chart.xScale = (x)=>{
-            if(!x) return xScale;
-            xScale = x;
-            return chart;
-        }
-
-        chart.yScale = (x)=>{
-            if(!x) return yScale;
-            yScale = x;
-            return chart;
-        }
-
-        return chart;
-    }
+const dataSorter = (a,b)=> {    //Sort the data so that the labeled items are drawn on top
+    if(a.label === 'yes') return 1;
+    return -1;
+};
 
 
-    function slopeAxes(){
-
-        let xScale = d3.scaleOrdinal();
-        let yScale = d3.scaleLinear();
-        let startLabel = 'start';
-        let endLabel = 'end';
-        let tickFormatter = d=>d3.format(',')(d);
 
 
-        function axes(parent){
-
-            const container = parent.append('g')
-                .attr('class','axes')
-
-            container.append('text')
-                .text(startLabel)
-                .attrs({
-                    'text-anchor': 'end',
-                    'dx':-5,
-                    'dy':-10,
-                    'class': 'xaxis-label',
-                });
-
-            container.append('text')
-                .text(endLabel)
-                .attrs({
-                    'x':xScale.range()[1],
-                    'dx':5,
-                    'dy':-10,
-                    'class': 'xaxis-label',
-                });
-
-            container.selectAll('g.tick')
-                .data(yScale.ticks())
-                    .enter()
-                .append('g')
-                    .attrs({
-                        'class':'tick',
-                        'transform':(d)=>'translate(0,'+yScale(d)+')',
-                    })
-                .call(function(tick){
-                    tick.append('line')
-                        .attrs({
-                            'x1':0,
-                            'y1':0,
-                            'x2':xScale.range()[1],
-                            'y2':0,
-                            'stroke':'#000'
-                        })
-
-                    tick.append('text')
-                        .attrs({
-                            'text-anchor':'end',
-                            'x':xScale.range()[1],
-                            'dy':-5,
-                            'dx':-10,
-                        })
-                        .text(tickFormatter)
-                        
-
-                });
-        }
-
-        axes.startLabel = (x)=>{
-            startLabel = x;
-            return axes;
-        }
-
-        axes.endLabel = (x)=>{
-            endLabel = x;
-            return axes;
-        }
-
-        axes.xScale = (x)=>{
-            xScale = x;
-            return axes;
-        }
-
-        axes.yScale = (x)=>{
-            yScale = x;
-            return axes;
-        }
 
 
-        return axes;
-    }
+d3.csv('data.csv',function(data){
 
+    const valueColumns = ['val1','val2'];    //define the start and end columns
+    const valueExtent = extentMulti(data, valueColumns).reverse()
+    data.sort(dataSorter);
+
+    //General slope configuration
+    const mySlope = slopeChart()
+        .colourProperty( 'label' )  //the data property determining the lines colour
+        .colourDomain( ['','yes'] ) //the values of theat property corresponding to the colours in the basic chart colour scheme
+        .xDomain( valueColumns ) 
+        .yDomain( valueExtent )
+        .includeLabel( (row)=> (row.label === 'yes') )
+        .labelTextStart( (row)=> (row.name + ' ' + row.val1) )
+        .labelTextEnd( (row)=> (row.name + ' ' + row.val2) );
+    
+
+    //specific slope configuration
+
+    const currentFrame = frame.web;
+
+    mySlope.xRange( [0, currentFrame.dimension().width] )
+        .yRange( [0, currentFrame.dimension().height] );
+
+    const myAxes = slopeAxes()
+        .xScale( mySlope.xScale() )
+        .yScale( mySlope.yScale() )
+        .startLabel('Start')
+        .endLabel('End');
+
+    currentFrame.plot()
+        .call( myAxes );
+
+    currentFrame.plot()
+        .selectAll( 'g.slope' )
+        .data( data )
+        .enter()
+        .append( 'g' )
+            .attr('class','slope')
+        .call(mySlope);
+});
 
 //a function to work out the extent of values in an array accross multiple properties...
-    function extentMulti(data, columns){
-        const ext = data.reduce((acc, row, index)=>{
-            let values = columns.map(key=>row[key])
-            let rowExtent = d3.extent(values);
-            if(!acc.max){
-                acc.max = rowExtent[1];
-                acc.min = rowExtent[0];
-            }else{
-                acc.max = Math.max(acc.max, rowExtent[1]);
-                acc.min = Math.min(acc.min, rowExtent[0]);
-            }
-            return acc;
-        },{})
-        return [ext.min, ext.max];
-    }
+function extentMulti(data, columns){
+    const ext = data.reduce((acc, row, index)=>{
+        let values = columns.map(key=>row[key])
+        let rowExtent = d3.extent(values);
+        if(!acc.max){
+            acc.max = rowExtent[1];
+            acc.min = rowExtent[0];
+        }else{
+            acc.max = Math.max(acc.max, rowExtent[1]);
+            acc.min = Math.min(acc.min, rowExtent[0]);
+        }
+        return acc;
+    },{})
+    return [ext.min, ext.max];
+}
 
 </script>
 </html>
