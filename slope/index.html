@@ -9,16 +9,16 @@
     <script src="slope.js"></script>
     <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
     <style type="text/css">
-        [data-frame^="print"] .highlighted-label{
+        [data-frame^="print"] .highlighted-label {
             font-size: 12px;
         }
 
 
-        [data-frame^="video"] .highlighted-label{
+        [data-frame^="video"] .highlighted-label {
             fill:#FFF;
         }
 
-        [data-frame^="social"] .highlighted-label{
+        [data-frame^="social"] .highlighted-label {
             fill:#FFF;
         }
 
@@ -57,7 +57,8 @@ const frame = {
         .height(190),   //note, this value is in mm for the print frame
 
     social: gChartframe.socialFrame
-        .margin({left:100,right:100}),
+        .margin({left:100,right:100})
+        .title('Slightly shorter title perhaps?'),
 
     video: gChartframe.videoFrame,
 };
@@ -145,7 +146,7 @@ function extentMulti(data, columns){
             acc.min = Math.min(acc.min, rowExtent[0]);
         }
         return acc;
-    },{})
+    },{});
     return [ext.min, ext.max];
 }
 
