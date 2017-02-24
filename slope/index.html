@@ -1,99 +1,154 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Frames for FT graphics</title>
-    <script type="text/javascript" src="styles.js"></script>
-    <link rel="stylesheet" type="text/css" href="./frameGlobalStyles.css">
+    <title>Slope chart - Visual Vocabulary</title>
+    <script src="//d3js.org/d3.v4.js"></script>
+    <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
+    <script src="//financial-times.github.io/g-chartframe/build/g-chartframe.js"></script>
+    <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
+    <script src="slope.js"></script>
+    <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
+    <style type="text/css">
+        [data-frame^="print"] .highlighted-label {
+            font-size: 12px;
+        }
+
+
+        [data-frame^="video"] .highlighted-label {
+            fill:#FFF;
+        }
+
+        [data-frame^="social"] .highlighted-label {
+            fill:#FFF;
+        }
+
+        /*in this example because of the density of lines we need to decrease the opacity of those not being highlighted: */
+        .background-line{
+            stroke-opacity:0.2;
+        }
+
+        svg text{
+            font-feature-settings: 'tnum';
+            -webkit-font-feature-settings: 'tnum';
+            -moz-font-feature-settings: 'tnum';`
+        }
+
+    </style>
 </head>
 <body>
-    <style>
-        text{font-family:metric}
-    </style>
-    <script src="d3.min.js"></script>
-    <script src="drawFrame.js"></script>
-    <script src="saveSvgAsPng.js"></script>
-    <script src="slope.js"></script>
-    <script>
-        
-        //datafile
-        var dataURL = "data.csv"
-        
-        //titles, footnotes
-        var title = "Changing fortunes: more loosers than winners";
-        var subtitle = "US median adjusted household income ($’000)";//comment out subtitle assignment if not needed
-        var source = "FT graphic Source:";
-        //slope config
-        var yMin=40000
-        var yMax=90000
-        var yAxisHighlight=40000
-        var labelleft="LABEL A"
-        var labelright="LABEL B"
-        var markers=false;
-        var showLabelLeft=true;
-        var showLabelRight=true;
 
-        //Use the frames array to set unique values for each media type of frame
-        // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
-        var frames=[
-        {name:"print",width:112.5,height:300,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert"},
-        {name:"web",width:600,height:650,units:'px',margins:[{top:10,right:40,bottom:5,left:10}],stylesheet:styleweb,legend:"hori"},
-        {name:"social",width:560,height:750,units:'px',margins:[{top:50,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert"},
-        {name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori"}
-        ]
-        
-        //sets the padding inside the chart area
-        var chartpadding=[
-        {name:"print",margin:[{top:10,right:80,bottom:15, left:80}]},
-        {name:"web",margin:[{top:15,right:115,bottom:20, left:110}]},
-        {name:"social",margin:[{top:20,right:190,bottom:20, left:150}]},
-        {name:"video",margin:[{top:80,right:35,bottom:0, left:35}]}
-        ]
-        
-        /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
-        for (var i=0;i<frames.length;i++){
-            var sylename=frames[i].stylesheet;
-            var media = frames[i].name;
-            if(frames[i].units=="mm") {
-                framewidth = mmToPx(frames[i].width);
-                frameheight = mmToPx(frames[i].height);
-            }
-            else{
-                framewidth = frames[i].width;
-                frameheight = frames[i].height;
-            }
-            var framemargin = frames[i].margins[0];
-            var titleYoffset=sylename.titleOffset;
-            var subYoffset=sylename.subOffset
-            var frame = new drawFrame(sylename.classes,media,titleYoffset,subYoffset)
-                .width(framewidth)
-                .height(frameheight)
-                .margin(framemargin)
-                .title(title)
-                .source(source)
-            //optional elements
-            if (subtitle){
-                frame.subtitle(subtitle)
-            }
-            d3.select("body").call(frame)
-            //drawFrame
+    <h1>Slope chart</h1>
+    <p>Good for showing changing data as long as the data can be simplified into 2 points without missing a key part of story</p>
+    <hr>
+    <figure class="framed saveable" data-frame="web"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="print"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="social"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="video"><svg></svg></figure>
 
-        }
-        
-        d3.csv(dataURL,function(error, data){
-
-            for (var i=0;i<frames.length;i++){
-                var stylename=frames[i].stylesheet;
-                var media = frames[i].name;
-                var legend=frames[i].legend;
-                slopeChart(data, stylename, media,yMin,yMax,chartpadding,legend, yAxisHighlight, markers, showLabelLeft,showLabelRight,labelleft,labelright);
-            }
-        })//end data load
-        
-        function mmToPx(mm){
-            var px = mm*2.83464480558843;
-            return px;
-        }
-        
-            
-    </script>
 </body>
+
+<script type="text/javascript">
+const frame = {
+    web: gChartframe.webFrame
+        .margin({left:200,right:200, top:100}),
+
+    print: gChartframe.printFrame
+        .margin({top:60,left:100,right:100})
+        .height(190),   //note, this value is in mm for the print frame
+
+    social: gChartframe.socialFrame
+        .margin({left:100,right:100})
+        .title('Slightly shorter title perhaps?'),
+
+    video: gChartframe.videoFrame,
+};
+
+d3.selectAll('.framed')
+    .each(function(){
+        const figure = d3.select(this);
+        figure.select('svg')
+            .call(frame[figure.node().dataset.frame]);
+    });
+
+
+const dataSorter = (a,b)=> {    //Sort the data so that the labeled items are drawn on top
+    if(a.label === 'yes') return 1;
+    return -1;
+};
+
+
+d3.csv('data.csv',function(data){
+
+    const valueColumns = ['val1','val2'];    //define the start and end columns
+    const valueExtent = extentMulti(data, valueColumns).reverse()
+    data.sort(dataSorter);
+
+    const valueFormat = d=>d3.format(',')(d)
+
+    //General slope configuration
+    const mySlope = slopeChart()
+        .colourProperty( 'label' )  //the data property determining the lines colour
+        .colourDomain( ['','yes'] ) //the values of theat property corresponding to the colours in the basic chart colour scheme
+        .xDomain( valueColumns ) 
+        .yDomain( valueExtent )
+        .includeLabel( (row)=> (row.label === 'yes') )
+        .labelTextStart( (row)=> (row.name + ' ' + valueFormat(row.val1)) )
+        .labelTextEnd( (row)=> (row.name + ' ' + valueFormat(row.val2)) );
+    
+    //general axes configuration    
+    const myAxes = slopeAxes()
+        .startLabel('Start')
+        .endLabel('End')
+        .yTicks([80000,60000,40000]);
+
+
+    //specific slope configuration
+    Object.keys(frame).forEach(frameName=>{
+        const currentFrame = frame[frameName];
+
+        mySlope.xRange( [0, currentFrame.dimension().width] )
+            .yRange( [0, currentFrame.dimension().height] );
+
+        myAxes.xScale( mySlope.xScale() )
+            .yScale( mySlope.yScale() );
+            
+        // specifics based on frame type
+        mySlope.colourInverse((frameName === 'social' || frameName === 'video'));
+        myAxes.colourInverse((frameName === 'social' || frameName === 'video'));
+
+        //do the actual drawing...
+
+        currentFrame.plot()
+            .selectAll( 'g.slope' )
+            .data( data )
+            .enter()
+            .append( 'g' )
+                .attr('class','slope')
+            .call(mySlope);
+
+        currentFrame.plot()
+            .call( myAxes );
+    });
+
+    
+});
+
+//a function to work out the extent of values in an array accross multiple properties...
+function extentMulti(data, columns){
+    const ext = data.reduce((acc, row, index)=>{
+        let values = columns.map(key=>row[key])
+        let rowExtent = d3.extent(values);
+        if(!acc.max){
+            acc.max = rowExtent[1];
+            acc.min = rowExtent[0];
+        }else{
+            acc.max = Math.max(acc.max, rowExtent[1]);
+            acc.min = Math.min(acc.min, rowExtent[0]);
+        }
+        return acc;
+    },{});
+    return [ext.min, ext.max];
+}
+
+</script>
 </html>
