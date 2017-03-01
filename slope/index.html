@@ -8,32 +8,7 @@
     <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
     <script src="slope.js"></script>
     <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
-    <style type="text/css">
-        [data-frame^="print"] .highlighted-label {
-            font-size: 12px;
-        }
-
-
-        [data-frame^="video"] .highlighted-label {
-            fill:#FFF;
-        }
-
-        [data-frame^="social"] .highlighted-label {
-            fill:#FFF;
-        }
-
-        /*in this example because of the density of lines we need to decrease the opacity of those not being highlighted: */
-        .background-line{
-            stroke-opacity:0.2;
-        }
-
-        svg text{
-            font-feature-settings: 'tnum';
-            -webkit-font-feature-settings: 'tnum';
-            -moz-font-feature-settings: 'tnum';`
-        }
-
-    </style>
+    <link rel="stylesheet" src="style.css"/>
 </head>
 <body>
 
@@ -48,6 +23,9 @@
 </body>
 
 <script type="text/javascript">
+
+const valueColumns = ['val1','val2'];    //define the start and end columns
+
 const frame = {
     web: gChartframe.webFrame
         .margin({left:200,right:200, top:100}),
@@ -71,7 +49,7 @@ d3.selectAll('.framed')
     });
 
 
-const dataSorter = (a,b)=> {    //Sort the data so that the labeled items are drawn on top
+const dataSorter = function(a,b){    //Sort the data so that the labeled items are drawn on top
     if(a.label === 'yes') return 1;
     return -1;
 };
@@ -79,7 +57,7 @@ const dataSorter = (a,b)=> {    //Sort the data so that the labeled items are dr
 
 d3.csv('data.csv',function(data){
 
-    const valueColumns = ['val1','val2'];    //define the start and end columns
+
     const valueExtent = extentMulti(data, valueColumns).reverse()
     data.sort(dataSorter);
 
