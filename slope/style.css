@@ -34,6 +34,23 @@
     fill:#FFF;
 }
 
+
+/*set line thickness*/
+[data-frame^="web"] .slope line{
+    stroke-width: 2.5px;
+}
+
+[data-frame^="print"] .slope line{
+    stroke-width: 2px;
+}
+
+[data-frame^="social"] .slope line{
+    stroke-width: 4px;
+}
+
+[data-frame^="video"] .slope line{
+    stroke-width: 8px;
+}
 /*in this example because of the density of lines we need to decrease the opacity of those not being highlighted: */
 .background-line{
     stroke-opacity:0.2;

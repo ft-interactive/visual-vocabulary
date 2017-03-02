@@ -35,10 +35,11 @@ const frame = {
         .height(190),   //note, this value is in mm for the print frame
 
     social: gChartframe.socialFrame
-        .margin({left:100,right:100})
+        .margin({top: 160, left:100,right:100})
         .title('Slightly shorter title perhaps?'),
 
-    video: gChartframe.videoFrame,
+    video: gChartframe.videoFrame
+        .margin({top: 300}),
 };
 
 d3.selectAll('.framed')
@@ -93,8 +94,11 @@ d3.csv('data.csv',function(data){
         // set radius of circles
         mySlope.dotRadius(currentFrame.rem() * 0.35);
         
-        //set y-axis label offset
+        //set y-axis tick label offset
         myAxes.tickOffset(-currentFrame.rem() / 4);
+
+        //set x-axis label offset
+        myAxes.labelOffset(-currentFrame.rem() / 3);
 
         // specifics based on frame type
         mySlope.colourInverse((frameName === 'social' || frameName === 'video'));

@@ -168,6 +168,7 @@ function slopeAxes(){
     let tickFormatter = d=>d3.format(',')(d);
     let colourInverse = false;
     let tickOffset = 5;
+    let labelOffset = 5;
     let tickColour = ()=>{
     	if (colourInverse){ 
     		return '#FFF'
@@ -186,7 +187,7 @@ function slopeAxes(){
             .attrs({
                 'text-anchor': 'start',
                 'dx':-5,
-                'dy':-10,
+                'dy':labelOffset,
                 'class': 'xaxis-label',
                 'fill':tickColour
             });
@@ -197,7 +198,7 @@ function slopeAxes(){
                 'x':xScale.range()[1],
                 'text-anchor': 'end',
                 'dx':5,
-                'dy':-10,
+                'dy':labelOffset,
                 'class': 'xaxis-label',
                 'fill':tickColour
             });
@@ -252,6 +253,12 @@ function slopeAxes(){
         endLabel = x;
         return axes;
     }
+    
+    axes.labelOffset = (x)=>{
+        labelOffset = x;
+        return axes;
+    }
+
     axes.tickOffset = (x)=>{
         tickOffset = x;
         return axes;
