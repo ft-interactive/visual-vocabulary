@@ -35,7 +35,7 @@
 }
 
 
-/*set line thickness*/
+/*set data line thickness*/
 [data-frame^="web"] .slope line{
     stroke-width: 2.5px;
 }
@@ -51,6 +51,27 @@
 [data-frame^="video"] .slope line{
     stroke-width: 8px;
 }
+
+/*set y-axis tick styles*/
+[data-frame^="web"] .tick line{
+    stroke: #CEC6B9;
+    stroke-dasharray: 2, 1;
+}
+
+[data-frame^="print"] .tick line{
+    stroke-width: 0.3;
+}
+
+[data-frame^="social"] .tick line{
+    stroke-width: 2;
+    stroke-opacity: 0.38;
+}
+
+[data-frame^="video"] .tick line{
+    stroke-width: 4;
+    stroke-opacity: 0.38;
+}
+
 /*in this example because of the density of lines we need to decrease the opacity of those not being highlighted: */
 .background-line{
     stroke-opacity:0.2;

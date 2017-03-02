@@ -28,10 +28,12 @@ const valueColumns = ['val1','val2'];    //define the start and end columns
 
 const frame = {
     web: gChartframe.webFrame
+        .width(600)
         .margin({left:180,right:180, top:100}),
 
     print: gChartframe.printFrame
         .margin({top:60,left:100,right:100})
+        .width(112.5)   //note, this value is in mm for the print frame
         .height(190),   //note, this value is in mm for the print frame
 
     social: gChartframe.socialFrame
@@ -107,6 +109,9 @@ d3.csv('data.csv',function(data){
         //do the actual drawing...
 
         currentFrame.plot()
+            .call( myAxes );
+
+        currentFrame.plot()
             .selectAll( 'g.slope' )
             .data( data )
             .enter()
@@ -114,8 +119,6 @@ d3.csv('data.csv',function(data){
                 .attr('class','slope')
             .call(mySlope);
 
-        currentFrame.plot()
-            .call( myAxes );
     });
 
     
