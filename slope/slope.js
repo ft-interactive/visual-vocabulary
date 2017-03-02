@@ -183,7 +183,7 @@ function slopeAxes(){
         container.append('text')
             .text(startLabel)
             .attrs({
-                'text-anchor': 'end',
+                'text-anchor': 'start',
                 'dx':-5,
                 'dy':-10,
                 'class': 'xaxis-label',
@@ -193,6 +193,7 @@ function slopeAxes(){
             .text(endLabel)
             .attrs({
                 'x':xScale.range()[1],
+                'text-anchor': 'end',
                 'dx':5,
                 'dy':-10,
                 'class': 'xaxis-label',
@@ -225,7 +226,7 @@ function slopeAxes(){
                         'text-anchor':'end',
                         'x':xScale.range()[1],
                         'dy':-5,
-                        'dx':-10,
+                        'dx':0,
                         'fill':tickColour,
                     })
                     .text(tickFormatter)
