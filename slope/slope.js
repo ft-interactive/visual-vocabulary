@@ -241,10 +241,12 @@ function slopeAxes(){
 
         let numticks = container.selectAll('.y-axis.tick').size();
         let base = container.selectAll('.y-axis.tick').filter(function(d, i) {
-           if (i === numticks - 1 || d === yTickHighlight) {
+           if (i === numticks - 1 || d === yTickHighlight ) {
             return d;
            }
+           return d === 0
         })
+        console.log(base)
         base.classed("base",true);
 
     }
