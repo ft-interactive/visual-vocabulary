@@ -1,12 +1,12 @@
 /* overall text style for each chart frame*/
 
-[data-frame^="print"] text{
-    font-size: 9.6px;
-}
-
 [data-frame^="web"] text{
     font-size: 18px;
     fill: #74736C;
+}
+
+[data-frame^="print"] text{
+    font-size: 9.6px;
 }
 
 [data-frame^="social"] text{
@@ -20,19 +20,17 @@
 }
 
 /* highlight label text style for each chart frame */
-[data-frame^="social"] .highlighted-label{
-    fill-opacity: 1;
-}
-
 [data-frame^="web"] .highlighted-label{
     fill: #333333;
 }
 
-[data-frame^="video"] .highlighted-label {
+[data-frame^="social"] .highlighted-label{
+    fill-opacity: 1;
     fill:#FFF;
 }
 
-[data-frame^="social"] .highlighted-label {
+[data-frame^="video"] .highlighted-label {
+    fill-opacity: 1;
     fill:#FFF;
 }
 
