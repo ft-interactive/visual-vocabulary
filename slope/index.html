@@ -80,7 +80,8 @@ d3.csv('data.csv',function(data){
     const myAxes = slopeAxes()
         .startLabel('Start')
         .endLabel('End')
-        .yTicks([80000,60000,40000]);
+        .yTicks([80000,60000,40000])
+        .yTickHighlight(60000); // y-axis tick to highlight
 
 
     //specific slope configuration

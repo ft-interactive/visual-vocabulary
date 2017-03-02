@@ -163,6 +163,7 @@ function slopeAxes(){
     let xScale = d3.scaleOrdinal();
     let yScale = d3.scaleLinear();
     let yTicks;
+    let yTickHighlight = 100;
     let startLabel = 'start';
     let endLabel = 'end';
     let tickFormatter = d=>d3.format(',')(d);
@@ -212,7 +213,7 @@ function slopeAxes(){
                 .enter()
             .append('g')
                 .attrs({
-                    'class':'tick',
+                    'class':'y-axis tick',
                     'transform':(d)=>'translate(0,'+yScale(d)+')',
                 })
             .call(function(tick){
@@ -237,6 +238,15 @@ function slopeAxes(){
                     
 
             });
+
+        let numticks = container.selectAll('.y-axis.tick').size();
+        let base = container.selectAll('.y-axis.tick').filter(function(d, i) {
+           if (i === numticks - 1 || d === yTickHighlight) {
+            return d;
+           }
+        })
+        base.classed("base",true);
+
     }
 
     axes.startLabel = (x)=>{
@@ -275,7 +285,12 @@ function slopeAxes(){
     }
 
     axes.yTicks = (x)=>{
-    	yTicks = x;
+        yTicks = x;
+        return axes;
+    }
+
+    axes.yTickHighlight = (x)=>{
+    	yTickHighlight = x;
     	return axes;
     }
 

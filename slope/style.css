@@ -59,19 +59,36 @@
 }
 
 [data-frame^="print"] .tick line{
-    stroke-width: 0.3;
+    stroke-width: 0.3px;
 }
 
 [data-frame^="social"] .tick line{
-    stroke-width: 2;
+    stroke-width: 2px;
     stroke-opacity: 0.38;
 }
 
 [data-frame^="video"] .tick line{
-    stroke-width: 4;
+    stroke-width: 4px;
     stroke-opacity: 0.38;
 }
 
+/* set baseline styling */
+[data-frame^="web"] .base line{
+    stroke: #a7a59b;
+    stroke-dasharray: none;
+}
+
+[data-frame^="print"] .base line{
+    stroke-width: 0.6px;
+}
+
+[data-frame^="social"] .base line{
+    stroke-opacity: 0.5;
+}
+
+[data-frame^="video"] .base line{
+    stroke-opacity: 0.5;
+}
 /*in this example because of the density of lines we need to decrease the opacity of those not being highlighted: */
 .background-line{
     stroke-opacity:0.2;
