@@ -3,7 +3,7 @@ function slopeChart(){
     let yScale = d3.scaleLinear();
     let xScale = d3.scaleOrdinal();
     const colourScale = d3.scaleOrdinal()
-        .range(gChartcolour.basicLine)
+        .range(gChartcolour.basicLineWeb)
         .domain(['','highlight']);
 
     let colourProperty = 'group';
@@ -118,12 +118,22 @@ function slopeChart(){
         return chart;
     }
 
-    chart.colourInverse = (x) =>{
-    	if(x===true){
-    		colourScale.range(gChartcolour.basicLineSocial);
-    	}else{
-    		colourScale.range(gChartcolour.basicLine);
-    	};
+    chart.colourPaletteWeb = (x) =>{
+        if(x===true){
+            colourScale.range(gChartcolour.basicLineSocial);
+        }
+        return chart;
+    }
+
+    chart.colourPalette = (x) =>{
+        console.log(x)
+    	if(x==='social' || x==='video'){
+            colourScale.range(gChartcolour.basicLineSocial);
+        } else if (x==='web') {
+    		colourScale.range(gChartcolour.basicLineWeb);
+        } else if (x==='print') {
+            colourScale.range(gChartcolour.basicLinePrint);
+        }
     	return chart;
     }
 
