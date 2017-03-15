@@ -136,7 +136,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         .scale(xScale)
         .tickValues(ticks.major)
         .tickSize(yOffset/2)
-        //.tickFormat(d3.time.format(formatTick(interval)))
+        .tickFormat(d3.time.format(formatTick(interval)))
         .orient("bottom");
 
     function formatTick(int) {
@@ -162,6 +162,8 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
 
     xLabel.selectAll('text')
         .attr("style", null)
+        .attr("text-anchor","middle")
+        .attr("x",(plotWidth/(ticks.major.length))/2)
 
 
     if(minAxis) {
