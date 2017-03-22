@@ -91,8 +91,9 @@ function makeChart(data, stylename, media, plotpadding, legAlign, graphsPerRow, 
     graphGroup.selectAll(".lines")
         .data(function(d,i) { return d.values; })
       .enter().append("path")
-        .attr("class", function(d,i) {return "lines line-" + nestedData[i].values[i].key})
-        .attr("class", media+"lines")
+        .attr("class", function(d,i) {
+            return media+"lines line-" + d.key;
+        })
         .attr("transform","translate("+margin.left+",0)")
         .attr("stroke",function(d,i){
                 return colours[i];  

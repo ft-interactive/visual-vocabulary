@@ -1,5 +1,5 @@
 
-function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpadding,legAlign,lineSmoothing, logScale, logScaleStart, markers, numTicksy, yAlign, ticks,minAxis,interval){
+function lineChart(data, stylename, media, doubleScale,yMinL, yMaxL, yMinR, yMaxR, yAxisHighlight, plotpadding,legAlign,lineSmoothing, logScale, logScaleStart, markers, numTicksy, numTicksyR, ticks,minAxis,interval){
 
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
@@ -28,18 +28,53 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
 
     //calculate range of time series 
     var xDomain = d3.extent(data, function(d) {return d.date;});
-    var yDomain;
+    var yDomainL;
+    var yDomainR;
+
+    let plotData=seriesNames.map(function(d,i){
+        return {
+            name:d,
+            index:i+1,
+            lineData:getlines(d,i+1)
+        }
+    })
+
+    function getlines(group,index) {
+        let lineData=[]
+        data.forEach(function(el,i){
+            //console.log(el,i)
+            let column=new Object();
+            column.date = el.date
+            column.value = +el[group]
+            column.highlight = el.highlight
+            column.annotate = el.annotate
+            column.index = index
+            if(el[group]) {
+                lineData.push(column)  
+            } 
+        });
+        return lineData
+    }
 
     //calculate range of y axis series data
     data.forEach(function(d,i){
-        seriesNames.forEach(function(e){
-            if (d[e]){
-                yMin=Math.min(yMin,d[e]);
-                yMax=Math.max(yMax,d[e]);
+        seriesNames.forEach(function(e,i){
+            if((i+1)<=doubleScale) {
+                if (d[e]){
+                    yMinL=Math.min(yMinL,d[e]);
+                    yMaxL=Math.max(yMaxL,d[e]);
+                }
+            }
+            else {
+                if (d[e]){
+                    yMinR=Math.min(yMinR,d[e]);
+                    yMaxR=Math.max(yMaxR,d[e]);
+                }
             }
         });			
     });
-    yDomain=[yMin,yMax];
+    yDomainL=[yMinL,yMaxL];
+    yDomainR=[yMinR,yMaxR];
 
     //creat an array of start stop areas
     var boundries= data.filter(function(d) {
@@ -53,73 +88,80 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         }
     })
 
-    //create a separate array for each series, filtering out records of each  series for which there are no data
-    var plotArrays = [];
-    seriesNames.forEach(function(series,i){
-        plotArrays[i] = [];
-    });
-    data.forEach(function(d,i){
-        seriesNames.forEach(function(series,e){
-            var myRow = new Object();
-            myRow.date=d.date;
-            myRow.highlight=d.highlight;
-            myRow.val=d[series];
-            if (myRow.val){
-                plotArrays[e].push(myRow);
-            }   else    {
-                //console.log('skipped a value:'+i);   
-            } 
-        });
-    });
-
     //Scales
 
-    var yScale;
+    var yScaleL;
         if (logScale) {
-			yScale = d3.scale.log()
-			.domain([logScaleStart,yMax])
+			yScaleL = d3.scale.log()
+			.domain([logScaleStart,yMaxL])
 			.range([plotHeight,0]);
 		}
         else {
-			yScale = d3.scale.linear()
-			.domain(yDomain)
+			yScaleL = d3.scale.linear()
+			.domain(yDomainL)
 			.range([plotHeight,0]);
 		}
 
-    var yAxis = d3.svg.axis()
-        .scale(yScale)
+    var yAxisL = d3.svg.axis()
+        .scale(yScaleL)
         .ticks(numTicksy)
-        .orient(yAlign)
+        .tickSize(yOffset)
+        .orient("left")
 
     if (logScale){
-        yAxis.tickFormat(function (d) {
-            return yScale.tickFormat(1,d3.format(",d"))(d)
+        yAxisL.tickFormat(function (d) {
+            return yScaleL.tickFormat(1,d3.format(",d"))(d)
         })   
     }
-    var yLabel=plot.append("g")
+
+    var yScaleR;
+        if (logScale) {
+            yScaleL = d3.scale.log()
+            .domain([logScaleStart,yMaxR])
+            .range([plotHeight,0]);
+        }
+        else {
+            yScaleR = d3.scale.linear()
+            .domain(yDomainR)
+            .range([plotHeight,0]);
+        }
+    var yAxisR = d3.svg.axis()
+        .scale(yScaleR)
+        .ticks(numTicksyR)
+        .tickSize(yOffset)
+        .orient("right")
+
+    if (logScale){
+        yAxisR.tickFormat(function (d) {
+            return yScaleR.tickFormat(1,d3.format(",d"))(d)
+        })   
+    }
+
+    var yLabelL=plot.append("g")
     .attr("class",media+"yAxis")
-    .call(yAxis);
+    .call(yAxisL);
+    var yLabelR=plot.append("g")
+    .attr("class",media+"yAxis")
+    .call(yAxisR);
+
+    yLabelL.selectAll('text')
+        .attr("style", null);
+    yLabelR.selectAll('text')
+        .attr("style", null)
+        .attr("x", yOffset*2)
 
     //calculate what the ticksize should be now that the text for the labels has been drawn
-    var yLabelOffset=yLabel.node().getBBox().width
-    //console.log("offset= ",yLabelOffset)
-    var yticksize=colculateTicksize(yAlign, yLabelOffset);
-    //console.log(yticksize);
-
-    yLabel.call(yAxis.tickSize(yticksize))
-    yLabel
+    var yLabelLOffsetL=yLabelL.node().getBBox().width
+    yLabelL
         .attr("transform",function(){
-            if (yAlign=="right"){
-                return "translate("+(margin.left)+","+margin.top+")"
-            }
-            else return "translate("+(w-margin.right)+","+margin.top+")"
+            return "translate("+(yLabelLOffsetL)+","+margin.top+")"
             })
 
-    if (yAlign=="right"){
-        yLabel.selectAll('text')
-            .attr("style", null)
-            .attr("x",yticksize+(yLabelOffset*.8))
-        }
+    var yLabelLOffsetR=yLabelR.node().getBBox().width
+    yLabelR
+        .attr("transform",function(){
+            return "translate("+(w-yLabelLOffsetR)+","+margin.top+")"
+            })
 
     //identify 0 line if there is one
     var originValue = 0;
@@ -130,7 +172,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     var xScale = d3.time.scale()
     //var xScale = scaleWeekday()
         .domain(xDomain)
-        .range([0,(plotWidth-yLabelOffset)])
+        .range([0,plotWidth-(yLabelLOffsetL+yLabelLOffsetR)])
 
     var xAxis = d3.svg.axis()
         .scale(xScale)
@@ -153,18 +195,12 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     var xLabel=plot.append("g")
         .attr("class",media+"xAxis")
         .attr("transform",function(){
-            if(yAlign=="right") {
-                return "translate("+(margin.left)+","+(plotHeight+margin.top)+")"
-            }
-             else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
-            })
+            return "translate("+(margin.left+yLabelLOffsetL)+","+(plotHeight+margin.top)+")"
+        })
         .call(xAxis);
 
     xLabel.selectAll('text')
         .attr("style", null)
-        .attr("text-anchor","middle")
-        .attr("x",(plotWidth/(ticks.major.length))/2)
-
 
     if(minAxis) {
         var xAxisMinor = d3.svg.axis()
@@ -176,11 +212,8 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         var xLabelMinor=plot.append("g")
             .attr("class",media+"minorAxis")
             .attr("transform",function(){
-                if(yAlign=="right") {
-                    return "translate("+(margin.left)+","+(plotHeight+margin.top)+")"
-                }
-                 else {return "translate("+(margin.left+yLabelOffset)+","+(plotHeight+margin.top)+")"}
-                })
+                return "translate("+(margin.left+yLabelLOffsetL)+","+(plotHeight+margin.top)+")"
+            })
             .call(xAxisMinor);
     }
 
@@ -194,18 +227,15 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
                 .attr("x", function(d) {
                     return xScale(d.begin)})
                 .attr("width", function (d) {return xScale(d.end)-xScale(d.begin)})
-                .attr("y", yScale(yMax))
-                .attr("height",plotHeight-yScale(yMax))
+                .attr("y", yScaleL(yMaxL))
+                .attr("height",plotHeight-yScaleL(yMaxL))
                 .attr("transform",function(){
-                if(yAlign=="right") {
-                    return "translate("+(margin.left)+","+(margin.top)+")"
-                }
-                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
-            });
+                    return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"
+                });
         })
     }
 
-        //add annotation
+    //add annotation
     var annotations = data.filter(function(d){
         return d.annotate !="" && d.annotate !=undefined;
     })
@@ -213,10 +243,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     var anno = plot.append("g")
         .attr("id","annotations")
         .attr("transform",function(){
-                if(yAlign=="right") {
-                    return "translate("+(margin.left)+","+(margin.top)+")"
-                }
-                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
+                return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"
         })
 
     anno.selectAll("line")
@@ -226,8 +253,8 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         .attr("class",media+"annotationLine")
         .attr("x1",function(d){return xScale(d.date)})
         .attr("x2",function(d){return xScale(d.date)})
-        .attr("y1",yScale.range()[0])
-        .attr("y2",yScale.range()[1]-5)
+        .attr("y1",yScaleL.range()[0])
+        .attr("y2",yScaleL.range()[1]-5)
 
     anno.selectAll("text")
         .data(annotations)
@@ -236,7 +263,7 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         .attr("class",media+"annotationText")
         .attr("text-anchor","middle")
         .attr("x",function(d){return xScale(d.date)})
-        .attr("y",yScale.range()[1]-10)
+        .attr("y",yScaleL.range()[1]-10)
         .text(function(d){
             return d.annotate
         })
@@ -244,77 +271,99 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
 
     //create a line function that can convert data[] into x and y points
     var lineData= d3.svg.line()
-        .x(function(d,i) { 
+        .x(function(d) { 
             return xScale(d.date); 
         })
         .y(function(d) { 
-            return yScale(d.val); 
+            if(d.index <= doubleScale){
+                return yScaleL(d.value);
+            }
+            else {return yScaleR(d.value);}
         })
         .interpolate(lineSmoothing)
 
-    var lines = plot.append("g").attr("id","series").selectAll("g")
-            .data(plotArrays)
+    var lines = plot.append("g")
+    .attr("id","series").selectAll("g")
+            .data(plotData)
             .enter()
             .append("g")
-            .attr("id",function(d,i){
-                return seriesNames[i];  
+            .attr("id",function(d){return d.name;})
+            .call(function(parent){
+                console.log("parent")
+                parent.selectAll("."+media+"lines")
+                    .data(function(d){
+                        return [d.lineData]
+                    })
+                    .enter()
+                    .append("path")
+                    .attr("class",media+"lines")
+                    .attr("stroke",function(d,i){
+                        return colours[(d[0].index-1)];  
+                    })
+                    .attr('d', function(d){
+                        return lineData(d);
+                    })
+                    .attr("transform",function(){
+                        return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"
+                    })
+
             })
-
-    lines.append("path")
-        .attr("class",media+"lines")
-        .attr("stroke",function(d,i){
-            return colours[i];  
-        })
-        .attr('d', function(d){
-            return lineData(d); })
-        .attr("transform",function(){
-            if(yAlign=="right") {
-                return "translate("+(margin.left)+","+(margin.top)+")"
-            }
-             else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
-        })
-
-    lines.append("g").attr("fill",function(d,i){return colours[i]})
-    .selectAll("circle")
-    .data(function(d){
-        let filtered=d.filter(function(d) {
-            return d.highlight=="yes"
-        })
-        return filtered})
-    .enter()
-    .append("circle")
-    .attr("r", yOffset/4)
-    .attr("cx",function(d){return xScale(d.date)})
-    .attr("cy",function(d){return yScale(d.val)})
-    .attr("transform",function(){
-        if(yAlign=="right") {
-            return "translate("+(margin.left)+","+(margin.top)+")"
-        }
-         else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
-    });
-    
-
-    //if needed, create markers
-    if (markers){
-        lines.append("g").attr("fill",function(d,i){return colours[i]})
-            .selectAll("circle")
-            .data(function(d){return d;})
-            .enter()
-            .append("circle")
-            .attr("r",yOffset/4)
-            .attr("id",function(d){
-                return d.date+":"+d.val;
+            .call(function(parent){
+                //if needed, create markers
+                    if (markers){
+                        parent.selectAll("circle")
+                        .data(function (d){
+                            return d.lineData
+                        })
+                        .enter()
+                        .append("circle")
+                        .attr("fill",function(d){
+                            return colours[(d.index-1)]
+                        })
+                        .attr("r",yOffset/4)
+                        .attr("id",function(d){
+                            console.log(d.date+":"+d.value);
+                            return d.date+":"+d.value;
+                        })
+                        .attr("cx",function(d){return xScale(d.date)})
+                        .attr("cy",function(d){
+                            if(d.index <= doubleScale) {
+                                return yScaleL(d.value)
+                            }
+                            else {return yScaleR(d.value)}
+                        })
+                        .attr("transform",function(){
+                            return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"
+                        })
+                    }
             })
-            .attr("cx",function(d){return xScale(d.date)})
-            .attr("cy",function(d){return yScale(d.val)})
-            .attr("transform",function(){
-                if(yAlign=="right") {
-                    return "translate("+(margin.left)+","+(margin.top)+")"
-                }
-                 else {return "translate("+(margin.left+yLabelOffset)+","+(margin.top)+")"}
-            });
-    }
+            .call(function(parent){
+                parent.selectAll("circle")
+                .data(function(d){
+                    let dots=d.lineData
+                    dots=dots.filter(function(d){
+                        return d.highlight=="yes"
+                    })
+                    return dots
+                })
+                .enter()
+                .append("circle")
+                .attr("fill",function(d){
+                    return colours[(d.index-1)]
+                })
+                .attr("r",yOffset/4)
+                .attr("cx",function(d){return xScale(d.date)})
+                .attr("cy",function(d){
+                    if(d.index <= doubleScale) {
+                        return yScaleL(d.value)
+                    }
+                    else {return yScaleR(d.value)}
+                })
+                .attr("transform",function(){
+                    return "translate("+(margin.left+yLabelLOffsetL)+","+(margin.top)+")"
+                })
 
+            })
 
     d3.selectAll(".domain").remove()
 
