@@ -269,6 +269,5 @@ function slopeAxes(){
     	return axes;
     }
 
-
     return axes;
 }
