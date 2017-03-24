@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Template - Visual Vocabulary</title>
+    <title>Line chart - Visual Vocabulary</title>
     <script src="//d3js.org/d3.v4.js"></script>
     <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
     <script src="//financial-times.github.io/g-chartframe/build/g-chartframe.js"></script>
@@ -17,7 +17,7 @@
 </head>
 <body>
 
-    <h1>Template</h1>
+    <h1>Line chart</h1>
     <p>A suggested starting point new charts types in the visual vocab.</p>
     <hr>
     <figure class="framed saveable" data-frame="web"><svg></svg></figure>
@@ -30,10 +30,22 @@
 <script type="text/javascript">
 
 const frame = {
-    web: gChartframe.webFrame,
-    print: gChartframe.printFrame,
-    social: gChartframe.socialFrame,
-    video: gChartframe.videoFrame,
+    web: gChartframe.webFrame
+        .title("Title not yet added")
+        .subtitle("Subtitle not yet added")
+        .source("Source: No source given"),
+    print: gChartframe.printFrame
+        .title("Title not yet added")
+        .subtitle("Subtitle not yet added")
+        .source("Source: No source given"),
+    social: gChartframe.socialFrame
+        .title("Title not yet added")
+        .subtitle("Subtitle not yet added")
+        .source("Source: No source given"),
+    video: gChartframe.videoFrame
+        .title("Title not yet added")
+        .subtitle("Subtitle not yet added")
+        .source("Source: No source given"),
 };
 
 //add the frames to the page...
@@ -44,10 +56,23 @@ d3.selectAll('.framed')
             .call(frame[figure.node().dataset.frame]);
     });
 
-d3.csv('data.csv',function(data){
+d3.csv('example.csv', function(data){
     //draw your charts! (see the slope chart for example)
+    console.log(data)
+    let seriesNames=getSeriesNames(data.columns)
+    let plotData=seriesNames.map(function(d,i){
+        return {
+            name:d,
+            lineData:getlines(data,d)
+        }
+    })
+    console.log(plotData)
 
-    var myChart = lineChart(); //defined in chart.js
+    const myChart = lineChart()
+        .seriesNames(seriesNames)
+        .yMax(100)
+        .yMin(0); //defined in chart.js
+
 
     Object.keys(frame).forEach(frameName=>{
         const currentFrame = frame[frameName];
@@ -55,6 +80,45 @@ d3.csv('data.csv',function(data){
             .call(myChart);
      });
 });
+
+//a function that returns the columns headers from the top of the dataset, excluding specified
+function getSeriesNames(columns){
+    var exclude = ['date','annotate','highlight'];
+    return columns.filter(d=>(exclude.indexOf(d) == -1));
+}
+
+//a function to work out the extent of values in an array accross multiple properties...
+function extentMulti(data, columns){
+    const ext = data.reduce((acc, row, index)=>{
+        let values = columns.map(key=>row[key])
+        let rowExtent = d3.extent(values);
+        if(!acc.max){
+            acc.max = rowExtent[1];
+            acc.min = rowExtent[0];
+        }else{
+            acc.max = Math.max(acc.max, rowExtent[1]);
+            acc.min = Math.min(acc.min, rowExtent[0]);
+        }
+        return acc;
+    },{});
+    return [ext.min, ext.max];
+}
+
+function getlines(data,group) {
+    let lineData=[]
+    data.forEach(function(el,i){
+        //console.log(el,i)
+        let column=new Object();
+        column.date = el.date
+        column.value = +el[group]
+        column.highlight = el.highlight
+        column.annotate = el.annotate
+        if(el[group]) {
+            lineData.push(column)  
+        } 
+    });
+    return lineData
+}
 
 </script>
 </html>
