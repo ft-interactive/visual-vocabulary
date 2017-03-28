@@ -1,0 +1,120 @@
+<html>
+<head>
+	<title>Constituency Cartogram</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+	<script charset="utf-8" src="http://d3js.org/queue.v1.min.js"></script>
+	<style type="text/css">
+
+	</style>
+</head>
+
+<body>
+	<h1>Constituency Cartogram - categorical</h1>
+	<a href="https://github.com/ft-interactive/graphics-examples/tree/master/constituency-cartogram-categorical">source</a>
+	<div class="chart">
+	</div>
+	<div class="key">
+	</div>
+</body>
+<script type="text/javascript">
+var styles = {
+    'text': {
+        'font-family': 'Metric, sans-serif'
+    }
+};
+
+
+//configuration stuff
+	var width = 600,
+		height = 1000,
+		margin = { top:200, bottom:20, left:20, right:20 },
+
+		categoryFill = {
+			'London':'#d7706c'
+		},
+		defaultCategoryFill = '#256ea6',
+		categoryStroke = {
+			// 'Wales':'#aaa',
+			// 'Scotland':'#aaa',
+			// 'London':'#aaa'
+		},
+		defaultCategoryStroke = 'none',
+		categoryColumn = 'region_name';
+
+
+	queue()
+      .defer(d3.csv, 'carto.csv')
+      .defer(d3.csv, 'data.csv')
+      .await(drawCartogram); // function that uses files
+
+    function drawCartogram(error, cartogram, data){
+    	var lookup = makeLookup(data, 'ons_id'),
+    		plotWidth = width - (margin.left + margin.right),
+    		plotHeight = height - (margin.top + margin.bottom);
+
+    	var scale = d3.scale.linear()
+    		.domain( [0, d3.max(cartogram, function(d){ return parseInt(d.y); })] )
+    		.range( [0, plotHeight] );
+
+
+    	console.log(scale.domain());
+    	console.log(scale.range());
+    	var svg = d3.select('.chart')
+    			.append('svg')
+    				.attr({
+    					width:width,
+    					height:height
+    				});
+
+//title and subtitle
+      //add a title and subtitle
+      svg.append('text')
+        .html('London constituencies')
+        .attr({
+          'font-size':30,
+          y:30
+        });
+
+    	var chart = svg.append('g')
+    					.attr('transform','translate('+ margin.left +', '+ margin.top +')');
+
+    	chart.selectAll('.unit')
+    		.data(cartogram)
+    			.enter()
+    		.append('circle')
+    			.attr({
+            id:function(d,i){ return (d.id + ' value: ' + lookup[d.id][categoryColumn] ); },
+   					r:2*scale(1)/5,
+   					transform:function(d){
+   						return 'translate(' + scale(d.x) + ',' + scale(d.y) + ')';
+   					},
+   					fill:function(d){
+   						var value = lookup[d.id][categoryColumn];
+   						if(categoryFill[value]) return categoryFill[value];
+   						return defaultCategoryFill;
+   					},
+   					stroke:function(d){
+   						var value = lookup[d.id][categoryColumn];
+   						if(categoryStroke[value]) return categoryStroke[value];
+   						return defaultCategoryStroke;
+   					}
+    			})
+
+        //apply the styles as attributes
+        d3.selectAll('*').attr('style','');
+        Object.keys(styles).forEach(function(selector){
+            d3.selectAll(selector)
+                .attr(styles[selector]);
+        });
+
+    }
+
+    function makeLookup(array, property){
+    	var lookup = {};
+    	array.forEach(function(d){
+    		lookup[ d[property] ] = d;
+    	})
+    	return lookup;
+    }
+</script>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<head>
+<title>Simple Icon Array</title>
+<style>
+    
+</style>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+
+<body>
+
+</body>
+<script type="text/javascript" src="iconarray.js"></script>
+
+<script type="text/javascript">
+var styles = {
+	'text': {
+		'font-family': 'metric, sans-serif'
+	},
+	'#title': {
+		dy:20,
+		'font-size':27
+	},
+	'#subtitle': {
+		dy:50
+	},
+	'.chart-title':{	//label for each individual array of dots
+		'text-anchor': 'middle'
+	}
+};
+
+var dataFile = 'data2.csv';	//the name of the data file to be loaded
+var title = 'US banks&rsquo; assets held abroad',
+	subtitle = 'Amount outstanding as % of GDP'
+
+var width = 600, height = 600,	//some properties for the SVG
+	margin = {
+		top:80, 
+		left:0, 
+		bottom:18, 
+		right:0
+	},
+	plotWidth = width - (margin.left + margin.right),
+	plotHeight = height - (margin.top + margin.bottom),
+	chartSpacing = 20;
+
+var blockWidth = 10,
+	blockHeight = 10,
+	iconProportion = 0.8;
+
+var colour = '#0000FF';
+var emptyColour = '#AAAAFF';
+
+var chartColumn = 'year', //i.e. make an icon array for each of year 
+	categoryColumn = 'year', //each chart is split into these categories
+	countColumn = 'percentage of assets';	//with this representing the count
+
+d3.csv(dataFile, drawChart);
+
+
+function expand(data, count, category){ //this function 
+	if(!count) count = 'count';
+	if(!category) category = 'category';
+
+	return data.reduce(function(value, d){
+		console.log(value, d[count])
+	    for(var i=0;i<d[count];i++){
+	        value.push(d[category]);
+	    }
+	    return value;
+	}, []);
+}
+
+function pad(data, length){
+	var gap = length - data.length;
+	if(gap>0){
+		for(var i = 0; i < gap; i++){
+			data.push(null);
+		}
+	}
+	return data;
+}
+
+function enumerateProperty(data, property){
+	var o = {};
+	data.forEach(function(value){
+		if(!o[value[property]]) o[value[property]] = true;
+	})
+	return Object.keys(o);
+}
+
+function drawChart(data){
+	var charts = enumerateProperty(data,'year');
+	var layout = d3.layout.iconArray()
+		.blockWidth( blockWidth )
+		.blockHeight( blockHeight );
+
+	//we lay the charts out in a line so the chart range is the available space / the number of charts
+	var chartWidth = Math.floor((plotWidth - (charts.length-1*chartSpacing))/charts.length);
+	var chartRange = [0, chartWidth];
+
+	var plot = d3.select('body')
+		.append('svg').attr({ 
+			width:width, 
+			height:height
+		})
+		.append('g').attr({
+			'transform':'translate('+margin.left+','+margin.top+')'
+		});
+
+
+
+	plot.selectAll('g.array-chart')
+		.data(charts)
+			.enter()
+		.append('g')
+			.attr({
+				'class':'array-chart',
+				'id':function(d){ return d + '-chart' },
+				'transform':function(d,i){
+					return 'translate(' + i*chartWidth+ ',0 )'
+				}
+			})
+		.each(iconArrayChart)
+
+
+
+	function iconArrayChart(chartName, chartIndex){
+		//calcuate the required scale
+		var parent = d3.select(this);
+		var filtered = data.filter(function(d){ 
+			return ( chartName == d[chartColumn] ); 
+		});
+
+		var chartData = pad(expand(filtered, countColumn, categoryColumn), 100).reverse();
+		var size = layout.maxDimensions(chartData.length).max;
+		var arrayScale = d3.scale.linear()
+			.domain( [0, layout.maxDimensions( chartData.length ).max ] )
+			.range( [0, Math.min(plotHeight, chartRange[1])] );
+
+		var iconSize = arrayScale(iconProportion);
+
+		parent.selectAll('g.icon')
+			.data( layout( chartData ) )
+				.enter()
+			.append('g')
+				.attr({
+					'transform':function(d){
+						return 'translate(' + arrayScale(d.x) + ',' + arrayScale(d.y) + ')';
+					},
+					'class':'icon'
+				})
+			.call(square, iconSize); // you can change circle to square if you like!
+	
+		parent.append('text')
+			.attr({
+				'id':function(d,i){ return d + '-title'},
+				'class':'chart-title',
+				'transform':'translate(' + arrayScale(blockWidth/2) + ', '+arrayScale(blockHeight+2)+')' //the charts title is positioned relatice to the block dimensions and the icon size
+			})
+			.html(chartName);
+
+		console.log(chartData);
+	}
+
+	d3.select('svg')
+		.append('text')
+			.attr('id','title')
+			.html(title);
+
+	d3.select('svg')
+		.append('text')
+			.attr('id','subtitle')
+			.text(subtitle);
+
+
+	//apply the styles as attributes
+    d3.selectAll('*').attr('style','');
+
+    Object.keys(styles).forEach(function(selector){
+        d3.selectAll(selector)
+            .attr(styles[selector]);
+    });
+}
+
+function circle(p, size){
+	p.append('circle')
+		.attr({
+			fill:function(d){
+				if(d.data!=null) return colour;
+				return emptyColour;
+			},
+			cx:size/2,
+			cy:size/2,
+			r:size/2
+		});
+}
+
+function square(p, size){
+	p.append('rect')
+		.attr({
+			fill:function(d){ 
+				if(d.data!=null) return colour;
+				return emptyColour;
+			},
+			x:0,
+			y:0,
+			width:size,
+			height:size
+		});
+}
+
+</script>
+</html>

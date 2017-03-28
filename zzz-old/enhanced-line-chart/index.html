@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<title>Line chart with print and web versions</title>
+<style>
+    /*
+    all print and web css styles are in javascript objects at end of file
+    */
+</style>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+<script>
+    
+    //titles
+    var title="Political support in Germany";
+    var subtitle="Per cent";
+    var source="Source: TNS-Emnid";
+    
+    //graph options
+    var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
+    var logScale=false;
+    var logScaleStart=1000;
+    
+    //general layout and config information
+    //online - sizes in pixels
+    
+    var widthWeb = 600;
+    var heightWeb = 300;
+    var marginWeb={left:15,top:50,bottom:50,right:25};
+    var coloursWeb=["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0"];
+    var webMarkers=false;//show circle markers on web version?
+    var yTicksWeb = 4;//rough number of ticks for y axis
+    var xTicksWeb = 4;//rough number of ticks for x axis
+    var ticksWeb//=[0.2,0.3];//option to force tick values for online
+
+    //print - all sizes in millimeters
+    var printWidthMM=87;
+    var printHeightMM=65;
+    var printMarginsMM={left:5,top:15,right:10,bottom:15};
+    var coloursPrt=["#005D7E","#D9AB44","#C4D2C5","#A8352C","#4B99BA","pink"];
+    var printMarkers=false;//show circle markers on print version?
+    var yTicksPrt = 4;//rough number of ticks for y axis
+    var xTicksPrt = 4;//rough number of ticks for x axis
+    var ticksPrt//=[0.2,0.3];//option to force tick values for web
+    
+    //date formatter, matching the format of the incoming csv...
+    //var parseDate = d3.time.format("%Y %b").parse;
+    //var parseDate = d3.time.format("%Y").parse;//just full year
+    var parseDate = d3.time.format("%d.%m.%Y").parse;
+    /*
+    some common formatting parsers....
+    d3.time.format("%Y %b")	1986 Jan
+    d3.time.format("%d-%b-%y")	28-Jan-86
+    d3.time.format("%Y-%m-%d")	1986-01-28
+    d3.time.format("%m/%d/%Y")	01/28/1986
+    d3.time.format("%H:%M")	11:39
+    d3.time.format("%H:%M %p")	11:39 AM
+    d3.time.format("%B %d")	January 28
+    d3.time.format("%d %b")	28 Jan
+     */
+    
+    d3.csv("germany.csv", function(error, data) {
+
+        // return the series names from the first row of the spreadsheet
+        var seriesNames = Object.keys(data[0]).filter(function(d){ return d != 'date'; });
+        
+        //parse the data
+        data.forEach(function(d)    {
+                d.date=parseDate(d.date);
+        });
+        
+        //calculate range of time series
+        var xDomain = d3.extent(data, function(d) {return d.date;});
+        var yDomain;
+
+        //calculate range of y axis series data
+        var min=0;
+        var max=0;
+        data.forEach(function(d,i){
+            seriesNames.forEach(function(e){
+                if (d[e]){
+                    min=Math.min(min,d[e]);
+                    max=Math.max(max,d[e]);
+                }
+            });			
+        });
+        yDomain=[min,max];
+        
+        //create a separate array for each series, filtering out records of each  series for which there are no data
+        var chartArrays = [];
+        seriesNames.forEach(function(series,i){
+            chartArrays[i] = [];
+        });
+        data.forEach(function(d,i){
+            seriesNames.forEach(function(series,e){
+                var myRow = new Object();
+                myRow.date=d.date;
+                myRow.val=d[series];
+                if (myRow.val){
+                    chartArrays[e].push(myRow);
+                }   else    {
+                    //console.log('skipped a value:'+i);   
+                } 
+            });
+        });
+
+        //web scales
+        var plotWidthWeb = widthWeb-(marginWeb.left+marginWeb.right);
+        var plotHeightWeb = heightWeb-(marginWeb.top+marginWeb.bottom);
+        var xScaleWeb = d3.time.scale()
+            .domain(xDomain)
+            .range([0,plotWidthWeb])
+        
+        var yScaleWeb;
+        if (logScale){
+         yScaleWeb = d3.scale.log()
+            .domain([logScaleStart,max])
+            .range([plotHeightWeb,0]);
+        }   else    {
+        yScaleWeb = d3.scale.linear()
+            .domain(yDomain)
+            .range([plotHeightWeb,0])
+            .nice();
+        }
+        
+        //web axes
+        var xAxisWeb = d3.svg.axis()
+            .scale(xScaleWeb)
+            .ticks(xTicksWeb)
+            .orient("bottom");
+        var yAxisWeb = d3.svg.axis()
+            .scale(yScaleWeb)
+            .ticks(yTicksWeb)
+            .tickValues(ticksWeb)
+            .tickSize(plotWidthWeb)
+            .orient("right")
+        
+        if (logScale){
+            yAxisWeb.tickFormat(function (d) {
+                return yScaleWeb.tickFormat(1,d3.format(",d"))(d)
+            })   
+        }
+        
+        //web svg structure
+        var webVersion = d3.select("body").append("svg")
+            .attr("id",title+":webVersion")
+            .attr("width",widthWeb)
+            .attr("height",heightWeb);
+        
+        //FTlogo
+        webVersion.append("defs").append("g").attr("id","ftLogo")
+        .append("path").attr("fill","#DAC9BD").attr("d","M0,16h7.6v-0.6c-0.5,0-0.9,0-1.2-0.1c-0.3,0-0.5-0.1-0.7-0.3c-0.2-0.1-0.3-0.3-0.4-0.6c-0.1-0.2-0.1-0.6-0.1-1V8.2h1.2c1.1,0,1.9,0.2,2.3,0.5c0.5,0.3,0.8,0.9,1,1.9h0.6V5H9.8C9.7,5.6,9.5,6,9.3,6.3c-0.2,0.3-0.5,0.5-1,0.6C7.9,7,7.3,7.1,6.5,7.1H5.3V2c0-0.3,0.1-0.5,0.2-0.7c0.1-0.1,0.3-0.2,0.7-0.2h2.4c0.8,0,1.4,0,1.9,0.1c0.5,0.1,0.9,0.2,1.2,0.4c0.3,0.2,0.6,0.4,0.7,0.7c0.2,0.3,0.3,0.7,0.5,1.1h0.7L13.4,0H0v0.6c0.4,0,0.8,0.1,1,0.1c0.2,0,0.4,0.1,0.6,0.3C1.8,1.1,1.9,1.3,2,1.5c0.1,0.2,0.1,0.6,0.1,1v10.9c0,0.4,0,0.8-0.1,1c-0.1,0.2-0.2,0.4-0.4,0.6c-0.2,0.1-0.4,0.2-0.6,0.3c-0.2,0-0.6,0.1-1,0.1V16z M14.2,3.5H15c0.3-0.9,0.6-1.5,1-1.8c0.4-0.4,1.1-0.5,1.9-0.5h2v12.3c0,0.4,0,0.8-0.1,1c-0.1,0.2-0.2,0.4-0.4,0.6c-0.2,0.1-0.4,0.2-0.7,0.3c-0.3,0-0.6,0.1-1.1,0.1V16h7.7v-0.6c-0.5,0-0.9,0-1.1-0.1c-0.3,0-0.5-0.1-0.7-0.3c-0.2-0.1-0.3-0.3-0.4-0.6c-0.1-0.2-0.1-0.6-0.1-1V1.2h2c0.8,0,1.5,0.2,1.9,0.5c0.4,0.4,0.8,1,1,1.8h0.8L28.5,0H14.6L14.2,3.5z");
+        
+        var webChart = webVersion.append("g").attr("id","webChartGroup")
+            .attr("transform",function(){
+                return "translate("+marginWeb.left+","+marginWeb.top+")";
+            })
+        
+        webChart.append("g").attr("class","axisWeb").call(yAxisWeb);
+        webChart.append("g").attr("class","dateAxisWeb")
+            .attr("transform",function(){
+                return "translate(0,"+plotHeightWeb+")"
+            })
+            .call(xAxisWeb);
+        
+        //identify 0 line if there is one
+        var originValue = 0;
+        var origin = webChart.selectAll(".tick").filter(function(d, i) {
+                return d==0;
+            }).classed('originWeb',function(d,i){
+                return (d == originValue);
+            });
+        
+        // create a line function that can convert data[] into x and y points
+		var lineWeb = d3.svg.line()
+			.x(function(d,i) { 
+				return xScaleWeb(d.date); 
+			})
+			.y(function(d) { 
+				return yScaleWeb(d.val); 
+			})
+            .interpolate(lineSmoothing)
+        
+        //create the series lines
+        var webLines = webChart.append("g").attr("id","webSeries").selectAll("g")
+            .data(chartArrays)
+            .enter()
+            .append("g")
+            .attr("id",function(d,i){
+                return seriesNames[i];  
+            })
+        webLines.append("path")
+            .attr("class","dataLinesWeb")
+            .attr("stroke",function(d,i){
+                return coloursWeb[i];  
+            })
+            .attr('d', function(d){ return lineWeb(d); });
+        //if needed, create markers
+        if (webMarkers){
+            webLines.append("g").attr("fill",function(d,i){return coloursWeb[i]})
+                .selectAll("circle")
+                .data(function(d){return d;})
+                .enter()
+                .append("circle")
+                .attr("r",3)
+                .attr("cx",function(d){return xScaleWeb(d.date)})
+                .attr("cy",function(d){return yScaleWeb(d.val)});
+        }
+        
+        //web key;
+        var webKey = webChart.append("g").attr("id","webKey")
+            .selectAll("g")
+            .data(seriesNames)
+            .enter()
+            .append("g")
+            .attr("transform",function(d,i){
+                return "translate(0,"+(35+(i*20))+")";  
+            })
+        
+        webKey.append("text")
+            .attr("x",50)
+            .attr("y",20)
+            .text(function(d){
+                return d;
+            })
+        
+        webKey.append("line")
+            .attr("stroke",function(d,i){
+                return coloursWeb[i];  
+            })
+            .attr("x1",0)
+            .attr("x2",45)
+            .attr("y1",15)
+            .attr("y2",15)
+            .attr("class","dataLinesWeb")
+        
+        //titles and logo
+        webVersion.append("text").attr("class","titleWeb")
+            .attr("x",marginWeb.left)
+            .attr("y",20)
+            .text(title);
+        webVersion.append("text").attr("class","subtitleWeb")
+            .attr("x",marginWeb.left)
+            .attr("y",35)
+            .text(subtitle);
+        webVersion.append("text").attr("class","sourceWeb")
+            .attr("x",marginWeb.left)
+            .attr("y",heightWeb-5)
+            .text(source);
+        webVersion.append("use").attr("xlink:href","#ftLogo")
+            .attr("x",widthWeb-marginWeb.right-15)
+            .attr("y",heightWeb-20);
+        
+        
+        /* PRINT EDITION*/
+        //fact fans, it seems you need around 2.83464480558843 pixels per mm
+        var pixelRatio=2.83464480558843
+        //map to pixels
+        var printWidth=printWidthMM*pixelRatio;
+        var printHeight=printHeightMM*pixelRatio;
+        var printMargins={left:printMarginsMM.left*pixelRatio,
+                         top:printMarginsMM.top*pixelRatio,
+                         right:printMarginsMM.right*pixelRatio,
+                         bottom:printMarginsMM.bottom*pixelRatio};
+        //all layouts now specified in pixels
+        
+        var printEd = d3.select("body").append("svg")
+            .attr("id",title+":printVersion")
+            .attr("width",printWidth)
+            .attr("height",printHeight)
+        
+        //background print rectangle
+        printEd.append("rect")
+            .attr("width",printWidth)
+            .attr("height",printHeight)
+            .attr("fill","#fff1e0");
+        
+        //titles
+        printEd.append("text").attr("class","titlePrt")
+            .attr("x",printMargins.left)
+            .attr("y",15)
+            .text(title);
+        printEd.append("text").attr("class","subtitlePrt")
+            .attr("x",printMargins.left)
+            .attr("y",30)
+            .text(subtitle);
+        printEd.append("text").attr("class","sourcePrt")
+            .attr("x",printMargins.left)
+            .attr("y",printHeight-5)
+            .text(source);
+        
+        //print scales
+        var plotWidthPrt = printWidth-(printMargins.left+printMargins.right);
+        var plotHeightPrt = printHeight-(printMargins.top+printMargins.bottom);
+        var xScalePrt = d3.time.scale()
+            .domain(xDomain)
+            .range([0,plotWidthPrt])
+        
+        //set up scale as linear or log
+        var yScalePrt;
+        if (logScale){
+         yScalePrt = d3.scale.log()
+            .domain([logScaleStart,max])
+            .range([plotHeightPrt,0]);
+        }   else    {
+        yScalePrt = d3.scale.linear()
+            .domain(yDomain)
+            .range([plotHeightPrt,0])
+            .nice();
+        }
+        
+        //print axes
+        var xAxisPrint = d3.svg.axis()
+            .scale(xScalePrt)
+            .orient("bottom")
+            .ticks(xTicksPrt);
+        var yAxisPrint = d3.svg.axis()
+            .scale(yScalePrt)
+            .ticks(yTicksPrt)
+            .tickValues(ticksPrt)
+            .tickSize(plotWidthPrt)
+            .orient("right")
+        
+        var printChart = printEd.append("g").attr("id","prtChartGroup")
+            .attr("transform",function(){
+                return "translate("+printMargins.left+","+printMargins.top+")";
+            })
+        
+        printChart.append("g").attr("class","axisPrt").call(yAxisPrint);
+        printChart.append("g").attr("class","dateAxisPrt")
+            .attr("transform",function(){
+                return "translate(0,"+plotHeightPrt+")"
+            })
+            .call(xAxisPrint);
+        
+        //line generator for print
+        var linePrint = d3.svg.line()
+			.x(function(d,i) { 
+				return xScalePrt(d.date); 
+			})
+			.y(function(d) { 
+				return yScalePrt(d.val); 
+			})
+            .interpolate(lineSmoothing)
+        
+        //create the series lines
+        var printLines = printChart.append("g").attr("id","printSeries").selectAll("g")
+            .data(chartArrays)
+            .enter()
+            .append("g")
+            .attr("id",function(d,i){
+                return seriesNames[i];  
+            })
+        
+        printLines.append("path")
+            .attr("class","dataLinesPrt")
+            .attr("stroke",function(d,i){
+                return coloursPrt[i];  
+            })
+            .attr('d', function(d){ return linePrint(d); });
+        
+         //if needed, create markers
+        if (printMarkers){
+            printLines.append("g").attr("fill",function(d,i){return coloursPrt[i]})
+                .selectAll("circle")
+                .data(function(d){return d;})
+                .enter()
+                .append("circle")
+                .attr("r",3)
+                .attr("cx",function(d){return xScalePrt(d.date)})
+                .attr("cy",function(d){return yScalePrt(d.val)});
+        }
+        
+        //print key;
+        var printKey = printEd.append("g").attr("id","printKey")
+            .selectAll("g")
+            .data(seriesNames)
+            .enter()
+            .append("g")
+            .attr("transform",function(d,i){
+                return "translate("+(printWidth-20)+","+(10+(i*15))+")";  
+            })
+        printKey.append("text")
+            .attr("x",0)
+            .attr("y",4)
+            .attr("class","keyPrt")
+            .text(function(d){
+                return d;
+            })
+        printKey.append("line")
+            .attr("stroke",function(d,i){
+                return coloursPrt[i];  
+            })
+            .attr("x1",2)
+            .attr("x2",15)
+            .attr("y1",0)
+            .attr("y2",0)
+            .attr("class","dataLinesWeb")
+        
+        //apply the styles as attributes
+        d3.selectAll('*').attr('style','');
+        Object.keys(styles).forEach(function(selector){
+            d3.selectAll(selector)
+                .attr(styles[selector]);
+        }); 
+  
+    });//end data load
+    
+    
+    //styling as attributes
+    var styles = {
+        'text':{
+            'font-family':'Metric, sans-serif'
+        },
+        '.titleWeb':{
+            'font-size':'21px'
+        },
+        '.subtitleWeb':{
+            'font-size':'14px'
+        },
+        '.sourceWeb':{
+            'font-size':'11px'
+        },
+        '.axisWeb line':{
+            'fill':'none',
+            'stroke':'#b1a595',
+            'stroke-width':'1px',
+            'stroke-dasharray':'1,2'
+        },
+        '.axisWeb path':{
+            'fill':'none',
+            'stroke':'none'
+        },
+        '.axisWeb text':{
+            'fill':'#2E2113'
+        },
+        '.dateAxisWeb line':{
+            'fill':'none',
+            'stroke':'#aaa',
+            'stroke-width':'1px'
+        },
+         '.dateAxisWeb path':{
+            'fill':'none',
+            'stroke':'none'
+        },
+         '.dateAxisWeb text':{
+            'fill':'#2E2113',
+            'font-size':'14px',
+            'text-anchor':'middle'
+        },
+        '.dataLinesWeb':{
+            'fill':'none',
+            'stroke-width':'2px',
+            'stroke-linecap':'round'
+        },
+        '.originWeb line':{
+            'stroke':'#828778',
+            'stroke-dasharray':'0,0'
+        },
+        '.titlePrt':{
+            'font-size':'12pt',
+            'font-weight':'500'
+        },
+        '.subtitlePrt':{
+            'font-size':'9.6pt',
+        },
+        '.sourcePrt':{
+            'font-size':'7.2pt',
+        },
+        '.keyPrt':{
+            'font-size':'9.6pt',
+            'text-anchor':'end'
+        },
+        '.axisPrt line':{
+            'fill':'none',
+            'stroke':'#2E2113',
+            'stroke-width':'0.3pt',
+        },
+        '.axisPrt path':{
+            'fill':'none',
+            'stroke':'none'
+        },
+        '.axisPrt text':{
+            'fill':'#2E2113',
+            'font-size':'9.6pt'
+        },
+         '.dateAxisPrt line':{
+            'fill':'none',
+            'stroke':'#2E2113',
+            'stroke-width':'0.3pt'
+        },
+         '.dateAxisPrt path':{
+            'fill':'none',
+            'stroke':'none'
+        },
+         '.dateAxisPrt text':{
+            'fill':'#2E2113',
+             'font-size':'9.6pt',
+             'text-anchor':'middle'
+        },
+        '.dataLinesPrt':{
+            'fill':'none',
+            'stroke-width':'2pt',
+            'stroke-linecap':'round'
+        },
+        '.originPrt line':{
+            'stroke':'#aaa',
+            'stroke-dasharray':'0,0'
+        },
+   } 
+
+
+</script>
+</body>
+</html>

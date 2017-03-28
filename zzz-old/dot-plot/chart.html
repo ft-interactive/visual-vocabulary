@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Dotplot</title>
+		<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+        <script type="text/javascript" src="styles.js"></script>
+        <style>
+            .backGround{fill:#fff1e0}
+            text{font-family:metric,sans-serif}
+            .xAxis path{stroke:none;fill:none}
+            .xAxis line{fill:none;stroke:#aaa;stroke-width:1px;stroke-dasharray:2,2}
+            .dots{fill:#994f68;opacity:0.6;}
+            .title{font-size:21pt;}
+            .subtitle{font-size:14pt;}
+            .source{font-size:11pt;}
+            
+        </style>
+	</head>
+	<body>
+		<script type="text/javascript">    
+            
+            var fileName="football_exp.csv";
+            
+            //titles
+            var title="Capacity of football stadia in Europe's top leagues";
+            var subtitle="circle size shows annual turnover";
+            var source="Source: Wikipedia";
+            
+            //chart configuration
+            var dotType="proportional";
+            /*choose 'single' or 'proportional':
+            single needs 2 columns of data per series in the csv: label and value[dot location]
+            proportional needs 3 columns of data: label,value 1 [dot location],value 2 [dot size]
+            */
+            var startZero=true;//clamp the scale to zero?
+            var numTicks=5;//rough number of ticks - remember, d3 might override this...
+            var specifyTicks//=[15000,19000,53000,85000];//use this to explicitly state which ticks to include
+            //dimensions and inner padding for chart
+            var w = 600;
+            var h;
+            var plotHeight=50;
+            var margin = {left:5,right:50,top:70,bottom:70}
+            
+            
+            /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
+    
+            var seriesNames = [];
+            
+            d3.csv(fileName, function(data) {
+                
+                // return the series names from the first row of the csv
+                seriesNames = Object.keys(data[0]);
+                
+                var colIndex;
+                if (dotType=="single"){
+                    colIndex = 2; 
+                }   else    {
+                    colIndex = 3;   
+                }
+
+                var dataArrays=[];
+                var allVals=[];
+                if (colIndex==3){
+                    var propVals=[];   
+                }
+                
+                seriesNames.forEach(function(d,i){
+                    //identify series
+                    if (i % colIndex==0){
+                        var myObj = new Object()
+                        myObj.name=d;
+                        myObj.dotData=[];
+                        data.forEach(function(rowData,k){
+                                //pick to see if there is data, then pick up values
+                                if (rowData[seriesNames[i+1]]){
+                                    allVals.push(+rowData[seriesNames[i+1]])
+                                    //take dot name and value, co-ercing value to number
+                                    myObj.dotData.push([rowData[seriesNames[i]],+rowData[seriesNames[i+1]]]);
+                                    //pick up data for proportional circles if needed, coercing data
+                                    if (colIndex==3){
+                                        propVals.push(+rowData[seriesNames[i+2]]);
+                                        myObj.dotData[k].push(+rowData[seriesNames[i+2]])
+                                    }
+                                } 
+                        })
+                        dataArrays.push(myObj);
+                    }
+                })//finish extracting data
+                console.log("data", data)
+                console.log("allVals", allVals)
+   
+                //prep for scale
+                var extent;
+                if (startZero){
+                     extent = [0,d3.max(allVals)];  
+                }   else    {
+                    extent = d3.extent(allVals);   
+                }
+                
+                //scales
+                var xScale = d3.scale.linear()
+                    .domain(extent)
+                    .range([margin.left,w-margin.right])
+                    .nice();
+                
+                //scale for circle size
+                if (colIndex==3){
+                    var circleScale = d3.scale.sqrt().domain([0, d3.max(propVals)]).range([0, plotHeight/4]);
+                }
+                
+                
+                //document structure;
+                //calculate height
+                h = margin.top+(dataArrays.length*plotHeight)+margin.bottom;                
+                var svg = d3.select("body").append("svg").attr("width",w).attr("height",h);
+                
+                //axis
+                var xAxis = d3.svg.axis()
+                    .scale(xScale)
+                    .orient("bottom")
+                    .ticks(numTicks)
+                    .tickSize(-(h-(margin.top+margin.bottom)));
+                
+                if (specifyTicks){
+                    xAxis.tickValues(specifyTicks);   
+                }
+            
+                //background color
+                svg.append("rect")
+                    .attr("width",w)
+                    .attr("height",h)
+                    .attr("class","backGround")
+                
+                svg.append("g")
+                    .attr("class","xAxis")
+                    .attr("transform","translate("+margin.left+","+(h-margin.bottom)+")").call(xAxis);
+            
+                var chart = svg.append("g").attr("class","chartGroup");
+        
+                var dotGroups = chart.selectAll("g")
+                    .data(dataArrays)
+                    .enter()
+                    .append("g")
+                    .attr("transform",function(d,i){
+                        return "translate("+margin.left+","+(margin.top+(i*plotHeight))+")";   
+                    })
+                
+                dotGroups.append("text")
+                    .attr("x",10)
+                    .attr("y",10)
+                    .attr("class","")
+                    .text(function(d){
+                        return d.name;
+                    })
+                
+                dotGroups.selectAll("circle").data(function(d,i){
+                    return d.dotData;  
+                }).enter().append("circle")
+                    .attr("cx",function(d){
+                        return xScale(d[1]);
+                    })
+                    .attr("cy",function(){
+                        return plotHeight/2;
+                    })
+                    .attr("id",function(d,i){
+                        if (colIndex==2){
+                            return d[0]+" value:"+d[1];
+                        }   else    {
+                            return d[0]+": dotPosition:"+d[1]+"; dotSize:"+d[2];
+                        }
+                    })
+                    .attr("r",function(d){
+                        if (colIndex==3){
+                            return circleScale(d[2]);
+                        }   else    {
+                            return 5;   
+                        }
+                    })
+                    .attr("class","dots");
+                
+                
+                //titles
+                svg.append("text").attr("class","title")
+                    .attr("x",margin.left)
+                    .attr("y",25)
+                    .text(title);
+                svg.append("text").attr("class","subtitle")
+                    .attr("x",margin.left)
+                    .attr("y",45)
+                    .text(subtitle);
+                svg.append("text").attr("class","source")
+                    .attr("x",margin.left)
+                    .attr("y",h-15)
+                    .text(source);
+                
+                //FTlogo
+                svg.append("defs").append("g").attr("id","ftLogo")
+        .append("path").attr("fill","#DAC9BD").attr("d","M0,16h7.6v-0.6c-0.5,0-0.9,0-1.2-0.1c-0.3,0-0.5-0.1-0.7-0.3c-0.2-0.1-0.3-0.3-0.4-0.6c-0.1-0.2-0.1-0.6-0.1-1V8.2h1.2c1.1,0,1.9,0.2,2.3,0.5c0.5,0.3,0.8,0.9,1,1.9h0.6V5H9.8C9.7,5.6,9.5,6,9.3,6.3c-0.2,0.3-0.5,0.5-1,0.6C7.9,7,7.3,7.1,6.5,7.1H5.3V2c0-0.3,0.1-0.5,0.2-0.7c0.1-0.1,0.3-0.2,0.7-0.2h2.4c0.8,0,1.4,0,1.9,0.1c0.5,0.1,0.9,0.2,1.2,0.4c0.3,0.2,0.6,0.4,0.7,0.7c0.2,0.3,0.3,0.7,0.5,1.1h0.7L13.4,0H0v0.6c0.4,0,0.8,0.1,1,0.1c0.2,0,0.4,0.1,0.6,0.3C1.8,1.1,1.9,1.3,2,1.5c0.1,0.2,0.1,0.6,0.1,1v10.9c0,0.4,0,0.8-0.1,1c-0.1,0.2-0.2,0.4-0.4,0.6c-0.2,0.1-0.4,0.2-0.6,0.3c-0.2,0-0.6,0.1-1,0.1V16z M14.2,3.5H15c0.3-0.9,0.6-1.5,1-1.8c0.4-0.4,1.1-0.5,1.9-0.5h2v12.3c0,0.4,0,0.8-0.1,1c-0.1,0.2-0.2,0.4-0.4,0.6c-0.2,0.1-0.4,0.2-0.7,0.3c-0.3,0-0.6,0.1-1.1,0.1V16h7.7v-0.6c-0.5,0-0.9,0-1.1-0.1c-0.3,0-0.5-0.1-0.7-0.3c-0.2-0.1-0.3-0.3-0.4-0.6c-0.1-0.2-0.1-0.6-0.1-1V1.2h2c0.8,0,1.5,0.2,1.9,0.5c0.4,0.4,0.8,1,1,1.8h0.8L28.5,0H14.6L14.2,3.5z");
+                
+                svg.append("use").attr("xlink:href","#ftLogo")
+                    .attr("x",w-margin.right)
+                    .attr("y",h-30);
+                
+  
+            })//end data load
+
+		</script>
+
+	</body>
+</html>

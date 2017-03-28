@@ -1,0 +1,179 @@
+<html>
+<head>
+	<title></title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-geo-projection/0.2.9/d3.geo.projection.min.js"></script>
+	<script charset="utf-8" src="http://d3js.org/queue.v1.min.js"></script>
+	<style type="text/css"></style>
+</head>
+<body>
+<h1>World choropleth categorical</h1>
+<a href="https://github.com/ft-interactive/graphics-examples/tree/master/world-choropleth-categorical">source</a>
+<div class="chart">
+</div>
+
+<div class="key">
+</div>
+</body>
+<script type="text/javascript">
+	var styles = {
+	    'text': {
+	        'font-family': 'Metric, sans-serif'
+	    }
+	};
+
+	var countryShapes = "https://raw.githubusercontent.com/datasets/geo-boundaries-world-110m/master/countries.geojson";
+	var width = 960,
+	    height = 600,
+	    margin = {top:50,left:0,bottom:0,right:0};
+
+	var category = 'same-sex-marriage'
+	var categoryFill = {
+		'legal':'#256ea6',
+		'legal in certain sub-jurisdictions':'#81d0e6',
+		'laws not yet in force':'#aaa'
+	}
+	var defaultCategoryFill = '#eee';
+
+	var categoryStroke = {
+		'legal':'#fff',
+		'legal in certain sub-jurisdictions':'#fff'
+	}
+	var defaultCategoryStroke = '#none';
+
+	var projection = d3.geo.robinson()
+	    .scale( 150 )
+	    .translate( [width / 2, height / 2] )
+	    .precision( .1 );
+
+	var path = d3.geo.path()
+	    .projection(projection);
+
+	var graticule = d3.geo.graticule();
+
+	var map = d3.select('.chart').append('svg')
+		.attr({
+			width:width,
+			height:height
+		}).append('g')
+			.attr({
+				id:'map',
+				transform:'translate(' + margin.left + ',' + margin.top + ')'
+			});
+
+	d3.select('svg')
+		.append('text')
+			.html('Where same-sex marriage is legal?')
+			.attr({
+				'font-size':30,
+				y:30
+			});
+
+	d3.select('svg')
+		.append('g')
+			.attr('id','key')
+			.attr('transform',function(d,i){return 'translate('+0+','+55+')'; })
+		.selectAll('.keyElement')
+			.data(Object.keys(categoryFill))
+		.enter()
+			.append('g')
+			.attr('transform',function(d,i){return 'translate('+30+','+(i*20)+')'; })
+			.call(function(p){
+				p.append('text').text(function(d){return d;});
+				p.append('circle').attr({ 
+					cx:-20,
+					cy:-6,
+					r:8,
+					fill: function(d){return categoryFill[d];},
+					stroke: function(d){return categoryStroke[d];}
+				})
+			});
+
+
+	map.append('defs').append('path')
+	    .datum({type: 'Sphere'})
+		    .attr('id', 'sphere')
+		    .attr('d', path);
+
+	//create the background 'sphere'
+	map.append("use")
+	    .attr({
+	    	'fill':'#FFF',
+	    	'stroke':'none'
+	    })
+	    .attr("xlink:href", "#sphere");
+
+	map.append("use")
+	    .attr({
+	    	"stroke":'#eee',
+	    	'stroke-width':'2',
+	    	'fill':'none'
+	    })
+	    .attr("xlink:href", "#sphere");
+
+	//create the grid lines
+	map.append('path')
+	    .datum(graticule)
+	    .attr({
+	    	'fill':'none',
+	    	'stroke':'#eee',
+	    	'id':'grid'
+	    })
+	    .attr('d', path);
+
+	//load and draw the countries
+	queue()
+      .defer(d3.json, countryShapes)
+      .defer(d3.csv, 'data.csv')
+      .await(drawMap); // function that uses files
+
+	function drawMap(error, world, data) {
+		var lookup = makeLookup(data, 'iso_a3');
+
+		map.append('g').attr('id','countries')
+			.selectAll('.nation')
+				.data(world.features)
+			.enter()
+				.append('path')
+				.attr({
+					id:function(d){ 
+						var id = d.properties.iso_a3;
+						return id + ' value: ' + lookup[id][category];
+					},
+					d:path,
+					fill:function(d){ 
+						var id = d.properties.iso_a3;
+						var cat = lookup[id][category];
+						if(categoryFill[cat] ){
+							return categoryFill[cat]; 
+						}
+						return defaultCategoryFill;
+					},
+					stroke:function(d){ 
+						var id = d.properties.iso_a3;
+						var cat = lookup[id][category];
+						if(categoryStroke[ cat ] ){
+							return categoryStroke[ cat ]; 
+						}
+						return defaultCategoryStroke;
+					}
+				});
+	
+	    //apply the styles as attributes
+        d3.selectAll('*').attr('style','');
+        Object.keys(styles).forEach(function(selector){
+            d3.selectAll(selector)
+                .attr(styles[selector]);
+        });
+	};
+
+
+	function makeLookup(array, property){
+    	var lookup = {};
+    	array.forEach(function(d){
+    		lookup[ d[property] ] = d;
+    	});
+    	return lookup;
+    }
+</script>
+</html>

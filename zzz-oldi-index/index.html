@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Graphic Anatomy</title>
+<style>
+  body {font-family:"Metric","sans-serif";}
+
+    h1 {font-size: 70px; font-weight: 200;}
+    h1:before {
+      display: block;
+      content: '';
+      height: 13px;
+      width: 500px;
+      background-color: #000000;
+      margin-bottom: 20px;
+    }
+    h2 {font-size: 45px; font-weight: 200;}
+    h3,h5  {font-size:16px;font-weight: 200;}
+
+    h4 {font-weight: 400;}
+    body    {background-color: #fff1e0;}
+    p   {font-family:"metric"; font-size: 18px}
+    p.intro-text   {font-family:"metric"; font-size: 24px;}
+
+    .container {margin: 0 auto; max-width:800px; width: 100%}
+    .container-div {max-width: 600px; padding: 20px; margin: 0 auto; margin-bottom: 16px;}
+    .category   {color:#777;
+                width:350px;
+                float:left}
+    .Deviation  {background-color:#fae596}
+    .Correlation  {background-color:#e3e0cf}
+    .Ranking  {background-color:#c2d4d8}
+    .Distribution  {background-color:#f2ccb2}
+    .time {background-color: #dbe9d8}
+    .Part-to-whole {background-color:#e1e0ec}
+    .Magnitude   {background-color:#dbc3d0}
+    .Spatial   {background-color:#e5d7c8}
+    .Flow {background-color:#e5efce}
+    .description {overflow:none;}
+    .example {font-weight: 500;}
+    /*font weights
+      600: semibold
+      500: medium
+      400: regular
+      200: light
+      100: thin
+    */
+    .thumbnail {display:inline-block; /*padding-bottom: 10px;*/ /*padding-left: 10px;*/
+    width:120px;
+    vertical-align: bottom;
+    }
+
+    .thumbnail a{text-decoration: none; color: #416E92; }
+}
+
+
+
+    /*img{width:90%;height:90%}*/
+
+</style>
+</head>
+<body>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script>
+
+        var myNumber = 15.2434;
+        var myString = "15"
+        var myBoolean = false;
+        var myObjects = [
+
+      {
+        title:"Deviation (DE)",
+        description:"Emphasise variations (+/-) from a fixed reference point. Typically the reference point is zero but it can also be a target or a long-term average. Can also be used to show sentiment (positive/neutral/negative)",
+        example:"Example FT uses: trade surplus/deficit, climate change",
+        types:["DE1-Diverging-bar","DE2-Diverging-stacked-bar","DE3-Surplus-deficit-filled-line"]
+      },
+      {
+        title:"Correlation (CO)",
+        description:"Show the relationship between two or more variables. Be mindful that, unless you tell them otherwise, many readers will assume the relationships you show them to be causal (i.e. one causes the other).",
+        example:"Example FT uses: inflation & unemployment, income & life expectancy",
+        types:["CO1-Line-and-Column","CO2-Scatterplot","CO3-Connected-scatterplot","CO4-Bubble","xy-heatmap"]
+      },
+      {
+      title:"Ranking (RA)",
+      description:"Use where an item’s position in an ordered list is more important than its absolute or relative value. Don’t be afraid to highlight the points of interest.",
+      example:"Example FT uses: wealth, deprivation, league tables, constituency election results",
+      types:["RA1-Ordered-column","RA2-Ordered-bar","RA3-Ordered-proportional-symbol","RA4-Dot-strip-plot","RA5-Slope","RA6-Lollipop"]
+    },
+      {
+        title:"Distribution (DI)",
+        description:"Show values in a dataset and how often they occur. The shape (or ‘skew’) of a distribution can be a memorable way of highlighting the lack of uniformity or equality in the data.",
+        example:"Example FT uses: income distribution, population (age/sex) distribution",
+        types:["DI1-Histogram","DI2-Boxplot","DI3-Violin-plot","DI3-Population-pyramid","DI4-Dot-strip-plot","DI5-Dot-plot","DI6-Barcode-plot","DI7-Cumulative-curve"]
+      },
+      {
+        title:"Change over time (CH)",
+        description:"Give emphasis to changing trends. These can be short (intra-day) movements or extended series traversing decades or centuries: Choosing the correct time period is important to provide suitable context for the reader.",
+        example:"Example FT uses: share price movements, economic time series",
+        types:["CH1-Column-time","CH2-Line-and-column","CH3-Line","CH4-Stock-price","CH5-Slope","CH6-Area-chart","CH7-Fan-chart-projections","CH8-Connected-scatter","CH9-Calendar-heatmap","CH10-Priestley-timeline","CH11-Circle-timeline"]
+      },
+      {
+        title:"Part-to-whole (PA)",
+        description:"Show how a single entity can be broken down into its component elements. If the reader’s interest is solely in the size of the components, consider a magnitude-type chart instead.",
+        example:"Example FT uses: fiscal budgets, company structures, national election results",
+        types:["PA1-Stacked-column","PA2-Pie","PA3-Donut","PA4-Treemap","PA5-Voronoi","PA6-Sunburst","PA7-Arc","PA8-Gridplot","PA9-Venn"]
+      },
+      {
+        title:"Magnitude (MA)",
+        description:"Show size comparisons. These can be relative (just being able to see larger/bigger) or absolute (need to see fine differences). Usually these show a ‘counted’ number (for example, barrels, dollars or people) rather than a calculated rate or per cent.",
+        example:"Example FT uses: commodity production, market capitalisation",
+        types:["MA1-Column","MA2-Bar","MA3-Paired-column","MA4-Paired-bar","MA5-Proportional-symbol","MA6-Isotype-pictogram","MA7-Lollipop","MA8-Radar-chart"]
+      },
+
+      {
+        title:"Spatial (SP)",
+        description:"Used only when precise locations or geographical patterns in data are more important to the reader than anything else.",
+        example:"Example FT uses: locator maps, population density, natural resource locations, natural disaster risk/impact, catchment areas, variation in election results",
+        types:["SP1-Basic-choropleth-rate-ratio","SP2-Proportional-symbol-count-magnitude","SP3-Flow-map","SP4-Contour-map","SP5-Equalised-cartogram","SP6-Scaled-cartogram-value"]
+      },
+      {
+        title:"Flow (FL)",
+        description:"Show the reader volumes or intensity of movement between two or more states or conditions. These might be logical sequences or geographical locations.",
+        example:"xample FT uses: movement of funds, trade, migrants, lawsuits, information; relationship graphs.",
+        types:["FL1-Waterfall","FL2-Sankey","FL3-Chord","FL4-Network"]
+      },
+    ];
+
+
+
+
+
+    var container = d3.select("body").append("div")
+                      .attr('class', 'container')
+    container.append("h1").text("Graphic Anatomy")
+    container.append("h2").text("Designing with data")
+    container.append("p").text("There are so many ways to visualise data – how do we know which one to pick? Use the categories across the top to decide which data relationship is most important in your story, then look at the different types of chart within the category to form some initial ideas about what might work best. This list is not meant to be exhaustive, nor a wizard, but is a useful starting point for making informative and meaningful data visualisations")
+    .attr('class', 'intro-text')
+    container.append("h4").text("Inspired by the Graphic Continuum by Jon Schwabish and Severino Ribecca")
+
+    var cats = container.selectAll("div")
+    .data(myObjects).enter().append("div")
+        .attr("class",function(d,i){
+            return d.title+" container-div"
+        })
+
+    cats.append("h2").text(function(d,i){
+        return d.title
+      })
+      cats.append("p").text(function(d,i){
+          return d.description
+          })
+          .attr("class","description"
+        )
+        cats.append("p").text(function(d,i){
+            return d.example
+            })
+            .attr("class","example"
+          )
+
+
+      var thumbnails = cats.selectAll("div")
+          .data(function(d,i){
+            return d.types;
+          })
+          .enter()
+          .append("div")
+          .attr("class","thumbnail")
+
+      var links = thumbnails.append("a")
+        .attr("href",function(d){
+          return d+"/";
+        });
+
+
+      links.append("h4")
+              .text(function(d,i){
+                return d;
+                })
+
+      thumbnails.append("img")
+        .attr('src',function(d,i){
+          return "icons/"+d+".png"
+          })
+
+
+
+
+
+    var divs = cats.selectAll("div")
+        .data(function(d){return d})
+        .enter()
+        .append("div")
+
+    divs.append("p")
+        .text(function(d){
+            return d
+        })
+
+    divs.append("img")
+        .attr("src",function(d){
+            return "icons/"+d+".png"
+            // console.log("icons/"+d+".png")
+
+        })
+
+
+
+    </script>
+</body>
+</html>
