@@ -1,44 +1,35 @@
-//the scatterchart factory
-
 function scatterChart(){
-
-    
-}
-
-/*function slopeChart(){
     let yScale = d3.scaleLinear();
-    let xScale = d3.scaleOrdinal();
+    let xScale = d3.scaleLinear();
     const colourScale = d3.scaleOrdinal()
         .range(gChartcolour.basicLineWeb)
         .domain(['','highlight']);
 
     let colourProperty = 'group';
     let includeLabel = (d)=>true;
-    let labelTextStart = (d) => 'start text';
-    let labelTextEnd = (d) => 'end text';
+    let labelTextStart = (d) => 'x Variable';
+    let labelTextEnd = (d) => 'y Variable';
     let highlightColour = '#F00';
     let dotRadius = 5;
     let lineClasser = (d)=>{
-    	if(d[colourProperty]){
-    		return 'highlight-line';
-    	}
-    	return 'background-line';
+        if(d[colourProperty]){
+            return 'highlight-line';
+        }
+        return 'background-line';
     };
+
 
     function chart(parent){
 
-        parent.append('line')
+           parent.append('circle')
             .attrs({
-                'x1':xScale(xScale.domain()[0]),
-                'x2':xScale(xScale.domain()[1]),
-                'y1':d=>yScale(d[xScale.domain()[0]]),
-                'y2':d=>yScale(d[xScale.domain()[1]]),
-                'stroke':d=>colourScale(d[colourProperty]),
-                'class':lineClasser
-            });
+                'cx':d=>xScale(d.x),
+                'cy':d=>yScale(d.y),
+                'r':dotRadius
+            }) 
 
         const labeled = parent.filter(includeLabel)
-
+/*
 //start circle...
         labeled.append('circle')
             .attrs({
@@ -78,9 +69,9 @@ function scatterChart(){
                 'dy': 5,
                 'dx': dotRadius*1.5,
             })
-            .text(labelTextEnd);
+            .text(labelTextEnd);*/
 
-        parent.append('text')
+        //parent.append('text')
 
     }
 
@@ -125,12 +116,12 @@ function scatterChart(){
     }
 
     chart.colourInverse = (x) =>{
-    	if(x === true){
-    		colourScale.range( gChartcolour.basicLineSocial );
-    	}else{
-    		colourScale.range( gChartcolour.basicLineWeb );
-    	};
-    	return chart;
+        if(x === true){
+            colourScale.range( gChartcolour.basicLineSocial );
+        }else{
+            colourScale.range( gChartcolour.basicLineWeb );
+        };
+        return chart;
     }
 
     chart.colourRange = (x)=>{
@@ -164,9 +155,9 @@ function scatterChart(){
 }
 
 
-function slopeAxes(){
+function scatterAxes(){
 
-    let xScale = d3.scaleOrdinal();
+    let xScale = d3.scaleLinear();
     let yScale = d3.scaleLinear();
     let yTicks;
     let startLabel = 'start';
@@ -174,10 +165,10 @@ function slopeAxes(){
     let tickFormatter = d=>d3.format(',')(d);
     let colourInverse = false;
     let tickColour = ()=>{
-    	if (colourInverse){ 
-    		return '#FFF'
-    	}
-    	return '#000'
+        if (colourInverse){ 
+            return '#FFF'
+        }
+        return '#000'
     };
 
 
@@ -205,7 +196,7 @@ function slopeAxes(){
             });
 
         if(yTicks === undefined){
-        	yTicks = yScale.ticks();
+            yTicks = yScale.ticks();
         }
 
         container.selectAll('g.tick')
@@ -246,8 +237,8 @@ function slopeAxes(){
     }
 
     axes.colourInverse = (x)=>{
-    	colourInverse = x;
-    	return axes;
+        colourInverse = x;
+        return axes;
     }
 
     axes.endLabel = (x)=>{
@@ -266,14 +257,14 @@ function slopeAxes(){
     }
 
     axes.yTicks = (x)=>{
-    	yTicks = x;
-    	return axes;
+        yTicks = x;
+        return axes;
     }
 
     axes.labelFormatter = (x)=>{
-    	labelFormatter = x;
-    	return axes;
+        labelFormatter = x;
+        return axes;
     }
 
     return axes;
-}*/
+}

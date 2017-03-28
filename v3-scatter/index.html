@@ -8,7 +8,7 @@
     <script src="simple-statistics.min.js"></script>
     <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
     <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
-    <script src="slope.js"></script>
+    <script src="scatter.js"></script>
     <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
     <link rel="stylesheet" src="style.css"/>
     <style>
@@ -29,7 +29,7 @@
 
 <script type="text/javascript">
 
-const valueColumns = ['x','y'];    //define the start and end columns
+const valueColumns = ['x','y'];    //the names of the columns in the data file to be plotter, x axis followed by y axis
 
 const frame = {
     web: gChartframe.webFrame
@@ -62,52 +62,66 @@ const dataSorter = function(a,b){    //Sort the data so that the labeled items a
 
 d3.csv('anscombe.csv',function(data){
 
+    //coerce the axes data into numbers
+    data.forEach(function(d){
+        d[valueColumns[0]]=+d[valueColumns[0]]
+        d[valueColumns[1]]=+d[valueColumns[1]]
+    })
 
-    const valueExtent = extentMulti(data, valueColumns).reverse()
+    //calculate extents
+    const xExtent = d3.extent(data, function(d){
+        return d[valueColumns[0]]
+    })
+    const yExtent = d3.extent(data, function(d){
+        return d[valueColumns[1]]
+    }).reverse()
+
+
     data.sort(dataSorter);
 
     const valueFormat = d=>d3.format(',')(d)
 
     //General slope configuration
-    const mySlope = slopeChart()
+    const myScatter = scatterChart()
         .colourProperty( 'label' )  //the data property determining the lines colour
         .colourDomain( ['','yes'] ) //the values of theat property corresponding to the colours in the basic chart colour scheme
-        .xDomain( valueColumns ) 
-        .yDomain( valueExtent )
-        .includeLabel( (row)=> (row.label === 'yes') )
+        .xDomain( xExtent ) 
+        .yDomain( yExtent )
+  /*      .includeLabel( (row)=> (row.label === 'yes') )
         .labelTextStart( (row)=> (row.name + ' ' + valueFormat(row.val1)) )
-        .labelTextEnd( (row)=> (row.name + ' ' + valueFormat(row.val2)) );
+        .labelTextEnd( (row)=> (row.name + ' ' + valueFormat(row.val2)) );*/
+    
     
     //general axes configuration    
-    const myAxes = slopeAxes()
-        .startLabel('Start')
-        .endLabel('End')
-        .yTicks([80000,60000,40000]);
+    const myAxes = scatterAxes()
+        .startLabel(valueColumns[0])
+        .endLabel(valueColumns[1])
+        //.yTicks([80000,60000,40000]);
 
 
-    //specific slope configuration
+    //specific scatter configuration
     Object.keys(frame).forEach(frameName=>{
         const currentFrame = frame[frameName];
 
-        mySlope.xRange( [0, currentFrame.dimension().width] )
+        myScatter.xRange( [0, currentFrame.dimension().width] )
             .yRange( [0, currentFrame.dimension().height] );
 
-        myAxes.xScale( mySlope.xScale() )
-            .yScale( mySlope.yScale() );
+        myAxes.xScale( myScatter.xScale() )
+            .yScale( myScatter.yScale() );
             
         // specifics based on frame type
-        mySlope.colourInverse((frameName === 'social' || frameName === 'video'));
+        myScatter.colourInverse((frameName === 'social' || frameName === 'video'));
         myAxes.colourInverse((frameName === 'social' || frameName === 'video'));
 
         //do the actual drawing...
 
         currentFrame.plot()
-            .selectAll( 'g.slope' )
+            .selectAll( 'g.scatter' )
             .data( data )
             .enter()
             .append( 'g' )
-                .attr('class','slope')
-            .call(mySlope);
+                .attr('class','scatter')
+            .call(myScatter);
 
         currentFrame.plot()
             .call( myAxes );
@@ -117,22 +131,6 @@ d3.csv('anscombe.csv',function(data){
     
 });
 
-//a function to work out the extent of values in an array accross multiple properties...
-function extentMulti(data, columns){
-    const ext = data.reduce((acc, row, index)=>{
-        let values = columns.map(key=>row[key])
-        let rowExtent = d3.extent(values);
-        if(!acc.max){
-            acc.max = rowExtent[1];
-            acc.min = rowExtent[0];
-        }else{
-            acc.max = Math.max(acc.max, rowExtent[1]);
-            acc.min = Math.min(acc.min, rowExtent[0]);
-        }
-        return acc;
-    },{});
-    return [ext.min, ext.max];
-}
 
 </script>
 </html>
