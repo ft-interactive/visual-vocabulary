@@ -177,7 +177,10 @@ function scatterAxes(){
 
     function axes(parent){
 
-        const container = parent.append('g')
+        const xContainer = parent.append('g')
+            .attr('class','axes')
+
+        const yContainer = parent.append('g')
             .attr('class','axes')
 
         /*container.append('text')
@@ -202,7 +205,7 @@ function scatterAxes(){
             yTicks = yScale.ticks();
         }
 
-        container.selectAll('g.xtick')
+        yContainer.selectAll('g.tick')
             .data(yTicks)
                 .enter()
             .append('g')
@@ -229,13 +232,48 @@ function scatterAxes(){
                         'fill':tickColour,
                     })
                     .text(tickFormatter)
-                    
-
             });
+
 
             //now to generate x axis
 
-            console.log(xScale.ticks())
+            if(xTicks === undefined){
+                xTicks = xScale.ticks();
+            }
+
+            xContainer.selectAll('g.tick')
+            .data(xTicks)
+                .enter()
+            .append('g')
+                .attrs({
+                    'class':'tick',
+                    'transform':(d)=>'translate('+xScale(d)+',0)',
+                })
+            .call(function(tick){
+                tick.append('line')
+                    .attrs({
+                        'x1':0,
+                        'y1':0,
+                        'x2':0,
+                        'y2':yScale.range()[1],
+                        'stroke':tickColour
+                    })
+
+                tick.append('text')
+                    .attrs({
+                        'text-anchor':'middle',
+                        'x':0,
+                        'y':yScale.range()[1],
+                        'dy':15,
+                        'dx':0,
+                        'fill':tickColour,
+                    })
+                    .text(tickFormatter)
+            });
+
+
+
+            //console.log(xScale.ticks())
 
     }
 

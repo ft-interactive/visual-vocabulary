@@ -33,10 +33,10 @@ const valueColumns = ['x','y'];    //the names of the columns in the data file t
 
 const frame = {
     web: gChartframe.webFrame()
-        .margin({left:75,right:100,top:100,bottom:70})
+        .margin({left:75,right:100,top:100,bottom:60})
         .title("V3 Scatter chart")
         .subtitle("Describe the data")
-        .source("FT graphic Alan Smith|Source: FT research|Further lines can be added using vertical pipe and adjusting frame margin"),
+        .source("FT graphic Alan Smith|Source: FT research"),
 
     print: gChartframe.printFrame()
         .margin({top:60,left:100,right:100})
@@ -98,7 +98,7 @@ d3.csv('anscombe.csv',function(data){
     
     //general axes configuration    
     const myAxes = scatterAxes()
-        .yTicks([4,5,9,12])
+        //.yTicks([4,5,9,12])
         
 
     //specific scatter configuration
