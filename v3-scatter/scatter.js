@@ -23,12 +23,15 @@ function scatterChart(){
 
            parent.append('circle')
             .attrs({
+                'id':d=>d.name,
                 'cx':d=>xScale(d.x),
                 'cy':d=>yScale(d.y),
                 'r':dotRadius
             }) 
 
         const labeled = parent.filter(includeLabel)
+
+        console.log(labeled)
 /*
 //start circle...
         labeled.append('circle')

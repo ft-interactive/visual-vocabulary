@@ -84,13 +84,14 @@ d3.csv('anscombe.csv',function(data){
 
     const valueFormat = d=>d3.format(',')(d)
 
-    //General slope configuration
+    //General chart configuration
     const myScatter = scatterChart()
         .colourProperty( 'label' )  //the data property determining the lines colour
         .colourDomain( ['','yes'] ) //the values of theat property corresponding to the colours in the basic chart colour scheme
         .xDomain( xExtent ) 
         .yDomain( yExtent )
-  /*      .includeLabel( (row)=> (row.label === 'yes') )
+        .includeLabel( (row)=> (row.label === 'yes') )
+  /*      
         .labelTextStart( (row)=> (row.name + ' ' + valueFormat(row.val1)) )
         .labelTextEnd( (row)=> (row.name + ' ' + valueFormat(row.val2)) );*/
     
