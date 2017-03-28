@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Slope chart - Visual Vocabulary</title>
+    <title>Scatter chart - Visual Vocabulary</title>
     <script src="//d3js.org/d3.v4.js"></script>
     <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
     <script src="//financial-times.github.io/g-chartframe/build/g-chartframe.js"></script>
@@ -16,8 +16,8 @@
 </head>
 <body>
 
-    <h1>Slope chart</h1>
-    <p>Good for showing changing data as long as the data can be simplified into 2 points without missing a key part of story</p>
+    <h1>Scatter chart</h1>
+    <p>The standard way to show the relationship between two continuous variables, each of which has its own axis.</p>
     <hr>
     <figure class="framed saveable" data-frame="web"><svg></svg></figure>
     <figure class="framed saveable" data-frame="print"><svg></svg></figure>
@@ -59,7 +59,7 @@ const dataSorter = function(a,b){    //Sort the data so that the labeled items a
 };
 
 
-d3.csv('data.csv',function(data){
+d3.csv('anscombe.csv',function(data){
 
 
     const valueExtent = extentMulti(data, valueColumns).reverse()
