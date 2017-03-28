@@ -1,5 +1,11 @@
-//the slopechart factory
-function slopeChart(){
+//the scatterchart factory
+
+function scatterChart(){
+
+    
+}
+
+/*function slopeChart(){
     let yScale = d3.scaleLinear();
     let xScale = d3.scaleOrdinal();
     const colourScale = d3.scaleOrdinal()
@@ -270,4 +276,4 @@ function slopeAxes(){
     }
 
     return axes;
-}
+}*/
