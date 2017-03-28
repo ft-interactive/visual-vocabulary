@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Template - Visual Vocabulary</title>
+    <script src="//d3js.org/d3.v4.js"></script>
+    <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
+    <script src="//financial-times.github.io/g-chartframe/build/g-chartframe.js"></script>
+    <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
+    <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
+    <script src="chart.js"></script>
+
+    <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
+    <link rel="stylesheet" src="style.css"/>
+    <style>
+    .saveable button{ display: block; }
+    </style>
+</head>
+<body>
+
+    <h1>Template</h1>
+    <p>A suggested starting point new charts types in the visual vocab.</p>
+    <hr>
+    <figure class="framed saveable" data-frame="web"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="print"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="social"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="video"><svg></svg></figure>
+
+</body>
+
+<script type="text/javascript">
+
+const frame = {
+    web: gChartframe.webFrame(),
+    print: gChartframe.printFrame(),
+    social: gChartframe.socialFrame(),
+    video: gChartframe.videoFrame(),
+};
+
+//add the frames to the page...
+d3.selectAll('.framed')
+    .each(function(){
+        const figure = d3.select(this);
+        figure.select('svg')
+            .call(frame[figure.node().dataset.frame]);
+    });
+
+d3.csv('data.csv',function(data){
+    //draw your charts! (see the slope chart for example)
+
+    var myChart = chart(); //defined in chart.js
+
+    Object.keys(frame).forEach(frameName=>{
+        const currentFrame = frame[frameName];
+        currentFrame.plot()
+            .call(myChart);
+     });
+});
+
+</script>
+</html>
