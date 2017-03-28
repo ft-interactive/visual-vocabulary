@@ -1,79 +1,44 @@
 function scatterChart(){
+
     let yScale = d3.scaleLinear();
     let xScale = d3.scaleLinear();
-    const colourScale = d3.scaleOrdinal()
-        .range(gChartcolour.basicLineWeb)
-        .domain(['','highlight']);
+    let colourScale = d3.scaleOrdinal();
 
-    let colourProperty = 'group';
     let includeLabel = (d)=>true;
     let labelTextStart = (d) => 'x Variable';
     let labelTextEnd = (d) => 'y Variable';
     let highlightColour = '#F00';
     let dotRadius = 5;
-    let lineClasser = (d)=>{
-        if(d[colourProperty]){
-            return 'highlight-line';
-        }
-        return 'background-line';
-    };
 
 
     function chart(parent){
+
+            colourScale.domain(this.groups)
+                .range(gChartcolour.categorical)
 
            parent.append('circle')
             .attrs({
                 'id':d=>d.name,
                 'cx':d=>xScale(d.x),
                 'cy':d=>yScale(d.y),
+                'fill-opacity':0.7,
+                'fill':d=>colourScale(d.group),
                 'r':dotRadius
             }) 
 
         const labeled = parent.filter(includeLabel)
-
-/*
-//start circle...
-        labeled.append('circle')
-            .attrs({
-                'cx':xScale(xScale.domain()[0]),
-                'cy':d=>yScale(d[xScale.domain()[0]]),
-                'r':dotRadius,
-                'fill':d=>colourScale(d[colourProperty]),
-                'stroke':'none',
-            });
-
-        labeled.append('text')
+            .append('text')
             .attrs({
                 'class':'highlighted-label',
-                'text-anchor':'end',
-                'y':d=>yScale(d[xScale.domain()[0]]),
-                'dy':5,
-                'dx':-dotRadius*1.5,
+                'text-anchor':'middle',
+                'x':d=>xScale(d.x),
+                'y':d=>yScale(d.y),
+                'dy':-8,
+                'dx':0,
             })
-            .text(labelTextStart);
-
-//end circle...
-        labeled.append('circle')
-            .attrs({
-                'class': 'highlighted-circle',
-                'cx': xScale(xScale.domain()[1]),
-                'cy': d=>yScale(d[xScale.domain()[1]]),
-                'r': dotRadius,
-                'fill': d=>colourScale(d[colourProperty]),
-                'stroke': 'none',
+            .text(function(d){
+                return d.name
             });
-
-        labeled.append('text')
-            .attrs({
-                'class': 'highlighted-label',
-                'y': d=>yScale(d[xScale.domain()[1]]),
-                'x': xScale(xScale.domain()[1]),
-                'dy': 5,
-                'dx': dotRadius*1.5,
-            })
-            .text(labelTextEnd);*/
-
-        //parent.append('text')
 
     }
 
@@ -141,6 +106,11 @@ function scatterChart(){
         return chart;
     }
 
+    chart.groups = (x)=>{
+        groups = x;
+        return chart;
+    }
+
     chart.xScale = (x)=>{
         if(!x) return xScale;
         xScale = x;
@@ -182,24 +152,6 @@ function scatterAxes(){
 
         const yContainer = parent.append('g')
             .attr('class','axes')
-
-        /*container.append('text')
-            .text(startLabel)
-            .attrs({
-                'text-anchor': 'end',
-                'dx':-5,
-                'dy':-10,
-                'class': 'xaxis-label',
-            });
-
-        container.append('text')
-            .text(endLabel)
-            .attrs({
-                'x':xScale.range()[1],
-                'dx':5,
-                'dy':-10,
-                'class': 'xaxis-label',
-            });*/
 
         if(yTicks === undefined){
             yTicks = yScale.ticks();
@@ -271,26 +223,12 @@ function scatterAxes(){
                     .text(tickFormatter)
             });
 
-
-
-            //console.log(xScale.ticks())
-
     }
-
-    /*axes.startLabel = (x)=>{
-        startLabel = x;
-        return axes;
-    }*/
 
     axes.colourInverse = (x)=>{
         colourInverse = x;
         return axes;
     }
-
-    /*axes.endLabel = (x)=>{
-        endLabel = x;
-        return axes;
-    }*/
 
     axes.xScale = (x)=>{
         xScale = x;

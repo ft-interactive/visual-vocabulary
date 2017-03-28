@@ -34,13 +34,13 @@ const valueColumns = ['x','y'];    //the names of the columns in the data file t
 const frame = {
     web: gChartframe.webFrame()
         .width(700)
-        .margin({left:75,right:100,top:100,bottom:60})
-        .title("V3 Scatter chart")
-        .subtitle("Describe the data")
+        .margin({left:75,right:50,top:60,bottom:50})
+        .title("Anscombe's quartet in a single chart")
+        .subtitle("Each series is a different colour (no key just yet)")
         .source("FT graphic Alan Smith|Source: FT research"),
 
     print: gChartframe.printFrame()
-        .margin({top:60,left:100,right:100})
+        .margin({top:60,left:20,right:20})
         .height(190),   //note, this value is in mm for the print frame
 
     social: gChartframe.socialFrame()
@@ -72,6 +72,9 @@ d3.csv('anscombe.csv',function(data){
         d[valueColumns[1]]=+d[valueColumns[1]]
     })
 
+    //identify groups in the data
+    var groups = d3.set(data, function(d) { return d.group; }).values();
+
     //calculate extents
     const xExtent = d3.extent(data, function(d){
         return d[valueColumns[0]]
@@ -80,7 +83,6 @@ d3.csv('anscombe.csv',function(data){
         return d[valueColumns[1]]
     }).reverse()
 
-
     data.sort(dataSorter);
 
     const valueFormat = d=>d3.format(',')(d)
@@ -88,14 +90,12 @@ d3.csv('anscombe.csv',function(data){
     //General chart configuration
     const myScatter = scatterChart()
         .colourProperty( 'label' )  //the data property determining the lines colour
-        .colourDomain( ['','yes'] ) //the values of theat property corresponding to the colours in the basic chart colour scheme
+        .colourDomain( ['','yes'] )
+        .groups(groups) //the values of that property corresponding to the colours in the basic chart colour scheme
         .xDomain( xExtent ) 
         .yDomain( yExtent )
         .includeLabel( (row)=> (row.label === 'yes') )
-  /*      
-        .labelTextStart( (row)=> (row.name + ' ' + valueFormat(row.val1)) )
-        .labelTextEnd( (row)=> (row.name + ' ' + valueFormat(row.val2)) );*/
-    
+
     
     //general axes configuration    
     const myAxes = scatterAxes()
@@ -107,7 +107,7 @@ d3.csv('anscombe.csv',function(data){
         const currentFrame = frame[frameName];
 
         myScatter.xRange( [0, currentFrame.dimension().width] )
-            .yRange( [0, currentFrame.dimension().height] );
+            .yRange( [0, currentFrame.dimension().height-10] );//offset on height to cope with x axis being under chart
 
         myAxes.xScale( myScatter.xScale() )
             .yScale( myScatter.yScale() );
