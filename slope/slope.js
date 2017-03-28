@@ -134,6 +134,7 @@ function slopeChart(){
         } else if (x==='print') {
             colourScale.range(gChartcolour.basicLinePrint);
         }
+
     	return chart;
     }
 
@@ -181,7 +182,7 @@ function slopeAxes(){
     let tickOffset = 5;
     let labelOffset = 5;
     let tickColour = ()=>{
-    	if (colourInverse){ 
+    	if (colourInverse){
     		return '#FFF'
     	}
     	return '#000'
@@ -245,7 +246,7 @@ function slopeAxes(){
                         'fill':tickColour,
                     })
                     .text(tickFormatter)
-                    
+
 
             });
 
@@ -275,7 +276,7 @@ function slopeAxes(){
         endLabel = x;
         return axes;
     }
-    
+
     axes.labelOffset = (x)=>{
         labelOffset = x;
         return axes;
@@ -310,7 +311,6 @@ function slopeAxes(){
     	labelFormatter = x;
     	return axes;
     }
-
 
     return axes;
 }
