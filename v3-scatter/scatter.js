@@ -160,8 +160,9 @@ function scatterAxes(){
     let xScale = d3.scaleLinear();
     let yScale = d3.scaleLinear();
     let yTicks;
-    let startLabel = 'start';
-    let endLabel = 'end';
+    let xTicks;
+    /*let startLabel = 'start';
+    let endLabel = 'end';*/
     let tickFormatter = d=>d3.format(',')(d);
     let colourInverse = false;
     let tickColour = ()=>{
@@ -177,7 +178,7 @@ function scatterAxes(){
         const container = parent.append('g')
             .attr('class','axes')
 
-        container.append('text')
+        /*container.append('text')
             .text(startLabel)
             .attrs({
                 'text-anchor': 'end',
@@ -193,13 +194,13 @@ function scatterAxes(){
                 'dx':5,
                 'dy':-10,
                 'class': 'xaxis-label',
-            });
+            });*/
 
         if(yTicks === undefined){
             yTicks = yScale.ticks();
         }
 
-        container.selectAll('g.tick')
+        container.selectAll('g.xtick')
             .data(yTicks)
                 .enter()
             .append('g')
@@ -229,22 +230,27 @@ function scatterAxes(){
                     
 
             });
+
+            //now to generate x axis
+
+            console.log(xScale.ticks())
+
     }
 
-    axes.startLabel = (x)=>{
+    /*axes.startLabel = (x)=>{
         startLabel = x;
         return axes;
-    }
+    }*/
 
     axes.colourInverse = (x)=>{
         colourInverse = x;
         return axes;
     }
 
-    axes.endLabel = (x)=>{
+    /*axes.endLabel = (x)=>{
         endLabel = x;
         return axes;
-    }
+    }*/
 
     axes.xScale = (x)=>{
         xScale = x;
