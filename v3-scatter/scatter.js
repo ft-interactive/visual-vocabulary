@@ -31,7 +31,6 @@ function scatterChart(){
 
         const labeled = parent.filter(includeLabel)
 
-        console.log(labeled)
 /*
 //start circle...
         labeled.append('circle')
