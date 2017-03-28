@@ -226,9 +226,9 @@ function scatterAxes(){
                 tick.append('text')
                     .attrs({
                         'text-anchor':'end',
-                        'x':xScale.range()[1],
-                        'dy':-5,
-                        'dx':-10,
+                        'x':xScale.range()[0],
+                        'dy':5,
+                        'dx':-5,
                         'fill':tickColour,
                     })
                     .text(tickFormatter)
