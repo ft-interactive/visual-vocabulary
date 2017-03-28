@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Slope chart - Visual Vocabulary</title>
+    <script src="//d3js.org/d3.v4.js"></script>
+    <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
+    <script src="//financial-times.github.io/g-chartframe/build/g-chartframe.js"></script>
+    <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
+    <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
+    <script src="slope.js"></script>
+    <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
+    <link rel="stylesheet" src="style.css"/>
+    <style>
+    .saveable button{ display: block; }
+    </style>
+</head>
+<body>
+
+    <h1>Slope chart</h1>
+    <p>Good for showing changing data as long as the data can be simplified into 2 points without missing a key part of story</p>
+    <hr>
+    <figure class="framed saveable" data-frame="web"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="print"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="social"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="video"><svg></svg></figure>
+
+</body>
+
+<script type="text/javascript">
+
+const valueColumns = ['val1','val2'];    //define the start and end columns
+
+const frame = {
+    web: gChartframe.webFrame
+        .margin({left:200,right:200, top:100}),
+
+    print: gChartframe.printFrame
+        .margin({top:60,left:100,right:100})
+        .height(190),   //note, this value is in mm for the print frame
+
+    social: gChartframe.socialFrame
+        .margin({left:100,right:100})
+        .title('Slightly shorter title perhaps?'),
+
+    video: gChartframe.videoFrame,
+};
+
+d3.selectAll('.framed')
+    .each(function(){
+        const figure = d3.select(this);
+        figure.select('svg')
+            .call(frame[figure.node().dataset.frame]);
+    });
+
+
+const dataSorter = function(a,b){    //Sort the data so that the labeled items are drawn on top
+    if(a.label === 'yes') return 1;
+    return -1;
+};
+
+
+d3.csv('data.csv',function(data){
+
+
+    const valueExtent = extentMulti(data, valueColumns).reverse()
+    data.sort(dataSorter);
+
+    const valueFormat = d=>d3.format(',')(d)
+
+    //General slope configuration
+    const mySlope = slopeChart()
+        .colourProperty( 'label' )  //the data property determining the lines colour
+        .colourDomain( ['','yes'] ) //the values of theat property corresponding to the colours in the basic chart colour scheme
+        .xDomain( valueColumns ) 
+        .yDomain( valueExtent )
+        .includeLabel( (row)=> (row.label === 'yes') )
+        .labelTextStart( (row)=> (row.name + ' ' + valueFormat(row.val1)) )
+        .labelTextEnd( (row)=> (row.name + ' ' + valueFormat(row.val2)) );
+    
+    //general axes configuration    
+    const myAxes = slopeAxes()
+        .startLabel('Start')
+        .endLabel('End')
+        .yTicks([80000,60000,40000]);
+
+
+    //specific slope configuration
+    Object.keys(frame).forEach(frameName=>{
+        const currentFrame = frame[frameName];
+
+        mySlope.xRange( [0, currentFrame.dimension().width] )
+            .yRange( [0, currentFrame.dimension().height] );
+
+        myAxes.xScale( mySlope.xScale() )
+            .yScale( mySlope.yScale() );
+            
+        // specifics based on frame type
+        mySlope.colourInverse((frameName === 'social' || frameName === 'video'));
+        myAxes.colourInverse((frameName === 'social' || frameName === 'video'));
+
+        //do the actual drawing...
+
+        currentFrame.plot()
+            .selectAll( 'g.slope' )
+            .data( data )
+            .enter()
+            .append( 'g' )
+                .attr('class','slope')
+            .call(mySlope);
+
+        currentFrame.plot()
+            .call( myAxes );
+    });
+
+    addSVGSavers('figure.saveable');
+    
+});
+
+//a function to work out the extent of values in an array accross multiple properties...
+function extentMulti(data, columns){
+    const ext = data.reduce((acc, row, index)=>{
+        let values = columns.map(key=>row[key])
+        let rowExtent = d3.extent(values);
+        if(!acc.max){
+            acc.max = rowExtent[1];
+            acc.min = rowExtent[0];
+        }else{
+            acc.max = Math.max(acc.max, rowExtent[1]);
+            acc.min = Math.min(acc.min, rowExtent[0]);
+        }
+        return acc;
+    },{});
+    return [ext.min, ext.max];
+}
+
+</script>
+</html>

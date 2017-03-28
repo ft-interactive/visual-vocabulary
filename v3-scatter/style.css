@@ -1,0 +1,23 @@
+[data-frame^="print"] .highlighted-label {
+    font-size: 12px;
+}
+
+
+[data-frame^="video"] .highlighted-label {
+    fill:#FFF;
+}
+
+[data-frame^="social"] .highlighted-label {
+    fill:#FFF;
+}
+
+/*in this example because of the density of lines we need to decrease the opacity of those not being highlighted: */
+.background-line{
+    stroke-opacity:0.2;
+}
+
+svg text{
+    font-feature-settings: 'tnum';
+    -webkit-font-feature-settings: 'tnum';
+    -moz-font-feature-settings: 'tnum';`
+}
