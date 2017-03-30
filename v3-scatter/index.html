@@ -89,8 +89,6 @@ d3.csv('anscombe.csv',function(data){
 
     //General chart configuration
     const myScatter = scatterChart()
-        .colourProperty( 'label' )  //the data property determining the lines colour
-        .colourDomain( ['','yes'] )
         .groups(groups) //the values of that property corresponding to the colours in the basic chart colour scheme
         .xDomain( xExtent ) 
         .yDomain( yExtent )
@@ -101,7 +99,6 @@ d3.csv('anscombe.csv',function(data){
     const myAxes = scatterAxes()
         //.yTicks([4,5,9,12])
         
-
     //specific scatter configuration
     Object.keys(frame).forEach(frameName=>{
         const currentFrame = frame[frameName];

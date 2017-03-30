@@ -91,21 +91,6 @@ function scatterChart(){
         return chart;
     }
 
-    chart.colourRange = (x)=>{
-        colourScale.range(x);
-        return chart;
-    }
-
-    chart.colourDomain = (x)=>{
-        colourScale.domain(x);
-        return chart;
-    }
-
-    chart.colourProperty = (x)=>{
-        colourProperty = x;
-        return chart;
-    }
-
     chart.groups = (x)=>{
         groups = x;
         return chart;
