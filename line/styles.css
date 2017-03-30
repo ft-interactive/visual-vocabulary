@@ -1,16 +1,94 @@
-[data-frame^="print"] .highlighted-label {
-    font-size: 12px;
+/* overall text style for each chart frame*/
+
+[data-frame^="web"] text{
+    font-size: 18px;
+    fill: #74736C;
 }
 
+[data-frame^="print"] text{
+    font-size: 9.6px;
+}
+
+[data-frame^="social"] text{
+    font-size: 28px;
+    fill-opacity: 0.5;
+}
+
+[data-frame^="video"] text{
+    font-size: 48px;
+    fill-opacity: 0.5;
+}
+
+/* highlight label text style for each chart frame */
+[data-frame^="web"] .highlighted-label{
+    fill: #333333;
+}
+
+[data-frame^="social"] .highlighted-label{
+    fill-opacity: 1;
+    fill:#FFF;
+}
 
 [data-frame^="video"] .highlighted-label {
+    fill-opacity: 1;
     fill:#FFF;
 }
 
-[data-frame^="social"] .highlighted-label {
-    fill:#FFF;
+
+/*set data line thickness*/
+[data-frame^="web"] .slope line{
+    stroke-width: 2.5px;
 }
 
+[data-frame^="print"] .slope line{
+    stroke-width: 2px;
+}
+
+[data-frame^="social"] .slope line{
+    stroke-width: 4px;
+}
+
+[data-frame^="video"] .slope line{
+    stroke-width: 8px;
+}
+
+/*set y-axis tick styles*/
+[data-frame^="web"] .tick line{
+    stroke: #CEC6B9;
+    stroke-dasharray: 2, 1;
+}
+
+[data-frame^="print"] .tick line{
+    stroke-width: 0.3px;
+}
+
+[data-frame^="social"] .tick line{
+    stroke-width: 2px;
+    stroke-opacity: 0.38;
+}
+
+[data-frame^="video"] .tick line{
+    stroke-width: 4px;
+    stroke-opacity: 0.38;
+}
+
+/* set baseline styling */
+[data-frame^="web"] .base line{
+    stroke: #a7a59b;
+    stroke-dasharray: none;
+}
+
+[data-frame^="print"] .base line{
+    stroke-width: 0.6px;
+}
+
+[data-frame^="social"] .base line{
+    stroke-opacity: 0.5;
+}
+
+[data-frame^="video"] .base line{
+    stroke-opacity: 0.5;
+}
 /*in this example because of the density of lines we need to decrease the opacity of those not being highlighted: */
 .background-line{
     stroke-opacity:0.2;
@@ -19,5 +97,5 @@
 svg text{
     font-feature-settings: 'tnum';
     -webkit-font-feature-settings: 'tnum';
-    -moz-font-feature-settings: 'tnum';`
+    -moz-font-feature-settings: 'tnum';
 }

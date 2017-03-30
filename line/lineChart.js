@@ -1,35 +1,81 @@
 function lineChart() {
-	let seriesNames = [];
-	let yAxisAlign = 'right';
-	let yMax=100
-	let yMin=0
 
-    function chartDrawer(parent){
-        parent.append('text')
-            .text('CHART');
+    let yScale=d3.scaleLinear()
+    let seriesNames = [];
+    let yAxisAlign = 'right';
+
+    function chart(parent){
+        console.log("domain",yScale.domain(),"range",yScale.range());
 
 
-	}
-
-	chartDrawer.yMax = (d)=>{
-    	yMax = d;
-    	return chartDrawer;
     }
 
-    chartDrawer.yMin = (d)=>{
-    	yMin = d;
-    	return chartDrawer;
+    chart.yScale = (d)=>{
+        if(!d) return yScale;
+        xScale = d;
+        return chart;
     }
 
-    chartDrawer.seriesNames = (d)=>{
-    	seriesNames = d;
-    	return chartDrawer;
+    chart.yDomain = (d)=>{
+        yScale.domain(d);
+        return chart;
+    };
+
+    chart.yRange = (d)=>{
+        yScale.range(d);
+        return chart;
+    };
+
+    chart.seriesNames = (d)=>{
+        seriesNames = d;
+        return chart;
     }
 
-    chartDrawer.yAxisAlign = (d)=>{
-    	yAxisAlign = d;
-    	return chartDrawer;
+    chart.yAxisAlign = (d)=>{
+        yAxisAlign = d;
+        return chart;
     }
 
-	return chartDrawer
+    return chart
+}
+
+function yLinearAxis() {
+    let yScale = d3.scaleLinear();
+    let yAxisAlign="right"
+    let yLabelOffset=200;
+    let tickSize = 5;
+
+    function axis(parent) {
+        const yAxis = parent.append("g")
+            .attr("class","axes")
+            .call(d3.axisRight(yScale))
+
+        yLabelOffset= d3.selectAll(".axes text").node().getBBox().height
+        console.log("axis width", yLabelOffset)
+
+        yAxis.call(d3.axisRight(yScale)
+            .tickSize(100))
+
+
+    }
+
+
+    axis.yScale = (d)=>{
+        yScale = d;
+        return axis;
+    }
+    axis.yAxisAlign = (d)=>{
+        yAxisAlign=d;
+        return axis;
+    }
+    axis.yLabelOffset = (d)=>{
+        yLabelOffset=d;
+        return axis;
+    }
+    axis.tickSize = (d)=>{
+        tickSize=d;
+        return axis;
+    }
+
+    return axis
 }

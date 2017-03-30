@@ -14,7 +14,6 @@
     <style>
     .saveable button{ display: block; }
     </style>
-<<<<<<< HEAD
 </head>
 <body>
 
@@ -25,44 +24,30 @@
     <figure class="framed saveable" data-frame="print"><svg></svg></figure>
     <figure class="framed saveable" data-frame="social"><svg></svg></figure>
     <figure class="framed saveable" data-frame="video"><svg></svg></figure>
-=======
-    <script src="d3.min.js"></script>
-    <script src="drawFrame.js"></script>
-    <script src="line.js"></script>
-    <script src="saveSvgAsPng.js"></script>
-    <script>
-        
-        //datafile
-        var dataURL = "linedata.csv"
-        
-        //titles, footnotes
-        var title = "Lorem ipsum dolor sit amet";
-        var subtitle = "Consectetur adipiscing elit";//comment out subtitle assignment if not needed
-        var source = "Sed do eiusmod tempor incididunt ut";
->>>>>>> master
 
 </body>
 
 <script type="text/javascript">
 
+
+const sharedConfig = {
+  title:"Title not yet added",
+  subtitle:"Subtitle not yet added",  
+  source:"Fox news",
+}
+
+let yMin = 0;
+let yMax = 110;
+let yAxisAlign="right"
+
+
 const frame = {
-    web: gChartframe.webFrame
-        .title("Title not yet added")
-        .subtitle("Subtitle not yet added")
-        .source("Source: No source given"),
-    print: gChartframe.printFrame
-        .title("Title not yet added")
-        .subtitle("Subtitle not yet added")
-        .source("Source: No source given"),
-    social: gChartframe.socialFrame
-        .title("Title not yet added")
-        .subtitle("Subtitle not yet added")
-        .source("Source: No source given"),
-    video: gChartframe.videoFrame
-        .title("Title not yet added")
-        .subtitle("Subtitle not yet added")
-        .source("Source: No source given"),
+   web: gChartframe.webFrame(sharedConfig),
+   print: gChartframe.printFrame(sharedConfig),
+   social: gChartframe.socialFrame(sharedConfig),
+   video: gChartframe.videoFrame(sharedConfig),
 };
+
 
 //add the frames to the page...
 d3.selectAll('.framed')
@@ -74,7 +59,6 @@ d3.selectAll('.framed')
 
 d3.csv('example.csv', function(data){
     //draw your charts! (see the slope chart for example)
-    console.log(data)
     let seriesNames=getSeriesNames(data.columns)
     let plotData=seriesNames.map(function(d,i){
         return {
@@ -82,16 +66,25 @@ d3.csv('example.csv', function(data){
             lineData:getlines(data,d)
         }
     })
-    console.log(plotData)
+    const valueExtent = extentMulti(data,seriesNames)
 
     const myChart = lineChart()
         .seriesNames(seriesNames)
-        .yMax(100)
-        .yMin(0); //defined in chart.js
+        .yDomain([Math.min(yMin,valueExtent[0]),Math.max(yMax,valueExtent[1])])
 
+    const myYAxis=yLinearAxis()
 
     Object.keys(frame).forEach(frameName=>{
         const currentFrame = frame[frameName];
+
+        myChart.yRange( [currentFrame.dimension().height,0] );
+        myYAxis.yScale( myChart.yScale() );
+
+        currentFrame.plot()
+            .call(myYAxis);
+
+        currentFrame.margin({left:200});
+        
         currentFrame.plot()
             .call(myChart);
      });
