@@ -53,7 +53,9 @@ function yLinearAxis() {
         yLabelOffset= d3.selectAll(".yAxis text").node().getBBox().height
         console.log("axis width", yLabelOffset)
 
-        yAxis.call(d3.axisRight(yScale)
+        yAxis
+        .attr("x",40)
+        .call(d3.axisRight(yScale)
             .tickSize(100))
 
 
