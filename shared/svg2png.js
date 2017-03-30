@@ -473,13 +473,13 @@ function addSVGSavers(parentSelector){
     .forEach(function(figure, index){
       figure.insertAdjacentHTML('beforeend', '<button id="png-saver-'+index+'" class="saver-button">💾 save PNG</button>');
       figure.insertAdjacentHTML('beforeend', '<button id="svg-saver-'+index+'" class="saver-button">💾 save SVG</button>');
-      
+
       document.querySelector('#png-saver-'+index).onclick = function(){
-        saveSvgAsPng(figure.querySelector('svg'), 'VisualVocab-'+index+'.png', {scale: 2});              
+        saveSvgAsPng(figure.querySelector('svg'), 'VisualVocab-'+index+'.png', {scale: 2});
       };
 
       document.querySelector('#svg-saver-'+index).onclick = function(){
-        saveSvg(figure.querySelector('svg'), 'VisualVocab-'+index+'.svg');              
+        saveSvg(figure.querySelector('svg'), 'VisualVocab-'+index+'.svg');
       };
     });
 }
