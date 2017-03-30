@@ -47,10 +47,10 @@ function yLinearAxis() {
 
     function axis(parent) {
         const yAxis = parent.append("g")
-            .attr("class","axes")
+            .attr("class","yAxis")
             .call(d3.axisRight(yScale))
 
-        yLabelOffset= d3.selectAll(".axes text").node().getBBox().height
+        yLabelOffset= d3.selectAll(".yAxis text").node().getBBox().height
         console.log("axis width", yLabelOffset)
 
         yAxis.call(d3.axisRight(yScale)
