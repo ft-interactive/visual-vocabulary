@@ -1,21 +1,21 @@
 /* overall text style for each chart frame*/
 
-[data-frame^="web"] yAxis text{
+[data-frame^="web"] text{
     font-size: 58px;
     fill: #74736C;
 
 }
 
-[data-frame^="print"] yAxis {
+[data-frame^="print"] .yAxis {
     font-size: 9.6px;
 }
 
-[data-frame^="social"] yAxis {
+[data-frame^="social"] .yAxis {
     font-size: 28px;
     fill-opacity: 0.5;
 }
 
-[data-frame^="video"] yAxis {
+[data-frame^="video"] .yAxis {
     font-size: 48px;
     fill-opacity: 0.5;
 }
