@@ -38,6 +38,7 @@ const sharedConfig = {
 
 let yMin = 0;
 let yMax = 110;
+let yAxisHighlight=1000
 let yAxisAlign="right"
 
 
@@ -72,18 +73,21 @@ d3.csv('example.csv', function(data){
         .seriesNames(seriesNames)
         .yDomain([Math.min(yMin,valueExtent[0]),Math.max(yMax,valueExtent[1])])
 
-    const myYAxis=yLinearAxis()
+    
 
     Object.keys(frame).forEach(frameName=>{
+        const myYAxis = yLinearAxis();
         const currentFrame = frame[frameName];
+        const tickSize=currentFrame.dimension().width-currentFrame.margin().right
 
         myChart.yRange( [currentFrame.dimension().height,0] );
-        myYAxis.yScale( myChart.yScale() );
+        myYAxis
+            .yScale(myChart.yScale())
+            .tickSize(tickSize)
+            .yAxisHighlight(yAxisHighlight);
 
         currentFrame.plot()
             .call(myYAxis);
-
-        currentFrame.margin({left:200});
         
         currentFrame.plot()
             .call(myChart);

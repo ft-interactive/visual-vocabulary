@@ -42,24 +42,38 @@ function lineChart() {
 function yLinearAxis() {
     let yScale = d3.scaleLinear();
     let yAxisAlign="right"
-    let yLabelOffset=200;
+    let yLabelOffset=0;
     let tickSize = 5;
+    let yAxisHighlight = 0;
 
     function axis(parent) {
-        const yAxis = parent.append("g")
-            .attr("class","yAxis")
-            .call(d3.axisRight(yScale))
 
-        yLabelOffset= d3.selectAll(".yAxis text").node().getBBox().height
-        console.log("axis width", yLabelOffset)
+        const yAxis =d3.axisRight()
+            .scale(yScale)
+        
+        const yLabel = parent.append("g")
+            .attr("class","axis yAxis")
+            .call(yAxis)
 
-        yAxis
-        .attr("x",40)
-        .call(d3.axisRight(yScale)
-            .tickSize(100))
+        //Calculate width of widest .tick text
+        parent.selectAll(".yAxis text").each(
+            function(){
+                yLabelOffset=Math.max(this.getBBox().width,yLabelOffset);
+            })
+        //Use this to amend the tickSIze and re cal the vAxis
+        yLabel.call(yAxis.tickSize(tickSize-yLabelOffset))
 
+        //position label
+        yLabel.selectAll("text")
+            .attr("x",tickSize)
 
-    }
+        //identify 0 line if there is one
+        let originValue = 0;
+        let origin = parent.selectAll(".tick").filter(function(d, i) {
+                return d==originValue || d==yAxisHighlight;
+            }).classed("baseline",true);
+
+        }
 
 
     axis.yScale = (d)=>{
@@ -71,11 +85,17 @@ function yLinearAxis() {
         return axis;
     }
     axis.yLabelOffset = (d)=>{
+        if(d===undefined) return yLabelOffset
         yLabelOffset=d;
         return axis;
     }
     axis.tickSize = (d)=>{
+        if(d===undefined) return tickSize
         tickSize=d;
+        return axis;
+    }
+    axis.yAxisHighlight = (d)=>{
+        yAxisHighlight = d;
         return axis;
     }
 
