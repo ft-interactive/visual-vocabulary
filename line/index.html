@@ -38,8 +38,9 @@ const sharedConfig = {
 
 let yMin = 0;
 let yMax = 110;
-let yAxisHighlight=1000
-let yAxisAlign="right"
+const yAxisHighlight=1000
+const yAxisAlign="right"
+let numTicksy=5
 
 
 const frame = {
@@ -83,6 +84,7 @@ d3.csv('example.csv', function(data){
         myChart.yRange( [currentFrame.dimension().height,0] );
         myYAxis
             .yScale(myChart.yScale())
+            .numTicksy(numTicksy)
             .tickSize(tickSize)
             .yAxisHighlight(yAxisHighlight);
 

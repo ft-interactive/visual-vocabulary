@@ -45,10 +45,12 @@ function yLinearAxis() {
     let yLabelOffset=0;
     let tickSize = 5;
     let yAxisHighlight = 0;
+    let numTicksy=2
 
     function axis(parent) {
 
         const yAxis =d3.axisRight()
+            .ticks(numTicksy)
             .scale(yScale)
         
         const yLabel = parent.append("g")
@@ -96,6 +98,10 @@ function yLinearAxis() {
     }
     axis.yAxisHighlight = (d)=>{
         yAxisHighlight = d;
+        return axis;
+    }
+    axis.numTicksy = (d)=>{
+        numTicksy = d;
         return axis;
     }
 
