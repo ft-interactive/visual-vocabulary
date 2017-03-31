@@ -68,8 +68,7 @@ function yLinearAxis() {
         //position label
         if(yAxisAlign=="right") {
             yLabel.selectAll("text")
-            .attr("x",tickSize)
-
+            .attr("dx",yLabelOffset)
         }
         //translate if a left axis
         if (yAxisAlign=="left") {
@@ -121,7 +120,6 @@ function yLinearAxis() {
         return{
             "left": d3.axisLeft(),
             "right":d3.axisRight()
-
         }[alignment]
     }
 }
