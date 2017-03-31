@@ -2,7 +2,7 @@ function lineChart() {
 
     let yScale=d3.scaleLinear()
     let seriesNames = [];
-    let yAxisAlign = 'right';
+    let yAxisAlign = "right"
 
     function chart(parent){
         console.log("domain",yScale.domain(),"range",yScale.range());
@@ -15,7 +15,11 @@ function lineChart() {
         xScale = d;
         return chart;
     }
-
+    chart.yAxisAlign = (d)=>{
+        if(!d) return yAxisAlign;
+        yAxisAlign = d;
+        return chart;
+    }
     chart.yDomain = (d)=>{
         yScale.domain(d);
         return chart;
@@ -31,10 +35,6 @@ function lineChart() {
         return chart;
     }
 
-    chart.yAxisAlign = (d)=>{
-        yAxisAlign = d;
-        return chart;
-    }
 
     return chart
 }
@@ -102,6 +102,11 @@ function yLinearAxis() {
     }
     axis.numTicksy = (d)=>{
         numTicksy = d;
+        return axis;
+    }
+    axis.yAxisAlign = (d)=>{
+        if(!d) return yAxisAlign;
+        yAxisAlign = d;
         return axis;
     }
 

@@ -38,9 +38,9 @@ const sharedConfig = {
 
 let yMin = 0;
 let yMax = 110;
-const yAxisHighlight=1000
-const yAxisAlign="right"
-let numTicksy=5
+const yAxisHighlight=0;
+let numTicksy=5;
+const yAxisAlign="right";
 
 
 const frame = {
@@ -73,20 +73,24 @@ d3.csv('example.csv', function(data){
     const myChart = lineChart()
         .seriesNames(seriesNames)
         .yDomain([Math.min(yMin,valueExtent[0]),Math.max(yMax,valueExtent[1])])
+        .yAxisAlign(yAxisAlign)
 
     
 
     Object.keys(frame).forEach(frameName=>{
         const myYAxis = yLinearAxis();
         const currentFrame = frame[frameName];
-        const tickSize=currentFrame.dimension().width-currentFrame.margin().right
+        const tickSize=getTickSize(currentFrame,myChart.yAxisAlign())
+    
+        console.log("ticksize",tickSize)
 
         myChart.yRange( [currentFrame.dimension().height,0] );
         myYAxis
             .yScale(myChart.yScale())
             .numTicksy(numTicksy)
             .tickSize(tickSize)
-            .yAxisHighlight(yAxisHighlight);
+            .yAxisHighlight(yAxisHighlight)
+            .yAxisAlign(myChart.yAxisAlign());
 
         currentFrame.plot()
             .call(myYAxis);
@@ -133,6 +137,12 @@ function getlines(data,group) {
         } 
     });
     return lineData
+}
+function getTickSize(frame,align) {
+    return {
+        "left":frame.dimension().width-frame.margin().left,
+        "right":frame.dimension().width-frame.margin().right
+    }[align]
 }
 
 </script>
