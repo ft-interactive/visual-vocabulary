@@ -49,7 +49,7 @@ function yLinearAxis() {
 
     function axis(parent) {
 
-        const yAxis =d3.axisRight()
+        const yAxis =getAxis(yAxisAlign)
             .ticks(numTicksy)
             .scale(yScale)
         
@@ -66,16 +66,21 @@ function yLinearAxis() {
         yLabel.call(yAxis.tickSize(tickSize-yLabelOffset))
 
         //position label
-        yLabel.selectAll("text")
+        if(yAxisAlign=="right") {
+            yLabel.selectAll("text")
             .attr("x",tickSize)
 
+        }
+        //translate if a left axis
+        if (yAxisAlign=="left") {
+            yLabel.attr("transform","translate("+(tickSize)+","+0+")")
+        }
         //identify 0 line if there is one
         let originValue = 0;
         let origin = parent.selectAll(".tick").filter(function(d, i) {
                 return d==originValue || d==yAxisHighlight;
             }).classed("baseline",true);
-
-        }
+    }
 
 
     axis.yScale = (d)=>{
@@ -111,4 +116,12 @@ function yLinearAxis() {
     }
 
     return axis
+
+    function getAxis(alignment){
+        return{
+            "left": d3.axisLeft(),
+            "right":d3.axisRight()
+
+        }[alignment]
+    }
 }

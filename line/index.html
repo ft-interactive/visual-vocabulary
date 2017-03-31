@@ -37,10 +37,10 @@ const sharedConfig = {
 }
 
 let yMin = 0;
-let yMax = 110;
+let yMax = 20000;
 const yAxisHighlight=0;
 let numTicksy=5;
-const yAxisAlign="right";
+const yAxisAlign="left";
 
 
 const frame = {
@@ -80,7 +80,8 @@ d3.csv('example.csv', function(data){
     Object.keys(frame).forEach(frameName=>{
         const myYAxis = yLinearAxis();
         const currentFrame = frame[frameName];
-        const tickSize=getTickSize(currentFrame,myChart.yAxisAlign())
+        const plotWidth=currentFrame.dimension().width-currentFrame.margin().left-currentFrame.margin().right
+        const tickSize=plotWidth
     
         console.log("ticksize",tickSize)
 
@@ -138,12 +139,7 @@ function getlines(data,group) {
     });
     return lineData
 }
-function getTickSize(frame,align) {
-    return {
-        "left":frame.dimension().width-frame.margin().left,
-        "right":frame.dimension().width-frame.margin().right
-    }[align]
-}
+
 
 </script>
 </html>
