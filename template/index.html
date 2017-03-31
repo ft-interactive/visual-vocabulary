@@ -51,8 +51,10 @@ d3.csv('data.csv',function(data){
 
     Object.keys(frame).forEach(frameName=>{
         const currentFrame = frame[frameName];
-        currentFrame.plot()
-            .call(myChart);
+        if(currentFrame.plot() !== undefined){
+            currentFrame.plot()
+                .call(myChart);
+        }
      });
 });
 
