@@ -62,10 +62,12 @@ function yLinearAxis() {
             function(){
                 yLabelOffset=Math.max(this.getBBox().width,yLabelOffset);
             })
+        console.log(parent)
+        console.log(yLabelOffset)
         //Use this to amend the tickSIze and re cal the vAxis
         yLabel.call(yAxis.tickSize(tickSize-yLabelOffset))
 
-        //position label
+        //position label on right hand axis
         if(yAxisAlign=="right") {
             yLabel.selectAll("text")
             .attr("dx",yLabelOffset)

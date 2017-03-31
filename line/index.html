@@ -45,8 +45,10 @@ const yAxisAlign="right";
 
 const frame = {
    web: gChartframe.webFrame(sharedConfig),
-   print: gChartframe.printFrame(sharedConfig),
-   social: gChartframe.socialFrame(sharedConfig),
+   print: gChartframe.printFrame(sharedConfig)
+   .margin({left:0,right:0}),
+   social: gChartframe.socialFrame(sharedConfig)
+   .margin({left:0,right:0}),
    video: gChartframe.videoFrame(sharedConfig),
 };
 
@@ -84,7 +86,7 @@ d3.csv('example.csv', function(data){
         const tickSize=plotWidth
     
         console.log("ticksize",tickSize)
-
+        console.log(currentFrame.dimension().width) 
         myChart.yRange( [currentFrame.dimension().height,0] );
         myYAxis
             .yScale(myChart.yScale())
