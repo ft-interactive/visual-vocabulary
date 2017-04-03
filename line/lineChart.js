@@ -148,21 +148,48 @@ function yLinearAxis() {
 function xDateAxis() {
     let xScale = d3.scaleTime();
     let plotDim = {}
+    let interval ="months"
 
     function axis(parent) {
+        var parseDate = d3.timeParse("%d/%m")
+
         const xAxis =d3.axisBottom()
-            .tickSize(5)
-            .ticks(10)
+            .tickSize(10)
+            .ticks(getTicks(interval))
+            .tickFormat(tickFormat(interval))
             .scale(xScale)
 
         const xLabel = parent.append("g")
             .attr("class","axis yAxis")
             .call(xAxis)
-        xLabel.attr("transform","translate(0,"+(plotDim.height)+")")
-
-    console.log(plotDim)
+        xLabel.attr("transform","translate(0,"+(plotDim.height)+")");
 
 
+
+    }
+
+    function getTicks(interval) {
+        return {
+            "decade":d3.timeYear.every(10),
+            "lustrum":d3.timeYear.every(5),
+            "years":d3.timeYear.every(1),
+            "quarters":d3.timeMonth.every(3),
+            "months":d3.timeMonth.every(1),
+            "weeks":d3.timeWeek.every(1),
+            "days":d3.timeDay.every(1)
+        }[interval]
+    }
+
+    function tickFormat(interval) {
+        return {
+            "decade":d3.timeFormat("%Y"),
+            "lustrum":d3.timeFormat("%Y"),
+            "years":d3.timeFormat("%Y"),
+            "quarters":d3.timeFormat("%b"),
+            "months":d3.timeFormat("%b"),
+            "weeks":d3.timeFormat("%b"),
+            "days":d3.timeFormat("%d")
+        }[interval]
     }
 
     axis.xScale = (d)=>{
@@ -171,6 +198,10 @@ function xDateAxis() {
     }
     axis.plotDim = (d)=>{
         plotDim = d;
+        return axis;
+    }
+    axis.interval = (d)=>{
+        interval = d;
         return axis;
     }
     return axis

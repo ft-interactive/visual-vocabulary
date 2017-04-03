@@ -78,17 +78,13 @@ d3.csv('linedata.csv', function(data){
             lineData:getlines(data,d)
         }
     })
-    console.log (data)
     const valueExtent = extentMulti(data,seriesNames)
-    const dateExtent = d3.extent(data, function(d) {return d.date;});  
     
     const myChart = lineChart()
         .seriesNames(seriesNames)
         .yDomain([Math.min(yMin,valueExtent[0]),Math.max(yMax,valueExtent[1])])
-        .xDomain([new Date(dateExtent[0]),new Date(dateExtent[1])])
+        .xDomain(d3.extent(data, function(d) {return d.date;}))
         .yAxisAlign(yAxisAlign)
-
-    
 
     Object.keys(frame).forEach(frameName=>{
         const myYAxis = yLinearAxis();
@@ -97,8 +93,6 @@ d3.csv('linedata.csv', function(data){
         const plotDim=currentFrame.dimension()
         const tickSize=plotDim.width
     
-        console.log("ticksize",tickSize)
-        console.log("frameWidth",currentFrame.dimension().width) 
         myChart
             .yRange( [currentFrame.dimension().height,0] )
             .plotDim(plotDim);
@@ -121,7 +115,8 @@ d3.csv('linedata.csv', function(data){
 
         myXAxis
             .xScale(myChart.xScale())
-            .plotDim(myChart.plotDim());
+            .plotDim(myChart.plotDim())
+            .interval(interval);
 
         currentFrame.plot()
             .call(myXAxis);
