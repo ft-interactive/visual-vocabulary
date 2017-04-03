@@ -5,6 +5,7 @@ function lineChart() {
     let plotDim = {}
     let seriesNames = [];
     let yAxisAlign = "right"
+    let rem =10
 
     function chart(parent){
         //console.log("domain",yScale.domain(),"range",yScale.range());
@@ -50,9 +51,15 @@ function lineChart() {
         xScale.range(d);
         return chart;
     };
+    
     chart.plotDim = (d)=>{
         if(!d) return plotDim;
         plotDim = d;
+        return chart;
+    }
+    chart.rem = (d)=>{
+        if(!d) return rem;
+        rem = d;
         return chart;
     }
 
@@ -149,22 +156,28 @@ function xDateAxis() {
     let xScale = d3.scaleTime();
     let plotDim = {}
     let interval ="months"
+    let rem=10
 
     function axis(parent) {
         var parseDate = d3.timeParse("%d/%m")
 
         const xAxis =d3.axisBottom()
-            .tickSize(10)
+            .tickSize(rem*0.75)
             .ticks(getTicks(interval))
             .tickFormat(tickFormat(interval))
             .scale(xScale)
 
         const xLabel = parent.append("g")
-            .attr("class","axis yAxis")
+            .attr("id","xLabel")
+            .attr("class","axis xAxis")
             .call(xAxis)
         xLabel.attr("transform","translate(0,"+(plotDim.height)+")");
 
-
+        let ticks=parent.selectAll(".xAxis line").each(
+            function (d) {
+                console.log(d)
+                return d})
+            .classed("baseline",true);
 
     }
 
@@ -202,6 +215,10 @@ function xDateAxis() {
     }
     axis.interval = (d)=>{
         interval = d;
+        return axis;
+    }
+    axis.rem = (d)=>{
+        rem = d;
         return axis;
     }
     return axis

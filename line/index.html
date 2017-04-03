@@ -87,6 +87,7 @@ d3.csv('linedata.csv', function(data){
         .yAxisAlign(yAxisAlign)
 
     Object.keys(frame).forEach(frameName=>{
+
         const myYAxis = yLinearAxis();
         const myXAxis = xDateAxis();
         const currentFrame = frame[frameName];
@@ -95,7 +96,8 @@ d3.csv('linedata.csv', function(data){
     
         myChart
             .yRange( [currentFrame.dimension().height,0] )
-            .plotDim(plotDim);
+            .plotDim(plotDim)
+            .rem(currentFrame.rem());
         
         myYAxis
             .yScale(myChart.yScale())
@@ -116,7 +118,8 @@ d3.csv('linedata.csv', function(data){
         myXAxis
             .xScale(myChart.xScale())
             .plotDim(myChart.plotDim())
-            .interval(interval);
+            .interval(interval)
+            .rem(myChart.rem());
 
         currentFrame.plot()
             .call(myXAxis);
