@@ -44,12 +44,14 @@ const yAxisAlign="right";
 
 
 const frame = {
-   web: gChartframe.webFrame(sharedConfig),
+   web: gChartframe.webFrame(sharedConfig)
+   .margin({right:0}),
    print: gChartframe.printFrame(sharedConfig)
-   .margin({left:0,right:0}),
+   .margin({right:0}),
    social: gChartframe.socialFrame(sharedConfig)
-   .margin({left:0,right:0}),
-   video: gChartframe.videoFrame(sharedConfig),
+   .margin({right:0}),
+   video: gChartframe.videoFrame(sharedConfig)
+   .margin({right:0}),
 };
 
 
@@ -82,7 +84,7 @@ d3.csv('example.csv', function(data){
     Object.keys(frame).forEach(frameName=>{
         const myYAxis = yLinearAxis();
         const currentFrame = frame[frameName];
-        const plotWidth=currentFrame.dimension().width-currentFrame.margin().left-currentFrame.margin().right
+        const plotWidth=currentFrame.dimension().width
         const tickSize=plotWidth
     
         console.log("ticksize",tickSize)
@@ -97,6 +99,11 @@ d3.csv('example.csv', function(data){
 
         currentFrame.plot()
             .call(myYAxis);
+        
+        console.log("Labels offset ",myYAxis.yLabelOffset())
+        //add code to redraw frame with new right margin.
+
+        const myXAxis=xDateAxis()
         
         currentFrame.plot()
             .call(myChart);

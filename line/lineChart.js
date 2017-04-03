@@ -74,7 +74,7 @@ function yLinearAxis() {
         }
         //translate if a left axis
         if (yAxisAlign=="left") {
-            yLabel.attr("transform","translate("+(tickSize)+","+0+")")
+            yLabel.attr("transform","translate("+(tickSize-yLabelOffset)+","+0+")")
         }
         //identify 0 line if there is one
         let originValue = 0;
@@ -125,3 +125,7 @@ function yLinearAxis() {
         }[alignment]
     }
 }
+
+function yLinearAxis() {
+
+    }
