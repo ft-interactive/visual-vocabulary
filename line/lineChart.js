@@ -1,18 +1,19 @@
 function lineChart() {
 
-    let yScale=d3.scaleLinear()
+    let yScale=d3.scaleLinear();
+    let xScale=d3.scaleTime();
     let seriesNames = [];
     let yAxisAlign = "right"
 
     function chart(parent){
-        console.log("domain",yScale.domain(),"range",yScale.range());
-
+        //console.log("domain",yScale.domain(),"range",yScale.range());
+        //console.log ("xScale", xScale)
 
     }
 
     chart.yScale = (d)=>{
         if(!d) return yScale;
-        xScale = d;
+        yScale = d;
         return chart;
     }
     chart.yAxisAlign = (d)=>{
@@ -34,6 +35,19 @@ function lineChart() {
         seriesNames = d;
         return chart;
     }
+    chart.xScale = (d)=>{
+        if(!d) return xScale;
+        xScale = d;
+        return chart;
+    }
+    chart.xDomain = (d)=>{
+        xScale.domain(d);
+        return chart;
+    };
+    chart.xRange = (d)=>{
+        xScale.range(d);
+        return chart;
+    };
 
 
     return chart
@@ -62,8 +76,6 @@ function yLinearAxis() {
             function(){
                 yLabelOffset=Math.max(this.getBBox().width,yLabelOffset);
             })
-        console.log(parent)
-        console.log(yLabelOffset)
         //Use this to amend the tickSIze and re cal the vAxis
         yLabel.call(yAxis.tickSize(tickSize-yLabelOffset))
 
@@ -126,6 +138,28 @@ function yLinearAxis() {
     }
 }
 
-function yLinearAxis() {
+function xDateAxis() {
+    let xScale = d3.scaleTime();
+
+    function axis(parent) {
+        const xAxis =d3.axisBottom()
+            .tickSize(5)
+            .ticks(10)
+            .scale(xScale)
+
+        console.log("xAxis",xAxis.domain,xAxis.range)
+
+        const xLabel = parent.append("g")
+            .attr("class","axis yAxis")
+            .call(xAxis)
 
     }
+
+
+    axis.xScale = (d)=>{
+        xScale = d;
+        return axis;
+    }
+    return axis
+
+}

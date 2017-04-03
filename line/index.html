@@ -41,7 +41,7 @@ let yMax = 20000;
 const yAxisHighlight=0;
 let numTicksy=5;
 const yAxisAlign="right";
-
+const interval="months"
 
 const frame = {
    web: gChartframe.webFrame(sharedConfig)
@@ -63,7 +63,7 @@ d3.selectAll('.framed')
             .call(frame[figure.node().dataset.frame]);
     });
 
-d3.csv('example.csv', function(data){
+d3.csv('linedata.csv', function(data){
     //draw your charts! (see the slope chart for example)
     let seriesNames=getSeriesNames(data.columns)
     let plotData=seriesNames.map(function(d,i){
@@ -72,23 +72,33 @@ d3.csv('example.csv', function(data){
             lineData:getlines(data,d)
         }
     })
+    console.log (data)
     const valueExtent = extentMulti(data,seriesNames)
+    const dateExtent = d3.extent(data, function(d) {return d.date;}); 
+
+    console.log("Date extent",dateExtent);
+    console.log("Date extent",new Date(dateExtent[0]));
+    console.log("Date extent",new Date(dateExtent[1]));
+    //console.log("Date extent",[new Date(dateExtent[0]),new Date(dateExtent[1])]) 
+    
 
     const myChart = lineChart()
         .seriesNames(seriesNames)
         .yDomain([Math.min(yMin,valueExtent[0]),Math.max(yMax,valueExtent[1])])
+        .xDomain([new Date(dateExtent[0]),new Date(dateExtent[1])])
         .yAxisAlign(yAxisAlign)
 
     
 
     Object.keys(frame).forEach(frameName=>{
         const myYAxis = yLinearAxis();
+        const myXAxis = xDateAxis();
         const currentFrame = frame[frameName];
         const plotWidth=currentFrame.dimension().width
         const tickSize=plotWidth
     
         console.log("ticksize",tickSize)
-        console.log(currentFrame.dimension().width) 
+        console.log("frameWidth",currentFrame.dimension().width) 
         myChart.yRange( [currentFrame.dimension().height,0] );
         myYAxis
             .yScale(myChart.yScale())
@@ -103,8 +113,16 @@ d3.csv('example.csv', function(data){
         console.log("Labels offset ",myYAxis.yLabelOffset())
         //add code to redraw frame with new right margin.
 
-        const myXAxis=xDateAxis()
-        
+        //Pass new range based on new margin
+        myChart.xRange( [0,currentFrame.dimension().width] );
+
+        myXAxis
+            .xScale(myChart.xScale())
+
+        currentFrame.plot()
+            .call(myXAxis);
+
+
         currentFrame.plot()
             .call(myChart);
      });
