@@ -2,12 +2,14 @@ function lineChart() {
 
     let yScale=d3.scaleLinear();
     let xScale=d3.scaleTime();
+    let plotDim = {}
     let seriesNames = [];
     let yAxisAlign = "right"
 
     function chart(parent){
         //console.log("domain",yScale.domain(),"range",yScale.range());
         //console.log ("xScale", xScale)
+        console.log ("plotDim", plotDim)
 
     }
 
@@ -48,6 +50,11 @@ function lineChart() {
         xScale.range(d);
         return chart;
     };
+    chart.plotDim = (d)=>{
+        if(!d) return plotDim;
+        plotDim = d;
+        return chart;
+    }
 
 
     return chart
@@ -140,6 +147,7 @@ function yLinearAxis() {
 
 function xDateAxis() {
     let xScale = d3.scaleTime();
+    let plotDim = {}
 
     function axis(parent) {
         const xAxis =d3.axisBottom()
@@ -147,17 +155,22 @@ function xDateAxis() {
             .ticks(10)
             .scale(xScale)
 
-        console.log("xAxis",xAxis.domain,xAxis.range)
-
         const xLabel = parent.append("g")
             .attr("class","axis yAxis")
             .call(xAxis)
+        xLabel.attr("transform","translate(0,"+(plotDim.height)+")")
+
+    console.log(plotDim)
+
 
     }
 
-
     axis.xScale = (d)=>{
         xScale = d;
+        return axis;
+    }
+    axis.plotDim = (d)=>{
+        plotDim = d;
         return axis;
     }
     return axis
