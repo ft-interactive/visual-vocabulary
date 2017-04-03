@@ -65,6 +65,12 @@ d3.selectAll('.framed')
 
 d3.csv('linedata.csv', function(data){
     //draw your charts! (see the slope chart for example)
+    var parseDate = d3.timeParse("%d/%m/%Y")
+    
+    data.forEach(function(d) {
+                d.date=parseDate(d.date);
+            });
+
     let seriesNames=getSeriesNames(data.columns)
     let plotData=seriesNames.map(function(d,i){
         return {
