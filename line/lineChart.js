@@ -2,15 +2,27 @@ function lineChart() {
 
     let yScale=d3.scaleLinear();
     let xScale=d3.scaleTime();
-    let plotDim = {}
     let seriesNames = [];
     let yAxisAlign = "right"
     let rem =10
 
     function chart(parent){
-        //console.log("domain",yScale.domain(),"range",yScale.range());
-        //console.log ("xScale", xScale)
-        console.log ("plotDim", plotDim)
+
+        var lineData= d3.line()
+            .x(function(d,i) { 
+                return xScale(d.date); 
+            })
+            .y(function(d) { 
+                return yScale(d.value); 
+            })
+
+       parent.append("path")
+            .attr("stroke","#FFFFFF")
+            .attr("stroke-width",3)
+            .attr('d', function(d){
+                console.log(d)
+                return lineData(d.lineData); })
+
 
     }
 
@@ -168,14 +180,12 @@ function xDateAxis() {
             .scale(xScale)
 
         const xLabel = parent.append("g")
-            .attr("id","xLabel")
             .attr("class","axis xAxis")
             .call(xAxis)
         xLabel.attr("transform","translate(0,"+(plotDim.height)+")");
 
         let ticks=parent.selectAll(".xAxis line").each(
             function (d) {
-                console.log(d)
                 return d})
             .classed("baseline",true);
 

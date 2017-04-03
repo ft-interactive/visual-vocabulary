@@ -29,17 +29,16 @@
 
 <script type="text/javascript">
 
-
+//User defined constants
 const sharedConfig = {
   title:"Title not yet added",
   subtitle:"Subtitle not yet added",  
   source:"Fox news",
 }
-
 let yMin = 0;
 let yMax = 20000;
 const yAxisHighlight=0;
-let numTicksy=5;
+const numTicksy=5;
 const yAxisAlign="right";
 const interval="months"
 
@@ -109,7 +108,7 @@ d3.csv('linedata.csv', function(data){
         currentFrame.plot()
             .call(myYAxis);
         
-        console.log("Labels offset ",myYAxis.yLabelOffset())
+        //console.log("Labels offset ",myYAxis.yLabelOffset())
         //add code to redraw frame with new right margin.
 
         //Pass new range based on new margin
@@ -123,9 +122,14 @@ d3.csv('linedata.csv', function(data){
 
         currentFrame.plot()
             .call(myXAxis);
-
+        console.log(plotData)
 
         currentFrame.plot()
+            .selectAll("g")
+            .data(plotData)
+            .enter()
+            .append("g")
+                //.attr('class','line')
             .call(myChart);
      });
 });
