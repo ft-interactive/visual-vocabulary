@@ -49,6 +49,9 @@
         drawFrames()
         //Load the data
         d3.csv(dataURL,function(error, data){
+
+            console.log("out here", data);
+
             //date formatter, matching the format of the incoming csv...
             //var parseDate = d3.time.format("%d-%b-%y").parse;
             /*

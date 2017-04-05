@@ -38,6 +38,9 @@ function makeChart(data,stylename,media,sort,xMin,xMax,xAxisHighlight,numTicksx,
     //chart variables
     var dotSize=yOffset/2;
     var lineWeight=2;
+
+          console.log("----!!!index1!!!----");
+    console.log(data);
     
     //parse the data for constant data elements
     data.forEach(function(d)    {
@@ -70,7 +73,7 @@ function makeChart(data,stylename,media,sort,xMin,xMax,xAxisHighlight,numTicksx,
 
     var yLabel=plot.append("g")
       .attr("class", media+"yAxis")
-      .call(yAxis)
+      .call(yAxis);
 
     //calculate what the ticksize should be now that the text for the labels has been drawn
     var yLabelOffset=yLabel.node().getBBox().width
@@ -96,6 +99,9 @@ function makeChart(data,stylename,media,sort,xMin,xMax,xAxisHighlight,numTicksx,
       .attr("class", media+"xAxis")
       .attr("transform", "translate("+(margin.left)+"," + (margin.top) + ")")
       .call(xAxis);
+
+      console.log("----!!!index2!!!----");
+    console.log(data);
     
     plot.append("g")
         .attr("id","lines")
@@ -119,6 +125,8 @@ function makeChart(data,stylename,media,sort,xMin,xMax,xAxisHighlight,numTicksx,
             if (d.value<0){
                 return xScale(0)
             }   else    {
+
+                console.log("x2 point will be set to", xScale(d.value), "from", d.value);
                 return xScale(d.value);
             }
             

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lollipop H chart - Visual Vocabulary</title>
+    <script src="//d3js.org/d3.v4.js"></script>
+    <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
+    <script src="//financial-times.github.io/g-chartframe/build/g-chartframe.js"></script>
+    <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
+    <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
+    <script src="lollipop-h2.js"></script>
+    <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
+
+    <link rel="stylesheet" href="style.css"/>
+    <style>
+    .saveable button{ display: block; }
+    </style>
+</head>
+<body>
+    <h1>Lollipop chart (horizontal)</h1>
+    <p>Lollipop charts draw more attention to the data value than standard bar/column and can also show rank effectively</p>
+    <hr>
+    <figure class="framed saveable" data-frame="web"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="print"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="social"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="video"><svg></svg></figure>
+</body>
+
+<script type="text/javascript">
+
+//custom graph options here
+const dotSize = 10; //radius 
+const sort="descending"; //ascending or descending
+const numTicksX = 5;
+const xAxisHighlight=0;
+const yLabelPosition = { x: -15, y: -15 }
+const normalColours = gChartcolour.basicLineWeb[1];    
+const popColours = gChartcolour.basicLineSocial[1];  
+
+const webPadding = {
+    left: 100,
+    right: 30,
+    top: 80,
+    bottom: 30,
+}
+const printPadding = {
+    left: 00,
+    right: 0,
+    top: 100,
+    bottom: 30,
+}
+const socialPadding = {
+    left: 30,
+    right: 50,
+    top: 200,
+    bottom: 0,
+}
+const videoPadding = {
+    left: 100,
+    right: 50,
+    top: 300,
+    bottom: 0,
+}
+
+const frame = {
+    web: gChartframe.webFrame()
+    	.margin({left: 100, top: 80, right: 30 })
+        .width(600),
+
+    print: gChartframe.printFrame()
+	    .margin({left: 100, top: 40, right: 30 })
+        .width(112.5)   //note, this value is in mm for the print frame
+        .height(190),   //note, this value is in mm for the print frame
+
+    social: gChartframe.socialFrame()
+	    .margin({left: 100, top: 170, right: 50 })
+        .title('Slightly shorter title perhaps?'),
+
+    video: gChartframe.videoFrame()
+	    .margin({left: 100, top: 270, right: 30 })
+};
+
+const choosePadding = function(frameName){
+	switch (frameName) {
+		case 'web':
+			return webPadding; 
+		case 'print':
+			return printPadding; 
+		case 'social':
+			return socialPadding
+		case 'video':
+			return videoPadding;
+	}
+}
+
+d3.selectAll('.framed')
+    .each(function(){
+        const figure = d3.select(this);
+        figure.select('svg')
+            .call(frame[figure.node().dataset.frame]);
+    });
+
+d3.csv('data_negative.csv',function(error, data){
+
+	if(error) throw new Error("There was a problem with the data loading");
+
+	//format data
+	const dataExtent = d3.extent(data, d => parseInt(d.value));
+
+	//reorder the data according to whether sort is asc or desc
+    if (sort=="descending"){ 
+    	data.sort((a, b) =>  b.value - a.value )
+    }
+    else { data.sort((a, b) => a.value - b.value )} 
+
+    //check if number of ticks is set, otherwise use default of null 
+	var presetNumTicks = (typeof numTicksX !== 'undefined') ? numTicksX : null;
+
+
+	Object.keys(frame).forEach(frameName=>{
+		const currentFrame = frame[frameName];
+
+		const h = currentFrame.dimension().height; 
+		const w = currentFrame.dimension().width;
+
+		const padding = choosePadding(frameName); 
+
+		const chartHeight = h - padding.top + padding.bottom;
+		const chartWidth = w - padding.left + padding.right;
+
+		const myChart = lollipopHChart();   
+		const myAxes = lollipopHAxes(); 
+   
+	    //create scales
+	    const xScale = d3.scaleLinear()
+						.domain(dataExtent)
+						.range([0, chartWidth]);
+
+		const yScale = d3.scaleBand()
+						.domain(data.map( d => d.name ))
+						.range([0, chartHeight])
+						.round(true);
+
+		//create axis
+		const xAxis = d3.axisBottom()
+						.scale(xScale)
+						.tickSize(chartHeight)
+						.ticks(presetNumTicks);
+
+		const yAxis = d3.axisLeft()
+						.scale(yScale)
+						.tickSize(0)
+
+		//set colour 
+		var colours = (frameName == 'video' || frameName == 'social') ? popColours : normalColours;
+
+
+
+		//add configuration to chart
+		myChart.setDataExtent(dataExtent)
+			.setXScale(xScale)
+			.setYScale(yScale)
+			.setDotSize(dotSize)
+			.setColour(colours);
+
+		//add configuration to axes
+		myAxes.setXAxis(xAxis)
+			.setYAxis(yAxis)
+			.setYLabelPosition(yLabelPosition);
+
+		// generate the axes
+		currentFrame.plot()
+			.call(myAxes);
+
+		//generate the chart 
+		currentFrame.plot()
+			.selectAll('g.lollipop-h')
+			.data(data)
+			.enter()
+			.append('g')
+				.attr('class', 'lollipop-h')
+			.call(myChart);
+
+	})
+
+	//add save buttons 
+    addSVGSavers('figure.saveable');
+
+});
+
+
+</script>
+</html>
