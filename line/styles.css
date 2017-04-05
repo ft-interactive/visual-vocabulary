@@ -126,6 +126,31 @@
     stroke-width: 4px;
     stroke-opacity: 0.38;
 }
+/* Styles for lines on chart*/
+[data-frame^="web"] .lines {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2.5px;
+    fill: none;
+}
+[data-frame^="print"] .lines{
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2px;
+    fill: none;
+}
+[data-frame^="social"] .lines{
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 5px;
+    fill: none;
+}
+[data-frame^="video"] .lines{
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 8px;
+    fill: none;
+}
 
 
 

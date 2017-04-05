@@ -16,9 +16,9 @@ function lineChart() {
                 return yScale(d.value); 
             })
 
+
        parent.append("path")
             .attr("stroke","#FFFFFF")
-            .attr("stroke-width",3)
             .attr('d', function(d){
                 console.log(d)
                 return lineData(d.lineData); })

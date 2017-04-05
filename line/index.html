@@ -36,9 +36,9 @@ const sharedConfig = {
   source:"Fox news",
 }
 let yMin = 0;
-let yMax = 20000;
-const yAxisHighlight=0;
-const numTicksy=5;
+let yMax = 140;
+const yAxisHighlight=100;
+const numTicksy=6;
 const yAxisAlign="right";
 const interval="months"
 
@@ -122,14 +122,15 @@ d3.csv('linedata.csv', function(data){
 
         currentFrame.plot()
             .call(myXAxis);
+        
         console.log(plotData)
 
         currentFrame.plot()
-            .selectAll("g")
+            .selectAll("lines")
             .data(plotData)
             .enter()
             .append("g")
-                //.attr('class','line')
+            .attr('class','lines')
             .call(myChart);
      });
 });
