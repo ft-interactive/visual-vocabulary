@@ -1,218 +1,99 @@
-function circlesTimelineChart(data,stylename,media,plotpadding,legAlign,minAxis,ticks,dateFormat){
-	//graph options
-    //console.log(ticks)
-    var lineSmoothing="monotone";//choose 'linear' for an unsmoothed line
-    var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
-    var subtitleYoffset=d3.select("#"+media+"Subtitle").node().getBBox().height
-    //console.log(data)
+//WHY DO TICKS HAVE A MAJOR AND MINOR TICK STYLE??
+//HOW CAN WE DEAL WITH INTERVALS THAT ARE NOT ANNUAL -- LET'S JUST RELY ON DEFAULT XAXIS STUFF?
+//WHY WERE THERE TWO AXIS, AS FAR AS I CAN SEE WE ONLY NEED ONE 
+//NB HAVE SET CHARTHEIGHT TO DECIDE MAX CIRCLE, NOT CHART WIDTH  
 
-    //Select the plot space in the frame from which to take measurements
-    var frame=d3.select("#"+media+"chart")
-    var plot=d3.select("#"+media+"plot");
+function circlesTimelineChart(){
 
-    var yOffset=d3.select("#"+media+"Subtitle").style("font-size");
-    yOffset=Number(yOffset.replace(/[^\d.-]/g, ''));
-    
-    //Get the width,height and the marginins unique to this plot
-    var w=plot.node().getBBox().width;
-    var h=plot.node().getBBox().height;
-    var margin=plotpadding.filter(function(d){
-        return (d.name === media);
-      });
-    margin=margin[0].margin[0]
-    var plotWidth = w-margin.left-margin.right;
-    var plotHeight = h-margin.top-margin.bottom;
-    var colours=stylename.fillcolours;
-    var maxCircle = (plotWidth/100)*6; // the size of the largest circle
+	let yScale;
+	let xScale;
+	let rScale;
+	let maxCircle;
+	let colours;
+    let xAxis;
 
-    //set up an array of all the dates and values which we need to work out the range of the data
-    var dates = new Array();
-    var values = new Array();
+    function chartDrawer(parent){
 
-    //parse the data
-    data.forEach(function(d) {
-            dates.push(d.date);
-            values.push(d.value);
-    });
+    	parent.append("g")
+    	    .attr('class', 'webfill')
+            .attr('fill', (d, i) => colours[i] )
+            .attr('stroke', (d,i) => colours[i])
 
-    //establish range of dates
-    dates =dates.sort(sortFunction);
-    var dateRange=[dates[0],dates[dates.length-1]];
-    //calculate number of days between dates - needed later for ticks
-    var numDays = daydiff(dates[0],dates[dates.length-1]);
+    	let timeLine = parent.select("g");
 
-    //establish max data value
-    values = values.sort(sortFunction);
-    var maxValue=values[values.length-1];
+    	timeLine.selectAll("circle")
+	    	.data( d => d.values)
+	    	.enter()
+	    	.append('circle')
+	    	.attr("id", d => d.date + d.value)
+            .attr("r", d => rScale(d.value) )
+            .attr("cx", (d, i) => xScale(d.date) )
+            .attr("cy", 0 );
 
-    //establish proportional sizes
-    var radius = d3.scale.sqrt()
-        .domain([0, maxValue])
-        .range([0, maxCircle]);
+        //add labels to circles that need it 
+        parent.append("g").selectAll("text")
+        	.data( d => {
+        		 return d.values.filter( e => e.label === 'yes' ) 
+        		})    
+        	.enter()
+        	.append("text")
+        	.attr("x", d =>  xScale(d.date))
+        	.attr("y", d =>  0 - rScale(d.value) -12)
+        	.text( d => `${d.name} (${d.date})`)
+        	.attr("text-anchor", "middle")
+        	.attr("fill", "black");
 
-    //set up the scale we will use for plotting out the timeline
-    var xScale = d3.time.scale()
-        .domain(dateRange)
-        .range([0, w-(margin.left+margin.right)]);
+        //add connecting lines to labels
+        timeLine.selectAll("line")
+        	.data( d => {
+        		return d.values.filter( e => e.label === 'yes') 
+        	})
+        	.enter()
+        	.append("line")
+        	.attr("x1", d => xScale(d.date))
+        	.attr("x2", d => xScale(d.date))
+        	.attr("y1", d => 0-rScale(d.value))
+        	.attr("y1", d => 0-rScale(d.value) -10);
 
-    //define a main axis based on the scale
-    var xAxis = d3.svg.axis()
-        .scale(xScale)
-        .tickSize(yOffset/2)
-        .tickValues(ticks.major)
-        .orient('bottom');
+        //add x axis     
+        parent.append("g")
+            .attr("class", "axis")
+            .call(xAxis)
+            .selectAll('text')
+            .attr("y", 15);
 
-    //define another axis based on days
-    var yAxis = d3.svg.axis()
-        .scale(xScale)
-        .orient('bottom')
-        .tickFormat('');
-
-    //roll up the data by category
-    var catData = d3.nest()
-        .key(function(d,i){return d.category;})
-        .entries(data);
-
-    //set up document structure
-    var svg=plot.append('g')
-            .attr({
-                'transform':'translate('+margin.left+','+maxCircle*2.5+margin.top+')'
-            });
-
-    var timelines = svg.selectAll('g')
-        .data(catData)
-            .enter()
-        .append('g')
-            .attr('id' , function(d){ 
-                return d.key; })
-            .attr('transform',function(d,i){
-                    return 'translate('+(margin.left)+','+(i*maxCircle*2.5-maxCircle)+')'
-              });
-
-    timelines.append('text')
-    .attr("class",media+"subtitle")
-        .text(function(d,i){
-            return d.key;
-        })
-        .attr('y',-(maxCircle*0.4));
-
-    timelines.append('g')
-        .attr('class', media+'yAxis')
-        .call(yAxis);
-
-    timelines.append('g')
-        .attr('class',media+'xAxis')
-        .call(xAxis);
-
-    if(minAxis) {
-        var xAxisMinor = d3.svg.axis()
-        .scale(xScale)
-        .tickValues(ticks.minor)
-        .tickSize(yOffset/4)
-        .orient("bottom");
-
-        var xLabelMinor=timelines.append("g")
-            .attr("class",media+"minorAxis")
-            .call(xAxisMinor);
+        //add chart subtitle 
+        parent.append("text")
+    		.attr("class", "websubtitle")
+    			.text(d => d.key )
+    		.attr('y', -(maxCircle*0.4) )
     }
 
-    var circles = timelines.append('g')
-            .attr({
-                'class': media+'fill',
-                'fill': function(d,i){
-                    return colours[i];  
-                },
-                'stroke':function(d,i){
-                    return colours[i];  
-                }
-            })
-
-
-        circles.selectAll('circle')
-            .data(function(d){ return d.values; })
-            .enter()
-        .append('circle')
-            .attr("id",(function(d){ return d.date+d.value; }))
-            .attr({
-                'cy':0,
-                'cx':function(d) {
-                    return xScale(d.date);
-                },
-                'r':function(d) {
-                    return radius(d.value);
-                }
-            });
-
-    //create text labels for those that need it
-
-        //text
-        timelines.append("g").selectAll("text")
-            .data(function(d){
-                return d.values.filter(function(e){
-                    return e.label=="yes"
-                })
-            })
-            .enter()
-            .append("text")
-            .attr("x",function(d){
-                return xScale(d.date)
-            })
-            .attr("y",function(d){
-                return 0-radius(d.value)-12;
-            })
-            .text(function(d){
-                return d.name+" ("+dateFormat(d.date)+")";
-            })
-            .attr("text-anchor","middle")
-            .attr("fill","black")
-
-        //connecting lines
-         circles.selectAll("line")
-            .data(function(d){
-                return d.values.filter(function(e){
-                    return e.label=="yes"
-                })
-            })
-            .enter()
-            .append("line")
-            .attr("x1",function(d){
-                return xScale(d.date)
-            })
-            .attr("x2",function(d){
-                return xScale(d.date)
-            })
-            .attr("y1",function(d){
-                return 0-radius(d.value);
-            })
-            .attr("y2",function(d){
-                return 0-radius(d.value)-10;
-            })
-
-    //Add labels so that the preflight script in illustrator will work
-    d3.selectAll(".printxAxis text")
-    .attr("id","xAxisLabel")
-    d3.selectAll(".printyAxis text")
-    .attr("id","yAxisLabel")
-    d3.selectAll(".printyAxis line")
-    .attr("id","yAxisTick")
-    d3.selectAll(".printxAxis line")
-    .attr("id","xAxisTick")
-    d3.selectAll(".printminorAxis line")
-    .attr("id","minorTick")
-
-    d3.selectAll(".domain")
-    .attr("id","printdomain")
-
-
-
-
-    //sort function
-    function sortFunction(a,b)    {
-        return a-b;   
+    //setter methods for the closure
+    chartDrawer.setRScale = (x)=>{
+    	rScale = x;
+    	return chartDrawer;
+    }
+    chartDrawer.setYScale = (x)=>{
+    	yScale = x;
+    	return chartDrawer;
+    }
+    chartDrawer.setXScale = (x)=>{
+    	xScale = x;
+    	return chartDrawer;
+    }
+    chartDrawer.setMaxCircle = (x)=>{
+    	maxCircle = x;
+    	return chartDrawer;
+    }
+    chartDrawer.setColours = (x)=>{
+    	colours = x;
+    	return chartDrawer;
+    }
+    chartDrawer.setXAxis = (x)=>{
+        xAxis = x;
+        return chartDrawer;
     }
 
-    function daydiff(a,b)   {
-        return Math.round((b-a)/(1000 * 60 * 60 * 24));   
-    }
-
-}
+    return chartDrawer;
+};
