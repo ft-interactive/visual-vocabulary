@@ -91,12 +91,15 @@ d3.csv('linedata.csv', function(data){
         const myXAxis = xDateAxis();
         const currentFrame = frame[frameName];
         const plotDim=currentFrame.dimension()
-        const tickSize=plotDim.width
+        const tickSize=plotDim.width;
+
+        //console.log(plotData)
     
         myChart
             .yRange( [currentFrame.dimension().height,0] )
             .plotDim(plotDim)
-            .rem(currentFrame.rem());
+            .rem(currentFrame.rem())
+            .includeLabel(function(d){return d.lineData; });
         
         myYAxis
             .yScale(myChart.yScale())
@@ -122,8 +125,6 @@ d3.csv('linedata.csv', function(data){
 
         currentFrame.plot()
             .call(myXAxis);
-        
-        console.log(plotData)
 
         currentFrame.plot()
             .selectAll("lines")

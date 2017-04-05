@@ -5,13 +5,15 @@ function lineChart() {
     let seriesNames = [];
     let yAxisAlign = "right"
     let rem =10
+    let includeLabel=(d)=> (d.lineData.highlight==="yes")
     const colourScale = d3.scaleOrdinal()
-        .range(gChartcolour.basicLineWeb)
+        .range(gChartcolour.lineWeb)
         .domain(seriesNames);
   
     function chart(parent){
 
         var lineData= d3.line()
+            .curve(d3.curveLinear)
             .x(function(d,i) { 
                 return xScale(d.date); 
             })
@@ -22,9 +24,18 @@ function lineChart() {
         parent.append("path")
             .attr("stroke",function (d){return colourScale(d.name)})
             .attr('d', function(d){
-                console.log(d)
+                console.log("line",d)
                 return lineData(d.lineData); })
 
+        parent.selectAll(".dot")
+            .data(function(d) {return d.lineData})
+            .enter()
+            .append('circle')
+            .classed("dot",true)
+            .attr("cx",(d)=> xScale(d.date))
+            .attr("cy",(d)=> yScale(d.value))
+            .attr("r",rem*.4)
+            .attr("fill",(d)=>{ return colourScale(d.name)} )
 
     }
 
@@ -65,7 +76,6 @@ function lineChart() {
         xScale.range(d);
         return chart;
     };
-    
     chart.plotDim = (d)=>{
         if(!d) return plotDim;
         plotDim = d;
@@ -76,7 +86,10 @@ function lineChart() {
         rem = d;
         return chart;
     }
-
+    chart.includeLabel = (d)=>{
+        includeLabel = d;
+        return chart;
+    }
 
     return chart
 }
