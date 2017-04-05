@@ -5,7 +5,10 @@ function lineChart() {
     let seriesNames = [];
     let yAxisAlign = "right"
     let rem =10
-
+    const colourScale = d3.scaleOrdinal()
+        .range(gChartcolour.basicLineWeb)
+        .domain(seriesNames);
+  
     function chart(parent){
 
         var lineData= d3.line()
@@ -16,9 +19,8 @@ function lineChart() {
                 return yScale(d.value); 
             })
 
-
-       parent.append("path")
-            .attr("stroke","#FFFFFF")
+        parent.append("path")
+            .attr("stroke",function (d){return colourScale(d.name)})
             .attr('d', function(d){
                 console.log(d)
                 return lineData(d.lineData); })
