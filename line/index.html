@@ -103,7 +103,8 @@ d3.csv('linedata.csv', function(data){
             .plotDim(plotDim)
             .rem(currentFrame.rem())
             .includeHighlight((d)=> (d.highlight==="yes"))
-            .includeLabel((d)=> (d.highlight==="yes"));
+            .includeLabel((d)=> (d.highlight==="yes"))
+            .colourPalette((frameName));
         
         myYAxis
             .yScale(myChart.yScale())

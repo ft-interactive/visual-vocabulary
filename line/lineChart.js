@@ -104,6 +104,18 @@ function lineChart() {
         highlight = d;
         return chart;
     }
+    chart.colourPalette = (d) =>{
+        console.log(d)
+        if(d==='social' || d==='video'){
+            colourScale.range(gChartcolour.lineSocial);
+        } else if (d==='web') {
+            colourScale.range(gChartcolour.lineWeb);
+        } else if (d==='print') {
+            colourScale.range(gChartcolour.linePrint);
+        }
+
+        return chart;
+    }
 
     return chart
 }
