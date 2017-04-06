@@ -5,7 +5,8 @@ function lineChart() {
     let seriesNames = [];
     let yAxisAlign = "right"
     let rem =10
-    let includeLabel=(d)=> (d.lineData.highlight==="yes")
+    let includeLabel=(d)=> (d.highlight==="yes")
+    let includeHighlight=(d)=> (d.highlight==="yes")
     const colourScale = d3.scaleOrdinal()
         .range(gChartcolour.lineWeb)
         .domain(seriesNames);
@@ -24,11 +25,13 @@ function lineChart() {
         parent.append("path")
             .attr("stroke",function (d){return colourScale(d.name)})
             .attr('d', function(d){
-                console.log("line",d)
                 return lineData(d.lineData); })
 
         parent.selectAll(".dot")
-            .data(function(d) {return d.lineData})
+            .data(function(d) {
+                let filtered=d.lineData.filter(includeHighlight);
+                return filtered
+            })
             .enter()
             .append('circle')
             .classed("dot",true)
@@ -87,6 +90,10 @@ function lineChart() {
         return chart;
     }
     chart.includeLabel = (d)=>{
+        includeLabel = d;
+        return chart;
+    }
+    chart.includeHighlight = (d)=>{
         includeLabel = d;
         return chart;
     }
