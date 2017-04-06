@@ -42,26 +42,6 @@ function lineChart() {
             .attr("r",rem*.4)
             .attr("fill",(d)=>{ return colourScale(d.name)} )
         }
-            
-        parent.selectAll("rect")
-            .append("rect")
-            .data(function(d) {
-                let filtered=d.lineData.filter(function(d) {
-                    return  (d.highlight==="begin"|| d.highlight==="end")
-                })
-                return filtered
-            })
-
-        // var boundries= parent.filter(function(d) {
-        //     return  (d.highlight==="begin" || d.highlight==="end")
-        // })
-        // var shadeAreas=[]
-
-        // boundries.forEach(function(d,i){
-        //     if (d.highlight==="begin") {
-        //         shadeAreas.push({begin: d.date,end:boundries[i+1].date}) 
-        //     }
-        // })
 
     }
 
