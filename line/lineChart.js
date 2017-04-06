@@ -5,9 +5,8 @@ function lineChart() {
     let seriesNames = [];
     let yAxisAlign = "right"
     let rem =10;
-    let includeLabel=(d)=> (d.highlight==="yes");
-    let includeHighlight=(d)=> (d.highlight==="yes");
-    let highlight = false;
+    let includeMarker=(d)=> (d.marker==="yes");
+    let markers = false;
     const colourScale = d3.scaleOrdinal()
         .range(gChartcolour.lineWeb)
         .domain(seriesNames);
@@ -28,15 +27,15 @@ function lineChart() {
             .attr('d', function(d){
                 return lineData(d.lineData); })
 
-        if (highlight) {
-            parent.selectAll(".marker")
+        if (markers) {
+            parent.selectAll(".markers")
             .data(function(d) {
-                let filtered=d.lineData.filter(includeHighlight);
+                let filtered=d.lineData.filter(includeMarker);
                 return filtered
             })
             .enter()
             .append('circle')
-            .classed("marker",true)
+            .classed("markers",true)
             .attr("cx",(d)=> xScale(d.date))
             .attr("cy",(d)=> yScale(d.value))
             .attr("r",rem*.4)
@@ -92,16 +91,12 @@ function lineChart() {
         rem = d;
         return chart;
     }
-    chart.includeLabel = (d)=>{
-        includeLabel = d;
+    chart.includeMarker = (d)=>{
+        includeMarker = d;
         return chart;
     }
-    chart.includeHighlight = (d)=>{
-        includeLabel = d;
-        return chart;
-    }
-    chart.highlight = (d)=>{
-        highlight = d;
+    chart.markers = (d)=>{
+        markers = d;
         return chart;
     }
     chart.colourPalette = (d) =>{
@@ -271,4 +266,39 @@ function xDateAxis() {
         return axis;
     }
     return axis
+}
+
+function drawHighlights() {
+    let yScale=d3.scaleLinear();
+    let xScale=d3.scaleTime();
+
+    function highlights(parent){
+        parent.append('rect')
+            .attr("x", (d)=> xScale(d.begin))
+            .attr("width", (d)=> xScale(d.end)-xScale(d.begin))
+            .attr("y", (d)=> yScale.range()[1])
+            .attr("height", (d)=> yScale.range()[0])
+            .attr("fill","#fff1e0")
+
+
+    }
+
+    highlights.yScale = (d)=>{
+        yScale = d;
+        return highlights;
+    }
+    highlights.xScale = (d)=>{
+        xScale = d;
+        return highlights;
+    }
+    highlights.yRange = (d)=>{
+        yScale.range(d);
+        return highlights;
+    };
+    highlights.xRange = (d)=>{
+        xScale.range(d);
+        return highlights;
+    };
+
+    return highlights;
 }

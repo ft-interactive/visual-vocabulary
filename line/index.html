@@ -41,7 +41,7 @@ const yAxisHighlight=100;
 const numTicksy=6;
 const yAxisAlign="right";
 const interval="months"
-let highlight= true;
+let markers= true;
 
 const frame = {
    web: gChartframe.webFrame(sharedConfig)
@@ -78,7 +78,15 @@ d3.csv('linedata.csv', function(data){
             lineData:getlines(data,d)
         }
     })
-    console.log(plotData)
+    //console.log(plotData)
+    const boundries=data.filter((d)=> (d.marker==="begin" || d.marker==="end"))
+    let highlights=[]
+    boundries.forEach(function(d,i){
+        if (d.marker==="begin") {
+            highlights.push({begin: d.date,end:boundries[i+1].date}) 
+        }
+    })
+   //console.log("highlights", highlights)
     
     const valueExtent = extentMulti(data,seriesNames)
     
@@ -87,12 +95,13 @@ d3.csv('linedata.csv', function(data){
         .yDomain([Math.min(yMin,valueExtent[0]),Math.max(yMax,valueExtent[1])])
         .xDomain(d3.extent(data, function(d) {return d.date;}))
         .yAxisAlign(yAxisAlign)
-        .highlight(highlight)
+        .markers(markers)
 
     Object.keys(frame).forEach(frameName=>{
 
         const myYAxis = yLinearAxis();
         const myXAxis = xDateAxis();
+        const myHighlights = drawHighlights()
         const currentFrame = frame[frameName];
         const plotDim=currentFrame.dimension()
         const tickSize=plotDim.width;
@@ -103,8 +112,7 @@ d3.csv('linedata.csv', function(data){
             .yRange( [currentFrame.dimension().height,0] )
             .plotDim(plotDim)
             .rem(currentFrame.rem())
-            .includeHighlight((d)=> (d.highlight==="yes"))
-            .includeLabel((d)=> (d.highlight==="yes"))
+            .includeMarker((d)=> (d.marker==="yes"))
             .colourPalette((frameName));
         
         myYAxis
@@ -129,6 +137,19 @@ d3.csv('linedata.csv', function(data){
             .interval(interval)
             .rem(myChart.rem());
 
+        myHighlights
+            .yScale(myChart.yScale())
+            .yRange( [currentFrame.dimension().height,0] )
+            .xScale(myChart.xScale())
+            .xRange( [0,currentFrame.dimension().width] );
+
+        currentFrame.plot()
+            .selectAll(".highlights")
+            .data(highlights)
+            .enter()
+            .append("g")
+            .call(myHighlights);
+        
         currentFrame.plot()
             .call(myXAxis);
 
@@ -145,7 +166,7 @@ d3.csv('linedata.csv', function(data){
 
 //a function that returns the columns headers from the top of the dataset, excluding specified
 function getSeriesNames(columns){
-    var exclude = ['date','annotate','highlight'];
+    var exclude = ['date','annotate','marker'];
     return columns.filter(d=>(exclude.indexOf(d) == -1));
 }
 
@@ -174,7 +195,7 @@ function getlines(data,group) {
         column.name = group
         column.date = el.date
         column.value = +el[group]
-        column.highlight = el.highlight
+        column.marker = el.marker
         column.annotate = el.annotate
         if(el[group]) {
             lineData.push(column)  
