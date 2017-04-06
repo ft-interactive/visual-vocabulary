@@ -36,12 +36,32 @@ function lineChart() {
             })
             .enter()
             .append('circle')
-            .classed("dot",true)
+            .classed("marker",true)
             .attr("cx",(d)=> xScale(d.date))
             .attr("cy",(d)=> yScale(d.value))
             .attr("r",rem*.4)
             .attr("fill",(d)=>{ return colourScale(d.name)} )
         }
+            
+        parent.selectAll("rect")
+            .append("rect")
+            .data(function(d) {
+                let filtered=d.lineData.filter(function(d) {
+                    return  (d.highlight==="begin"|| d.highlight==="end")
+                })
+                return filtered
+            })
+
+        // var boundries= parent.filter(function(d) {
+        //     return  (d.highlight==="begin" || d.highlight==="end")
+        // })
+        // var shadeAreas=[]
+
+        // boundries.forEach(function(d,i){
+        //     if (d.highlight==="begin") {
+        //         shadeAreas.push({begin: d.date,end:boundries[i+1].date}) 
+        //     }
+        // })
 
     }
 
@@ -105,7 +125,6 @@ function lineChart() {
         return chart;
     }
     chart.colourPalette = (d) =>{
-        console.log(d)
         if(d==='social' || d==='video'){
             colourScale.range(gChartcolour.lineSocial);
         } else if (d==='web') {
@@ -113,7 +132,6 @@ function lineChart() {
         } else if (d==='print') {
             colourScale.range(gChartcolour.linePrint);
         }
-
         return chart;
     }
 
@@ -273,5 +291,4 @@ function xDateAxis() {
         return axis;
     }
     return axis
-
 }

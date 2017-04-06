@@ -41,7 +41,7 @@ const yAxisHighlight=100;
 const numTicksy=6;
 const yAxisAlign="right";
 const interval="months"
-let highlight= false;
+let highlight= true;
 
 const frame = {
    web: gChartframe.webFrame(sharedConfig)
@@ -138,6 +138,7 @@ d3.csv('linedata.csv', function(data){
             .append("g")
             .attr('class','lines')
             .call(myChart);
+
      });
 });
 
