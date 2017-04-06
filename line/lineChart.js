@@ -4,9 +4,10 @@ function lineChart() {
     let xScale=d3.scaleTime();
     let seriesNames = [];
     let yAxisAlign = "right"
-    let rem =10
-    let includeLabel=(d)=> (d.highlight==="yes")
-    let includeHighlight=(d)=> (d.highlight==="yes")
+    let rem =10;
+    let includeLabel=(d)=> (d.highlight==="yes");
+    let includeHighlight=(d)=> (d.highlight==="yes");
+    let highlight = false;
     const colourScale = d3.scaleOrdinal()
         .range(gChartcolour.lineWeb)
         .domain(seriesNames);
@@ -27,7 +28,8 @@ function lineChart() {
             .attr('d', function(d){
                 return lineData(d.lineData); })
 
-        parent.selectAll(".dot")
+        if (highlight) {
+            parent.selectAll(".marker")
             .data(function(d) {
                 let filtered=d.lineData.filter(includeHighlight);
                 return filtered
@@ -39,6 +41,7 @@ function lineChart() {
             .attr("cy",(d)=> yScale(d.value))
             .attr("r",rem*.4)
             .attr("fill",(d)=>{ return colourScale(d.name)} )
+        }
 
     }
 
@@ -95,6 +98,10 @@ function lineChart() {
     }
     chart.includeHighlight = (d)=>{
         includeLabel = d;
+        return chart;
+    }
+    chart.highlight = (d)=>{
+        highlight = d;
         return chart;
     }
 
@@ -227,9 +234,9 @@ function xDateAxis() {
 
     function tickFormat(interval) {
         return {
-            "decade":d3.timeFormat("%Y"),
-            "lustrum":d3.timeFormat("%Y"),
-            "years":d3.timeFormat("%Y"),
+            "decade":d3.timeFormat("%y"),
+            "lustrum":d3.timeFormat("%y"),
+            "years":d3.timeFormat("%y"),
             "quarters":d3.timeFormat("%b"),
             "months":d3.timeFormat("%b"),
             "weeks":d3.timeFormat("%b"),

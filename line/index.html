@@ -41,6 +41,7 @@ const yAxisHighlight=100;
 const numTicksy=6;
 const yAxisAlign="right";
 const interval="months"
+let highlight= false;
 
 const frame = {
    web: gChartframe.webFrame(sharedConfig)
@@ -77,6 +78,7 @@ d3.csv('linedata.csv', function(data){
             lineData:getlines(data,d)
         }
     })
+    console.log(plotData)
     const valueExtent = extentMulti(data,seriesNames)
     
     const myChart = lineChart()
@@ -84,6 +86,7 @@ d3.csv('linedata.csv', function(data){
         .yDomain([Math.min(yMin,valueExtent[0]),Math.max(yMax,valueExtent[1])])
         .xDomain(d3.extent(data, function(d) {return d.date;}))
         .yAxisAlign(yAxisAlign)
+        .highlight(highlight)
 
     Object.keys(frame).forEach(frameName=>{
 
@@ -165,6 +168,7 @@ function getlines(data,group) {
     data.forEach(function(el,i){
         //console.log(el,i)
         let column=new Object();
+        column.name = group
         column.date = el.date
         column.value = +el[group]
         column.highlight = el.highlight
