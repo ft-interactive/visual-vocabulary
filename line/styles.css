@@ -151,6 +151,23 @@
     stroke-width: 8px;
     fill: none;
 }
+/* .overall text styles on axis*/
+[data-frame^="web"] .highlights {
+    fill: #C1B8B9;
+    opacity: 0.3;
+}
+[data-frame^="print"] .highlights{
+    fill: #95BFC5;
+    opacity: 0.3;
+}
+[data-frame^="social"] .highlights{
+    fill: #ffffff;
+    opacity: 0.38;
+}
+[data-frame^="video"] .highlights{
+    fill: #ffffff;
+    opacity: 0.38
+}
 
 
 
