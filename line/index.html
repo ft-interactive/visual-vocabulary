@@ -30,22 +30,23 @@
 
 <script type="text/javascript">
 
-//User defined constants
+//User defined constants similar to version 2
 const sharedConfig = {
   title:"Title not yet added",
   subtitle:"Subtitle not yet added",  
   source:"Fox news",
 }
-let yMin = 0;
-let yMax = 1500;
-const yAxisHighlight = 100;
-const numTicksy = 3;
-const yAxisAlign = "right";
-const interval = "years"
-let markers = false;
-let legendAlign = "vert"//hori or vert
-let minorAxis = false
+let yMin = 0;//sets the minimum value on the yAxis
+let yMax = 1500;//sets the maximum value on the xAxis
+const yAxisHighlight = 100; //sets which tick to highlight on the yAxis
+const numTicksy = 3;//Number of tick on the uAxis
+const yAxisAlign = "right";//alingment of the axis
+const interval = "years"//date interval on xAxis "decade", "lustrum", "years","months","days"
+let markers = false;//show dots on lines marked as 'yes in the marker column'
+let legendAlign = "vert"//hori or vert, alignmeny of the legend
+let minorAxis = false//turns on or off the minor axis
 
+//Individual frame configuratiuon, used to set margins etc
 const frame = {
    web: gChartframe.webFrame(sharedConfig)
    .margin({right:0}),
@@ -67,21 +68,21 @@ d3.selectAll('.framed')
     });
 
 d3.csv('example.csv', function(data){
-    //draw your charts! (see the slope chart for example)
+    //make sure all the dates in the date column are a date object
     var parseDate = d3.timeParse("%d/%m/%Y")
-    
     data.forEach(function(d) {
                 d.date=parseDate(d.date);
             });
-
+    //automatically calculate the seriesnames excluding the "marker" and "annotate column"
     let seriesNames=getSeriesNames(data.columns)
+    //format the dataset that is used to draw the lines
     let plotData=seriesNames.map(function(d,i){
         return {
             name:d,
             lineData:getlines(data,d)
         }
     })
-    //console.log(plotData)
+    //fortmat the data that is used to draw highlight tonal bands
     const boundries=data.filter((d)=> (d.marker==="begin" || d.marker==="end"))
     let highlights=[]
     boundries.forEach(function(d,i){
@@ -89,10 +90,9 @@ d3.csv('example.csv', function(data){
             highlights.push({begin: d.date,end:boundries[i+1].date}) 
         }
     })
-   //console.log("highlights", highlights)
-    
+    //Use the seriesNames array to calculate the minimum and max values in the dataset
     const valueExtent = extentMulti(data,seriesNames)
-
+    //define the chart x and x domains. yDomain will automatically overwrite the user defined min and max if the domain is too small
     const myChart = lineChart()
         .seriesNames(seriesNames)
         .yDomain([Math.min(yMin,valueExtent[0]),Math.max(yMax,valueExtent[1])])
@@ -101,16 +101,14 @@ d3.csv('example.csv', function(data){
         .markers(markers)
 
     Object.keys(frame).forEach(frameName=>{
-
-        const myYAxis = yLinearAxis();
-        const myXAxis = xDateAxis();
-        const myHighlights = drawHighlights()
-        const myLegend = drawLegend()
+        //define other functions to be called
+        const myYAxis = yLinearAxis();//sets up yAxis
+        const myXAxis = xDateAxis();//sets up xAxis
+        const myHighlights = drawHighlights()//sets up highlight tonal bands
+        const myLegend = drawLegend()//sets up the legend
         const currentFrame = frame[frameName];
-        const plotDim=currentFrame.dimension()
-        const tickSize=plotDim.width;
-
-        //console.log(plotData)
+        const plotDim=currentFrame.dimension()//uswful variable to carry the current frame dimensions
+        const tickSize=plotDim.width;//Used when drawing the yAxis ticks
     
         myChart
             .yRange( [currentFrame.dimension().height,0] )
@@ -126,38 +124,40 @@ d3.csv('example.csv', function(data){
             .yAxisHighlight(yAxisHighlight)
             .yAxisAlign(myChart.yAxisAlign())
 
+        //Draw the yAxis first, this will position the yAxis correctly and measure the widht of the label text
         currentFrame.plot()
             .call(myYAxis);
-        
-        //console.log("Labels offset ",myYAxis.yLabelOffset())
-        //add code to redraw frame with new right margin to come.
 
-        //Pass new range based on new margin
+        //return the value in the variable newMargin
+        let newMargin = myYAxis.yLabelOffset()
+
+        //Use new<argin to reDraw frame, then define the xRange with the ne width
         myChart.xRange( [0,currentFrame.dimension().width] );
 
+        //Set up xAxis for this frame
         myXAxis
             .xScale(myChart.xScale())
             .plotDim(myChart.plotDim())
             .interval(interval)
             .rem(myChart.rem())
             .minorAxis(minorAxis);;
-
+        //Set up highlights for this fram
         myHighlights
             .yScale(myChart.yScale())
             .yRange( [currentFrame.dimension().height,0] )
             .xScale(myChart.xScale())
             .xRange( [0,currentFrame.dimension().width] );
-
+        //Draw the highlights before the lines and xAxis
         currentFrame.plot()
             .selectAll(".highlights")
             .data(highlights)
             .enter()
             .append("g")
             .call(myHighlights);
-        
+        //Draw the xAxis
         currentFrame.plot()
             .call(myXAxis);
-
+        //Draw the lines  
         currentFrame.plot()
             .selectAll("lines")
             .data(plotData)
@@ -165,13 +165,13 @@ d3.csv('example.csv', function(data){
             .append("g")
             .attr('class','lines')
             .call(myChart);
-        
+        //Se up legend for this fram
         myLegend
             .seriesNames(seriesNames)
             .colourPalette((frameName))
             .rem(myChart.rem())
             .alignment(legendAlign);
-
+        //Draw the Legend
         currentFrame.plot()
             .selectAll(".legend")
             .data(seriesNames)
@@ -205,7 +205,7 @@ function extentMulti(data, columns){
     },{});
     return [ext.min, ext.max];
 }
-
+//a function that sort the column information in the dataset into groups according to the column head, so that the line path can be passed as one object to the drawing function
 function getlines(data,group) {
     let lineData=[]
     data.forEach(function(el,i){
