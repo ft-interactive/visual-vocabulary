@@ -43,6 +43,7 @@ const numTicksy=3;
 const yAxisAlign="right";
 const interval="years"
 let markers= false;
+let legendAlign="hori"//hori or vert
 
 const frame = {
    web: gChartframe.webFrame(sharedConfig)
@@ -128,7 +129,7 @@ d3.csv('test.csv', function(data){
             .call(myYAxis);
         
         //console.log("Labels offset ",myYAxis.yLabelOffset())
-        //add code to redraw frame with new right margin.
+        //add code to redraw frame with new right margin to come.
 
         //Pass new range based on new margin
         myChart.xRange( [0,currentFrame.dimension().width] );
@@ -166,11 +167,15 @@ d3.csv('test.csv', function(data){
         myLegend
             .seriesNames(seriesNames)
             .colourPalette((frameName))
-            .rem(myChart.rem());
+            .rem(myChart.rem())
+            .alignment(legendAlign);
 
         currentFrame.plot()
-            .selectAll(".lines")
+            .selectAll(".legend")
             .data(seriesNames)
+            .enter()
+            .append("g")
+            .classed("legend",true)
             .call(myLegend)
 
      });
