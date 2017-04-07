@@ -115,11 +115,11 @@ function lineChart() {
 
 function yLinearAxis() {
     let yScale = d3.scaleLinear();
-    let yAxisAlign="right"
-    let yLabelOffset=0;
+    let yAxisAlign = "right"
+    let yLabelOffset = 0;
     let tickSize = 5;
     let yAxisHighlight = 0;
-    let numTicksy=2
+    let numTicksy = 2
 
     function axis(parent) {
 
@@ -187,7 +187,6 @@ function yLinearAxis() {
         yAxisAlign = d;
         return axis;
     }
-
     return axis
 
     function getAxis(alignment){
@@ -203,6 +202,7 @@ function xDateAxis() {
     let plotDim = {}
     let interval ="months"
     let rem=10
+    let minorAxis = false
 
     function axis(parent) {
         var parseDate = d3.timeParse("%d/%m")
@@ -213,10 +213,24 @@ function xDateAxis() {
             .tickFormat(tickFormat(interval))
             .scale(xScale)
 
+        const xMinor=d3.axisBottom()
+            .tickSize(rem*.5)
+            .ticks(getTicksMinor(interval))
+            .tickFormat("")
+            .scale(xScale)
+
         const xLabel = parent.append("g")
             .attr("class","axis xAxis")
             .call(xAxis)
         xLabel.attr("transform","translate(0,"+(plotDim.height)+")");
+
+        if (minorAxis) {
+            const xLabelMinor = parent.append("g")
+            .attr("class","axis xAxis")
+            .call(xMinor)
+            
+            xLabelMinor.attr("transform","translate(0,"+(plotDim.height)+")");
+        }
 
         let ticks=parent.selectAll(".xAxis line").each(
             function (d) {
@@ -234,6 +248,17 @@ function xDateAxis() {
             "months":d3.timeMonth.every(1),
             "weeks":d3.timeWeek.every(1),
             "days":d3.timeDay.every(1)
+        }[interval]
+    }
+    function getTicksMinor(interval) {
+        return {
+            "decade":d3.timeYear.every(1),
+            "lustrum":d3.timeYear.every(1),
+            "years":d3.timeMonth.every(1),
+            "quarters":d3.timeMonth.every(1),
+            "months":d3.timeWeek.every(1),
+            "weeks":d3.timeDay.every(1),
+            "days":d3.timeHour.every(1)
         }[interval]
     }
 
@@ -263,6 +288,10 @@ function xDateAxis() {
     }
     axis.rem = (d)=>{
         rem = d;
+        return axis;
+    }
+    axis.minorAxis = (d)=>{
+        minorAxis = d;
         return axis;
     }
     return axis

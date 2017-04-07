@@ -168,6 +168,28 @@
     fill: #ffffff;
     opacity: 0.38
 }
+/* legend */
+[data-frame^="web"] .legend {
+    font-family: metric;
+    fill: #74736C;
+    font-size: 18px;
+}
+[data-frame^="print"] .legend{
+    font-family: metric;
+    font-size: 9.6px;
+}
+[data-frame^="social"] .legend{
+    font-family: metric;
+    fill-opacity: 0.5;
+    fill: #FFFFFF;
+    font-size: 28px;
+}
+[data-frame^="video"] .legend{
+    font-family: metric;
+    fill-opacity: 0.5;
+    fill: #FFFFFF;
+    font-size: 48px;
+}
 
 
 

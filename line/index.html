@@ -38,12 +38,13 @@ const sharedConfig = {
 }
 let yMin = 0;
 let yMax = 1500;
-const yAxisHighlight=100;
-const numTicksy=3;
-const yAxisAlign="right";
-const interval="years"
-let markers= false;
-let legendAlign="hori"//hori or vert
+const yAxisHighlight = 100;
+const numTicksy = 3;
+const yAxisAlign = "right";
+const interval = "years"
+let markers = false;
+let legendAlign = "vert"//hori or vert
+let minorAxis = false
 
 const frame = {
    web: gChartframe.webFrame(sharedConfig)
@@ -123,7 +124,7 @@ d3.csv('test.csv', function(data){
             .numTicksy(numTicksy)
             .tickSize(tickSize)
             .yAxisHighlight(yAxisHighlight)
-            .yAxisAlign(myChart.yAxisAlign());
+            .yAxisAlign(myChart.yAxisAlign())
 
         currentFrame.plot()
             .call(myYAxis);
@@ -138,7 +139,8 @@ d3.csv('test.csv', function(data){
             .xScale(myChart.xScale())
             .plotDim(myChart.plotDim())
             .interval(interval)
-            .rem(myChart.rem());
+            .rem(myChart.rem())
+            .minorAxis(minorAxis);;
 
         myHighlights
             .yScale(myChart.yScale())

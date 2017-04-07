@@ -4,10 +4,16 @@ function drawLegend() {
         .range(gChartcolour.lineWeb)
         .domain(seriesNames);
     let rem=10
-    let alignment="horz"
+    let alignment="hori"
 
 	function legend(parent) {
 		let legendyOffset=0
+        parent
+            .attr('id',"legend" )
+            .on("mouseover",pointer)
+
+        // let drag = d3.behavior.drag().on("drag", moveLegend);
+        // parent.select("#legend").call(drag);
 
 		let ledge=parent.append("g")
 			.attr ("id",function(d,i){
@@ -17,7 +23,7 @@ function drawLegend() {
             .attr("id",(d,i)=> ("t"+i))
 			.attr("x",rem+rem/2)
             .attr("y",rem/2)
-            //.attr("class","subtitle")
+            .attr("class","chart-subtitle")
             .text(function(d){
                 return d;
             })
@@ -70,6 +76,15 @@ function drawLegend() {
         return legend;
     }
 
+    function moveLegend() {
+        var dX = d3.event.x; // subtract cx
+        var dY = d3.event.y; // subtract cy
+        d3.select(this).attr("transform", "translate(" + dX + ", " + dY + ")");
+    }
+
+    function pointer() {
+        this.style.cursor='pointer'
+    }
 
 	return legend
 }
