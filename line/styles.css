@@ -109,7 +109,7 @@
 [data-frame^="web"] .xAxis line {
     stroke: #CEC6B9;
     stroke-width: 1px;
-    stroke-dasharray: 2, 1;
+    stroke-dasharray: 2,1;
 }
 [data-frame^="print"] .xAxis line{
     stroke: #000000;

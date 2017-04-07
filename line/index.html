@@ -8,6 +8,7 @@
     <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
     <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
     <script src="lineChart.js"></script>
+    <script src="legend.js"></script>
 
     <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
     <link rel="stylesheet" href="styles.css"/>
@@ -36,12 +37,12 @@ const sharedConfig = {
   source:"Fox news",
 }
 let yMin = 0;
-let yMax = 140;
+let yMax = 1500;
 const yAxisHighlight=100;
-const numTicksy=6;
+const numTicksy=3;
 const yAxisAlign="right";
-const interval="months"
-let markers= true;
+const interval="years"
+let markers= false;
 
 const frame = {
    web: gChartframe.webFrame(sharedConfig)
@@ -63,7 +64,7 @@ d3.selectAll('.framed')
             .call(frame[figure.node().dataset.frame]);
     });
 
-d3.csv('linedata.csv', function(data){
+d3.csv('test.csv', function(data){
     //draw your charts! (see the slope chart for example)
     var parseDate = d3.timeParse("%d/%m/%Y")
     
@@ -89,7 +90,7 @@ d3.csv('linedata.csv', function(data){
    //console.log("highlights", highlights)
     
     const valueExtent = extentMulti(data,seriesNames)
-    
+
     const myChart = lineChart()
         .seriesNames(seriesNames)
         .yDomain([Math.min(yMin,valueExtent[0]),Math.max(yMax,valueExtent[1])])
@@ -102,6 +103,7 @@ d3.csv('linedata.csv', function(data){
         const myYAxis = yLinearAxis();
         const myXAxis = xDateAxis();
         const myHighlights = drawHighlights()
+        const myLegend = drawLegend()
         const currentFrame = frame[frameName];
         const plotDim=currentFrame.dimension()
         const tickSize=plotDim.width;
@@ -160,6 +162,16 @@ d3.csv('linedata.csv', function(data){
             .append("g")
             .attr('class','lines')
             .call(myChart);
+        
+        myLegend
+            .seriesNames(seriesNames)
+            .colourPalette((frameName))
+            .rem(myChart.rem());
+
+        currentFrame.plot()
+            .selectAll(".lines")
+            .data(seriesNames)
+            .call(myLegend)
 
      });
 });
@@ -173,7 +185,7 @@ function getSeriesNames(columns){
 //a function to work out the extent of values in an array accross multiple properties...
 function extentMulti(data, columns){
     const ext = data.reduce((acc, row, index)=>{
-        let values = columns.map(key=>row[key])
+        let values = columns.map(key=> +row[key])
         let rowExtent = d3.extent(values);
         if(!acc.max){
             acc.max = rowExtent[1];
