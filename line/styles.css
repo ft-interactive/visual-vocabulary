@@ -191,11 +191,6 @@
     font-size: 48px;
 }
 
-
-
-
-
-
 svg text{
     font-feature-settings: 'tnum',1;
     -webkit-font-feature-settings: 'tnum';
