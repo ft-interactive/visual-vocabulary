@@ -1,0 +1,40 @@
+/* LOLLIPOP V STYLES */
+
+[data-frame=social] text,
+[data-frame=video] text {
+	fill: #CEC6B9;
+}
+
+[data-frame=social] line,
+[data-frame=video] line {
+	stroke: #CEC6B9;
+}
+
+[data-frame=video] .axes line {
+	stroke-width: 4px;
+}
+[data-frame=video] .axes text {
+	font-size: 2em;
+}
+[data-frame=video] .lollipop-v line {
+	stroke-width: 12px;
+}
+
+/* hide actual x-axis */
+.axes path.domain {
+	stroke-width: 0px;
+}
+.axes {
+	text-anchor: "start";
+}
+.axes .tick line {
+	stroke-dasharray: 2;
+}
+.axes .tick.highlight line {
+	stroke-width: 4px;
+	stroke-dasharray: 0; 
+}
+[data-frame=video] #y-axis .tick.highlight {
+	stroke-width: 10px;
+}
+
