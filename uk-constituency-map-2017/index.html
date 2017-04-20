@@ -53,8 +53,9 @@ d3.queue()
     .await(draw);
 
 function draw( error, data, topology ){
-    const colourScale = (x)=>{
-        gChartcolour.ukPoliticalParties[x]
+    const colourScale = (x) => {
+        if(gChartcolour.ukPoliticalParties[x] === undefined) return gChartcolour.ukPoliticalParties.other;
+        return gChartcolour.ukPoliticalParties[x];
     };
 
     const projection = d3.geoAlbers()
@@ -63,7 +64,9 @@ function draw( error, data, topology ){
         .parallels([50, 60])
         .scale(4500);
 
-    const myMap = choropleth()
+    const myMap = choroplethFactory()
+        .dataIDProperty( d=>d.ons_id )
+        .dataAccessor( d=>d.winner )
         .projection(projection)
         .data(data)
         .topology(topology) //defined in chart.js

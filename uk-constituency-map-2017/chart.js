@@ -1,8 +1,8 @@
-function choropleth(){
+function choroplethFactory(){
     let topology;
     let path;
     let projection;
-    let dataset = [];
+    let dataLookup = {};
     let dataAccessor = (d)=>( d.value );
     let dataScale = (d)=>{
         if(d.value > 0){
@@ -10,9 +10,11 @@ function choropleth(){
         }
         return '#000';
     };
+    let topologyIDProperty = d=>d.id;
+    let dataIDProperty = d=>d.id;
     let subunits = 'constituencies'
 
-    function map(parent){
+    function choropleth(parent){
         const features = topojson.feature(topology, topology.objects[subunits]).features;
         parent.append('path')
             .data(features)
@@ -20,43 +22,63 @@ function choropleth(){
             .append('path')
                 .attr('d',(d)=>{
                     return path(d);
+                })
+                .attr('fill',(d)=>{
+                    const id = topologyIDProperty( d );
+                    const value = dataAccessor( dataLookup[id] );
+                    return dataScale( value );
                 });
     }
 
-    map.data = (x) => {
+    choropleth.data = (x) => {
         if(x===undefined) return dataset;
-        dataset = x;
-        return map;
+        dataLookup = makeLookup(x,dataIDProperty);
+        return choropleth;
     }
 
-    map.dataAccessor = (x) => {
+    choropleth.dataAccessor = (x) => {
         if(x===undefined) return dataAccessor;
         dataAccessor = x;
-        return map;
+        return choropleth;
     };
 
-    map.dataScale = (x) => {
+    choropleth.dataIDProperty = (x) => {
+        if(x===undefined) return dataIDProperty;
+        dataIDProperty = x;
+        return choropleth;
+    }
+
+    choropleth.dataScale = (x) => {
         if(x===undefined) return dataScale;
         dataScale = x;
-        return map;
+        return choropleth;
     };
 
-    map.path = ()=>{
+    choropleth.path = ()=>{
         return path;
     };
 
-    map.projection = (x) => {
+    choropleth.projection = (x) => {
         if(x===undefined) return projection;
         projection = x;
         path = d3.geoPath(projection);
-        return map;
+        return choropleth;
     };
 
-    map.topology = (x) => {
+    choropleth.topology = (x) => {
         if(x===undefined) return topology;
         topology = x;
-        return map
+        return choropleth
     };
 
-    return map;
+    return choropleth;
+}
+
+function makeLookup(arr, keyAccessor){
+    const lookup = {};
+    arr.forEach(function(d){
+        const key = keyAccessor(d);
+        lookup[key] = d;
+    });
+    return lookup;
 }
