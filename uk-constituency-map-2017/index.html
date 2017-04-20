@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Template - Visual Vocabulary</title>
+    <script src="//d3js.org/d3.v4.js"></script>
+    <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
+    <script src="https://unpkg.com/topojson@3"></script>
+    <script src="//financial-times.github.io/g-chartframe/build/g-chartframe.js"></script>
+    <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
+    <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
+    <script src="chart.js"></script>
+
+    <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
+    <link rel="stylesheet" src="style.css"/>
+    <style>
+    .saveable button{ display: block; }
+    </style>
+</head>
+<body>
+
+    <h1>UK Constituency Choropleth</h1>
+    <p>A map for showing thematic data for the UKs parliamentary constituencies. Valid for 2015 and 2017.</p>
+    <hr>
+    <figure class="framed saveable" data-frame="web"><svg></svg></figure>
+
+</body>
+
+<script type="text/javascript">
+
+const frame = {
+    web: gChartframe.webFrame(),
+};
+
+//add the frames to the page...
+d3.selectAll('.framed')
+    .each(function(){
+        const figure = d3.select(this);
+        figure.select('svg')
+            .call(frame[figure.node().dataset.frame]);
+    });
+
+d3.csv('data.csv',function(data){
+    //draw your charts! (see the slope chart for example)
+
+    var myChart = chart(); //defined in chart.js
+
+    Object.keys(frame).forEach(frameName=>{
+        const currentFrame = frame[frameName];
+        if(currentFrame.plot() !== undefined){
+            currentFrame.plot()
+                .call(myChart);
+        }
+     });
+});
+
+</script>
+</html>
