@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Template - Visual Vocabulary</title>
+    <title>UK Constituency Choropleth - Visual Vocabulary</title>
     <script src="//d3js.org/d3.v4.js"></script>
     <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
     <script src="https://unpkg.com/topojson@3"></script>
@@ -36,6 +36,7 @@ const frame = {
         title:'UK parliamentary constituencies',
         subtitle:'2017 boundaries',
         margin:{left:0, right:0},
+        source:'Source: House of Commons Library|Graphic: Tom Pearson'
     }),
 };
 
@@ -48,14 +49,15 @@ d3.selectAll('.framed')
     });
 
 d3.queue()
-    .defer(d3.csv, 'constituencies-pre2017.csv')
+    .defer(d3.csv, 'hocl-ge2015-results-summary.csv')
     .defer(d3.json, 'geodata/constituencies-medium.json')
     .await(draw);
 
 function draw( error, data, topology ){
+
     const colourScale = (x) => {
-        if(gChartcolour.ukPoliticalParties[x] === undefined) return gChartcolour.ukPoliticalParties.other;
-        return gChartcolour.ukPoliticalParties[x];
+        const party = normalisePartyNames(x);
+        return gChartcolour.ukPoliticalParties[party];
     };
 
     const projection = d3.geoAlbers()
@@ -66,7 +68,7 @@ function draw( error, data, topology ){
 
     const myMap = choroplethFactory()
         .dataIDProperty( d=>d.ons_id )
-        .dataAccessor( d=>d.winner )
+        .dataAccessor( d=>d.first_party )
         .projection(projection)
         .data(data)
         .topology(topology) //defined in chart.js
@@ -82,6 +84,25 @@ function draw( error, data, topology ){
         }
      });
 };
+
+function normalisePartyNames(p){
+    if(p==='') return '';
+    const lookup={
+        'Lab':'labour',
+        'Con':'conservative',
+        'LD':'liberal democrats',
+        'UKIP':'ukip',
+        'Green': 'green',
+        'SNP':  'snp', //thse other parties are not yet defined in g-colours talk to tom pearson
+        'PC': 'pc',
+        'SF': 'sf',
+        'DUP':'dup',
+        'Alliance': 'alliance',
+        'SDLP': 'sdlp',
+    }
+    if(lookup[p]!== undefined) return lookup[p];
+    return 'independent';
+}
 
 </script>
 </html>
