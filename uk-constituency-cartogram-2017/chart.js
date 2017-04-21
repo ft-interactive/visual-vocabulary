@@ -19,7 +19,7 @@ function cartogramLayout(){
                 .attr('cx', d=>spaceScale(d.x))
                 .attr('cy', d=>spaceScale(d.y))
                 .attr('fill', d=>colourScale( valueAccessor(d.data) ))
-                .attr('r', 5);
+                .attr('r',spaceScale(0.4)); //the radius of the circles is set relative to the grid i.e. r=0.5 will prcisely fill the grid squares, the circle edges will touch
     }
 
     cartogram.colourScale = (x) => {
