@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>UK Constituency Choropleth - Visual Vocabulary</title>
+    <script src="//d3js.org/d3.v4.js"></script>
+    <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
+    <script src="https://unpkg.com/topojson@3"></script>
+    <script src="https://d3js.org/d3-queue.v3.min.js"></script>
+    <script src="//financial-times.github.io/g-chartframe/build/g-chartframe.js"></script>
+    <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
+    <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
+    <script src="chart.js"></script>
+
+    <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
+    <link rel="stylesheet" src="style.css"/>
+    <style>
+    .saveable button{ display: block; }
+    </style>
+</head>
+<body>
+
+    <h1>UK Constituency Choropleth</h1>
+    <p>A map for showing thematic data for the UKs parliamentary constituencies. Valid for 2015 and 2017.</p>
+    <hr>
+    <figure class="framed saveable" data-frame="web">
+        <svg></svg>
+        </figure>
+
+</body>
+
+<script type="text/javascript">
+
+const frame = {
+    web: gChartframe.webFrame({
+        height:800,
+        title:'UK parliamentary constituencies',
+        subtitle:'2017 boundaries',
+        margin:{left:0, right:0},
+        source:'Source: House of Commons Library|Graphic: Tom Pearson'
+    }),
+};
+
+//add the frames to the page...
+d3.selectAll('.framed')
+    .each(function(){
+        const figure = d3.select(this);
+        figure.select('svg')
+            .call(frame[figure.node().dataset.frame]);
+    });
+
+d3.queue()
+    .defer(d3.csv, 'hocl-ge2015-results-summary.csv')
+    .defer(d3.json, 'geodata/constituencies-medium.json')
+    .await(draw);
+
+function draw( error, data, topology ){
+
+    const colourScale = (x) => {
+        const party = normalisePartyNames(x);
+        return gChartcolour.ukPoliticalParties[party];
+    };
+
+    const projection = d3.geoAlbers()
+        .center([0, 55.4])
+        .rotate([3, 0])
+        .parallels([50, 60])
+        .scale(4500);
+
+    const myMap = choroplethFactory()
+        .dataIDProperty( d=>d.ons_id )
+        .dataAccessor( d=>d.first_party )
+        .projection(projection)
+        .data(data)
+        .topology(topology) //defined in chart.js
+        .dataScale(colourScale);
+
+    Object.keys(frame).forEach(frameName=>{
+        const currentFrame = frame[frameName];
+        const dim = currentFrame.dimension()
+        projection.translate([dim.width / 2, dim.height / 2]);
+        if(currentFrame.plot() !== undefined){
+            currentFrame.plot()
+                .call(myMap);
+        }
+     });
+};
+
+function normalisePartyNames(p){
+    if(p==='') return '';
+    const lookup={
+        'Lab':'labour',
+        'Con':'conservative',
+        'LD':'liberal democrats',
+        'UKIP':'ukip',
+        'Green': 'green',
+        'SNP':  'snp', //thse other parties are not yet defined in g-colours talk to tom pearson
+        'PC': 'pc',
+        'SF': 'sf',
+        'DUP':'dup',
+        'Alliance': 'alliance',
+        'SDLP': 'sdlp',
+    }
+    if(lookup[p]!== undefined) return lookup[p];
+    return 'independent';
+}
+
+</script>
+</html>
