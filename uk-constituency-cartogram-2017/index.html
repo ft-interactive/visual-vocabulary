@@ -72,17 +72,17 @@ function draw( error, data, layout ){
     const myCarto = cartogramLayout()
         .joinOn('ons_id','onsid')
         .data(data)
-        .layout(layout.data);
+        .layout(layout.data)
+        .valueAccessor(d=>d.first_party)
+        .colourScale(colourScale);
 
     const layoutDim = myCarto.layoutDimensions();
     const layoutApectRatio = layoutDim.x / layoutDim.y;
-    console.log(layoutApectRatio);
     Object.keys(frame).forEach(frameName=>{
         const currentFrame = frame[frameName];
         const dim = currentFrame.dimension();
-        //work out the appropriate spaceScale...
+
         const plotAspectRatio = dim.width/dim.height;
-        console.log(plotAspectRatio);
         const spaceScale = d3.scaleLinear()
             .range([0, dim.width])
             .domain([0, layoutDim.x]);

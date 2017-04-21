@@ -12,12 +12,11 @@ function cartogramLayout(){
 
 
     function cartogram(parent){
-        console.log(joinedLayout);
         parent.selectAll('circle')
             .data(joinedLayout)
             .enter()
             .append('circle')
-                .attr('cx', d=>{console.log(spaceScale(d.x));return spaceScale(d.x)})
+                .attr('cx', d=>spaceScale(d.x))
                 .attr('cy', d=>spaceScale(d.y))
                 .attr('fill', d=>colourScale( valueAccessor(d.data) ))
                 .attr('r', 5);
@@ -26,6 +25,12 @@ function cartogramLayout(){
     cartogram.colourScale = (x) => {
         if(x===undefined) return colourScale;
         colourScale = x;
+        return cartogram;
+    }
+
+    cartogram.valueAccessor = (x) => {
+        if(x===undefined) return valueAccessor;
+        valueAccessor = x;
         return cartogram;
     }
 
