@@ -24,7 +24,7 @@
     <hr>
     <figure class="framed saveable" data-frame="web">
         <svg></svg>
-        </figure>
+    </figure>
 
 </body>
 
@@ -83,6 +83,8 @@ function draw( error, data, topology ){
                 .call(myMap);
         }
      });
+
+     addSVGSavers('figure.saveable');
 };
 
 function normalisePartyNames(p){
