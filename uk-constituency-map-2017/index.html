@@ -26,6 +26,10 @@
         <svg></svg>
     </figure>
 
+    <figure class="framed saveable" data-frame="social">
+        <svg></svg>
+    </figure>
+
 </body>
 
 <script type="text/javascript">
@@ -33,6 +37,12 @@
 const frame = {
     web: gChartframe.webFrame({
         height:800,
+        title:'UK parliamentary constituencies',
+        subtitle:'2017 boundaries',
+        margin:{left:0, right:0},
+        source:'Source: House of Commons Library|Graphic: Tom Pearson'
+    }),
+    social: gChartframe.socialFrame({
         title:'UK parliamentary constituencies',
         subtitle:'2017 boundaries',
         margin:{left:0, right:0},
@@ -69,15 +79,21 @@ function draw( error, data, topology ){
     const myMap = choroplethFactory()
         .dataIDProperty( d=>d.ons_id )
         .dataAccessor( d=>d.first_party )
-        .projection(projection)
         .data(data)
         .topology(topology) //defined in chart.js
-        .dataScale(colourScale);
+        .dataScale(colourScale)
+        .projection(projection);
 
     Object.keys(frame).forEach(frameName=>{
         const currentFrame = frame[frameName];
         const dim = currentFrame.dimension()
-        projection.translate([dim.width / 2, dim.height / 2]);
+        projection.translate([dim.width / 2, dim.height / 2])
+        if(frameName === 'social'){
+            projection
+                .scale(3500)
+                .rotate([3,-1.5])
+
+        }
         if(currentFrame.plot() !== undefined){
             currentFrame.plot()
                 .call(myMap);
