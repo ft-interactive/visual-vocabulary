@@ -232,10 +232,12 @@ function xDateAxis() {
             xLabelMinor.attr("transform","translate(0,"+(plotDim.height)+")");
         }
 
-        let ticks=parent.selectAll(".xAxis line").each(
-            function (d) {
-                return d})
+        let ticks = parent.selectAll(".xAxis .tick line");
+        console.log("tick",ticks)
+        ticks.each(function (d) {
+            d3.select(this)
             .classed("baseline",true);
+        })
 
     }
 
