@@ -309,8 +309,6 @@ function drawHighlights() {
             .attr("y", (d)=> yScale.range()[1])
             .attr("height", (d)=> yScale.range()[0])
             .attr("fill","#fff1e0")
-
-
     }
 
     highlights.yScale = (d)=>{

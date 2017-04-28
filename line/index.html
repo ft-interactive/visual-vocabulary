@@ -4,7 +4,7 @@
     <title>Line chart - Visual Vocabulary</title>
     <script src="//d3js.org/d3.v4.js"></script>
     <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
-    <script src="//financial-times.github.io/g-chartframe/build/g-chartframe.js"></script>
+    <script src="https://unpkg.com/g-chartframe@0.3.9"></script>
     <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
     <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
     <script src="lineChart.js"></script>
@@ -40,7 +40,7 @@ let yMin = 0;//sets the minimum value on the yAxis
 let yMax = 1500;//sets the maximum value on the xAxis
 const yAxisHighlight = 100; //sets which tick to highlight on the yAxis
 const numTicksy = 3;//Number of tick on the uAxis
-const yAxisAlign = "right";//alingment of the axis
+const yAxisAlign = "left";//alingment of the axis
 const interval = "years"//date interval on xAxis "decade", "lustrum", "years","months","days"
 let markers = false;//show dots on lines marked as 'yes in the marker column'
 let legendAlign = "vert"//hori or vert, alignmeny of the legend
@@ -49,7 +49,7 @@ let minorAxis = false//turns on or off the minor axis
 //Individual frame configuratiuon, used to set margins etc
 const frame = {
    web: gChartframe.webFrame(sharedConfig)
-   .margin({right:0}),
+   .margin({right:43}),
    print: gChartframe.printFrame(sharedConfig)
    .margin({right:0}),
    social: gChartframe.socialFrame(sharedConfig)
@@ -107,12 +107,12 @@ d3.csv('example.csv', function(data){
         const myHighlights = drawHighlights()//sets up highlight tonal bands
         const myLegend = drawLegend()//sets up the legend
         const currentFrame = frame[frameName];
-        const plotDim=currentFrame.dimension()//uswful variable to carry the current frame dimensions
-        const tickSize=plotDim.width;//Used when drawing the yAxis ticks
+        //const plotDim=currentFrame.dimension()//uswful variable to carry the current frame dimensions
+        const tickSize=currentFrame.dimension().width;//Used when drawing the yAxis ticks
     
         myChart
             .yRange( [currentFrame.dimension().height,0] )
-            .plotDim(plotDim)
+            .plotDim(currentFrame.dimension())
             .rem(currentFrame.rem())
             .includeMarker((d)=> (d.marker==="yes"))
             .colourPalette((frameName));
@@ -129,10 +129,23 @@ d3.csv('example.csv', function(data){
             .call(myYAxis);
 
         //return the value in the variable newMargin
-        let newMargin = myYAxis.yLabelOffset()
-
-        //Use new<argin to reDraw frame, then define the xRange with the ne width
-        myChart.xRange( [0,currentFrame.dimension().width] );
+        if (yAxisAlign=="right") {
+            console.log( myYAxis.yLabelOffset())
+            let newMargin = myYAxis.yLabelOffset()+currentFrame.margin().right
+            //Use new<argin re define the new margin and range of xAxis
+            currentFrame.margin({right:newMargin});
+        }
+        else {
+            console.log(myYAxis.yLabelOffset())
+            let newMargin = myYAxis.yLabelOffset()+currentFrame.margin().left
+            //Use new<argin re define the new margin and range of xAxis
+            console.log(myYAxis.yLabelOffset())
+            currentFrame.margin({left:newMargin});
+        }
+        console.log(currentFrame.margin())
+        d3.select(currentFrame.plot().node().parentNode)
+            .call(currentFrame);
+        myChart.xRange( [0, currentFrame.dimension().width] );
 
         //Set up xAxis for this frame
         myXAxis
@@ -140,7 +153,7 @@ d3.csv('example.csv', function(data){
             .plotDim(myChart.plotDim())
             .interval(interval)
             .rem(myChart.rem())
-            .minorAxis(minorAxis);;
+            .minorAxis(minorAxis);
         //Set up highlights for this fram
         myHighlights
             .yScale(myChart.yScale())
