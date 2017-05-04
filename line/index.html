@@ -40,7 +40,7 @@ let yMin = 0;//sets the minimum value on the yAxis
 let yMax = 1500;//sets the maximum value on the xAxis
 const yAxisHighlight = 100; //sets which tick to highlight on the yAxis
 const numTicksy = 3;//Number of tick on the uAxis
-const yAxisAlign = "left";//alingment of the axis
+const yAxisAlign = "right";//alingment of the axis
 const interval = "years"//date interval on xAxis "decade", "lustrum", "years","months","days"
 let markers = false;//show dots on lines marked as 'yes in the marker column'
 let legendAlign = "vert"//hori or vert, alignmeny of the legend
@@ -136,13 +136,10 @@ d3.csv('example.csv', function(data){
             currentFrame.margin({right:newMargin});
         }
         else {
-            console.log(myYAxis.yLabelOffset())
             let newMargin = myYAxis.yLabelOffset()+currentFrame.margin().left
             //Use new<argin re define the new margin and range of xAxis
-            console.log(myYAxis.yLabelOffset())
             currentFrame.margin({left:newMargin});
         }
-        console.log(currentFrame.margin())
         d3.select(currentFrame.plot().node().parentNode)
             .call(currentFrame);
         myChart.xRange( [0, currentFrame.dimension().width] );
