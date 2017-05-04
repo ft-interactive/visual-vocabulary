@@ -150,7 +150,7 @@ function yLinearAxis() {
         }
         //identify 0 line if there is one
         let originValue = 0;
-        let origin = parent.selectAll(".tick").filter(function(d, i) {
+        let origin = yLabel.selectAll(".tick").filter(function(d, i) {
                 return d==originValue || d==yAxisHighlight;
             }).classed("baseline",true);
     }
@@ -232,7 +232,7 @@ function xDateAxis() {
             xLabelMinor.attr("transform","translate(0,"+(plotDim.height)+")");
         }
 
-        let ticks = parent.selectAll(".xAxis .tick line");
+        let ticks = xLabel.selectAll(".tick");
         console.log("tick",ticks)
         ticks.each(function (d) {
             d3.select(this)
