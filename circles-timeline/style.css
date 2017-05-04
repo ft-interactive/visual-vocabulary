@@ -1,0 +1,28 @@
+/* STYLES */
+
+circle {
+	fill-opacity: 0.5;
+}
+
+.saveable button {
+	display: block; 
+}
+
+[data-frame=social] text,
+[data-frame=video] text {
+	fill: #CEC6B9;
+}
+
+[data-frame=social] .axis path,
+[data-frame=video] .axis path {
+	fill: none;
+	stroke: #CEC6B9;
+	stroke-width: 1px;
+}
+
+[data-frame=social] .tick line,
+[data-frame=video] .tick line {
+	fill: none;
+	stroke: #CEC6B9;
+	stroke-width: 1px;
+}

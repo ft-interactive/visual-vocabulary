@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>UK Constituency Choropleth - Visual Vocabulary</title>
+    <script src="//d3js.org/d3.v4.js"></script>
+    <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
+    <script src="https://d3js.org/d3-queue.v3.min.js"></script>
+    <script src="//financial-times.github.io/g-chartframe/build/g-chartframe.js"></script>
+    <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
+    <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
+    <script src="chart.js"></script>
+
+    <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
+    <link rel="stylesheet" src="style.css"/>
+    <style>
+    .saveable button{ display: block; }
+    </style>
+</head>
+<body>
+
+    <h1>UK Constituency Cartogram</h1>
+    <p>In  cartogram some geographical information is retained  but the emphasis is on assigning equal weight to each parliamentary constitency. Valid for 2015 and 2017 data.</p>
+    <hr>
+    <figure class="framed saveable" data-frame="web">
+        <svg></svg>
+    </figure>
+
+    <figure class="framed saveable" data-frame="social">
+        <svg></svg>
+    </figure>
+
+</body>
+
+<script type="text/javascript">
+
+const frame = {
+    web: gChartframe.webFrame({
+        height:800,
+        title:'UK parliamentary constituencies',
+        subtitle:'2017 cartogram',
+        margin:{left:70, right:70},
+        source:'Source: House of Commons Library|Graphic: Tom Pearson'
+    }),
+    social: gChartframe.socialFrame({
+        title:'Westminster constituencies',
+        subtitle:'2017 cartogram',
+        margin:{left:80, right:50},
+        source:'Source: House of Commons Library|Graphic: Tom Pearson'
+    }),
+};
+
+//add the frames to the page...
+d3.selectAll('.framed')
+    .each(function(){
+        const figure = d3.select(this);
+        figure.select('svg')
+            .call(frame[figure.node().dataset.frame]);
+    });
+
+d3.queue()
+    .defer(d3.csv, 'hocl-ge2015-results-summary.csv')
+    .defer(d3.json, 'https://bertha.ig.ft.com/republish/publish/ig/1DlW90o7qEFMux6ux2VldCRFSnRlR3AlZ48xuCsPd9NM/basic')
+    .await(draw);
+
+function draw( error, data, layout ){
+
+    const colourScale = (x) => {
+        const party = normalisePartyNames(x);
+        return gChartcolour.ukPoliticalParties[party];
+    };
+
+    const myCarto = cartogramLayout()
+        .joinOn('ons_id','onsid')
+        .data(data)
+        .layout(layout.data)
+        .valueAccessor(d=>d.first_party)
+        .colourScale(colourScale);
+
+    const layoutDim = myCarto.layoutDimensions();
+    const layoutApectRatio = layoutDim.x / layoutDim.y;
+    Object.keys(frame).forEach(frameName=>{
+        const currentFrame = frame[frameName];
+        const dim = currentFrame.dimension();
+
+        const plotAspectRatio = dim.width/dim.height;
+        const spaceScale = d3.scaleLinear()
+            .range([0, dim.width])
+            .domain([0, layoutDim.x]);
+
+        if(plotAspectRatio-layoutApectRatio > 0){
+            spaceScale
+                .range([0, dim.height])
+                .domain([0, layoutDim.y]);
+        }
+
+        myCarto.spaceScale(spaceScale);
+
+        if(currentFrame.plot() !== undefined){
+            currentFrame.plot()
+                .call(myCarto);
+        }
+     });
+
+     addSVGSavers('figure.saveable');
+};
+
+function normalisePartyNames(p){
+    if(p==='') return '';
+    const lookup={
+        'Lab':'labour',
+        'Con':'conservative',
+        'LD':'liberal democrats',
+        'UKIP':'ukip',
+        'Green': 'green',
+        'SNP':  'snp', //thse other parties are not yet defined in g-colours talk to tom pearson
+        'PC': 'pc',
+        'SF': 'sf',
+        'DUP':'dup',
+        'Alliance': 'alliance',
+        'SDLP': 'sdlp',
+    }
+    if(lookup[p]!== undefined) return lookup[p];
+    return 'independent';
+}
+
+</script>
+</html>

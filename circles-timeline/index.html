@@ -1,139 +1,187 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Frames for FT graphics</title>
-    <script type="text/javascript" src="styles.js"></script>
-    <link rel="stylesheet" type="text/css" href="./frameGlobalStyles.css">
+    <title>Circles Timeline - Visual Vocabulary</title>
+    <script src="//d3js.org/d3.v4.js"></script>
+    <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
+    <script src="//financial-times.github.io/g-chartframe/build/g-chartframe.js"></script>
+    <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
+    <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
+    <script src="circles-timeline.js"></script>
+
+    <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
+    <link rel="stylesheet" href="style.css"/>
 
 </head>
 <body>
-    <style>
-        text{font-family:metric}
-    </style>
-    <script src="d3.min.js"></script>
-    <script src="drawFrame.js"></script>
-    <script src="circles-timeline.js"></script>
-    <script src="saveSvgAsPng.js"></script>
-    <script>
-        
-        //datafile
-        var dataURL = "data_piracy.csv"
-        
-        //titles, footnotes
-        var title = "Lorem ipsum dolor sit amet";
-        var subtitle = "Consectetur adipiscing elit";//comment out subtitle assignment if not needed
-        var source = "Sed do eiusmod tempor incididunt ut";
-        var interval="years";//days, months or years, NOTE THAT HOURS FUNCTION IS TURNED OFF FOR GENERAL USE AS IT TAKES TOO LONG TO CALCULATE
-        var minAxis=false //true or false
-        var ticks//Contains the tick values for the major and minor xAxis
 
-
-
-        //Use the frames array to set unique values for each media type of frame
-        // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
-        var frames=[
-        {name:"print",width:211,height:220,units:'mm',margins:[{top:5,right:5,bottom:5, left:5}],stylesheet:styleprint,legend:"vert"},
-        {name:"web",width:600,height:640,units:'px',margins:[{top:10,right:40,bottom:5,left:10}],stylesheet:styleweb,legend:"hori"},
-        {name:"social",width:560,height:720,units:'px',margins:[{top:25,right:25, bottom:25, left:25}],stylesheet:stylesoc,legend:"vert"},
-        {name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori"}
-        ]
-        
-        //sets the padding inside the chart area
-        var chartpadding=[
-        {name:"print",margin:[{top:0,right:35,bottom:15, left:10}]},
-        {name:"web",margin:[{top:0,right:30,bottom:20, left:5}]},
-        {name:"social",margin:[{top:0,right:15,bottom:20, left:5}]},
-        {name:"video",margin:[{top:55,right:35,bottom:80, left:42}]}
-        ]
-        //calls funtion to add empty frames
-        drawFrames()
-        //loads data and formats date
-        d3.csv(dataURL,function(error, data){
-            //date formatter, matching the format of the incoming csv...
-            //var parseDate = d3.time.format("%Y %b").parse;
-            //var parseDate = d3.time.format("%Y").parse;//just full year
-            var dateFormat = d3.time.format('%Y')
-            var parseDate = dateFormat.parse;
-            /*
-            some common formatting parsers....
-            d3.time.format("%Y %b") 1986 Jan
-            d3.time.format("%d-%b-%y")  28-Jan-86
-            d3.time.format("%Y-%m-%d")  1986-01-28
-            d3.time.format("%m/%d/%Y")  01/28/1986
-            d3.time.format("%H:%M") 11:39
-            d3.time.format("%H:%M %p")  11:39 AM
-            d3.time.format("%B %d") January 28
-            d3.time.format("%d %b") 28 Jan
-             */
-
-            //parse the data
-            data.forEach(function(d) {
-                d.date=parseDate(d.date);
-            });
-
-            //YOU SHOULD'NT HAVE TO DO MUCH AFTER THIS
-            ticks=calculateTicks(data,interval)
-            console.log(ticks)
-
-            for (var i=0;i<frames.length;i++){
-                var stylename=frames[i].stylesheet;
-                var media = frames[i].name;
-                var legend=frames[i].legend;
-                circlesTimelineChart(data, stylename, media, chartpadding,legend, minAxis, ticks,dateFormat);
-            }   
-        })//end data load
-
-        function drawFrames(){
-            for (var i=0;i<frames.length;i++){
-                var stylename=frames[i].stylesheet;
-                var media = frames[i].name;
-                if(frames[i].units=="mm") {
-                    framewidth = mmToPx(frames[i].width);
-                    frameheight = mmToPx(frames[i].height);
-                }
-                else{
-                    framewidth = frames[i].width;
-                    frameheight = frames[i].height;
-                }
-                var framemargin = frames[i].margins[0];
-                var titleYoffset=stylename.titleOffset;
-                var subYoffset=stylename.subOffset
-                var frame = new drawFrame(stylename.classes,media,titleYoffset,subYoffset)
-                    .width(framewidth)
-                    .height(frameheight)
-                    .margin(framemargin)
-                    .title(title)
-                    .source(source)
-                //optional elements
-                if (subtitle){
-                    frame.subtitle(subtitle)
-                }
-                d3.select("body").call(frame)
-            }
-        }
-
-        function calculateTicks(data,int) {
-            console.log("intercal ", int)
-            var dateDomain = d3.extent(data, function(d) {return d.date;});       
-            return {
-                'years':{major: timeline(dateDomain,"year"),minor:timeline(dateDomain,"month")},
-                'months':{major: timeline(dateDomain,"month"),minor:timeline(dateDomain,"day")},
-                'days':{major: timeline(dateDomain,"day"),minor:timeline(dateDomain,"hour")}
-
-            }[int];
-
-            function timeline(dateDomain,time) {
-                var intervals= d3.time[time].range(new Date(dateDomain[0]), new Date(dateDomain[1]));
-                intervals.unshift(dateDomain[0])
-                //console.log("test interva;",intervals)
-                return intervals
-            }
-        }
-        
-        function mmToPx(mm){
-            var px = mm*2.83464480558843;
-            return px;
-        }
-            
-    </script>
+    <h1>Circles timeline</h1>
+    <p>Good for showing discrete values of varying size across multiple categories (eg earthquakes by contintent)</p>
+    <hr>
+    <figure class="framed saveable" data-frame="web"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="print"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="social"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="video"><svg></svg></figure>
+    
 </body>
+
+<script type="text/javascript">
+
+const normalColours = gChartcolour.categorical_bar;
+const popColours = gChartcolour.lineSocial;
+
+const webMargin = {
+    left: 20,
+    right: 30,
+    top: 130,
+    bottom: 30,
+}
+const printMargin = {
+    left: 10,
+    right: 20,
+    top: 100,
+    bottom: 30,
+}
+const socialMargin = {
+    left: 30,
+    right: 50,
+    top: 200,
+    bottom: 0,
+}
+const videoMargin = {
+    left: 100,
+    right: 50,
+    top: 300,
+    bottom: 0,
+}
+
+const frame = {
+    web: gChartframe.webFrame()
+        .margin(webMargin)
+        .width(600)
+        .height(640),
+
+    print: gChartframe.printFrame()
+        .margin(printMargin)
+        .width(221)   //note, this value is in mm for the print frame
+        .height(220),   //note, this value is in mm for the print frame
+
+    social: gChartframe.socialFrame()
+        .margin(socialMargin)
+        .width(560)
+        .height(720)
+        .title('Slightly shorter title perhaps?'),
+
+    video: gChartframe.videoFrame()
+        .margin(videoMargin)
+        .width(1920)
+        .height(1080)
+};
+
+d3.selectAll('.framed')
+    .each(function(){
+        const figure = d3.select(this);
+        figure.select('svg')
+            .call(frame[figure.node().dataset.frame]);
+    });
+
+//sort data 
+const dataSorter = function(a,b){
+    return a-b;
+};
+
+const formatId = function(name){
+    return name.replace(/\s+/g, '').toLowerCase();
+};
+
+d3.csv('data.csv',function(error, data){
+
+    if(error){ 
+        throw new Error("There is a problem the data entered into Circles Timeline chart: `${error}");
+    }
+    //parse the data 
+    const dates = [];
+    const values = [];  
+    data.sort(dataSorter);
+    data.forEach( d => {
+        dates.push(d.date);
+        values.push(d.value);
+    });
+
+    //establish max data value
+    values.sort(dataSorter);
+    const maxValue = values[values.length - 1];
+
+    //establish range of dates
+    dates.sort(dataSorter);
+    const dateDomain=[dates[0],dates[dates.length-1]];
+
+    //roll up the data by category 
+
+    let dataCategories = data.map((dataObj, index) => { return dataObj.category})
+    let dataCategoriesDeDuped = dataCategories.filter((category, position) => { return dataCategories.indexOf(category) == position; })
+    let dataCategoriesAsObjects = dataCategoriesDeDuped.map((category) => { return {key: category, values: [] } } );
+    const catData = dataCategoriesAsObjects.map((item) => { 
+                                                let allCategoryData = data.filter( (d) => { 
+                                                    return d.category === item.key;
+                                                } );
+                                            item.values = allCategoryData;
+                                            return item;
+                                    });
+
+    const countCategories = catData.length;
+
+    Object.keys(frame).forEach(frameName=>{
+        const currentFrame = frame[frameName];
+
+        //Get the size of the container to set scales for each box 
+        const h = currentFrame.dimension().height; 
+        const w = currentFrame.dimension().width; 
+        const chartWidth = w - currentFrame.margin().left - currentFrame.margin().right;
+        const chartHeight = h - currentFrame.margin().top - currentFrame.margin().bottom;
+
+        //calculate the size of the max circle - here using height 
+        const maxCircle = (chartHeight / 100) * countCategories;
+
+        //set radius scale 
+        const rScale = d3.scalePow().exponent(0.5)
+            .domain([0, maxValue])
+            .range([0, maxCircle]);
+
+        //set xScale
+        const xScale = d3.scaleTime()
+            .domain(dateDomain)
+            .range([0, chartWidth]);
+
+        //set xAxis
+        const xAxis = d3.axisBottom()
+            .scale(xScale)
+            .tickFormat(d3.format('.0f'));
+
+        //set colours 
+        var colours = (frameName == 'video' || frameName == 'social') ? popColours : normalColours;
+
+       //apply properties to an instance of chart
+        const myChart = circlesTimelineChart()
+            .setColours(colours)
+            .setRScale(rScale)
+            .setXScale(xScale)
+            .setMaxCircle(maxCircle)
+            .setXAxis(xAxis);
+
+        // Specific chart format configuration
+        currentFrame.plot()
+            .selectAll('g')
+            .data(catData)
+                .enter()
+            .append('g')
+                .attr('id', d => formatId(d.key))
+                .attr('transform', (d,i) => `translate(${currentFrame.margin().left}, ${(i*maxCircle*3)})`)
+            .call(myChart);
+   }) 
+
+    addSVGSavers('figure.saveable');
+});
+
+</script>
 </html>
