@@ -44,6 +44,7 @@ const yAxisAlign = "right";//alingment of the axis
 const interval = "years"//date interval on xAxis "decade", "lustrum", "years","months","days"
 let markers = false;//show dots on lines marked as 'yes in the marker column'
 let legendAlign = "vert"//hori or vert, alignmeny of the legend
+let curve=d3.curveLinear//curveStep, curveStepBefore, curveStepAfter, curveBasis, curveCardinal, curveCatmullRom
 let minorAxis = false//turns on or off the minor axis
 
 //Individual frame configuratiuon, used to set margins etc
@@ -99,6 +100,7 @@ d3.csv('example.csv', function(data){
         .xDomain(d3.extent(data, function(d) {return d.date;}))
         .yAxisAlign(yAxisAlign)
         .markers(markers)
+        .curve(curve)
 
     Object.keys(frame).forEach(frameName=>{
         //define other functions to be called

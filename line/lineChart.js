@@ -7,6 +7,7 @@ function lineChart() {
     let rem =10;
     let includeMarker=(d)=> (d.marker==="yes");
     let markers = false;
+    let curve=d3.curveLinear;
     const colourScale = d3.scaleOrdinal()
         .range(gChartcolour.lineWeb)
         .domain(seriesNames);
@@ -14,7 +15,7 @@ function lineChart() {
     function chart(parent){
 
         var lineData= d3.line()
-            .curve(d3.curveLinear)
+            .curve(curve)
             .x(function(d,i) { 
                 return xScale(d.date); 
             })
@@ -61,6 +62,11 @@ function lineChart() {
 
     chart.yRange = (d)=>{
         yScale.range(d);
+        return chart;
+    };
+
+    chart.curve = (d)=>{
+        if(!d) return curve;
         return chart;
     };
 
