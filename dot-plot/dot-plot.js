@@ -12,7 +12,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
 
     var yOffset=d3.select("#"+media+"Subtitle").style("font-size");
     yOffset=Number(yOffset.replace(/[^\d.-]/g, ''));
-    
+
     //Get the width,height and the marginins unique to this chart
     var w=plot.node().getBBox().width;
     var h=plot.node().getBBox().height;
@@ -23,13 +23,13 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
     var colours=stylename.linecolours;
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
-    
+
     var plotData=d3.nest()
         .key(function(d) { return d.group; })
         .entries(data);
 
-    xMin=Math.min(xMin,d3.min(plotData, function(d) { return d3.min(d.values, function(d) { return d.value; })})); 
-    xMax=Math.max(xMax,d3.max(plotData, function(d) { return d3.max(d.values, function(d) { return d.value; })})); 
+    xMin=Math.min(xMin,d3.min(plotData, function(d) { return d3.min(d.values, function(d) { return d.value; })}));
+    xMax=Math.max(xMax,d3.max(plotData, function(d) { return d3.max(d.values, function(d) { return d.value; })}));
     //console.log(xMin,xMax)
 
     var xScale = d3.scale.linear()
@@ -55,7 +55,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
     var yScale = d3.scale.ordinal()
         .rangeBands([plotHeight+margin.top, margin.top])
         .domain(plotData.map(function(d) { return d.key; }));;
-    
+
 
     var category = plot.selectAll("."+media+"category")
         .data(plotData)
@@ -88,7 +88,7 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
         .attr("cx",function(d){return xScale(d.value)})
         .attr("cy",yScale.rangeBand()*.4)
         .attr("r", function(d) {
-            if (size) {return d.size*(yScale.rangeBand()*.003   )}
+            if (size) { return Math.sqrt((d.size * yScale.rangeBand() * .1)/Math.PI); }
             else {return yOffset/2}
         })
         .attr("transform", function (d) {return "translate("+(margin.left)+","+(0)+")"})
@@ -155,10 +155,10 @@ function makeChart(data,stylename,media,plotpadding,legAlign,yAlign,xMin,xMax, x
 
     })
 
-    d3.selection.prototype.moveToFront = function() { 
-                return this.each(function() { 
-                this.parentNode.appendChild(this); 
-                }); 
+    d3.selection.prototype.moveToFront = function() {
+                return this.each(function() {
+                this.parentNode.appendChild(this);
+                });
     };
 
     function pointer() {
