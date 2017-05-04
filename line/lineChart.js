@@ -232,12 +232,9 @@ function xDateAxis() {
             xLabelMinor.attr("transform","translate(0,"+(plotDim.height)+")");
         }
 
-        let ticks = xLabel.selectAll(".tick");
-        console.log("tick",ticks)
-        ticks.each(function (d) {
-            d3.select(this)
-            .classed("baseline",true);
-        })
+        let ticks = xLabel.selectAll(".tick").each(function (d) {
+            return d
+        }).classed("baseline",true);
 
     }
 
@@ -252,6 +249,7 @@ function xDateAxis() {
             "days":d3.timeDay.every(1)
         }[interval]
     }
+
     function getTicksMinor(interval) {
         return {
             "decade":d3.timeYear.every(1),

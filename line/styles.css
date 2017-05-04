@@ -58,23 +58,6 @@
     stroke-width: 4px;
     stroke-opacity: 0.38;
 }
-/* Style for the highlight or base line on yAxia*/
-[data-frame^="web"] .baseline line{
-    stroke-width: 2px;
-    stroke-dasharray: 1, 0;
-}
-[data-frame^="print"] .baseline line{
-    stroke-width: 0.6px;
-}
-[data-frame^="social"] .baseline line{
-    stroke-width: 2px;
-    stroke-dasharray: 1, 0;
-    stroke-opacity: 0.5;
-}
-[data-frame^="video"] .baseline line{
-    stroke-width: 4px;
-    stroke-opacity: .38;
-}
 /* Makes domian invivible on yAxis*/
 [data-frame^="web"] .domain {
     stroke-width: 0px;
@@ -125,6 +108,23 @@
     stroke: #FFFFFF;
     stroke-width: 4px;
     stroke-opacity: 0.38;
+}
+/* Style for the highlight or base line on yAxia*/
+[data-frame^="web"] .baseline line{
+    stroke-width: 2px;
+    stroke-dasharray: 1, 0;
+}
+[data-frame^="print"] .baseline line{
+    stroke-width: 0.6px;
+}
+[data-frame^="social"] .baseline line{
+    stroke-width: 2px;
+    stroke-dasharray: 1, 0;
+    stroke-opacity: 0.5;
+}
+[data-frame^="video"] .baseline line{
+    stroke-width: 4px;
+    stroke-opacity: .38;
 }
 /* Styles for lines on chart*/
 [data-frame^="web"] .lines {
