@@ -60,7 +60,7 @@ d3.selectAll('.framed')
 
 d3.queue()
     .defer(d3.csv, 'hocl-ge2015-results-summary.csv')
-    .defer(d3.json, 'geodata/constituencies-medium.json')
+    .defer(d3.json, 'geodata/constituencies-low.json')
     .await(draw);
 
 function draw( error, data, topology ){

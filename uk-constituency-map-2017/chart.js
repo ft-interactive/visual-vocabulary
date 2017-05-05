@@ -27,7 +27,9 @@ function choroplethFactory(){
                     const id = topologyIDProperty( d );
                     const value = dataAccessor( dataLookup[id] );
                     return dataScale( value );
-                });
+                    //return '{{ constituencies.'+d.id+'.fill }}';
+                })
+                .attr('id',d=>'map-constituency'+d.id);
     }
 
     choropleth.data = (x) => {
