@@ -232,7 +232,7 @@ function xDateAxis() {
 
         if (minorAxis) {
             const xLabelMinor = parent.append("g")
-            .attr("class","axis xAxis")
+            .attr("class","axis baseline")
             .call(xMinor)
             
             xLabelMinor.attr("transform","translate(0,"+(plotDim.height)+")");
