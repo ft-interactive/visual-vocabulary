@@ -7,7 +7,7 @@ function lineChart() {
     let rem =10;
     let includeMarker=(d)=> (d.marker==="yes");
     let markers = false;
-    let curve=d3.curveLinear;
+    let curve =d3.curveLinear
     const colourScale = d3.scaleOrdinal()
         .range(gChartcolour.lineWeb)
         .domain(seriesNames);
@@ -15,7 +15,7 @@ function lineChart() {
     function chart(parent){
 
         var lineData= d3.line()
-            .curve(curve)
+            .curve(d3.curveLinear)
             .x(function(d,i) { 
                 return xScale(d.date); 
             })
@@ -65,11 +65,6 @@ function lineChart() {
         return chart;
     };
 
-    chart.curve = (d)=>{
-        if(!d) return curve;
-        return chart;
-    };
-
     chart.seriesNames = (d)=>{
         seriesNames = d;
         return chart;
@@ -103,6 +98,11 @@ function lineChart() {
     }
     chart.markers = (d)=>{
         markers = d;
+        return chart;
+    }
+    chart.curve = (d)=>{
+        if(!d) return curve;
+        curve = d;
         return chart;
     }
     chart.colourPalette = (d) =>{
@@ -232,15 +232,18 @@ function xDateAxis() {
 
         if (minorAxis) {
             const xLabelMinor = parent.append("g")
-            .attr("class","axis minorAxis")
+            .attr("class","axis xAxis")
             .call(xMinor)
             
             xLabelMinor.attr("transform","translate(0,"+(plotDim.height)+")");
         }
 
-        let ticks = xLabel.selectAll(".tick").each(function (d) {
-            return d
-        }).classed("baseline",true);
+        let ticks = xLabel.selectAll(".tick");
+        console.log("tick",ticks)
+        ticks.each(function (d) {
+            d3.select(this)
+            .classed("baseline",true);
+        })
 
     }
 
@@ -255,7 +258,6 @@ function xDateAxis() {
             "days":d3.timeDay.every(1)
         }[interval]
     }
-
     function getTicksMinor(interval) {
         return {
             "decade":d3.timeYear.every(1),
