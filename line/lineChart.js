@@ -220,7 +220,7 @@ function xDateAxis() {
             .scale(xScale)
 
         const xMinor=d3.axisBottom()
-            .tickSize(rem*.5)
+            .tickSize(rem*.3)
             .ticks(getTicksMinor(interval))
             .tickFormat("")
             .scale(xScale)
