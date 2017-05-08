@@ -1,0 +1,202 @@
+/* overall text style for each chart frame*/
+
+/* .overall text styles on axis*/
+[data-frame^="web"] .axis {
+    font-family: metric;
+    font-size: 18px;
+}
+[data-frame^="print"] .axis{
+    font-family: metric;
+    font-size: 9.6px;
+}
+[data-frame^="social"] .axis{
+    font-family: metric;
+    font-size: 28px;
+}
+[data-frame^="video"] .axis{
+    font-family: metric;
+    font-size: 48px;
+}
+
+/* .tick text on yAxis*/
+[data-frame^="web"] .yAxis text {
+    fill: #74736C;
+    text-anchor: end;
+}
+[data-frame^="print"] .yAxis text{
+    text-anchor: end;
+}
+[data-frame^="social"] .yAxis text{
+    fill-opacity: 0.5;
+    fill: #FFFFFF;
+    text-anchor: end;
+}
+[data-frame^="video"] .yAxis text{
+    fill-opacity: 0.5;
+    fill: #FFFFFF;
+    text-anchor: end;
+}
+
+/* .tick line styles on yAxis*/
+[data-frame^="web"] .yAxis line {
+    stroke: #CEC6B9;
+    stroke-width: 1px;
+    stroke-dasharray: 2, 1;
+}
+[data-frame^="print"] .yAxis line{
+    stroke: #000000;
+    stroke-width: 0.3px;
+}
+[data-frame^="social"] .yAxis line{
+    stroke: #FFFFFF;
+    stroke-width: 2px;
+    stroke-dasharray: 2, 8;
+    stroke-opacity: 0.38;
+}
+[data-frame^="video"] .yAxis line{
+    stroke: #FFFFFF;
+    stroke-width: 4px;
+    stroke-opacity: 0.38;
+}
+/* Makes domian invivible on yAxis*/
+[data-frame^="web"] .domain {
+    stroke-width: 0px;
+}
+[data-frame^="print"] .domain{
+    stroke-width: 0px;
+}
+[data-frame^="social"] .domain{
+    stroke-width: 0px;
+}
+[data-frame^="video"] .domain{
+    stroke-width: 0px;
+}
+/* .tick text on yAxis*/
+[data-frame^="web"] .xAxis text {
+    fill: #74736C;
+    text-anchor: middle;
+}
+[data-frame^="print"] .xAxis text{
+    text-anchor: middle;
+}
+[data-frame^="social"] .xAxis text{
+    fill-opacity: 0.5;
+    fill: #FFFFFF;
+    text-anchor: middle;
+}
+[data-frame^="video"] .xAxis text{
+    fill-opacity: 0.5;
+    fill: #FFFFFF;
+    text-anchor: middle;
+}
+[data-frame^="web"] .xAxis line {
+    stroke: #CEC6B9;
+    stroke-width: 1px;
+    stroke-dasharray: 2,1;
+}
+[data-frame^="print"] .xAxis line{
+    stroke: #000000;
+    stroke-width: 0.3px;
+}
+[data-frame^="social"] .xAxis line{
+    stroke: #FFFFFF;
+    stroke-width: 2px;
+    stroke-dasharray: 2, 8;
+    stroke-opacity: 0.38;
+}
+[data-frame^="video"] .xAxis line{
+    stroke: #FFFFFF;
+    stroke-width: 4px;
+    stroke-opacity: 0.38;
+}
+/* Style for the highlight or base line on yAxia*/
+[data-frame^="web"] .baseline line{
+    stroke: #CEC6B9;
+    stroke-width: 2px;
+    stroke-dasharray: 1, 0;
+}
+[data-frame^="print"] .baseline line{
+    stroke: #000000;
+    stroke-width: 0.6px;
+}
+[data-frame^="social"] .baseline line{
+    stroke: #FFFFFF;
+    stroke-width: 2px;
+    stroke-dasharray: 1, 0;
+    stroke-opacity: 0.5;
+}
+[data-frame^="video"] .baseline line{
+    stroke: #FFFFFF;
+    stroke-width: 4px;
+    stroke-opacity: .38;
+}
+/* Styles for lines on chart*/
+[data-frame^="web"] .lines {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2.5px;
+    fill: none;
+}
+[data-frame^="print"] .lines{
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2px;
+    fill: none;
+}
+[data-frame^="social"] .lines{
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 5px;
+    fill: none;
+}
+[data-frame^="video"] .lines{
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 8px;
+    fill: none;
+}
+/* .overall text styles on axis*/
+[data-frame^="web"] .highlights {
+    fill: #C1B8B9;
+    opacity: 0.3;
+}
+[data-frame^="print"] .highlights{
+    fill: #95BFC5;
+    opacity: 0.3;
+}
+[data-frame^="social"] .highlights{
+    fill: #ffffff;
+    opacity: 0.38;
+}
+[data-frame^="video"] .highlights{
+    fill: #ffffff;
+    opacity: 0.38
+}
+/* legend */
+[data-frame^="web"] .legend {
+    font-family: metric;
+    fill: #74736C;
+    font-size: 18px;
+}
+[data-frame^="print"] .legend{
+    font-family: metric;
+    font-size: 9.6px;
+}
+[data-frame^="social"] .legend{
+    font-family: metric;
+    fill-opacity: 0.5;
+    fill: #FFFFFF;
+    font-size: 28px;
+}
+[data-frame^="video"] .legend{
+    font-family: metric;
+    fill-opacity: 0.5;
+    fill: #FFFFFF;
+    font-size: 48px;
+}
+
+svg text{
+    font-feature-settings: 'tnum',1;
+    -webkit-font-feature-settings: 'tnum';
+    -moz-font-feature-settings: 'tnum';
+}
