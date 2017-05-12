@@ -34,7 +34,6 @@ function xaxisdate() {
         }
 
         let ticks = xLabel.selectAll(".tick");
-        console.log("tick",ticks)
         ticks.each(function (d) {
             d3.select(this)
             .classed("baseline",true);

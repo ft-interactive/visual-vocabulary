@@ -11,6 +11,7 @@
     <script src="legend.js"></script>
     <script src="yaxislinear.js"></script>
     <script src="xaxisdate.js"></script>
+    <script src="https://rawgit.com/ft-interactive/g-yaxislinear/master/build/g-yaxislinear.js"></script>
 
     <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
     <link rel="stylesheet" href="styles.css"/>
@@ -78,7 +79,6 @@ d3.csv('example.csv', function(data){
             });
     //automatically calculate the seriesnames excluding the "marker" and "annotate column"
     let seriesNames=getSeriesNames(data.columns)
-    console.log(data)
     //format the dataset that is used to draw the lines
     let plotData=seriesNames.map(function(d,i){
         return {
@@ -135,7 +135,6 @@ d3.csv('example.csv', function(data){
 
         //return the value in the variable newMargin
         if (yAxisAlign=="right") {
-            console.log( myYAxis.yLabelOffset())
             let newMargin = myYAxis.yLabelOffset()+currentFrame.margin().right
             //Use new<argin re define the new margin and range of xAxis
             currentFrame.margin({right:newMargin});
