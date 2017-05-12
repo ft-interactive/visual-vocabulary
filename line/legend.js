@@ -45,8 +45,9 @@ function drawLegend() {
         })
 
 	}
-    let test=d3.selectAll("#legend")
-    test.on("mouseover",pointer)
+
+   d3.selectAll("#legend")
+        .on("mouseover",pointer)
         .call(d3.drag()
                 .on("start", dragstarted)
                 .on("drag", dragged)
