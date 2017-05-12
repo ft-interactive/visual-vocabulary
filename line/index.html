@@ -189,11 +189,13 @@ d3.csv('example.csv', function(data){
             .alignment(legendAlign);
         //Draw the Legend
         currentFrame.plot()
-            .selectAll(".legend")
-            .data(seriesNames)
-            .enter()
             .append("g")
-            .classed("legend",true)
+            .attr("id","legend")
+                .selectAll(".legend")
+                .data(seriesNames)
+                .enter()
+                .append("g")
+                .classed("legend",true)
             .call(myLegend)
 
      });

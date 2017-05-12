@@ -4,22 +4,16 @@ function drawLegend() {
         .range(gChartcolour.lineWeb)
         .domain(seriesNames);
     let rem=10
-    let alignment="hori"
+    let alignment="hori";
 
 	function legend(parent) {
 		let legendyOffset=0
-        parent
-            .attr('id',"legend" )
-            .on("mouseover",pointer)
 
-        // let drag = d3.behavior.drag().on("drag", moveLegend);
-        // parent.select("#legend").call(drag);
-
-		let ledge=parent.append("g")
-			.attr ("id",function(d,i){
+		parent.attr ("id",function(d,i){
                 return "l"+i
             })
-        ledge.append("text")
+
+        parent.append("text")
             .attr("id",(d,i)=> ("t"+i))
 			.attr("x",rem+rem/2)
             .attr("y",rem/2)
@@ -27,7 +21,8 @@ function drawLegend() {
             .text(function(d){
                 return d;
             })
-        ledge.append("line")
+
+        parent.append("line")
             .attr("stroke",(d)=>colourScale(d))
             .attr("x1",0)
             .attr("x2",rem)
@@ -35,7 +30,7 @@ function drawLegend() {
             .attr("y2",rem/4)
             .attr("class","lines")
 
-        ledge.attr("transform",function(d,i){
+        parent.attr("transform",function(d,i){
             if (alignment=='hori') {
                 var gHeigt=parent.select("#l0").node().getBBox().height;
                 if (i>0) {
@@ -47,8 +42,15 @@ function drawLegend() {
             }
             else {
                 return "translate(0,"+((i*rem))+")"};
-    })
+        })
+
 	}
+    let test=d3.select("#legend")
+    test.on("mouseover",pointer)
+        .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
 
 	legend.seriesNames = (d)=>{
         seriesNames = d;
@@ -85,6 +87,25 @@ function drawLegend() {
     function pointer() {
         this.style.cursor='pointer'
     }
+
+    function dragstarted(d) {
+      d3.select(this).raise().classed("active", true);
+    }
+
+    function dragged(d) {
+        d3.select(this).attr("transform", "translate(" + d3.event.x + ", " + d3.event.y + ")");
+      // d3.select(this).selectAll("text")
+      //   .attr("x", d.x = d3.event.x)
+      //   .attr("y", d.y = d3.event.y);
+      // d3.select(this).selectAll("line")
+      //   .attr("x", d.x = d3.event.x)
+      //   .attr("y", d.y = d3.event.y);
+    }
+
+    function dragended(d) {
+      d3.select(this).classed("active", false);
+    }
+
 
 	return legend
 }
