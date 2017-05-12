@@ -45,7 +45,7 @@ function drawLegend() {
         })
 
 	}
-    let test=d3.select("#legend")
+    let test=d3.selectAll("#legend")
     test.on("mouseover",pointer)
         .call(d3.drag()
                 .on("start", dragstarted)
@@ -94,12 +94,6 @@ function drawLegend() {
 
     function dragged(d) {
         d3.select(this).attr("transform", "translate(" + d3.event.x + ", " + d3.event.y + ")");
-      // d3.select(this).selectAll("text")
-      //   .attr("x", d.x = d3.event.x)
-      //   .attr("y", d.y = d3.event.y);
-      // d3.select(this).selectAll("line")
-      //   .attr("x", d.x = d3.event.x)
-      //   .attr("y", d.y = d3.event.y);
     }
 
     function dragended(d) {
