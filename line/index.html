@@ -105,6 +105,8 @@ d3.csv('example.csv', function(data){
         .markers(markers)
         .interpolation(interpolation)
 
+    console.log(d3.yaxisLinear)
+
     Object.keys(frame).forEach(frameName=>{
         //define other functions to be called
         const myYAxis = yaxislinear();//sets up yAxis
@@ -115,8 +117,6 @@ d3.csv('example.csv', function(data){
         //const plotDim=currentFrame.dimension()//uswful variable to carry the current frame dimensions
         const tickSize=currentFrame.dimension().width;//Used when drawing the yAxis ticks
 
-
-        console.log(d3.yaxisLinear)
     
         myChart
             .yRange( [currentFrame.dimension().height,0] )
