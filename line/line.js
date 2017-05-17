@@ -1,5 +1,5 @@
 
-function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpadding,legAlign,lineSmoothing, logScale, logScaleStart, markers, numTicksy, yAlign, ticks,minAxis,interval){
+function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpadding,legAlign,lineSmoothing, logScale, logScaleStart, markers, numTicksy, yAlign, ticks,minAxis){
 
 
     var titleYoffset = d3.select("#"+media+"Title").node().getBBox().height
@@ -24,7 +24,6 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
     var colours=stylename.linecolours;
     var plotWidth = w-(margin.left+margin.right);
     var plotHeight = h-(margin.top+margin.bottom);
-
 
     //calculate range of time series 
     var xDomain = d3.extent(data, function(d) {return d.date;});
@@ -132,23 +131,12 @@ function lineChart(data, stylename, media, yMin, yMax, yAxisHighlight, plotpaddi
         .domain(xDomain)
         .range([0,(plotWidth-yLabelOffset)])
 
+    
     var xAxis = d3.svg.axis()
         .scale(xScale)
         .tickValues(ticks.major)
         .tickSize(yOffset/2)
-        //.tickFormat(d3.time.format(formatTick(interval)))
         .orient("bottom");
-
-    function formatTick(int) {
-        return {
-            "months":"%b",
-            "years": "%Y",
-            "decade": "%Y",
-            "lustrum": "%Y",
-            "days": "%d",
-            "hours":"%H:%M"
-        }[int]
-    };
 
     var xLabel=plot.append("g")
         .attr("class",media+"xAxis")
