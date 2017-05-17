@@ -9,6 +9,9 @@
     <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
     <script src="lineChart.js"></script>
     <script src="legend.js"></script>
+    <script src="yaxislinear.js"></script>
+    <script src="xaxisdate.js"></script>
+    <script src="https://rawgit.com/ft-interactive/g-yaxislinear/master/build/g-yaxislinear.js"></script>
 
     <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
     <link rel="stylesheet" href="styles.css"/>
@@ -44,7 +47,7 @@ const yAxisAlign = "right";//alingment of the axis
 const interval = "years"//date interval on xAxis "decade", "lustrum", "years","months","days"
 let markers = false;//show dots on lines marked as 'yes in the marker column'
 let legendAlign = "vert"//hori or vert, alignmeny of the legend
-let curve=d3.curveLinear//curveStep, curveStepBefore, curveStepAfter, curveBasis, curveCardinal, curveCatmullRom
+let interpolation=d3.curveLinear//curveStep, curveStepBefore, curveStepAfter, curveBasis, curveCardinal, curveCatmullRom
 let minorAxis = true//turns on or off the minor axis
 
 //Individual frame configuratiuon, used to set margins etc
@@ -100,17 +103,20 @@ d3.csv('example.csv', function(data){
         .xDomain(d3.extent(data, function(d) {return d.date;}))
         .yAxisAlign(yAxisAlign)
         .markers(markers)
-        .curve(curve)
+        .interpolation(interpolation)
+
+    console.log(d3.yaxisLinear)
 
     Object.keys(frame).forEach(frameName=>{
         //define other functions to be called
-        const myYAxis = yLinearAxis();//sets up yAxis
-        const myXAxis = xDateAxis();//sets up xAxis
+        const myYAxis = yaxislinear();//sets up yAxis
+        const myXAxis = xaxisdate();//sets up xAxis
         const myHighlights = drawHighlights()//sets up highlight tonal bands
         const myLegend = drawLegend()//sets up the legend
         const currentFrame = frame[frameName];
         //const plotDim=currentFrame.dimension()//uswful variable to carry the current frame dimensions
         const tickSize=currentFrame.dimension().width;//Used when drawing the yAxis ticks
+
     
         myChart
             .yRange( [currentFrame.dimension().height,0] )
@@ -132,7 +138,6 @@ d3.csv('example.csv', function(data){
 
         //return the value in the variable newMargin
         if (yAxisAlign=="right") {
-            console.log( myYAxis.yLabelOffset())
             let newMargin = myYAxis.yLabelOffset()+currentFrame.margin().right
             //Use new<argin re define the new margin and range of xAxis
             currentFrame.margin({right:newMargin});
@@ -144,8 +149,8 @@ d3.csv('example.csv', function(data){
         }
         d3.select(currentFrame.plot().node().parentNode)
             .call(currentFrame);
+       
         myChart.xRange( [0, currentFrame.dimension().width] );
-
         //Set up xAxis for this frame
         myXAxis
             .xScale(myChart.xScale())
@@ -166,6 +171,7 @@ d3.csv('example.csv', function(data){
             .enter()
             .append("g")
             .call(myHighlights);
+
         //Draw the xAxis
         currentFrame.plot()
             .call(myXAxis);
@@ -185,11 +191,13 @@ d3.csv('example.csv', function(data){
             .alignment(legendAlign);
         //Draw the Legend
         currentFrame.plot()
-            .selectAll(".legend")
-            .data(seriesNames)
-            .enter()
             .append("g")
-            .classed("legend",true)
+            .attr("id","legend")
+                .selectAll(".legend")
+                .data(seriesNames)
+                .enter()
+                .append("g")
+                .classed("legend",true)
             .call(myLegend)
 
      });
