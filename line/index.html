@@ -1,248 +1,149 @@
-<!DOCTYPE html>
 <html>
 <head>
-    <title>Line chart - Visual Vocabulary</title>
-    <script src="//d3js.org/d3.v4.js"></script>
-    <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
-    <script src="https://unpkg.com/g-chartframe@0.3.9"></script>
-    <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
-    <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
-    <script src="lineChart.js"></script>
-    <script src="legend.js"></script>
-    <script src="yaxislinear.js"></script>
-    <script src="xaxisdate.js"></script>
-    <script src="https://rawgit.com/ft-interactive/g-yaxislinear/master/build/g-yaxislinear.js"></script>
+    <title>Frames for FT graphics</title>
+    <script type="text/javascript" src="styles.js"></script>
+    <link rel="stylesheet" type="text/css" href="./frameGlobalStyles.css">
 
-    <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
-    <link rel="stylesheet" href="styles.css"/>
-    <style>
-    .saveable button{ display: block; }
-    </style>
 </head>
 <body>
+    <style>
+        text{font-family:metric}
+    </style>
+    <script src="d3.min.js"></script>
+    <script src="drawFrame.js"></script>
+    <script src="line.js"></script>
+    <script src="saveSvgAsPng.js"></script>
+    <script>
+        
+        //datafile
+        var dataURL = "linedata.csv"
+        
+        //titles, footnotes
+        var title = "Lorem ipsum dolor sit amet";
+        var subtitle = "Consectetur adipiscing elit";//comment out subtitle assignment if not needed
+        var source = "Sed do eiusmod tempor incididunt ut";
 
-    <h1>Line chart</h1>
-    <p>A suggested starting point new charts types in the visual vocab.</p>
-    <hr>
-    <figure class="framed saveable" data-frame="web"><svg></svg></figure>
-    <figure class="framed saveable" data-frame="print"><svg></svg></figure>
-    <figure class="framed saveable" data-frame="social"><svg></svg></figure>
-    <figure class="framed saveable" data-frame="video"><svg></svg></figure>
+        //graph options
+        var yMin=96;
+        var yMax=106;
+        var yAxisHighlight=100;
+        var lineSmoothing="linear";//choose 'linear' for an unsmoothed line 'monotone' for smooth
+        var logScale=false;
+        var logScaleStart=1000;
+        var markers=true;//show circle markers
+        var numTicksy = 4;//rough number of ticks for y axis
+        var interval="months";//days, months, quarters, years, lustrum or decade
+        var minAxis=false //true or false
+        var ticks//Contains the tick values for the major and minor xAxis
+        //Use the frames array to set unique values for each media type of frame
+        // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
+        var frames=[
+        {name:"print",width:112.25,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"hori",yLabel:"left"},
+        {name:"web",width:600,height:400,units:'px',margins:[{top:0,right:10,bottom:5,left:10}],stylesheet:styleweb,legend:"vert",yLabel:"right"},
+        {name:"now",width:274,height:276,units:'px',margins:[{top:0,right:0,bottom:5,left:0}],stylesheet:stylenowcast,legend:"vert",yLabel:"right"},
+        {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"hori",yLabel:"left"},
+        {name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
+        ]
+        
+        //sets the padding inside the chart area
+        var chartpadding=[
+        {name:"print",margin:[{top:20, right:10, bottom:15, left:0}]},
+        {name:"web",margin:[{top:25, right:0,bottom:30,left:15}]},
+        {name:"now",margin:[{top:20, right:0,bottom:20,left:20}]},
+        {name:"social",margin:[{top:70, right:10, bottom:40, left:12}]},
+        {name:"video",margin:[{top:55, right:35,bottom:80, left:42}]}
+        ]
+        //Add blank frames
+        drawFrames()
+        //Load Data
+        d3.csv(dataURL,function(error, data){
+            //date formatter, matching the format of the incoming csv...
+            //var parseDate = d3.time.format("%Y %b").parse;
+            //var parseDate = d3.time.format("%Y").parse;//just full year
+            var parseDate = d3.time.format("%d/%m/%y").parse;
+            /*
 
-</body>
+            some common formatting parsers....
+            d3.time.format("%Y %b") 1986 Jan
+            d3.time.format("%d-%b-%y")  28-Jan-86
+            d3.time.format("%Y-%m-%d")  1986-01-28
+            d3.time.format("%m/%d/%Y")  01/28/1986
+            d3.time.format("%H:%M") 11:39
+            d3.time.format("%H:%M %p")  11:39 AM
+            d3.time.format("%B %d") January 28
+            d3.time.format("%d %b") 28 Jan
+             d3.time.format("%d/%m/%Y %H:%M")28/01/16
+             */
 
-<script type="text/javascript">
-
-//User defined constants similar to version 2
-const sharedConfig = {
-  title:"Title not yet added",
-  subtitle:"Subtitle not yet added",  
-  source:"Fox news",
-}
-let yMin = 0;//sets the minimum value on the yAxis
-let yMax = 1500;//sets the maximum value on the xAxis
-const yAxisHighlight = 100; //sets which tick to highlight on the yAxis
-const numTicksy = 3;//Number of tick on the uAxis
-const yAxisAlign = "right";//alingment of the axis
-const interval = "years"//date interval on xAxis "decade", "lustrum", "years","months","days"
-let markers = false;//show dots on lines marked as 'yes in the marker column'
-let legendAlign = "vert"//hori or vert, alignmeny of the legend
-let interpolation=d3.curveLinear//curveStep, curveStepBefore, curveStepAfter, curveBasis, curveCardinal, curveCatmullRom
-let minorAxis = true//turns on or off the minor axis
-
-//Individual frame configuratiuon, used to set margins etc
-const frame = {
-   web: gChartframe.webFrame(sharedConfig)
-   .margin({right:43}),
-   print: gChartframe.printFrame(sharedConfig)
-   .margin({right:0}),
-   social: gChartframe.socialFrame(sharedConfig)
-   .margin({right:0}),
-   video: gChartframe.videoFrame(sharedConfig)
-   .margin({right:0}),
-};
-
-
-//add the frames to the page...
-d3.selectAll('.framed')
-    .each(function(){
-        const figure = d3.select(this);
-        figure.select('svg')
-            .call(frame[figure.node().dataset.frame]);
-    });
-
-d3.csv('example.csv', function(data){
-    //make sure all the dates in the date column are a date object
-    var parseDate = d3.timeParse("%d/%m/%Y")
-    data.forEach(function(d) {
+            //parse the data
+            data.forEach(function(d) {
                 d.date=parseDate(d.date);
             });
-    //automatically calculate the seriesnames excluding the "marker" and "annotate column"
-    let seriesNames=getSeriesNames(data.columns)
-    //format the dataset that is used to draw the lines
-    let plotData=seriesNames.map(function(d,i){
-        return {
-            name:d,
-            lineData:getlines(data,d)
+        //YOU SHOULD'NT HAVE TO DO MUCH AFTER THIS
+            ticks=calculateTicks(data,interval)
+
+            for (var i=0;i<frames.length;i++){
+                var stylename=frames[i].stylesheet;
+                var media = frames[i].name;
+                var legend=frames[i].legend;
+                var subYoffset=stylename.subOffset
+                var yLabel=frames[i].yLabel
+                lineChart(data,stylename,media,yMin,yMax,yAxisHighlight,chartpadding,legend, lineSmoothing,logScale,logScaleStart,markers, numTicksy,yLabel,ticks,minAxis);
+            }
+        })//end data load
+
+        function drawFrames(){
+            for (var i=0;i<frames.length;i++){
+                var stylename=frames[i].stylesheet;
+                var media = frames[i].name;
+                if(frames[i].units=="mm") {
+                    framewidth = mmToPx(frames[i].width);
+                    frameheight = mmToPx(frames[i].height);
+                }
+                else{
+                    framewidth = frames[i].width;
+                    frameheight = frames[i].height;
+                }
+                var framemargin = frames[i].margins[0];
+                var titleYoffset=stylename.titleOffset;
+                var subYoffset=stylename.subOffset
+                var frame = new drawFrame(stylename.classes,media,titleYoffset,subYoffset)
+                    .width(framewidth)
+                    .height(frameheight)
+                    .margin(framemargin)
+                    .title(title)
+                    .source(source)
+                //optional elements
+                if (subtitle){
+                    frame.subtitle(subtitle)
+                }
+                d3.select("body").call(frame)
+            }
         }
-    })
-    //fortmat the data that is used to draw highlight tonal bands
-    const boundries=data.filter((d)=> (d.marker==="begin" || d.marker==="end"))
-    let highlights=[]
-    boundries.forEach(function(d,i){
-        if (d.marker==="begin") {
-            highlights.push({begin: d.date,end:boundries[i+1].date}) 
+
+        function calculateTicks(data,int) {
+            var dateDomain = d3.extent(data, function(d) {return d.date;});       
+            return {
+                'decade':{major: timeline(dateDomain,"year",10),minor:timeline(dateDomain,"year",1)},
+                'lutrrum':{major: timeline(dateDomain,"year",5),minor:timeline(dateDomain,"year",1)},
+                'years':{major: timeline(dateDomain,"year",1),minor:timeline(dateDomain,"month",1)},
+                'quarters':{major: timeline(dateDomain,"year",1),minor:timeline(dateDomain,"month",3)},
+                'months':{major: timeline(dateDomain,"month",1 ),minor:timeline(dateDomain,"day",1)},
+                'days':{major: timeline(dateDomain,"day",1),minor:timeline(dateDomain,"hour",1)}
+            }[int];
+
+            function timeline(dateDomain,time,step) {
+                var intervals= d3.time[time].range(new Date(dateDomain[0]), new Date(dateDomain[1]),step);
+                intervals.unshift(dateDomain[0])
+            return intervals        
+            }
         }
-    })
-    //Use the seriesNames array to calculate the minimum and max values in the dataset
-    const valueExtent = extentMulti(data,seriesNames)
-    //define the chart x and x domains. yDomain will automatically overwrite the user defined min and max if the domain is too small
-    const myChart = lineChart()
-        .seriesNames(seriesNames)
-        .yDomain([Math.min(yMin,valueExtent[0]),Math.max(yMax,valueExtent[1])])
-        .xDomain(d3.extent(data, function(d) {return d.date;}))
-        .yAxisAlign(yAxisAlign)
-        .markers(markers)
-        .interpolation(interpolation)
 
-    console.log(d3.yaxisLinear)
-
-    Object.keys(frame).forEach(frameName=>{
-        //define other functions to be called
-        const myYAxis = yaxislinear();//sets up yAxis
-        const myXAxis = xaxisdate();//sets up xAxis
-        const myHighlights = drawHighlights()//sets up highlight tonal bands
-        const myLegend = drawLegend()//sets up the legend
-        const currentFrame = frame[frameName];
-        //const plotDim=currentFrame.dimension()//uswful variable to carry the current frame dimensions
-        const tickSize=currentFrame.dimension().width;//Used when drawing the yAxis ticks
-
-    
-        myChart
-            .yRange( [currentFrame.dimension().height,0] )
-            .plotDim(currentFrame.dimension())
-            .rem(currentFrame.rem())
-            .includeMarker((d)=> (d.marker==="yes"))
-            .colourPalette((frameName));
-        
-        myYAxis
-            .yScale(myChart.yScale())
-            .numTicksy(numTicksy)
-            .tickSize(tickSize)
-            .yAxisHighlight(yAxisHighlight)
-            .yAxisAlign(myChart.yAxisAlign())
-
-        //Draw the yAxis first, this will position the yAxis correctly and measure the widht of the label text
-        currentFrame.plot()
-            .call(myYAxis);
-
-        //return the value in the variable newMargin
-        if (yAxisAlign=="right") {
-            let newMargin = myYAxis.yLabelOffset()+currentFrame.margin().right
-            //Use new<argin re define the new margin and range of xAxis
-            currentFrame.margin({right:newMargin});
+        function mmToPx(mm){
+            var px = mm*2.83464480558843;
+            return px;
         }
-        else {
-            let newMargin = myYAxis.yLabelOffset()+currentFrame.margin().left
-            //Use new<argin re define the new margin and range of xAxis
-            currentFrame.margin({left:newMargin});
-        }
-        d3.select(currentFrame.plot().node().parentNode)
-            .call(currentFrame);
-       
-        myChart.xRange( [0, currentFrame.dimension().width] );
-        //Set up xAxis for this frame
-        myXAxis
-            .xScale(myChart.xScale())
-            .plotDim(myChart.plotDim())
-            .interval(interval)
-            .rem(myChart.rem())
-            .minorAxis(minorAxis);
-        //Set up highlights for this fram
-        myHighlights
-            .yScale(myChart.yScale())
-            .yRange( [currentFrame.dimension().height,0] )
-            .xScale(myChart.xScale())
-            .xRange( [0,currentFrame.dimension().width] );
-        //Draw the highlights before the lines and xAxis
-        currentFrame.plot()
-            .selectAll(".highlights")
-            .data(highlights)
-            .enter()
-            .append("g")
-            .call(myHighlights);
-
-        //Draw the xAxis
-        currentFrame.plot()
-            .call(myXAxis);
-        //Draw the lines  
-        currentFrame.plot()
-            .selectAll("lines")
-            .data(plotData)
-            .enter()
-            .append("g")
-            .attr('class','lines')
-            .call(myChart);
-        //Se up legend for this fram
-        myLegend
-            .seriesNames(seriesNames)
-            .colourPalette((frameName))
-            .rem(myChart.rem())
-            .alignment(legendAlign);
-        //Draw the Legend
-        currentFrame.plot()
-            .append("g")
-            .attr("id","legend")
-                .selectAll(".legend")
-                .data(seriesNames)
-                .enter()
-                .append("g")
-                .classed("legend",true)
-            .call(myLegend)
-
-     });
-});
-
-//a function that returns the columns headers from the top of the dataset, excluding specified
-function getSeriesNames(columns){
-    var exclude = ['date','annotate','marker'];
-    return columns.filter(d=>(exclude.indexOf(d) == -1));
-}
-
-//a function to work out the extent of values in an array accross multiple properties...
-function extentMulti(data, columns){
-    const ext = data.reduce((acc, row, index)=>{
-        let values = columns.map(key=> +row[key])
-        let rowExtent = d3.extent(values);
-        if(!acc.max){
-            acc.max = rowExtent[1];
-            acc.min = rowExtent[0];
-        }else{
-            acc.max = Math.max(acc.max, rowExtent[1]);
-            acc.min = Math.min(acc.min, rowExtent[0]);
-        }
-        return acc;
-    },{});
-    return [ext.min, ext.max];
-}
-//a function that sort the column information in the dataset into groups according to the column head, so that the line path can be passed as one object to the drawing function
-function getlines(data,group) {
-    let lineData=[]
-    data.forEach(function(el,i){
-        //console.log(el,i)
-        let column=new Object();
-        column.name = group
-        column.date = el.date
-        column.value = +el[group]
-        column.marker = el.marker
-        column.annotate = el.annotate
-        if(el[group]) {
-            lineData.push(column)  
-        } 
-    });
-    return lineData
-}
-
-
-</script>
+            
+    </script>
+</body>
 </html>
