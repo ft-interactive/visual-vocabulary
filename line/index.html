@@ -4,7 +4,7 @@
     <title>Line chart - Visual Vocabulary</title>
     <script src="//d3js.org/d3.v4.js"></script>
     <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
-    <script src="https://unpkg.com/g-chartframe@0.4.5"></script>
+    <script src="https://unpkg.com/g-chartframe@0.4.6"></script>
     <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
     <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
     <script src="lineChart.js"></script>
@@ -53,7 +53,7 @@ let minorAxis = true//turns on or off the minor axis
 //Individual frame configuratiuon, used to set margins (defaults shown below) etc
 const frame = {
    webS: gChartframe.webFrameS(sharedConfig)
-   .margin({bottom:80, right:20, top:130})
+   .margin({bottom:80, right:20, top:80})
    .title("Put headline here") //use this if you need to override the defaults
    .subtitle("Put headline here") //use this if you need to override the defaults
    .height(350),
