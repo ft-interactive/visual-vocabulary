@@ -35,7 +35,7 @@
 
 //User defined constants similar to version 2
 const sharedConfig = {
-  title:"Title not yet added s`j;d lvs ljhlsd ",
+  title:"Title not yet added",
   subtitle:"Subtitle not yet added",  
   source:"Fox news",
 }
@@ -54,8 +54,8 @@ let minorAxis = true//turns on or off the minor axis
 const frame = {
    webS: gChartframe.webFrameS(sharedConfig)
    .margin({bottom:80, right:20, top:80})
-   .title("Put headline here") //use this if you need to override the defaults
-   .subtitle("Put headline here") //use this if you need to override the defaults
+   // .title("Put headline here") //use this if you need to override the defaults
+   // .subtitle("Put headline here") //use this if you need to override the defaults
    .height(350),
 
    webM: gChartframe.webFrameM(sharedConfig)
@@ -157,7 +157,7 @@ d3.csv('example.csv', function(data) {
 
         selectFrame.select('.chart-plot')
         .transition()
-        .attr('transform','translate(2,'  + (offsetMargin + (currentFrame.rem() * 0.6)) + ')');
+        .attr('transform','translate('currentFrame.margin().left + ','  + (offsetMargin + (currentFrame.rem() * 0.6)) + ')');
 
         myChart
             .yRange( [currentFrame.dimension().height,0] )
