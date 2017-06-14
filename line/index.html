@@ -157,7 +157,7 @@ d3.csv('example.csv', function(data) {
 
         selectFrame.select('.chart-plot')
         .transition()
-        .attr('transform','translate(' + currentFrame.margin().left + ','  + (offsetMargin + (currentFrame.rem() * 0.6)) + ')');
+        .attr('transform','translate(' + currentFrame.margin().left + ','  + (offsetMargin + (currentFrame.rem() * 0.2)) + ')');
 
         myChart
             .yRange( [currentFrame.dimension().height,0] )
