@@ -4,17 +4,15 @@
     <title>Line chart - Visual Vocabulary</title>
     <script src="//d3js.org/d3.v4.js"></script>
     <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
-    <script src="https://unpkg.com/g-chartframe@0.3.9"></script>
+    <script src="https://unpkg.com/g-chartframe@0.4.4"></script>
     <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
     <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
     <script src="lineChart.js"></script>
     <script src="legend.js"></script>
-    <script src="yaxislinear.js"></script>
-    <script src="xaxisdate.js"></script>
     <script src="https://rawgit.com/ft-interactive/g-yaxislinear/master/build/g-yaxislinear.js"></script>
-
-    <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
+    <script src="https://rawgit.com/ft-interactive/g-xaxisdate/master/build/g-xaxisdate.js"></script>
     <link rel="stylesheet" href="styles.css"/>
+    <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
     <style>
     .saveable button{ display: block; }
     </style>
@@ -24,7 +22,9 @@
     <h1>Line chart</h1>
     <p>A suggested starting point new charts types in the visual vocab.</p>
     <hr>
-    <figure class="framed saveable" data-frame="web"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="webS"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="webM"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="webL"><svg></svg></figure>
     <figure class="framed saveable" data-frame="print"><svg></svg></figure>
     <figure class="framed saveable" data-frame="social"><svg></svg></figure>
     <figure class="framed saveable" data-frame="video"><svg></svg></figure>
@@ -52,14 +52,18 @@ let minorAxis = true//turns on or off the minor axis
 
 //Individual frame configuratiuon, used to set margins etc
 const frame = {
-   web: gChartframe.webFrame(sharedConfig)
-   .margin({right:43}),
+   webS: gChartframe.webFrameS(sharedConfig)
+   .margin({bottom:80, right:20}),
+   webM: gChartframe.webFrameM(sharedConfig)
+   .margin({bottom:80, right:20}),
+   webL: gChartframe.webFrameL(sharedConfig)
+   .margin({bottom:80, right:20}),
    print: gChartframe.printFrame(sharedConfig)
-   .margin({right:0}),
+   .margin({top:40, left:7, bottom:35, right:7}),
    social: gChartframe.socialFrame(sharedConfig)
-   .margin({right:0}),
+   .margin({left:50, right:40, bottom:138, top:140}),
    video: gChartframe.videoFrame(sharedConfig)
-   .margin({right:0}),
+   .margin({left:207, right:207, bottom:210, top:233}),
 };
 
 
@@ -71,7 +75,7 @@ d3.selectAll('.framed')
             .call(frame[figure.node().dataset.frame]);
     });
 
-d3.csv('example.csv', function(data){
+d3.csv('example.csv', function(data) {
     //make sure all the dates in the date column are a date object
     var parseDate = d3.timeParse("%d/%m/%Y")
     data.forEach(function(d) {
@@ -105,12 +109,12 @@ d3.csv('example.csv', function(data){
         .markers(markers)
         .interpolation(interpolation)
 
-    console.log(d3.yaxisLinear)
 
     Object.keys(frame).forEach(frameName=>{
         //define other functions to be called
-        const myYAxis = yaxislinear();//sets up yAxis
-        const myXAxis = xaxisdate();//sets up xAxis
+        const myYAxis = gAxis.yaxisLinear();//sets up yAxis
+
+        const myXAxis = gAxis.xaxisDate();//sets up xAxis
         const myHighlights = drawHighlights()//sets up highlight tonal bands
         const myLegend = drawLegend()//sets up the legend
         const currentFrame = frame[frameName];
@@ -127,10 +131,10 @@ d3.csv('example.csv', function(data){
         
         myYAxis
             .yScale(myChart.yScale())
-            .numTicksy(numTicksy)
+            .numTicks(numTicksy)
             .tickSize(tickSize)
             .yAxisHighlight(yAxisHighlight)
-            .yAxisAlign(myChart.yAxisAlign())
+            .tickAlign(myChart.yAxisAlign())
 
         //Draw the yAxis first, this will position the yAxis correctly and measure the widht of the label text
         currentFrame.plot()
@@ -138,25 +142,26 @@ d3.csv('example.csv', function(data){
 
         //return the value in the variable newMargin
         if (yAxisAlign=="right") {
-            let newMargin = myYAxis.yLabelOffset()+currentFrame.margin().right
+            let newMargin = myYAxis.labelWidth()+currentFrame.margin().right
             //Use new<argin re define the new margin and range of xAxis
             currentFrame.margin({right:newMargin});
         }
         else {
-            let newMargin = myYAxis.yLabelOffset()+currentFrame.margin().left
+            let newMargin = myYAxis.labelWidth()+currentFrame.margin().left
             //Use new<argin re define the new margin and range of xAxis
             currentFrame.margin({left:newMargin});
         }
+
         d3.select(currentFrame.plot().node().parentNode)
             .call(currentFrame);
        
         myChart.xRange( [0, currentFrame.dimension().width] );
         //Set up xAxis for this frame
         myXAxis
-            .xScale(myChart.xScale())
-            .plotDim(myChart.plotDim())
+            .scale(myChart.xScale())
+            .offset(currentFrame.dimension().height)
             .interval(interval)
-            .rem(myChart.rem())
+            .tickSize(myChart.rem())
             .minorAxis(minorAxis);
         //Set up highlights for this fram
         myHighlights
@@ -192,6 +197,7 @@ d3.csv('example.csv', function(data){
         //Draw the Legend
         currentFrame.plot()
             .append("g")
+            .attr("transform","translate(0,"+currentFrame.rem()/2 + ")")
             .attr("id","legend")
                 .selectAll(".legend")
                 .data(seriesNames)
@@ -201,6 +207,7 @@ d3.csv('example.csv', function(data){
             .call(myLegend)
 
      });
+    addSVGSavers('figure.saveable');
 });
 
 //a function that returns the columns headers from the top of the dataset, excluding specified
