@@ -43,10 +43,10 @@ let yMin = 0;//sets the minimum value on the yAxis
 let yMax = 1500;//sets the maximum value on the xAxis
 const yAxisHighlight = 100; //sets which tick to highlight on the yAxis
 const numTicksy = 3;//Number of tick on the uAxis
-const yAxisAlign = "right";//alingment of the axis
+const yAxisAlign = "right";//alignment of the axis
 const interval = "years"//date interval on xAxis "decade", "lustrum", "years","months","days"
 let markers = false;//show dots on lines marked as 'yes in the marker column'
-let legendAlign = "vert"//hori or vert, alignmeny of the legend
+let legendAlign = "vert"//hori or vert, alignment of the legend
 let interpolation=d3.curveLinear//curveStep, curveStepBefore, curveStepAfter, curveBasis, curveCardinal, curveCatmullRom
 let minorAxis = true//turns on or off the minor axis
 
@@ -90,12 +90,12 @@ d3.csv('example.csv', function(data) {
             lineData:getlines(data,d)
         }
     })
-    //fortmat the data that is used to draw highlight tonal bands
-    const boundries=data.filter((d)=> (d.marker==="begin" || d.marker==="end"))
+    //format the data that is used to draw highlight tonal bands
+    const boundaries=data.filter((d)=> (d.marker==="begin" || d.marker==="end"))
     let highlights=[]
-    boundries.forEach(function(d,i){
+    boundaries.forEach(function(d,i){
         if (d.marker==="begin") {
-            highlights.push({begin: d.date,end:boundries[i+1].date}) 
+            highlights.push({begin: d.date,end:boundaries[i+1].date}) 
         }
     })
     //Use the seriesNames array to calculate the minimum and max values in the dataset
@@ -118,7 +118,7 @@ d3.csv('example.csv', function(data) {
         const myHighlights = drawHighlights()//sets up highlight tonal bands
         const myLegend = drawLegend()//sets up the legend
         const currentFrame = frame[frameName];
-        //const plotDim=currentFrame.dimension()//uswful variable to carry the current frame dimensions
+        //const plotDim=currentFrame.dimension()//useful variable to carry the current frame dimensions
         const tickSize=currentFrame.dimension().width;//Used when drawing the yAxis ticks
 
     
@@ -136,19 +136,19 @@ d3.csv('example.csv', function(data) {
             .yAxisHighlight(yAxisHighlight)
             .tickAlign(myChart.yAxisAlign())
 
-        //Draw the yAxis first, this will position the yAxis correctly and measure the widht of the label text
+        //Draw the yAxis first, this will position the yAxis correctly and measure the width of the label text
         currentFrame.plot()
             .call(myYAxis);
 
         //return the value in the variable newMargin
         if (yAxisAlign=="right") {
             let newMargin = myYAxis.labelWidth()+currentFrame.margin().right
-            //Use new<argin re define the new margin and range of xAxis
+            //Use newMargin redefine the new margin and range of xAxis
             currentFrame.margin({right:newMargin});
         }
         else {
             let newMargin = myYAxis.labelWidth()+currentFrame.margin().left
-            //Use new<argin re define the new margin and range of xAxis
+            //Use newMargin re define the new margin and range of xAxis
             currentFrame.margin({left:newMargin});
         }
 
@@ -163,7 +163,7 @@ d3.csv('example.csv', function(data) {
             .interval(interval)
             .tickSize(myChart.rem())
             .minorAxis(minorAxis);
-        //Set up highlights for this fram
+        //Set up highlights for this frame
         myHighlights
             .yScale(myChart.yScale())
             .yRange( [currentFrame.dimension().height,0] )
@@ -188,7 +188,7 @@ d3.csv('example.csv', function(data) {
             .append("g")
             .attr('class','lines')
             .call(myChart);
-        //Se up legend for this fram
+        //Se up legend for this frame
         myLegend
             .seriesNames(seriesNames)
             .colourPalette((frameName))
