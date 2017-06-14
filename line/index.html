@@ -4,7 +4,7 @@
     <title>Line chart - Visual Vocabulary</title>
     <script src="//d3js.org/d3.v4.js"></script>
     <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
-    <script src="https://unpkg.com/g-chartframe@0.4.4"></script>
+    <script src="https://unpkg.com/g-chartframe@0.4.5"></script>
     <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
     <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
     <script src="lineChart.js"></script>
@@ -35,7 +35,7 @@
 
 //User defined constants similar to version 2
 const sharedConfig = {
-  title:"Title not yet added",
+  title:"Title not yet added s`j;d lvs ljhlsd ",
   subtitle:"Subtitle not yet added",  
   source:"Fox news",
 }
@@ -53,8 +53,9 @@ let minorAxis = true//turns on or off the minor axis
 //Individual frame configuratiuon, used to set margins (defaults shown below) etc
 const frame = {
    webS: gChartframe.webFrameS(sharedConfig)
-   .margin({bottom:80, right:20})
-   // .title("Put headline here") //use this if you need to override the defaults
+   .margin({bottom:80, right:20, top:130})
+   .title("Put headline here") //use this if you need to override the defaults
+   .subtitle("Put headline here") //use this if you need to override the defaults
    .height(350),
 
    webM: gChartframe.webFrameM(sharedConfig)
@@ -70,7 +71,8 @@ const frame = {
    print: gChartframe.printFrame(sharedConfig)
    .margin({top:40, left:7, bottom:35, right:7})
    // .title("Put headline here")
-   .height(68),
+   .height(68)
+   .width(55),
 
    social: gChartframe.socialFrame(sharedConfig)
    .margin({left:50, right:40, bottom:138, top:140})
@@ -137,7 +139,26 @@ d3.csv('example.csv', function(data) {
         //const plotDim=currentFrame.dimension()//useful variable to carry the current frame dimensions
         const tickSize=currentFrame.dimension().width;//Used when drawing the yAxis ticks
 
-    
+        d3.select(currentFrame.plot().node().parentNode)
+            .call(currentFrame);
+        
+        // measure title and subtitle and adjust plot size and position accordingly
+        var selectFrame = d3.select(currentFrame.plot().node().parentNode);
+        selectFrame.select('.chart-title tspan')
+            .call(wrap, currentFrame.width() - (currentFrame.margin().left + currentFrame.margin().right),currentFrame.margin().left);
+
+        var subYOffset =  selectFrame.select('.chart-title').node().getBBox().height +  selectFrame.select('.chart-title').node().getBBox().y + currentFrame.rem();
+        
+        selectFrame.select('.chart-subtitle tspan')
+            .call(wrap, currentFrame.width() - (currentFrame.margin().left + currentFrame.margin().right),currentFrame.margin().left,subYOffset);
+
+        var offsetMargin = subYOffset + selectFrame.select('.chart-subtitle tspan').node().getBBox().height;
+        currentFrame.margin().top = offsetMargin;
+
+        selectFrame.select('.chart-plot')
+        .transition()
+        .attr('transform','translate(2,'  + (offsetMargin + (currentFrame.rem() * 0.6)) + ')');
+
         myChart
             .yRange( [currentFrame.dimension().height,0] )
             .plotDim(currentFrame.dimension())
@@ -168,9 +189,9 @@ d3.csv('example.csv', function(data) {
             currentFrame.margin({left:newMargin});
         }
 
-        d3.select(currentFrame.plot().node().parentNode)
-            .call(currentFrame);
        
+       
+
         myChart.xRange( [0, currentFrame.dimension().width] );
         //Set up xAxis for this frame
         myXAxis
@@ -266,6 +287,31 @@ function getlines(data,group) {
     return lineData
 }
 
+//wrap text function adapted from Mike Bostock
+function wrap(text, width, x,y) {
+    text.each(function() {
+        var text = d3.select(this),
+        words = text.text().split(/\s+/).reverse(),
+        word,
+        line = [],
+        lineNumber = 0,
+        lineHeight = 1.1,
+        dy = 0.08,
+        tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
+        console.log(text)
+        if(!y){ y= text.attr("y")}
+        while (word = words.pop()) {
+            line.push(word);
+            tspan.text(line.join(" "));
+            if (tspan.node().getComputedTextLength() > width) {
+                line.pop();
+                tspan.text(line.join(" "));
+                line = [word];
+                tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy",++lineNumber * lineHeight + dy + "em").text(word);
+            }
+        }
+    });
+}
 
 </script>
 </html>
