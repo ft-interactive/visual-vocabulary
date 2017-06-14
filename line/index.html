@@ -50,20 +50,36 @@ let legendAlign = "vert"//hori or vert, alignment of the legend
 let interpolation=d3.curveLinear//curveStep, curveStepBefore, curveStepAfter, curveBasis, curveCardinal, curveCatmullRom
 let minorAxis = true//turns on or off the minor axis
 
-//Individual frame configuratiuon, used to set margins etc
+//Individual frame configuratiuon, used to set margins (defaults shown below) etc
 const frame = {
    webS: gChartframe.webFrameS(sharedConfig)
-   .margin({bottom:80, right:20}),
+   .margin({bottom:80, right:20})
+   // .title("Put headline here") //use this if you need to override the defaults
+   .height(350),
+
    webM: gChartframe.webFrameM(sharedConfig)
-   .margin({bottom:80, right:20}),
+   .margin({bottom:80, right:20})
+   // .title("Put headline here")
+   .height(500),
+
    webL: gChartframe.webFrameL(sharedConfig)
-   .margin({bottom:80, right:20}),
+   .margin({bottom:80, right:20})
+   // .title("Put headline here")
+   .height(600),
+
    print: gChartframe.printFrame(sharedConfig)
-   .margin({top:40, left:7, bottom:35, right:7}),
+   .margin({top:40, left:7, bottom:35, right:7})
+   // .title("Put headline here")
+   .height(68),
+
    social: gChartframe.socialFrame(sharedConfig)
-   .margin({left:50, right:40, bottom:138, top:140}),
+   .margin({left:50, right:40, bottom:138, top:140})
+   // .title("Put headline here")
+   .height(750), // 700 is ideal height for Instagram
+
    video: gChartframe.videoFrame(sharedConfig)
-   .margin({left:207, right:207, bottom:210, top:233}),
+   .margin({left:207, right:207, bottom:210, top:233})
+   // .title("Put headline here")
 };
 
 
