@@ -1,10 +1,24 @@
 /* overall text style for each chart frame*/
 
 /* .overall text styles on axis*/
-[data-frame^="web"] .axis {
+[data-frame^="webS"] .axis,
+[data-frame^="webM"] .axis,
+[data-frame^="webL"] .axis {
     font-family: metric;
+}
+
+[data-frame^="webS"] .axis {
+    font-size: 14px;
+}
+
+[data-frame^="webM"] .axis {
+    font-size: 16px;
+}
+
+[data-frame^="webL"] .axis {
     font-size: 18px;
 }
+
 [data-frame^="print"] .axis{
     font-family: metric;
     font-size: 9.6px;
@@ -19,9 +33,12 @@
 }
 
 /* .tick text on yAxis*/
-[data-frame^="web"] .yAxis text {
+[data-frame^="webS"] .yAxis text,
+[data-frame^="webM"] .yAxis text,
+[data-frame^="webL"] .yAxis text {
     fill: #74736C;
     text-anchor: end;
+    vertical-align: baseline;
 }
 [data-frame^="print"] .yAxis text{
     text-anchor: end;
@@ -38,7 +55,9 @@
 }
 
 /* .tick line styles on yAxis*/
-[data-frame^="web"] .yAxis line {
+[data-frame^="webS"] .yAxis line,
+[data-frame^="webM"] .yAxis line,
+[data-frame^="webL"] .yAxis line {
     stroke: #CEC6B9;
     stroke-width: 1px;
     stroke-dasharray: 2, 1;
@@ -59,7 +78,9 @@
     stroke-opacity: 0.38;
 }
 /* Makes domian invivible on yAxis*/
-[data-frame^="web"] .domain {
+[data-frame^="webS"] .domain,
+[data-frame^="webM"] .domain,
+[data-frame^="webL"] .domain {
     stroke-width: 0px;
 }
 [data-frame^="print"] .domain{
@@ -72,7 +93,9 @@
     stroke-width: 0px;
 }
 /* .tick text on yAxis*/
-[data-frame^="web"] .xAxis text {
+[data-frame^="webS"] .xAxis text,
+[data-frame^="webM"] .xAxis text,
+[data-frame^="webL"] .xAxis text {
     fill: #74736C;
     text-anchor: middle;
 }
@@ -89,7 +112,9 @@
     fill: #FFFFFF;
     text-anchor: middle;
 }
-[data-frame^="web"] .xAxis line {
+[data-frame^="webS"] .xAxis line,
+[data-frame^="webM"] .xAxis line,
+[data-frame^="webL"] .xAxis line {
     stroke: #CEC6B9;
     stroke-width: 1px;
     stroke-dasharray: 2,1;
@@ -110,7 +135,9 @@
     stroke-opacity: 0.38;
 }
 /* Style for the highlight or base line on yAxia*/
-[data-frame^="web"] .baseline line{
+[data-frame^="webS"] .baseline line, 
+[data-frame^="webM"] .baseline line,
+[data-frame^="webL"] .baseline line {
     stroke: #CEC6B9;
     stroke-width: 2px;
     stroke-dasharray: 1, 0;
@@ -131,7 +158,9 @@
     stroke-opacity: .38;
 }
 /* Styles for lines on chart*/
-[data-frame^="web"] .lines {
+[data-frame^="webS"] .lines,
+[data-frame^="webM"] .lines,
+[data-frame^="webL"] .lines {
     stroke-linecap: round;
     stroke-linejoin: round;
     stroke-width: 2.5px;
@@ -156,7 +185,9 @@
     fill: none;
 }
 /* .overall text styles on axis*/
-[data-frame^="web"] .highlights {
+[data-frame^="webS"] .highlights,
+[data-frame^="webM"] .highlights,
+[data-frame^="webL"] .highlights {
     fill: #C1B8B9;
     opacity: 0.3;
 }
@@ -173,11 +204,25 @@
     opacity: 0.38
 }
 /* legend */
-[data-frame^="web"] .legend {
+[data-frame^="webS"] .legend,
+[data-frame^="webM"] .legend,
+[data-frame^="webL"] .legend {
     font-family: metric;
     fill: #74736C;
+}
+
+[data-frame^="webS"] .legend {
+    font-size: 14px;
+}
+
+[data-frame^="webM"] .legend {
+    font-size: 16px;
+}
+
+[data-frame^="webL"] .legend {
     font-size: 18px;
 }
+
 [data-frame^="print"] .legend{
     font-family: metric;
     font-size: 9.6px;
