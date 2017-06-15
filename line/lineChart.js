@@ -9,7 +9,7 @@ function lineChart() {
     let markers = false;
     let interpolation =d3.curveLinear
     const colourScale = d3.scaleOrdinal()
-        .range(gChartcolour.lineWeb)
+        // .range(gChartcolour.lineWeb)
         .domain(seriesNames);
   
     function chart(parent){
@@ -108,7 +108,7 @@ function lineChart() {
     chart.colourPalette = (d) =>{
         if(d==='social' || d==='video'){
             colourScale.range(gChartcolour.lineSocial);
-        } else if (d==='web') {
+        } else if (d==='webS' || d==='webM' || d==='webL') {
             colourScale.range(gChartcolour.lineWeb);
         } else if (d==='print') {
             colourScale.range(gChartcolour.linePrint);

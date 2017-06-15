@@ -61,7 +61,7 @@ function drawLegend() {
     legend.colourPalette = (d) =>{
         if(d==='social' || d==='video'){
             colourScale.range(gChartcolour.lineSocial);
-        } else if (d==='web') {
+        } else if (d==='webS' || d==='webM' || d==='webL') {
             colourScale.range(gChartcolour.lineWeb);
         } else if (d==='print') {
             colourScale.range(gChartcolour.linePrint);

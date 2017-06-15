@@ -4,17 +4,15 @@
     <title>Line chart - Visual Vocabulary</title>
     <script src="//d3js.org/d3.v4.js"></script>
     <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
-    <script src="https://unpkg.com/g-chartframe@0.3.9"></script>
+    <script src="https://unpkg.com/g-chartframe@0.4.6"></script>
     <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
     <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
     <script src="lineChart.js"></script>
     <script src="legend.js"></script>
-    <script src="yaxislinear.js"></script>
-    <script src="xaxisdate.js"></script>
     <script src="https://rawgit.com/ft-interactive/g-yaxislinear/master/build/g-yaxislinear.js"></script>
-
-    <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
+    <script src="https://rawgit.com/ft-interactive/g-xaxisdate/master/build/g-xaxisdate.js"></script>
     <link rel="stylesheet" href="styles.css"/>
+    <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
     <style>
     .saveable button{ display: block; }
     </style>
@@ -24,7 +22,9 @@
     <h1>Line chart</h1>
     <p>A suggested starting point new charts types in the visual vocab.</p>
     <hr>
-    <figure class="framed saveable" data-frame="web"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="webS"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="webM"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="webL"><svg></svg></figure>
     <figure class="framed saveable" data-frame="print"><svg></svg></figure>
     <figure class="framed saveable" data-frame="social"><svg></svg></figure>
     <figure class="framed saveable" data-frame="video"><svg></svg></figure>
@@ -43,23 +43,45 @@ let yMin = 0;//sets the minimum value on the yAxis
 let yMax = 1500;//sets the maximum value on the xAxis
 const yAxisHighlight = 100; //sets which tick to highlight on the yAxis
 const numTicksy = 3;//Number of tick on the uAxis
-const yAxisAlign = "right";//alingment of the axis
+const yAxisAlign = "right";//alignment of the axis
 const interval = "years"//date interval on xAxis "decade", "lustrum", "years","months","days"
 let markers = false;//show dots on lines marked as 'yes in the marker column'
-let legendAlign = "vert"//hori or vert, alignmeny of the legend
+let legendAlign = "vert"//hori or vert, alignment of the legend
 let interpolation=d3.curveLinear//curveStep, curveStepBefore, curveStepAfter, curveBasis, curveCardinal, curveCatmullRom
 let minorAxis = true//turns on or off the minor axis
 
-//Individual frame configuratiuon, used to set margins etc
+//Individual frame configuratiuon, used to set margins (defaults shown below) etc
 const frame = {
-   web: gChartframe.webFrame(sharedConfig)
-   .margin({right:43}),
+   webS: gChartframe.webFrameS(sharedConfig)
+   .margin({bottom:80, right:20, top:80})
+   // .title("Put headline here") //use this if you need to override the defaults
+   // .subtitle("Put headline here") //use this if you need to override the defaults
+   .height(350),
+
+   webM: gChartframe.webFrameM(sharedConfig)
+   .margin({bottom:80, right:20})
+   // .title("Put headline here")
+   .height(500),
+
+   webL: gChartframe.webFrameL(sharedConfig)
+   .margin({bottom:80, right:20})
+   // .title("Put headline here")
+   .height(600),
+
    print: gChartframe.printFrame(sharedConfig)
-   .margin({right:0}),
+   .margin({top:40, left:7, bottom:35, right:7})
+   // .title("Put headline here")
+   .height(68)
+   .width(55),
+
    social: gChartframe.socialFrame(sharedConfig)
-   .margin({right:0}),
+   .margin({left:50, right:40, bottom:138, top:140})
+   // .title("Put headline here")
+   .height(750), // 700 is ideal height for Instagram
+
    video: gChartframe.videoFrame(sharedConfig)
-   .margin({right:0}),
+   .margin({left:207, right:207, bottom:210, top:233})
+   // .title("Put headline here")
 };
 
 
@@ -71,7 +93,7 @@ d3.selectAll('.framed')
             .call(frame[figure.node().dataset.frame]);
     });
 
-d3.csv('example.csv', function(data){
+d3.csv('example.csv', function(data) {
     //make sure all the dates in the date column are a date object
     var parseDate = d3.timeParse("%d/%m/%Y")
     data.forEach(function(d) {
@@ -86,12 +108,12 @@ d3.csv('example.csv', function(data){
             lineData:getlines(data,d)
         }
     })
-    //fortmat the data that is used to draw highlight tonal bands
-    const boundries=data.filter((d)=> (d.marker==="begin" || d.marker==="end"))
+    //format the data that is used to draw highlight tonal bands
+    const boundaries=data.filter((d)=> (d.marker==="begin" || d.marker==="end"))
     let highlights=[]
-    boundries.forEach(function(d,i){
+    boundaries.forEach(function(d,i){
         if (d.marker==="begin") {
-            highlights.push({begin: d.date,end:boundries[i+1].date}) 
+            highlights.push({begin: d.date,end:boundaries[i+1].date}) 
         }
     })
     //Use the seriesNames array to calculate the minimum and max values in the dataset
@@ -105,19 +127,38 @@ d3.csv('example.csv', function(data){
         .markers(markers)
         .interpolation(interpolation)
 
-    console.log(d3.yaxisLinear)
 
     Object.keys(frame).forEach(frameName=>{
         //define other functions to be called
-        const myYAxis = yaxislinear();//sets up yAxis
-        const myXAxis = xaxisdate();//sets up xAxis
+        const myYAxis = gAxis.yaxisLinear();//sets up yAxis
+
+        const myXAxis = gAxis.xaxisDate();//sets up xAxis
         const myHighlights = drawHighlights()//sets up highlight tonal bands
         const myLegend = drawLegend()//sets up the legend
         const currentFrame = frame[frameName];
-        //const plotDim=currentFrame.dimension()//uswful variable to carry the current frame dimensions
+        //const plotDim=currentFrame.dimension()//useful variable to carry the current frame dimensions
         const tickSize=currentFrame.dimension().width;//Used when drawing the yAxis ticks
 
-    
+        d3.select(currentFrame.plot().node().parentNode)
+            .call(currentFrame);
+        
+        // measure title and subtitle and adjust plot size and position accordingly
+        var selectFrame = d3.select(currentFrame.plot().node().parentNode);
+        selectFrame.select('.chart-title tspan')
+            .call(wrap, currentFrame.width() - (currentFrame.margin().left + currentFrame.margin().right),currentFrame.margin().left);
+
+        var subYOffset =  selectFrame.select('.chart-title').node().getBBox().height +  selectFrame.select('.chart-title').node().getBBox().y + currentFrame.rem();
+        
+        selectFrame.select('.chart-subtitle tspan')
+            .call(wrap, currentFrame.width() - (currentFrame.margin().left + currentFrame.margin().right),currentFrame.margin().left,subYOffset);
+
+        var offsetMargin = subYOffset + selectFrame.select('.chart-subtitle tspan').node().getBBox().height;
+        currentFrame.margin().top = offsetMargin;
+
+        selectFrame.select('.chart-plot')
+        .transition()
+        .attr('transform','translate(' + currentFrame.margin().left + ','  + (offsetMargin + (currentFrame.rem() * 0.2)) + ')');
+
         myChart
             .yRange( [currentFrame.dimension().height,0] )
             .plotDim(currentFrame.dimension())
@@ -127,38 +168,39 @@ d3.csv('example.csv', function(data){
         
         myYAxis
             .yScale(myChart.yScale())
-            .numTicksy(numTicksy)
+            .numTicks(numTicksy)
             .tickSize(tickSize)
             .yAxisHighlight(yAxisHighlight)
-            .yAxisAlign(myChart.yAxisAlign())
+            .tickAlign(myChart.yAxisAlign())
 
-        //Draw the yAxis first, this will position the yAxis correctly and measure the widht of the label text
+        //Draw the yAxis first, this will position the yAxis correctly and measure the width of the label text
         currentFrame.plot()
             .call(myYAxis);
 
         //return the value in the variable newMargin
         if (yAxisAlign=="right") {
-            let newMargin = myYAxis.yLabelOffset()+currentFrame.margin().right
-            //Use new<argin re define the new margin and range of xAxis
+            let newMargin = myYAxis.labelWidth()+currentFrame.margin().right
+            //Use newMargin redefine the new margin and range of xAxis
             currentFrame.margin({right:newMargin});
         }
         else {
-            let newMargin = myYAxis.yLabelOffset()+currentFrame.margin().left
-            //Use new<argin re define the new margin and range of xAxis
+            let newMargin = myYAxis.labelWidth()+currentFrame.margin().left
+            //Use newMargin re define the new margin and range of xAxis
             currentFrame.margin({left:newMargin});
         }
-        d3.select(currentFrame.plot().node().parentNode)
-            .call(currentFrame);
+
        
+       
+
         myChart.xRange( [0, currentFrame.dimension().width] );
         //Set up xAxis for this frame
         myXAxis
-            .xScale(myChart.xScale())
-            .plotDim(myChart.plotDim())
+            .scale(myChart.xScale())
+            .offset(currentFrame.dimension().height)
             .interval(interval)
-            .rem(myChart.rem())
+            .tickSize(myChart.rem())
             .minorAxis(minorAxis);
-        //Set up highlights for this fram
+        //Set up highlights for this frame
         myHighlights
             .yScale(myChart.yScale())
             .yRange( [currentFrame.dimension().height,0] )
@@ -183,7 +225,7 @@ d3.csv('example.csv', function(data){
             .append("g")
             .attr('class','lines')
             .call(myChart);
-        //Se up legend for this fram
+        //Se up legend for this frame
         myLegend
             .seriesNames(seriesNames)
             .colourPalette((frameName))
@@ -192,6 +234,7 @@ d3.csv('example.csv', function(data){
         //Draw the Legend
         currentFrame.plot()
             .append("g")
+            .attr("transform","translate(0,"+currentFrame.rem()/2 + ")")
             .attr("id","legend")
                 .selectAll(".legend")
                 .data(seriesNames)
@@ -201,6 +244,7 @@ d3.csv('example.csv', function(data){
             .call(myLegend)
 
      });
+    addSVGSavers('figure.saveable');
 });
 
 //a function that returns the columns headers from the top of the dataset, excluding specified
@@ -243,6 +287,31 @@ function getlines(data,group) {
     return lineData
 }
 
+//wrap text function adapted from Mike Bostock
+function wrap(text, width, x,y) {
+    text.each(function() {
+        var text = d3.select(this),
+        words = text.text().split(/\s+/).reverse(),
+        word,
+        line = [],
+        lineNumber = 0,
+        lineHeight = 1.1,
+        dy = 0.08,
+        tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
+        console.log(text)
+        if(!y){ y= text.attr("y")}
+        while (word = words.pop()) {
+            line.push(word);
+            tspan.text(line.join(" "));
+            if (tspan.node().getComputedTextLength() > width) {
+                line.pop();
+                tspan.text(line.join(" "));
+                line = [word];
+                tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy",++lineNumber * lineHeight + dy + "em").text(word);
+            }
+        }
+    });
+}
 
 </script>
 </html>
