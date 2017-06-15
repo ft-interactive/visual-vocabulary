@@ -36,7 +36,7 @@
 [data-frame^="webS"] .yAxis text,
 [data-frame^="webM"] .yAxis text,
 [data-frame^="webL"] .yAxis text {
-    fill: #74736C;
+    fill: #66605C;
     text-anchor: end;
     vertical-align: baseline;
 }
@@ -58,7 +58,7 @@
 [data-frame^="webS"] .yAxis line,
 [data-frame^="webM"] .yAxis line,
 [data-frame^="webL"] .yAxis line {
-    stroke: #CEC6B9;
+    stroke: #CCC1B7;
     stroke-width: 1px;
     stroke-dasharray: 2, 1;
 }
@@ -96,7 +96,7 @@
 [data-frame^="webS"] .xAxis text,
 [data-frame^="webM"] .xAxis text,
 [data-frame^="webL"] .xAxis text {
-    fill: #74736C;
+    fill: #66605C;
     text-anchor: middle;
 }
 [data-frame^="print"] .xAxis text{
@@ -208,7 +208,7 @@
 [data-frame^="webM"] .legend,
 [data-frame^="webL"] .legend {
     font-family: metric;
-    fill: #74736C;
+    fill: #66605C;
 }
 
 [data-frame^="webS"] .legend {
