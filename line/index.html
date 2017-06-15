@@ -165,6 +165,7 @@ d3.csv('example.csv', function(data) {
             .rem(currentFrame.rem())
             .includeMarker((d)=> (d.marker==="yes"))
             .colourPalette((frameName));
+
         
         myYAxis
             .yScale(myChart.yScale())
@@ -189,8 +190,8 @@ d3.csv('example.csv', function(data) {
             currentFrame.margin({left:newMargin});
         }
 
-       
-       
+        d3.select(currentFrame.plot().node().parentNode)
+            .call(currentFrame);
 
         myChart.xRange( [0, currentFrame.dimension().width] );
         //Set up xAxis for this frame
