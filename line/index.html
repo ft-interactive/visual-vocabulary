@@ -4,7 +4,7 @@
     <title>Line chart - Visual Vocabulary</title>
     <script src="//d3js.org/d3.v4.js"></script>
     <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
-    <script src="https://unpkg.com/g-chartframe@0.4.11"></script>
+    <script src="https://unpkg.com/g-chartframe@0.4.16"></script>
     <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
     <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
     <script src="lineChart.js"></script>
@@ -53,18 +53,18 @@ let minorAxis = true//turns on or off the minor axis
 //Individual frame configuratiuon, used to set margins (defaults shown below) etc
 const frame = {
    webS: gChartframe.webFrameS(sharedConfig)
-   .margin({top:100, left:15, bottom:80, right:20})
+   .margin({top:100, left:15, bottom:82, right:20})
    // .title("Put headline head a fAWfd sf sfva`f are") //use this if you need to override the defaults
    // .subtitle("Put headline hea sd asd gasgasdg ad gsd adrg srgdsf sfhsdfre") //use this if you need to override the defaults
-   .height(350),
+   .height(400),
 
    webM: gChartframe.webFrameM(sharedConfig)
-   .margin({top:100, left:20, bottom:80, right:20})
+   .margin({top:100, left:20, bottom:86, right:20})
    // .title("Put headline here")
    .height(500),
 
    webL: gChartframe.webFrameL(sharedConfig)
-   .margin({top:100, left:20, bottom:90, right:20})
+   .margin({top:100, left:20, bottom:104, right:20})
    // .title("Put headline here")
    .height(600),
 
@@ -147,12 +147,20 @@ d3.csv('example.csv', function(data) {
         selectFrame.select('.chart-title tspan')
             .call(wrap, currentFrame.width() - (currentFrame.margin().left + currentFrame.margin().right),currentFrame.titleX());
 
-        var subYOffset =  selectFrame.select('.chart-title').node().getBBox().height +  selectFrame.select('.chart-title').node().getBBox().y + 14;
+        var subYOffset =  selectFrame.select('.chart-title').node().getBBox().height +  selectFrame.select('.chart-title').node().getBBox().y +currentFrame.rem();
         
         selectFrame.select('.chart-subtitle tspan')
             .call(wrap, currentFrame.width() - (currentFrame.margin().left + currentFrame.margin().right),currentFrame.titleX(),subYOffset);
 
-        var offsetMargin = subYOffset + selectFrame.select('.chart-subtitle').node().getBBox().height + 22;
+        var offsetMargin;
+
+        // set gap between subtitle and plot area
+        if(frameName === 'webS' || frameName === 'webM' || frameName === 'webL') {
+            offsetMargin = subYOffset + selectFrame.select('.chart-subtitle').node().getBBox().height + 22;
+        } else {
+            offsetMargin = subYOffset + selectFrame.select('.chart-subtitle').node().getBBox().height + (currentFrame.rem()/2);
+        }
+        
         currentFrame.margin().top = offsetMargin;
 
         selectFrame.select('.chart-plot')
@@ -193,8 +201,6 @@ d3.csv('example.csv', function(data) {
             //Use newMargin re define the new margin and range of xAxis
             currentFrame.margin({left:newMargin});
         }
-
-
 
         myChart.xRange( [0, currentFrame.dimension().width] );
         //Set up xAxis for this frame
@@ -249,7 +255,7 @@ d3.csv('example.csv', function(data) {
             .call(myLegend)
 
      });
-    addSVGSavers('figure.saveable');
+    // addSVGSavers('figure.saveable');
 });
 
 //a function that returns the columns headers from the top of the dataset, excluding specified

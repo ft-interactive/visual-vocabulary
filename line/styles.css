@@ -38,7 +38,6 @@
 [data-frame^="webL"] .yAxis text {
     fill: #66605C;
     text-anchor: end;
-    vertical-align: baseline;
 }
 [data-frame^="print"] .yAxis text{
     text-anchor: end;
@@ -60,7 +59,7 @@
 [data-frame^="webL"] .yAxis line {
     stroke: #CCC1B7;
     stroke-width: 1px;
-    stroke-dasharray: 2, 1;
+    stroke-dasharray: 4, 4;
 }
 [data-frame^="print"] .yAxis line{
     stroke: #000000;
@@ -139,7 +138,7 @@
 [data-frame^="webM"] .baseline line,
 [data-frame^="webL"] .baseline line {
     stroke: #CEC6B9;
-    stroke-width: 2px;
+    stroke-width: 1px;
     stroke-dasharray: 1, 0;
 }
 [data-frame^="print"] .baseline line{
@@ -161,9 +160,9 @@
 [data-frame^="webS"] .lines,
 [data-frame^="webM"] .lines,
 [data-frame^="webL"] .lines {
-    stroke-linecap: round;
+    stroke-linecap: square;
     stroke-linejoin: round;
-    stroke-width: 2.5px;
+    stroke-width: 3px;
     fill: none;
 }
 [data-frame^="print"] .lines{
