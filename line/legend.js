@@ -32,7 +32,7 @@ function drawLegend() {
 
         parent.attr("transform",function(d,i){
             if (alignment=='hori') {
-                var gHeigt=parent.select("#l0").node().getBBox().height;
+                var gHeigt=d3.select("#l0").node().getBBox().height;
                 if (i>0) {
                     var gWidth=d3.select("#l"+(i-1)).node().getBBox().width+rem; 
                 }
