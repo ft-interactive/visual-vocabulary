@@ -159,6 +159,9 @@ d3.csv('example.csv', function(data) {
         .transition()
         .attr('transform','translate(' + currentFrame.margin().left + ','  + (offsetMargin + (currentFrame.rem() * 0.2)) + ')');
 
+        //create a 'g' element at the back of the chart to add time period highlights after axis have been created
+        let axisHighlight = currentFrame.plot().append('g');
+
         myChart
             .yRange( [currentFrame.dimension().height,0] )
             .plotDim(currentFrame.dimension())
@@ -201,6 +204,7 @@ d3.csv('example.csv', function(data) {
             .interval(interval)
             .tickSize(myChart.rem())
             .minorAxis(minorAxis);
+
         //Set up highlights for this frame
         myHighlights
             .yScale(myChart.yScale())
@@ -208,12 +212,13 @@ d3.csv('example.csv', function(data) {
             .xScale(myChart.xScale())
             .xRange( [0,currentFrame.dimension().width] );
         //Draw the highlights before the lines and xAxis
-        currentFrame.plot()
+        axisHighlight
             .selectAll(".highlights")
             .data(highlights)
             .enter()
             .append("g")
             .call(myHighlights);
+
 
         //Draw the xAxis
         currentFrame.plot()
@@ -226,7 +231,8 @@ d3.csv('example.csv', function(data) {
             .append("g")
             .attr('class','lines')
             .call(myChart);
-        //Se up legend for this frame
+
+        //Set up legend for this frame
         myLegend
             .seriesNames(seriesNames)
             .colourPalette((frameName))
