@@ -240,7 +240,6 @@ d3.csv('example.csv', function(data) {
         //Draw the Legend
         currentFrame.plot()
             .append("g")
-            .attr("transform","translate(0,"+currentFrame.rem()/2 + ")")
             .attr("id","legend")
                 .selectAll(".legend")
                 .data(seriesNames)
