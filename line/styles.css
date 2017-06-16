@@ -188,9 +188,9 @@
 [data-frame^="webS"] .highlights,
 [data-frame^="webM"] .highlights,
 [data-frame^="webL"] .highlights {
-    fill: #C1B8B9;
-    opacity: 0.3;
+    fill: #F2DFCE;
 }
+
 [data-frame^="print"] .highlights{
     fill: #95BFC5;
     opacity: 0.3;

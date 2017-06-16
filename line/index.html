@@ -4,7 +4,7 @@
     <title>Line chart - Visual Vocabulary</title>
     <script src="//d3js.org/d3.v4.js"></script>
     <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
-    <script src="https://unpkg.com/g-chartframe@0.4.6"></script>
+    <script src="https://unpkg.com/g-chartframe@0.4.11"></script>
     <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
     <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
     <script src="lineChart.js"></script>
@@ -37,7 +37,7 @@
 const sharedConfig = {
   title:"Title not yet added",
   subtitle:"Subtitle not yet added",  
-  source:"Fox news",
+  source:"Source: Fox news",
 }
 let yMin = 0;//sets the minimum value on the yAxis
 let yMax = 1500;//sets the maximum value on the xAxis
@@ -53,18 +53,18 @@ let minorAxis = true//turns on or off the minor axis
 //Individual frame configuratiuon, used to set margins (defaults shown below) etc
 const frame = {
    webS: gChartframe.webFrameS(sharedConfig)
-   .margin({bottom:80, right:20, top:80})
-   // .title("Put headline here") //use this if you need to override the defaults
-   // .subtitle("Put headline here") //use this if you need to override the defaults
+   .margin({top:100, left:15, bottom:80, right:20})
+   // .title("Put headline head a fAWfd sf sfva`f are") //use this if you need to override the defaults
+   // .subtitle("Put headline hea sd asd gasgasdg ad gsd adrg srgdsf sfhsdfre") //use this if you need to override the defaults
    .height(350),
 
    webM: gChartframe.webFrameM(sharedConfig)
-   .margin({bottom:80, right:20})
+   .margin({top:100, left:20, bottom:80, right:20})
    // .title("Put headline here")
    .height(500),
 
    webL: gChartframe.webFrameL(sharedConfig)
-   .margin({bottom:80, right:20})
+   .margin({top:100, left:20, bottom:90, right:20})
    // .title("Put headline here")
    .height(600),
 
@@ -75,7 +75,7 @@ const frame = {
    .width(55),
 
    social: gChartframe.socialFrame(sharedConfig)
-   .margin({left:50, right:40, bottom:138, top:140})
+   .margin({top:140, left:50, bottom:138, right:40})
    // .title("Put headline here")
    .height(750), // 700 is ideal height for Instagram
 
@@ -129,35 +129,36 @@ d3.csv('example.csv', function(data) {
 
 
     Object.keys(frame).forEach(frameName=>{
+        const currentFrame = frame[frameName];
         //define other functions to be called
         const myYAxis = gAxis.yaxisLinear();//sets up yAxis
 
         const myXAxis = gAxis.xaxisDate();//sets up xAxis
         const myHighlights = drawHighlights()//sets up highlight tonal bands
         const myLegend = drawLegend()//sets up the legend
-        const currentFrame = frame[frameName];
         //const plotDim=currentFrame.dimension()//useful variable to carry the current frame dimensions
         const tickSize=currentFrame.dimension().width;//Used when drawing the yAxis ticks
 
         d3.select(currentFrame.plot().node().parentNode)
             .call(currentFrame);
-        
+
         // measure title and subtitle and adjust plot size and position accordingly
         var selectFrame = d3.select(currentFrame.plot().node().parentNode);
         selectFrame.select('.chart-title tspan')
-            .call(wrap, currentFrame.width() - (currentFrame.margin().left + currentFrame.margin().right),currentFrame.margin().left);
+            .call(wrap, currentFrame.width() - (currentFrame.margin().left + currentFrame.margin().right),currentFrame.titleX());
 
-        var subYOffset =  selectFrame.select('.chart-title').node().getBBox().height +  selectFrame.select('.chart-title').node().getBBox().y + currentFrame.rem();
+        var subYOffset =  selectFrame.select('.chart-title').node().getBBox().height +  selectFrame.select('.chart-title').node().getBBox().y + 14;
         
         selectFrame.select('.chart-subtitle tspan')
-            .call(wrap, currentFrame.width() - (currentFrame.margin().left + currentFrame.margin().right),currentFrame.margin().left,subYOffset);
+            .call(wrap, currentFrame.width() - (currentFrame.margin().left + currentFrame.margin().right),currentFrame.titleX(),subYOffset);
 
-        var offsetMargin = subYOffset + selectFrame.select('.chart-subtitle tspan').node().getBBox().height;
+        var offsetMargin = subYOffset + selectFrame.select('.chart-subtitle').node().getBBox().height + 22;
         currentFrame.margin().top = offsetMargin;
 
         selectFrame.select('.chart-plot')
         .transition()
-        .attr('transform','translate(' + currentFrame.margin().left + ','  + (offsetMargin + (currentFrame.rem() * 0.2)) + ')');
+        .attr('transform','translate(' + currentFrame.margin().left + ','  + (offsetMargin + 2) + ')');
+        
 
         myChart
             .yRange( [currentFrame.dimension().height,0] )
@@ -190,8 +191,7 @@ d3.csv('example.csv', function(data) {
             currentFrame.margin({left:newMargin});
         }
 
-        d3.select(currentFrame.plot().node().parentNode)
-            .call(currentFrame);
+
 
         myChart.xRange( [0, currentFrame.dimension().width] );
         //Set up xAxis for this frame
