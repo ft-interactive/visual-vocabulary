@@ -66,7 +66,8 @@ const frame = {
    webL: gChartframe.webFrameL(sharedConfig)
    .margin({top:100, left:20, bottom:104, right:20})
    // .title("Put headline here")
-   .height(600),
+   .height(600)
+   .fullYear(true),
 
    print: gChartframe.printFrame(sharedConfig)
    .margin({top:40, left:7, bottom:35, right:7})
@@ -205,6 +206,7 @@ d3.csv('example.csv', function(data) {
         myChart.xRange( [0, currentFrame.dimension().width] );
         //Set up xAxis for this frame
         myXAxis
+            .fullYear(currentFrame.fullYear())
             .scale(myChart.xScale())
             .offset(currentFrame.dimension().height)
             .interval(interval)
