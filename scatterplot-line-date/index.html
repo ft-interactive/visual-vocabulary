@@ -3,7 +3,6 @@
     <title>Frames for FT graphics</title>
     <script type="text/javascript" src="styles.js"></script>
     <link rel="stylesheet" type="text/css" href="./frameGlobalStyles.css">
-
 </head>
 <body>
     <style>
@@ -11,58 +10,53 @@
     </style>
     <script src="d3.min.js"></script>
     <script src="drawFrame.js"></script>
-    <script src="line.js"></script>
+    <script src="scatterplot.js"></script>
     <script src="saveSvgAsPng.js"></script>
     <script>
         
         //datafile
-        var dataURL = "linedata.csv"
+        var dataURL = "example2.csv"
         
         //titles, footnotes
-        var title = "Lorem ipsum";
-        var subtitle = "Consectetur adipiscing elit";//comment out subtitle assignment if not needed
-        var source = "Sed do eiusmod tempor incididunt ut";
+        var title = "Brazilian policy rate";
+        var subtitle = "Selic rate %";//comment out subtitle assignment if not needed
+        var source = "Thomson Reuters Datastream";
 
-        //graph options
-        var yMin=96;
-        var yMax=106;
-        var yAxisHighlight=100;
-        var lineSmoothing="linear";//choose 'linear' for an unsmoothed line 'monotone' for smooth
-        var logScale=false;
-        var logScaleStart=1000;
-        var markers=true;//show circle markers
-        var numTicksy = 4;//rough number of ticks for y axis
+        //put custom graph options here
+        var yMin=0//Minimum value for the y-axis
+        var yMax=60//Maximum value for the y-axis
+        var yAxisHighlight=2;
+        let lineStart=2
+        var numTicksy = 6;//rough number of ticks for y axis
         var interval="months";//days, months, quarters, years, lustrum or decade
         var minAxis=false //true or false
         var ticks//Contains the tick values for the major and minor xAxis
+
+        var lineSmoothing="linear";//choose 'linear' for an unsmoothed line 'monotone' for smooth
+
         //Use the frames array to set unique values for each media type of frame
         // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
         var frames=[
-        {name:"print",width:112.25,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"hori",yLabel:"left"},
-        {name:"web",width:600,height:400,units:'px',margins:[{top:0,right:10,bottom:5,left:10}],stylesheet:styleweb,legend:"vert",yLabel:"right"},
-        {name:"now",width:274,height:276,units:'px',margins:[{top:0,right:0,bottom:5,left:0}],stylesheet:stylenowcast,legend:"vert",yLabel:"right"},
-        {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"hori",yLabel:"left"},
-        {name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
+        {name:"print",width:112.25,height:68,units:'mm',margins:[{top:5,right:5,bottom:5, left:3}],stylesheet:styleprint,legend:"vert",yLabel:"right"},
+        {name:"web",width:600,height:422,units:'px',margins:[{top:0,right:29,bottom:5,left:00}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
+        //{name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
+        //{name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
         ]
         
         //sets the padding inside the chart area
         var chartpadding=[
-        {name:"print",margin:[{top:20, right:10, bottom:15, left:0}]},
-        {name:"web",margin:[{top:25, right:0,bottom:30,left:15}]},
-        {name:"now",margin:[{top:20, right:0,bottom:20,left:20}]},
-        {name:"social",margin:[{top:70, right:10, bottom:40, left:12}]},
-        {name:"video",margin:[{top:55, right:35,bottom:80, left:42}]}
+        {name:"print",margin:[{top:0, right:0, bottom:15, left:0}]},
+        {name:"web",margin:[{top:50, right:10, bottom:25, left:10}]},
+        {name:"social",margin:[{top:40, right:25, bottom:62, left:12}]},
+        {name:"video",margin:[{top:55, right:35,bottom:68, left:42}]}
         ]
-        //Add blank frames
+        //Calls the functions that adds the balnk frames before loading the data 
         drawFrames()
-        //Load Data
+        //Load the data
         d3.csv(dataURL,function(error, data){
             //date formatter, matching the format of the incoming csv...
-            //var parseDate = d3.time.format("%Y %b").parse;
-            //var parseDate = d3.time.format("%Y").parse;//just full year
             var parseDate = d3.time.format("%d/%m/%Y").parse;
             /*
-
             some common formatting parsers....
             d3.time.format("%Y %b") 1986 Jan
             d3.time.format("%d-%b-%y")  28-Jan-86
@@ -72,15 +66,16 @@
             d3.time.format("%H:%M %p")  11:39 AM
             d3.time.format("%B %d") January 28
             d3.time.format("%d %b") 28 Jan
-             d3.time.format("%d/%m/%Y %H:%M")28/01/16
              */
 
-            //parse the data
+            //parse the data if needed
             data.forEach(function(d) {
                 d.date=parseDate(d.date);
             });
-        //YOU SHOULD'NT HAVE TO DO MUCH AFTER THIS
-            ticks=calculateTicks(data,interval)
+
+
+         /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
+         ticks=calculateTicks(data,interval)
 
             for (var i=0;i<frames.length;i++){
                 var stylename=frames[i].stylesheet;
@@ -88,7 +83,7 @@
                 var legend=frames[i].legend;
                 var subYoffset=stylename.subOffset
                 var yLabel=frames[i].yLabel
-                lineChart(data,stylename,media,yMin,yMax,yAxisHighlight,chartpadding,legend, lineSmoothing,logScale,logScaleStart,markers, numTicksy,yLabel,ticks,minAxis);
+                scatterplot(data, stylename, media, chartpadding,legend, yLabel,yMin,yMax,numTicksy,yAxisHighlight,lineSmoothing,lineStart);
             }
         })//end data load
 
