@@ -47,7 +47,7 @@ var styleweb = {classes:
 titleOffset:21,
 subOffset:0,
 legendyOffset:0,
-linecolours:["#A5526A","#F19F9E","#D36969","#69A1AA","#66bfd4","#486ba0","#8A8A8A"]
+linecolours:[ '#0f5499','#EB5E8D','#70DCE6','#9dbf57','#208fce','#7f062e','#c2b7af']
 }
 
 var stylesoc = {classes:

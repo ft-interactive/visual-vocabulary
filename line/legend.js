@@ -3,7 +3,7 @@ function drawLegend() {
 	const colourScale = d3.scaleOrdinal()
         .range(gChartcolour.lineWeb)
         .domain(seriesNames);
-    let rem=10
+    let rem=16
     let alignment="hori";
 
 	function legend(parent) {
