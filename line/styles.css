@@ -1,33 +1,37 @@
 /* overall text style for each chart frame*/
 
+.axis {
+    font-size: inherit !important;
+}
+
 /* .overall text styles on axis*/
-[data-frame^="webS"] .axis,
-[data-frame^="webM"] .axis,
-[data-frame^="webL"] .axis {
+[data-frame^="webS"] .axis text,
+[data-frame^="webM"] .axis text,
+[data-frame^="webL"] .axis text {
     font-family: metric;
 }
 
-[data-frame^="webS"] .axis {
+[data-frame^="webS"] .axis text {
     font-size: 14px;
 }
 
-[data-frame^="webM"] .axis {
+[data-frame^="webM"] .axis text {
     font-size: 16px;
 }
 
-[data-frame^="webL"] .axis {
+[data-frame^="webL"] .axis text {
     font-size: 18px;
 }
 
-[data-frame^="print"] .axis{
+[data-frame^="print"] .axis text {
     font-family: metric;
     font-size: 9.6px;
 }
-[data-frame^="social"] .axis{
+[data-frame^="social"] .axis text {
     font-family: metric;
     font-size: 28px;
 }
-[data-frame^="video"] .axis{
+[data-frame^="video"] .axis text {
     font-family: metric;
     font-size: 48px;
 }

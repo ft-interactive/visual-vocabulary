@@ -189,7 +189,10 @@ d3.csv('example.csv', function(data) {
 
         //Draw the yAxis first, this will position the yAxis correctly and measure the width of the label text
         currentFrame.plot()
-            .call(myYAxis);
+            .call((g) => {
+                g.call(myYAxis);
+                g.selectAll('[font-size="10"]').attr('font-size', null);
+            });
 
         //return the value in the variable newMargin
         if (yAxisAlign=="right") {
@@ -229,7 +232,10 @@ d3.csv('example.csv', function(data) {
 
         //Draw the xAxis
         currentFrame.plot()
-            .call(myXAxis);
+            .call((g) => {
+                g.call(myXAxis);
+                g.selectAll('[font-size="10"]').attr('font-size', null);
+            });
         //Draw the lines  
         currentFrame.plot()
             .selectAll("lines")
