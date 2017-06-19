@@ -4,7 +4,7 @@
     <title>Line chart - Visual Vocabulary</title>
     <script src="//d3js.org/d3.v4.js"></script>
     <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
-    <script src="https://unpkg.com/g-chartframe@0.4.16"></script>
+    <script src="https://unpkg.com/g-chartframe@0.4.19"></script>
     <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
     <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
     <script src="lineChart.js"></script>
@@ -53,20 +53,20 @@ let minorAxis = true//turns on or off the minor axis
 //Individual frame configuratiuon, used to set margins (defaults shown below) etc
 const frame = {
    webS: gChartframe.webFrameS(sharedConfig)
-   .margin({top:100, left:15, bottom:82, right:20})
-   // .title("Put headline head a fAWfd sf sfva`f are") //use this if you need to override the defaults
-   // .subtitle("Put headline hea sd asd gasgasdg ad gsd adrg srgdsf sfhsdfre") //use this if you need to override the defaults
+   .margin({top:100, left:15, bottom:82, right:5})
+   // .title("Put headline here") //use this if you need to override the defaults
+   // .subtitle("Put headline here") //use this if you need to override the defaults
    .height(400),
 
    webM: gChartframe.webFrameM(sharedConfig)
-   .margin({top:100, left:20, bottom:86, right:20})
+   .margin({top:100, left:20, bottom:86, right:5})
    // .title("Put headline here")
    .height(500),
 
    webL: gChartframe.webFrameL(sharedConfig)
-   .margin({top:100, left:20, bottom:104, right:20})
+   .margin({top:100, left:20, bottom:104, right:5})
    // .title("Put headline here")
-   .height(600)
+   .height(700)
    .fullYear(true),
 
    print: gChartframe.printFrame(sharedConfig)
