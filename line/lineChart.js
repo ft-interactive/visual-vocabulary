@@ -6,6 +6,8 @@ function lineChart() {
     let yAxisAlign = "right"
     let rem =10;
     let markers = false;
+    let includeAnnotations = (d)=> (d.annotate !="" && d.annotate !=undefined);
+    let annotate = false;
     let interpolation =d3.curveLinear
     const colourScale = d3.scaleOrdinal()
         // .range(gChartcolour.lineWeb)
@@ -42,6 +44,34 @@ function lineChart() {
             .attr("cy",(d)=> yScale(d.value))
             .attr("r",rem*.25)
             .attr("fill",(d)=>{ return colourScale(d.name)} )
+        }
+
+        if (annotate) {
+            var anno = parent.append('g')
+                .attr('id','annotations')
+          console.log(anno)
+                
+            anno.selectAll("line")
+                .data(annotations)
+                .enter()
+                .append("line")
+                // .attr("class",media+"annotationLine")
+                .attr("x1",function(d){return xScale(d.date)})
+                .attr("x2",function(d){return xScale(d.date)})
+                .attr("y1",yScale.range()[0])
+                .attr("y2",yScale.range()[1]-5)
+
+            // anno.selectAll("text")
+            //     .data(annotations)
+            //     .enter()
+            //     .append("text")
+            //     .attr("class",media+"annotationText")
+            //     .attr("text-anchor","middle")
+            //     .attr("x",function(d){return xScale(d.date)})
+            //     .attr("y",yScale.range()[1]-10)
+            //     .text(function(d){
+            //         return d.annotate
+            //     })
         }
 
     }
@@ -93,8 +123,8 @@ function lineChart() {
         rem = d;
         return chart;
     }
-    chart.includeMarker = (d)=>{
-        includeMarker = d;
+    chart.annotate = (d)=>{
+        annotate = d;
         return chart;
     }
     chart.markers = (d)=>{

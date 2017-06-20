@@ -47,7 +47,8 @@ const yAxisHighlight = 100; //sets which tick to highlight on the yAxis
 const numTicksy = 3;//Number of tick on the uAxis
 const yAxisAlign = "right";//alignment of the axis
 const interval = "years"//date interval on xAxis "decade", "lustrum", "years","months","days"
-let markers = false;//show dots on lines marked as 'yes in the marker column'
+let annotate = true; // show annotations, defined in the 'annotate' column
+let markers = false;//show dots on lines
 let legendAlign = "vert"//hori or vert, alignment of the legend
 let interpolation=d3.curveLinear//curveStep, curveStepBefore, curveStepAfter, curveBasis, curveCardinal, curveCatmullRom
 let minorAxis = true//turns on or off the minor axis
@@ -111,6 +112,7 @@ d3.csv('example.csv', function(data) {
             lineData:getlines(data,d)
         }
     })
+
     //format the data that is used to draw highlight tonal bands
     const boundaries=data.filter((d)=> (d.highlight==="begin" || d.highlight==="end"))
     let highlights=[]
@@ -128,6 +130,7 @@ d3.csv('example.csv', function(data) {
         .xDomain(d3.extent(data, function(d) {return d.date;}))
         .yAxisAlign(yAxisAlign)
         .markers(markers)
+        .annotate(annotate)
         .interpolation(interpolation)
 
 
@@ -152,7 +155,6 @@ d3.csv('example.csv', function(data) {
             .yRange( [currentFrame.dimension().height,0] )
             .plotDim(currentFrame.dimension())
             .rem(currentFrame.rem())
-            .includeMarker((d)=> (d.marker==="yes"))
             .colourPalette((frameName));
 
         
