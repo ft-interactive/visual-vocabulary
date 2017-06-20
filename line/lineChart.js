@@ -46,13 +46,16 @@ function lineChart() {
             .attr("fill",(d)=>{ return colourScale(d.name)} )
         }
 
-        if (annotate) {
             var anno = parent.append('g')
                 .attr('id','annotations')
-          console.log(anno)
+         
                 
+        if (annotate) {
             anno.selectAll("line")
-                .data(annotations)
+                .data(function(d) {
+                    let filtered=d.lineData.filter(includeAnnotations);
+                    return filtered
+                })
                 .enter()
                 .append("line")
                 // .attr("class",media+"annotationLine")
@@ -61,17 +64,19 @@ function lineChart() {
                 .attr("y1",yScale.range()[0])
                 .attr("y2",yScale.range()[1]-5)
 
-            // anno.selectAll("text")
-            //     .data(annotations)
-            //     .enter()
-            //     .append("text")
-            //     .attr("class",media+"annotationText")
-            //     .attr("text-anchor","middle")
-            //     .attr("x",function(d){return xScale(d.date)})
-            //     .attr("y",yScale.range()[1]-10)
-            //     .text(function(d){
-            //         return d.annotate
-            //     })
+            anno.selectAll("text")
+                .data(function(d) {
+                    let filtered=d.lineData.filter(includeAnnotations);
+                    return filtered
+                })
+                .enter()
+                .append("text")
+                .attr("text-anchor","middle")
+                .attr("x",function(d){return xScale(d.date)})
+                .attr("y",yScale.range()[1]-10)
+                .text(function(d){
+                    return d.annotate
+                })
         }
 
     }
@@ -121,6 +126,10 @@ function lineChart() {
     chart.rem = (d)=>{
         if(!d) return rem;
         rem = d;
+        return chart;
+    }
+    chart.includeAnnotations = (d)=>{
+        includeAnnotations = d;
         return chart;
     }
     chart.annotate = (d)=>{
