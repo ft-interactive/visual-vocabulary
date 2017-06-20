@@ -4,7 +4,7 @@
     <title>Line chart - Visual Vocabulary</title>
     <script src="//d3js.org/d3.v4.js"></script>
     <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
-    <script src="https://unpkg.com/g-chartframe@0.4.21"></script>
+    <script src="https://unpkg.com/g-chartframe@0.4.23"></script>
     <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
     <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
     <script src="lineChart.js"></script>
@@ -37,7 +37,7 @@
 //User defined constants similar to version 2
 const dateStructure = "%d/%m/%Y";
 const sharedConfig = {
-  title:"Title not |yet added",
+  title:"Title not yet added",
   subtitle:"Subtitle not yet added",  
   source:"Source not yet added",
 }
@@ -47,7 +47,7 @@ const yAxisHighlight = 100; //sets which tick to highlight on the yAxis
 const numTicksy = 3;//Number of tick on the uAxis
 const yAxisAlign = "right";//alignment of the axis
 const interval = "years"//date interval on xAxis "decade", "lustrum", "years","months","days"
-let markers = false;//show dots on lines marked as 'yes in the marker column'
+let markers = true;//show dots on lines marked as 'yes in the marker column'
 let legendAlign = "vert"//hori or vert, alignment of the legend
 let interpolation=d3.curveLinear//curveStep, curveStepBefore, curveStepAfter, curveBasis, curveCardinal, curveCatmullRom
 let minorAxis = true//turns on or off the minor axis

@@ -5,7 +5,6 @@ function lineChart() {
     let seriesNames = [];
     let yAxisAlign = "right"
     let rem =10;
-    let includeMarker=(d)=> (d.marker==="yes");
     let markers = false;
     let interpolation =d3.curveLinear
     const colourScale = d3.scaleOrdinal()
@@ -31,15 +30,17 @@ function lineChart() {
         if (markers) {
             parent.selectAll(".markers")
             .data(function(d) {
-                let filtered=d.lineData.filter(includeMarker);
-                return filtered
+               if(markers) {
+                    return d.lineData
+                }
             })
             .enter()
             .append('circle')
             .classed("markers",true)
+            .attr('id' ,(d)=> 'date: ' + d.date + ' value: ' + d.value)
             .attr("cx",(d)=> xScale(d.date))
             .attr("cy",(d)=> yScale(d.value))
-            .attr("r",rem*.4)
+            .attr("r",rem*.25)
             .attr("fill",(d)=>{ return colourScale(d.name)} )
         }
 
