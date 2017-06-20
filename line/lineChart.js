@@ -45,40 +45,6 @@ function lineChart() {
             .attr("r",rem*.25)
             .attr("fill",(d)=>{ return colourScale(d.name)} )
         }
-
-            var anno = parent.append('g')
-                .attr('id','annotations')
-         
-                
-        if (annotate) {
-            anno.selectAll("line")
-                .data(function(d) {
-                    let filtered=d.lineData.filter(includeAnnotations);
-                    return filtered
-                })
-                .enter()
-                .append("line")
-                // .attr("class",media+"annotationLine")
-                .attr("x1",function(d){return xScale(d.date)})
-                .attr("x2",function(d){return xScale(d.date)})
-                .attr("y1",yScale.range()[0])
-                .attr("y2",yScale.range()[1]-5)
-
-            anno.selectAll("text")
-                .data(function(d) {
-                    let filtered=d.lineData.filter(includeAnnotations);
-                    return filtered
-                })
-                .enter()
-                .append("text")
-                .attr("text-anchor","middle")
-                .attr("x",function(d){return xScale(d.date)})
-                .attr("y",yScale.range()[1]-10)
-                .text(function(d){
-                    return d.annotate
-                })
-        }
-
     }
 
     chart.yScale = (d)=>{
@@ -126,10 +92,6 @@ function lineChart() {
     chart.rem = (d)=>{
         if(!d) return rem;
         rem = d;
-        return chart;
-    }
-    chart.includeAnnotations = (d)=>{
-        includeAnnotations = d;
         return chart;
     }
     chart.annotate = (d)=>{
@@ -192,3 +154,49 @@ function drawHighlights() {
 
     return highlights;
 }
+
+function drawAnnotations() {
+    let yScale=d3.scaleLinear();
+    let xScale=d3.scaleTime();
+
+    function annotations(parent){
+    
+        parent.append("line")
+            .attr("class","annotation")
+            .attr("x1", (d)=> xScale(d.date))
+            .attr("x2",(d)=> xScale(d.date))
+            .attr("y1",yScale.range()[0])
+            .attr("y2",yScale.range()[1]-5)
+            .style('stroke', '#000')
+            .style('stroke-width', '2px')
+
+        parent.append("text")
+            .attr("class","annotation")
+            .attr("text-anchor","middle")
+            .attr("x",function(d){return xScale(d.date)})
+            .attr("y",yScale.range()[1]-10)
+            .text(function(d){
+                return d.annotate
+            })
+    }
+
+    annotations.yScale = (d)=>{
+        yScale = d;
+        return annotations;
+    }
+    annotations.xScale = (d)=>{
+        xScale = d;
+        return annotations;
+    }
+    annotations.yRange = (d)=>{
+        yScale.range(d);
+        return annotations;
+    };
+    annotations.xRange = (d)=>{
+        xScale.range(d);
+        return annotations;
+    };
+
+    return annotations;
+}
+
