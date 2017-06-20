@@ -4,7 +4,7 @@
     <title>Line chart - Visual Vocabulary</title>
     <script src="//d3js.org/d3.v4.js"></script>
     <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
-    <script src="https://unpkg.com/g-chartframe@0.4.20"></script>
+    <script src="https://unpkg.com/g-chartframe@0.4.21"></script>
     <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
     <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
     <script src="lineChart.js"></script>
@@ -37,7 +37,7 @@
 //User defined constants similar to version 2
 const dateStructure = "%d/%m/%Y";
 const sharedConfig = {
-  title:"Title not yet added",
+  title:"Title not |yet added",
   subtitle:"Subtitle not yet added",  
   source:"Source not yet added",
 }
@@ -57,7 +57,7 @@ const frame = {
    webS: gChartframe.webFrameS(sharedConfig)
    .margin({top:100, left:15, bottom:82, right:5})
    // .title("Put headline here") //use this if you need to override the defaults
-   // .subtitle("Put headline here") //use this if you need to override the defaults
+   // .subtitle("Put headline |here") //use this if you need to override the defaults
    .height(400),
 
    webM: gChartframe.webFrameM(sharedConfig)
@@ -144,31 +144,6 @@ d3.csv('example.csv', function(data) {
 
         d3.select(currentFrame.plot().node().parentNode)
             .call(currentFrame);
-
-        // measure title and subtitle and adjust plot size and position accordingly
-        var selectFrame = d3.select(currentFrame.plot().node().parentNode);
-        selectFrame.select('.chart-title tspan')
-            .call(wrap, currentFrame.width() - (currentFrame.margin().left + currentFrame.margin().right),currentFrame.titleX(),currentFrame.titleY(),currentFrame.titleLineHeight());
-        var subYOffset =  selectFrame.select('.chart-title').node().getBBox().height +  selectFrame.select('.chart-title').node().getBBox().y +currentFrame.rem();
-        
-        selectFrame.select('.chart-subtitle tspan')
-            .call(wrap, currentFrame.width() - (currentFrame.margin().left + currentFrame.margin().right),currentFrame.titleX(),subYOffset,currentFrame.subtitleLineHeight());
-
-        var offsetMargin;
-
-        // set gap between subtitle and plot area
-        if(frameName === 'webS' || frameName === 'webM' || frameName === 'webL') {
-            offsetMargin = subYOffset + selectFrame.select('.chart-subtitle').node().getBBox().height + 22;
-        } else {
-            offsetMargin = subYOffset + selectFrame.select('.chart-subtitle').node().getBBox().height + (currentFrame.rem()/2);
-        }
-        
-        currentFrame.margin().top = offsetMargin;
-
-        selectFrame.select('.chart-plot')
-        .transition()
-        .attr('transform','translate(' + currentFrame.margin().left + ','  + (offsetMargin + 2) + ')');
-        
 
         //create a 'g' element at the back of the chart to add time period highlights after axis have been created
         let axisHighlight = currentFrame.plot().append('g');
@@ -300,30 +275,6 @@ function getlines(data,group) {
         } 
     });
     return lineData
-}
-
-//wrap text function adapted from Mike Bostock
-function wrap(text, width, x,y,lineHeight) {
-    text.each(function() {
-        var text = d3.select(this),
-        words = text.text().split(/\s+/).reverse(),
-        word,
-        line = [],
-        lineNumber = 0,
-        dy = 0,
-        tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
-        if(!y){ y= text.attr("y")}
-        while (word = words.pop()) {
-            line.push(word);
-            tspan.text(line.join(" "));
-            if (tspan.node().getComputedTextLength() > width) {
-                line.pop();
-                tspan.text(line.join(" "));
-                line = [word];
-                tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy",++lineNumber * lineHeight + "px").text(word);
-            }
-        }
-    });
 }
 
 </script>
