@@ -47,7 +47,8 @@ const yAxisHighlight = 100; //sets which tick to highlight on the yAxis
 const numTicksy = 3;//Number of tick on the uAxis
 const yAxisAlign = "right";//alignment of the axis
 const interval = "years"//date interval on xAxis "decade", "lustrum", "years","months","days"
-let markers = false;//show dots on lines marked as 'yes in the marker column'
+let annotate = true; // show annotations, defined in the 'annotate' column
+let markers = false;//show dots on lines
 let legendAlign = "vert"//hori or vert, alignment of the legend
 let interpolation=d3.curveLinear//curveStep, curveStepBefore, curveStepAfter, curveBasis, curveCardinal, curveCatmullRom
 let minorAxis = true//turns on or off the minor axis
@@ -111,6 +112,10 @@ d3.csv('example.csv', function(data) {
             lineData:getlines(data,d)
         }
     })
+
+    // filter data for annotations
+    const annos = data.filter((d)=> (d.annotate !="" && d.annotate !=undefined))
+
     //format the data that is used to draw highlight tonal bands
     const boundaries=data.filter((d)=> (d.highlight==="begin" || d.highlight==="end"))
     let highlights=[]
@@ -128,6 +133,7 @@ d3.csv('example.csv', function(data) {
         .xDomain(d3.extent(data, function(d) {return d.date;}))
         .yAxisAlign(yAxisAlign)
         .markers(markers)
+        .annotate(annotate)
         .interpolation(interpolation)
 
 
@@ -138,6 +144,7 @@ d3.csv('example.csv', function(data) {
 
         const myXAxis = gAxis.xaxisDate();//sets up xAxis
         const myHighlights = drawHighlights()//sets up highlight tonal bands
+        const myAnnotations = drawAnnotations()//sets up highlight tonal bands
         const myLegend = drawLegend()//sets up the legend
         //const plotDim=currentFrame.dimension()//useful variable to carry the current frame dimensions
         const tickSize=currentFrame.dimension().width;//Used when drawing the yAxis ticks
@@ -145,6 +152,9 @@ d3.csv('example.csv', function(data) {
         d3.select(currentFrame.plot().node().parentNode)
             .call(currentFrame);
 
+        
+        let plotAnnotation = currentFrame.plot().append('g');
+            
         //create a 'g' element at the back of the chart to add time period highlights after axis have been created
         let axisHighlight = currentFrame.plot().append('g');
 
@@ -152,7 +162,6 @@ d3.csv('example.csv', function(data) {
             .yRange( [currentFrame.dimension().height,0] )
             .plotDim(currentFrame.dimension())
             .rem(currentFrame.rem())
-            .includeMarker((d)=> (d.marker==="yes"))
             .colourPalette((frameName));
 
         
@@ -195,6 +204,8 @@ d3.csv('example.csv', function(data) {
             .yRange( [currentFrame.dimension().height,0] )
             .xScale(myChart.xScale())
             .xRange( [0,currentFrame.dimension().width] );
+
+
         //Draw the highlights before the lines and xAxis
         axisHighlight
             .selectAll(".highlights")
@@ -206,7 +217,22 @@ d3.csv('example.csv', function(data) {
         //Draw the xAxis
         currentFrame.plot()
             .call(myXAxis);
-                
+        
+        //Set up highlights for this frame
+        myAnnotations
+            .yScale(myChart.yScale())
+            .yRange( [currentFrame.dimension().height,0] )
+            .xScale(myChart.xScale())
+            .xRange( [0,currentFrame.dimension().width] );
+
+        //Draw the annotations before the lines
+        plotAnnotation
+            .selectAll(".annotation")
+            .data(annos)
+            .enter()
+            .append("g")
+            .call(myAnnotations);
+
         //Draw the lines  
         currentFrame.plot()
             .selectAll("lines")

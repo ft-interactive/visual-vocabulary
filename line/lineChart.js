@@ -6,6 +6,8 @@ function lineChart() {
     let yAxisAlign = "right"
     let rem =10;
     let markers = false;
+    let includeAnnotations = (d)=> (d.annotate !="" && d.annotate !=undefined);
+    let annotate = false;
     let interpolation =d3.curveLinear
     const colourScale = d3.scaleOrdinal()
         // .range(gChartcolour.lineWeb)
@@ -43,7 +45,6 @@ function lineChart() {
             .attr("r",rem*.25)
             .attr("fill",(d)=>{ return colourScale(d.name)} )
         }
-
     }
 
     chart.yScale = (d)=>{
@@ -93,8 +94,8 @@ function lineChart() {
         rem = d;
         return chart;
     }
-    chart.includeMarker = (d)=>{
-        includeMarker = d;
+    chart.annotate = (d)=>{
+        annotate = d;
         return chart;
     }
     chart.markers = (d)=>{
@@ -153,3 +154,49 @@ function drawHighlights() {
 
     return highlights;
 }
+
+function drawAnnotations() {
+    let yScale=d3.scaleLinear();
+    let xScale=d3.scaleTime();
+
+    function annotations(parent){
+    
+        parent.append("line")
+            .attr("class","annotation")
+            .attr("x1", (d)=> xScale(d.date))
+            .attr("x2",(d)=> xScale(d.date))
+            .attr("y1",yScale.range()[0])
+            .attr("y2",yScale.range()[1]-5)
+            .style('stroke', '#000')
+            .style('stroke-width', '2px')
+
+        parent.append("text")
+            .attr("class","annotation")
+            .attr("text-anchor","middle")
+            .attr("x",function(d){return xScale(d.date)})
+            .attr("y",yScale.range()[1]-10)
+            .text(function(d){
+                return d.annotate
+            })
+    }
+
+    annotations.yScale = (d)=>{
+        yScale = d;
+        return annotations;
+    }
+    annotations.xScale = (d)=>{
+        xScale = d;
+        return annotations;
+    }
+    annotations.yRange = (d)=>{
+        yScale.range(d);
+        return annotations;
+    };
+    annotations.xRange = (d)=>{
+        xScale.range(d);
+        return annotations;
+    };
+
+    return annotations;
+}
+
