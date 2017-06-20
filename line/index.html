@@ -33,7 +33,9 @@
 
 <script type="text/javascript">
 
+
 //User defined constants similar to version 2
+const dateStructure = "%d/%m/%Y";
 const sharedConfig = {
   title:"Title not yet added",
   subtitle:"Subtitle not yet added",  
@@ -96,7 +98,7 @@ d3.selectAll('.framed')
 
 d3.csv('example.csv', function(data) {
     //make sure all the dates in the date column are a date object
-    var parseDate = d3.timeParse("%d/%m/%Y")
+    var parseDate = d3.timeParse(dateStructure)
     data.forEach(function(d) {
                 d.date=parseDate(d.date);
             });
