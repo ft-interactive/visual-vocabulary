@@ -112,10 +112,10 @@ d3.csv('example.csv', function(data) {
         }
     })
     //format the data that is used to draw highlight tonal bands
-    const boundaries=data.filter((d)=> (d.marker==="begin" || d.marker==="end"))
+    const boundaries=data.filter((d)=> (d.highlight==="begin" || d.highlight==="end"))
     let highlights=[]
     boundaries.forEach(function(d,i){
-        if (d.marker==="begin") {
+        if (d.highlight==="begin") {
             highlights.push({begin: d.date,end:boundaries[i+1].date}) 
         }
     })
@@ -239,7 +239,7 @@ d3.csv('example.csv', function(data) {
 
 //a function that returns the columns headers from the top of the dataset, excluding specified
 function getSeriesNames(columns){
-    var exclude = ['date','annotate','marker'];
+    var exclude = ['date','annotate','highlight'];
     return columns.filter(d=>(exclude.indexOf(d) == -1));
 }
 
@@ -268,7 +268,7 @@ function getlines(data,group) {
         column.name = group
         column.date = el.date
         column.value = +el[group]
-        column.marker = el.marker
+        column.highlight = el.highlight
         column.annotate = el.annotate
         if(el[group]) {
             lineData.push(column)  
