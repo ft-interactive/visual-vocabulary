@@ -167,14 +167,12 @@ function drawAnnotations() {
             .attr("x2",(d)=> xScale(d.date))
             .attr("y1",yScale.range()[0])
             .attr("y2",yScale.range()[1]-5)
-            .style('stroke', '#000')
-            .style('stroke-width', '2px')
 
         parent.append("text")
             .attr("class","annotation")
             .attr("text-anchor","middle")
             .attr("x",function(d){return xScale(d.date)})
-            .attr("y",yScale.range()[1]-10)
+            .attr("y",yScale.range()[1]-(rem/2))
             .text(function(d){
                 return d.annotate
             })
@@ -196,7 +194,11 @@ function drawAnnotations() {
         xScale.range(d);
         return annotations;
     };
-
+    annotations.rem = (d)=>{
+        if(!d) return rem;
+        rem = d;
+        return annotations;
+    }
     return annotations;
 }
 

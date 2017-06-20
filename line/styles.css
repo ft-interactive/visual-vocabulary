@@ -1,6 +1,6 @@
 /* overall text style for each chart frame*/
-html, body {
-    font-size: 15px;
+svg {
+    font-size: 0;
 }
 .axis {
     font-size: inherit !important;
@@ -24,15 +24,15 @@ html, body {
     font-size: 18px;
 }
 
-[data-frame^="print"] .axis text {
+.ft-printgraphic .axis text {
     font-family: metric;
     font-size: 9.6px;
 }
-[data-frame^="social"] .axis text {
+.ft-socialgraphic .axis text {
     font-family: metric;
     font-size: 28px;
 }
-[data-frame^="video"] .axis text {
+.ft-videographic .axis text {
     font-family: metric;
     font-size: 48px;
 }
@@ -44,15 +44,15 @@ html, body {
     fill: #66605C;
     text-anchor: end;
 }
-[data-frame^="print"] .yAxis text{
+.ft-printgraphic .yAxis text{
     text-anchor: end;
 }
-[data-frame^="social"] .yAxis text{
+.ft-socialgraphic .yAxis text{
     fill-opacity: 0.5;
     fill: #FFFFFF;
     text-anchor: end;
 }
-[data-frame^="video"] .yAxis text{
+.ft-videographic .yAxis text{
     fill-opacity: 0.5;
     fill: #FFFFFF;
     text-anchor: end;
@@ -66,17 +66,17 @@ html, body {
     stroke-width: 1px;
     stroke-dasharray: 4, 4;
 }
-[data-frame^="print"] .yAxis line{
+.ft-printgraphic .yAxis line{
     stroke: #000000;
     stroke-width: 0.3px;
 }
-[data-frame^="social"] .yAxis line{
+.ft-socialgraphic .yAxis line{
     stroke: #FFFFFF;
     stroke-width: 2px;
     stroke-dasharray: 2, 8;
     stroke-opacity: 0.38;
 }
-[data-frame^="video"] .yAxis line{
+.ft-videographic .yAxis line{
     stroke: #FFFFFF;
     stroke-width: 4px;
     stroke-opacity: 0.38;
@@ -87,13 +87,13 @@ html, body {
 .ft-webgraphic-l .domain {
     stroke-width: 0px;
 }
-[data-frame^="print"] .domain{
+.ft-printgraphic .domain{
     stroke-width: 0px;
 }
-[data-frame^="social"] .domain{
+.ft-socialgraphic .domain{
     stroke-width: 0px;
 }
-[data-frame^="video"] .domain{
+.ft-videographic .domain{
     stroke-width: 0px;
 }
 /* .tick text on yAxis*/
@@ -103,15 +103,15 @@ html, body {
     fill: #66605C;
     text-anchor: middle;
 }
-[data-frame^="print"] .xAxis text{
+.ft-printgraphic .xAxis text{
     text-anchor: middle;
 }
-[data-frame^="social"] .xAxis text{
+.ft-socialgraphic .xAxis text{
     fill-opacity: 0.5;
     fill: #FFFFFF;
     text-anchor: middle;
 }
-[data-frame^="video"] .xAxis text{
+.ft-videographic .xAxis text{
     fill-opacity: 0.5;
     fill: #FFFFFF;
     text-anchor: middle;
@@ -123,22 +123,22 @@ html, body {
     stroke-width: 1px;
     stroke-dasharray: 2,1;
 }
-[data-frame^="print"] .xAxis line{
+.ft-printgraphic .xAxis line{
     stroke: #000000;
     stroke-width: 0.3px;
 }
-[data-frame^="social"] .xAxis line{
+.ft-socialgraphic .xAxis line{
     stroke: #FFFFFF;
     stroke-width: 2px;
     stroke-dasharray: 2, 8;
     stroke-opacity: 0.38;
 }
-[data-frame^="video"] .xAxis line{
+.ft-videographic .xAxis line{
     stroke: #FFFFFF;
     stroke-width: 4px;
     stroke-opacity: 0.38;
 }
-/* Style for the highlight or base line on yAxia*/
+/* Style for the highlight or base line on yAxis*/
 .ft-webgraphic-s .baseline line, 
 .ft-webgraphic-m .baseline line,
 .ft-webgraphic-l .baseline line {
@@ -146,17 +146,17 @@ html, body {
     stroke-width: 1px;
     stroke-dasharray: 1, 0;
 }
-[data-frame^="print"] .baseline line{
+.ft-printgraphic .baseline line{
     stroke: #000000;
     stroke-width: 0.6px;
 }
-[data-frame^="social"] .baseline line{
+.ft-socialgraphic .baseline line{
     stroke: #FFFFFF;
     stroke-width: 2px;
     stroke-dasharray: 1, 0;
     stroke-opacity: 0.5;
 }
-[data-frame^="video"] .baseline line{
+.ft-videographic .baseline line{
     stroke: #FFFFFF;
     stroke-width: 4px;
     stroke-opacity: .38;
@@ -170,24 +170,84 @@ html, body {
     stroke-width: 3px;
     fill: none;
 }
-[data-frame^="print"] .lines{
+.ft-printgraphic .lines{
     stroke-linecap: round;
     stroke-linejoin: round;
     stroke-width: 2px;
     fill: none;
 }
-[data-frame^="social"] .lines{
+.ft-socialgraphic .lines{
     stroke-linecap: round;
     stroke-linejoin: round;
     stroke-width: 5px;
     fill: none;
 }
-[data-frame^="video"] .lines{
+.ft-videographic .lines{
     stroke-linecap: round;
     stroke-linejoin: round;
     stroke-width: 8px;
     fill: none;
 }
+
+/* annotation styling*/
+
+.ft-webgraphic-s .annotations-holder line,
+.ft-webgraphic-m .annotations-holder line,
+.ft-webgraphic-l .annotations-holder line {
+    stroke: #66605C;
+    stroke-width: 1px;
+}
+
+.ft-printgraphic .annotations-holder line {
+    stroke: #000000;
+    stroke-width: 0.5px;
+}
+.ft-socialgraphic .annotations-holder line {
+    stroke: #ffffff;
+    stroke-width: 2px;
+    opacity: 0.7;
+}
+.ft-videographic .annotations-holder line {
+    stroke: #ffffff;
+    stroke-width: 4px;
+    opacity: 0.7;
+}
+
+.ft-webgraphic-s .annotations-holder text {
+    font-size: 14px;
+}
+
+.ft-webgraphic-m .annotations-holder text {
+    font-size: 16px;
+}
+
+.ft-webgraphic-l .annotations-holder text {
+    font-size: 18px;
+}
+
+.ft-webgraphic-s .annotations-holder text,
+.ft-webgraphic-m .annotations-holder text,
+.ft-webgraphic-l .annotations-holder text {
+    fill: #66605C;
+}
+
+.ft-printgraphic .annotations-holder text {
+    font-size: 9.6px;
+    fill: #000000;
+}
+
+.ft-socialgraphic .annotations-holder text {
+    font-size: 28px;
+    fill: #ffffff;
+    opacity: 0.7;
+}
+
+.ft-videographic .annotations-holder text {
+    font-size: 48px;
+    fill: #ffffff;
+    opacity: 0.7;
+}
+
 /* .overall text styles on axis*/
 .ft-webgraphic-s .highlights,
 .ft-webgraphic-m .highlights,
@@ -195,17 +255,17 @@ html, body {
     fill: #F2DFCE;
 }
 
-[data-frame^="print"] .highlights{
+.ft-printgraphic .highlights{
     fill: #95BFC5;
     opacity: 0.3;
 }
-[data-frame^="social"] .highlights{
+.ft-socialgraphic .highlights{
     fill: #ffffff;
-    opacity: 0.38;
+    opacity: 0.2;
 }
-[data-frame^="video"] .highlights{
+.ft-videographic .highlights{
     fill: #ffffff;
-    opacity: 0.38
+    opacity: 0.2;
 }
 /* legend */
 .ft-webgraphic-s .legend,
@@ -227,17 +287,17 @@ html, body {
     font-size: 18px;
 }
 
-[data-frame^="print"] .legend{
+.ft-printgraphic .legend{
     font-family: metric;
     font-size: 9.6px;
 }
-[data-frame^="social"] .legend{
+.ft-socialgraphic .legend{
     font-family: metric;
     fill-opacity: 0.5;
     fill: #FFFFFF;
     font-size: 28px;
 }
-[data-frame^="video"] .legend{
+.ft-videographic .legend{
     font-family: metric;
     fill-opacity: 0.5;
     fill: #FFFFFF;

@@ -4,7 +4,7 @@
     <title>Line chart - Visual Vocabulary</title>
     <script src="//d3js.org/d3.v4.js"></script>
     <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
-    <script src="https://unpkg.com/g-chartframe@0.4.23"></script>
+    <script src="https://unpkg.com/g-chartframe@0.4.24"></script>
     <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
     <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
     <script src="lineChart.js"></script>
@@ -144,16 +144,17 @@ d3.csv('example.csv', function(data) {
 
         const myXAxis = gAxis.xaxisDate();//sets up xAxis
         const myHighlights = drawHighlights()//sets up highlight tonal bands
-        const myAnnotations = drawAnnotations()//sets up highlight tonal bands
+        const myAnnotations = drawAnnotations()//sets up annotations
         const myLegend = drawLegend()//sets up the legend
         //const plotDim=currentFrame.dimension()//useful variable to carry the current frame dimensions
         const tickSize=currentFrame.dimension().width;//Used when drawing the yAxis ticks
-
+        
         d3.select(currentFrame.plot().node().parentNode)
             .call(currentFrame);
 
         
-        let plotAnnotation = currentFrame.plot().append('g');
+        let plotAnnotation = currentFrame.plot().append('g')
+                                .attr('class', 'annotations-holder');
             
         //create a 'g' element at the back of the chart to add time period highlights after axis have been created
         let axisHighlight = currentFrame.plot().append('g');
@@ -223,7 +224,8 @@ d3.csv('example.csv', function(data) {
             .yScale(myChart.yScale())
             .yRange( [currentFrame.dimension().height,0] )
             .xScale(myChart.xScale())
-            .xRange( [0,currentFrame.dimension().width] );
+            .xRange( [0,currentFrame.dimension().width] )
+            .rem(currentFrame.rem());
 
         //Draw the annotations before the lines
         plotAnnotation
