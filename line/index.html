@@ -148,16 +148,17 @@ d3.csv('example.csv', function(data) {
         const myLegend = drawLegend()//sets up the legend
         //const plotDim=currentFrame.dimension()//useful variable to carry the current frame dimensions
         const tickSize=currentFrame.dimension().width;//Used when drawing the yAxis ticks
-        
+
         d3.select(currentFrame.plot().node().parentNode)
             .call(currentFrame);
 
-        
-        let plotAnnotation = currentFrame.plot().append('g')
-                                .attr('class', 'annotations-holder');
             
         //create a 'g' element at the back of the chart to add time period highlights after axis have been created
         let axisHighlight = currentFrame.plot().append('g');
+       
+        //create a 'g' element behind the chart and in front of the highlights
+        let plotAnnotation = currentFrame.plot().append('g')
+                                .attr('class', 'annotations-holder');
 
         myChart
             .yRange( [currentFrame.dimension().height,0] )
