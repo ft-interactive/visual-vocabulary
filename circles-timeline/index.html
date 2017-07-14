@@ -177,7 +177,7 @@ d3.csv('data.csv',function(error, data){
         //set xAxis
         const xAxis = d3.axisBottom()
             .scale(xScale)
-            .tickFormat(d3.format('.0f'));
+            //.tickFormat(d3.format('.0f'));
 
         //set colours 
         var colours = (frameName == 'video' || frameName == 'social') ? popColours : normalColours;
