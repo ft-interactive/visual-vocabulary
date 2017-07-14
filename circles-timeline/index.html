@@ -5,6 +5,8 @@
     <script src="//d3js.org/d3.v4.js"></script>
     <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
     <script src="//financial-times.github.io/g-chartframe/build/g-chartframe.js"></script>
+    <script src="//unpkg.com/g-chartframe@latest"></script>
+    <script src="//unpkg.com/g-chartcolour@latest"></script>
     <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
     <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
     <script src="circles-timeline.js"></script>
@@ -56,7 +58,7 @@ const videoMargin = {
 }
 
 const frame = {
-    web: gChartframe.webFrame()
+    web: gChartframe.webFrameM()
         .margin(webMargin)
         .width(700)
         .height(640),
