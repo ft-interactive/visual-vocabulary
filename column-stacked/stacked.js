@@ -51,7 +51,7 @@ function stackedChart(data,stylename,media,plotpadding,legAlign,yAlign, yMin, yM
                 posCumulative = posCumulative+(+el[name]);
                 baseY=posCumulative;
             }
-            if(el[name]<0){
+            if(el[name]<=0){
                 baseY1=negCumulative
                 negCumulative = negCumulative+(+el[name]);
                 baseY=negCumulative;
