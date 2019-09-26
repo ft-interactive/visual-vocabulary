@@ -34,6 +34,6 @@ Use the SVG Crowbar bookmarklet [which is available here](http://nytimes.github.
 
 ## Licence
 
-This software is published by the Financial Times under the [MIT licence](http://opensource.org/licenses/MIT). 
+This software is published by the Financial Times under the [MIT licence](https://opensource.org/licenses/MIT).
 
-Please note the MIT licence includes only the software, and does not cover any FT content made available using the software, which is copyright &copy; The Financial Times Limited, all rights reserved. For more information about re-publishing FT content, please contact our [syndication department](http://syndication.ft.com/).
+Please note the MIT licence only covers the software, and does not cover any FT content or branding incorporated into the software or made available using the software. FT content is copyright © The Financial Times Limited, and FT and 'Financial Times' are trademarks of The Financial Times Limited, all rights reserved. For more information about republishing FT content, please contact our [republishing department](https://ft.com/republishing).
