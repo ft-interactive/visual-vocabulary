@@ -1,128 +1,213 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Frames for FT graphics</title>
-    <script type="text/javascript" src="styles.js"></script>
-    <link rel="stylesheet" type="text/css" href="./frameGlobalStyles.css">
+    <title>Lollipop V chart - Visual Vocabulary</title>
+    <script src="//d3js.org/d3.v4.js"></script>
+    <script src="//d3js.org/d3-selection-multi.v1.min.js"></script>
+    <script src="//financial-times.github.io/g-chartframe/build/g-chartframe.js"></script>
+    <script src="//ft-interactive.github.io/visual-vocabulary/shared/svg2png.js"></script>
+    <script src="//ft-interactive.github.io/g-chartcolour/build/g-chartcolour.js"></script>
+    <script src="lollipop-v.js"></script>
+    <link rel="stylesheet" href="https://www.ft.com/__origami/service/build/v2/bundles/css?modules=o-fonts@^2.2.0" />
+
+    <link rel="stylesheet" href="style.css"/>
+    <style>
+    .saveable button{ display: block; }
+    </style>
 </head>
 <body>
-    <style>
-        text{font-family:metric}
-    </style>
-    <script src="d3.min.js"></script>
-    <script src="drawFrame.js"></script>
-    <script src="chart.js"></script>
-    <script src="saveSvgAsPng.js"></script>
-    <script>
-        
-        //datafile
-        var dataURL = "changeme.csv"
-        
-        //titles, footnotes
-        var title = "Property prices";
-        var subtitle = "€ 000s";//comment out subtitle assignment if not needed
-        var source = "Source: FT research";
-
-        //put custom graph options here
-        var sort="ascending"//ascending or descending
-        var yMin=300//Minimum value for the y-axis
-        var yMax=650//Maximum value for the y-axis
-        var yAxisHighlight=0;
-        var numTicksy = 10;//rough number of ticks for y axis
-
-        
-
-        //Use the frames array to set unique values for each media type of frame
-        // Print column sizes-- 1col 53.71mm: 2col 112.25mm: 3col 170.8mm: 4col 229.34mm: 5col 287.88mm: 6col 346.43
-        //datawatch size is 47.48mm x 50.45mm
-        var frames=[
-        {name:"print",width:47.48,height:50.45,units:'mm',margins:[{top:5,right:5,bottom:5, left:5}],stylesheet:styleprint,legend:"vert",yLabel:"right"},
-        {name:"web",width:600,height:422,units:'px',margins:[{top:0,right:29,bottom:5,left:10}],stylesheet:styleweb,legend:"hori",yLabel:"right"},
-        {name:"social",width:560,height:750,units:'px',margins:[{top:36,right:50, bottom:25, left:50}],stylesheet:stylesoc,legend:"vert",yLabel:"left"},
-        {name:"video",width:1920,height:1080,units:'px',margins:[{top:80,right:207,bottom:50,left:207}],stylesheet:stylevid,legend:"hori",yLabel:"right"}
-        ]
-        
-        //sets the padding inside the chart area
-        var chartpadding=[
-        {name:"print",margin:[{top:0, right:0, bottom:15, left:5}]},
-        {name:"web",margin:[{top:20, right:10, bottom:20, left:0}]},
-        {name:"social",margin:[{top:30, right:25, bottom:30, left:12}]},
-        {name:"video",margin:[{top:55, right:35,bottom:68, left:42}]}
-        ]
-        //Calls the functions that adds the balnk frames before loading the data 
-        drawFrames()
-        //Load the data
-        d3.csv(dataURL,function(error, data){
-            
-           
-            
-            //date formatter, matching the format of the incoming csv...
-            //var parseDate = d3.time.format("%d-%b-%y").parse;
-            /*
-            some common formatting parsers....
-            d3.time.format("%Y %b") 1986 Jan
-            d3.time.format("%d-%b-%y")  28-Jan-86
-            d3.time.format("%Y-%m-%d")  1986-01-28
-            d3.time.format("%m/%d/%Y")  01/28/1986
-            d3.time.format("%H:%M") 11:39
-            d3.time.format("%H:%M %p")  11:39 AM
-            d3.time.format("%B %d") January 28
-            d3.time.format("%d %b") 28 Jan
-             */
-
-            //parse the data if needed
-            data.forEach(function(d) {
-                d.y=+d.y
-            });
-            
-
-
-
-         /*SHOULD NOT NEED TO CHANGE MUCH BELOW HERE*/
-
-            for (var i=0;i<frames.length;i++){
-                var stylename=frames[i].stylesheet;
-                var media = frames[i].name;
-                var legend=frames[i].legend;
-                var subYoffset=stylename.subOffset
-                var yLabel=frames[i].yLabel
-                makeChart(data, stylename, media,sort, yMin,yMax,yAxisHighlight,numTicksy,chartpadding,legend, yLabel);
-            }
-        })//end data load
-
-        function drawFrames(){
-            for (var i=0;i<frames.length;i++){
-                var stylename=frames[i].stylesheet;
-                var media = frames[i].name;
-                if(frames[i].units=="mm") {
-                    framewidth = mmToPx(frames[i].width);
-                    frameheight = mmToPx(frames[i].height);
-                }
-                else{
-                    framewidth = frames[i].width;
-                    frameheight = frames[i].height;
-                }
-                var framemargin = frames[i].margins[0];
-                var titleYoffset=stylename.titleOffset;
-                var subYoffset=stylename.subOffset
-                var frame = new drawFrame(stylename.classes,media,titleYoffset,subYoffset)
-                    .width(framewidth)
-                    .height(frameheight)
-                    .margin(framemargin)
-                    .title(title)
-                    .source(source)
-                //optional elements
-                if (subtitle){
-                    frame.subtitle(subtitle)
-                }
-                d3.select("body").call(frame)
-            }
-        }
-
-        function mmToPx(mm){
-            var px = mm*2.83464480558843;
-            return px;
-        }
-            
-    </script>
+    <h1>Lollipop chart (vertical)</h1>
+    <p>Lollipop charts draw more attention to the data value than standard bar/column and can also show rank effectively</p>
+    <hr>
+    <figure class="framed saveable" data-frame="web"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="print"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="social"><svg></svg></figure>
+    <figure class="framed saveable" data-frame="video"><svg></svg></figure>
 </body>
+
+<script type="text/javascript">
+
+//custom graph options here
+const dataPath = 'data_neg.csv' //column headings in the CSV should be 'name' & 'value'
+const sort = "descending"; //sort values into ascending or descending order by data value
+const yAlign = 'left'; //sets which side the y axis labels go on 
+
+const dotSize = 10; //change radius to change size of the lollipop dots
+const numTicksY = 5; //changes the number of ticks on the Y axis 
+const yHighlight = 0; //0 is already highlighted, change this to add another highlight to y axis
+const yLabelOffset = 5; //helps position the ylabel from its default position  
+const normalColours = gChartcolour.basicLineWeb[1];    
+const popColours = gChartcolour.basicLineSocial[1];
+
+const webPadding = {
+    left: 50,
+    right: 30,
+    top: 80,
+    bottom: 30,
+}
+const printPadding = {
+    left: 0,
+    right: 0,
+    top: 100,
+    bottom: 30,
+}
+const socialPadding = {
+    left: 30,
+    right: 50,
+    top: 200,
+    bottom: 0,
+}
+const videoPadding = {
+    left: 100,
+    right: 50,
+    top: 300,
+    bottom: 0,
+}
+
+const frame = {
+    web: gChartframe.webFrame()
+    	.margin({left: 50, top: 80, right: 30 })
+        .width(600),
+
+    print: gChartframe.printFrame()
+	    .margin({left: 30, top: 70, right: 30 })
+        .width(112.5)   //note, this value is in mm for the print frame
+        .height(190),   //note, this value is in mm for the print frame
+
+    social: gChartframe.socialFrame()
+	    .margin({left: 50, top: 170, right: 50 })
+        .title('Slightly shorter title perhaps?'),
+
+    video: gChartframe.videoFrame()
+	    .margin({left: 100, top: 270, right: 50 })
+};
+
+const choosePadding = function(frameName){
+	switch (frameName) {
+		case 'web':
+			return webPadding; 
+		case 'print':
+			return printPadding; 
+		case 'social':
+			return socialPadding
+		case 'video':
+			return videoPadding;
+	}
+}
+const chooseColours = function(frameName){
+	switch (frameName){
+		case 'web':
+		case 'print':
+			return normalColours;
+		case 'social':
+		case 'video':
+			return popColours;
+	}
+}
+
+d3.selectAll('.framed')
+    .each(function(){
+        const figure = d3.select(this);
+        figure.select('svg')
+            .call(frame[figure.node().dataset.frame]);
+    });
+
+d3.csv(dataPath, function(error, data){
+
+	if(error) throw new Error("There was a problem with the data loading");
+
+	//format data
+	const dataExtent = d3.extent(data, d => parseInt(d.value));
+
+	//reorder the data according to whether sort is asc or desc
+    if (sort=="descending"){ 
+    	data.sort((a, b) =>  b.value - a.value )
+    }
+    else if(sort=="ascending"){ 
+    	data.sort((a, b) => a.value - b.value )
+    } 
+    else {
+    	return data;
+    }
+
+    //check if number of ticks is set, otherwise use default of null 
+	var presetNumTicks = (typeof numTicksY !== 'undefined') ? numTicksY : null;
+
+
+	Object.keys(frame).forEach(frameName=>{
+		const currentFrame = frame[frameName];
+
+		const h = currentFrame.dimension().height; 
+		const w = currentFrame.dimension().width;
+
+		const padding = choosePadding(frameName); 
+
+		const chartHeight = h - padding.top + padding.bottom;
+		const chartWidth = w - padding.left + padding.right;
+
+		const myChart = lollipopVChart();   
+		const myAxes = lollipopVAxes(); 
+   
+	    //create scales
+	    const yScale = d3.scaleLinear()
+						.domain(dataExtent)
+						.range([chartHeight, 0]);
+
+		const xScale = d3.scaleBand()
+						.domain(data.map( d => d.name ))
+						.range([chartWidth, 0])
+
+		//create axis
+		const xAxis = d3.axisBottom()
+						.scale(xScale)
+						.tickSize(0)
+
+		const yAxis = d3.axisRight()
+						.scale(yScale)
+						.tickSize(chartWidth)
+						.ticks(presetNumTicks);
+
+		//set colour 
+		var colours = chooseColours(frameName);
+
+		//add configuration to chart
+		myChart.setDataExtent(dataExtent)
+			.setXScale(xScale)
+			.setYScale(yScale)
+			.setDotSize(dotSize)
+			.setColour(colours);
+
+		//add configuration to axes
+		myAxes.setXAxis(xAxis)
+			.setYAxis(yAxis)
+			.setXScale(xScale)
+			.setYScale(yScale)
+			.setYHighlight(yHighlight)
+			.setYAlign(yAlign)
+			.setChartSize({width: chartWidth, height: chartHeight})
+			.setMargins(currentFrame.margin())
+			.setYLabelOffset(yLabelOffset);
+
+		// generate the axes
+		currentFrame.plot()
+			.call(myAxes);
+
+		//generate the chart 
+		currentFrame.plot()
+			.selectAll('g.lollipop-v')
+			.data(data)
+			.enter()
+			.append('g')
+				.attr('class', 'lollipop-v')
+			.call(myChart);
+
+	})
+
+	//add save buttons 
+    addSVGSavers('figure.saveable');
+
+});
+
+
+</script>
 </html>
