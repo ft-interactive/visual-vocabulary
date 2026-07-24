@@ -1,39 +1,39 @@
-# Visual Vocabulary
+# Визуальный словарь
 
-Small examples of data driven graphics -- to be used as starting points for static graphics to be further refined through Illustrator.
-[Viewable here](http://ft-interactive.github.io/visual-vocabulary/)
+Русская адаптация проекта [FT Visual Vocabulary](https://ft-interactive.github.io/visual-vocabulary/).
+Словарь помогает выбирать форму визуализации по аналитической задаче, а не по названию
+или внешнему виду графика.
 
+## Что изменено
 
-# Getting started
+- переведены девять аналитических задач, названия и описания 72 видов графиков;
+- светлый текст на полупрозрачном цветном фоне заменён на чёрный текст на белом;
+- цвет используется только как устойчивый маркер категории;
+- навигация и каталог перестроены для настольных и мобильных экранов;
+- добавлены клавиатурная навигация, видимый фокус и семантическая разметка;
+- внешняя зависимость D3 убрана с главной страницы.
 
-For ease of use we suggest you use [`srvlr`](https://github.com/kavanagh/srvlr) to help you see your changes reflected immediately in your browser.
+## Локальный запуск
 
-If you have srvlr installed using it is as simple as opening terminal, navigating to the location of you project and typing `srvlr`
+Откройте каталог проекта в терминале и запустите любой статический сервер, например:
 
+```bash
+python -m http.server 8000
+```
 
-# Setting up a Mac for editing the examples
+После этого откройте `http://localhost:8000`.
 
- * Install Node.js from here https://nodejs.org
- * Open up Terminal app
- * Install srvlr `npm install -g srvlr` (if you see errors you may need to try `sudo npm install -g srvlr` which will then prompt you for your password)
- * Make sure Git is installed, type `git` into the command line. If it's not installed your Mac should take over and install it for you.
+## GitHub Pages
 
+В настройках репозитория выберите **Settings → Pages → Deploy from a branch**,
+укажите нужную ветку и каталог `/ (root)`.
 
-# Getting a local copy of the examples
+## Происхождение и лицензия
 
-i.e. copying them to your computer. either : [Download them from here](https://github.com/ft-interactive/visual-vocabulary/archive/main.zip)
-or in the terminal window type `git clone https://github.com/ft-interactive/graphics-examples.git TARGET-LOCATION`
+Исходный программный код опубликован Financial Times по лицензии MIT.
+FT отдельно указывает, что лицензия не распространяется на содержание и фирменные
+обозначения Financial Times. В этой адаптации фирменная символика FT не используется,
+а ссылка на первоисточник сохранена.
 
-replacing `TARGET-LOCATION` with the name of the folder you wish to put the examples in.
-
-
-# Getting you graphic off the page and into illustrator
-
-Use the SVG Crowbar bookmarklet [which is available here](http://nytimes.github.io/svg-crowbar/)
-
-
-## Licence
-
-This software is published by the Financial Times under the [MIT licence](https://opensource.org/licenses/MIT).
-
-Please note the MIT licence only covers the software, and does not cover any FT content or branding incorporated into the software or made available using the software. FT content is copyright © The Financial Times Limited, and FT and 'Financial Times' are trademarks of The Financial Times Limited, all rights reserved. For more information about republishing FT content, please contact our [republishing department](https://ft.com/republishing).
+Проект вдохновлён Graphic Continuum Джона Швабиша и Visualisation Catalogue
+Северино Рибекки.

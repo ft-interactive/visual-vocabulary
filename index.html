@@ -1,196 +1,73 @@
-
-<html>
+<!doctype html>
+<html lang="ru">
 <head>
-    <title>Visual Vocabulary</title>
-    <link rel="stylesheet" type="text/css" href="./mani.css">
-    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="v2-data.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Русский визуальный словарь с интерактивными примерами: выбор графика по аналитической задаче.">
+  <title>Визуальный словарь</title>
+  <link rel="stylesheet" href="./mani.css">
+  <link rel="stylesheet" href="./examples.css">
 </head>
 <body>
-    <style>
-        text{font-family:metric}
-    </style>
-    <script>  
-
-    d3.csv("chartTypes.csv",function(error, chartData){
-      let plotCategories=catData.categories
-
-      let container = d3.select("body")
-        .append("div")
-        .attr("class", 'container');
-
-      window.onresize=redraw;
-
-      container.append("h1")
-        .text("Visual Vocabulary")
-      container.append("h2")
-        .text("Designing with data")
-      container.append("p")
-        .text("There are so many ways to visualise data – how do we know which one to pick? Click on the coloured categories below to decide which data relationship is most important in your story, then look at the different types of chart within the category to form some initial ideas about what might work best. This list is not meant to be exhaustive, nor a wizard, but is a useful starting point for making informative and meaningful data visualisations")
-        .attr('class', 'intro-text')
-      container.append("p")
-        .text("Inspired by the Graphic Continuum by Jon Schwabish and Severino Ribecca")
-
-      let plotWidth=container.node().getBoundingClientRect().width;
-      let cellWidth=(plotWidth)/plotCategories.length
-      let menus=container.append("svg")
-        .attr("width",plotWidth)
-        .attr("height",100)
-      let category=menus.selectAll(".categ")
-        .data(plotCategories)
-        .enter()
-        .append("g")
-        .attr("class","categ")
-        .attr("id",function(d,i){return i})
-        .on("mouseover",pointer)
-        .on("mousedown",addLink)
-
-      category.append("text")
-        .attr("class","buttonText")
-        .attr("x",function(d,i){return (cellWidth*i)+(cellWidth/2)})
-        .attr("y",20)
-        .attr("height",20)
-        .attr("width",50)
-        .attr("fill",function(d) {return d.colour})
-        .text(function(d){return d.category})
-
-      category.append("rect")
-        .attr("class","button")
-        .attr("x",function(d,i){return cellWidth*i})
-        .attr("y",30)
-        .attr("height",10)
-        .attr("width",cellWidth)
-        .attr("fill",function(d){return d.colour})
-
-      function addCharts(lookUp){
-        let chartWidth=((plotWidth-60)/6)-10
-        let chartHolder=d3.select("#charts")
-          .append("div")
-        
-        let chart=chartHolder.selectAll(".chart")
-          .data(function(d){
-            let filtered=chartData.filter(function(d){
-                return d.category==lookUp
-            })
-            return filtered
-          })
-          .enter()
-          let div=chart.append("div")
-            .attr("class","chart")
-            .style("max-width",chartWidth)
-
-          div.append("div")
-            .attr("class","chart")
-            .style("height",55)
-            .html(function(d){return d.chartName})
-
-          div.append("img")
-            .attr("class","chart")
-            .style("background-color","#ffffff")
-            .style("opacity",function (d){
-              if(d.avail=="TRUE"){
-                return 0.85
-              }
-              else{return 0.2}
-            })
-            .attr("src",function(d){return "icons/"+d.img})
-            .attr("width", chartWidth-20)
-            .attr("height", chartWidth-20)
-
-          div.append("div")
-            .attr("class","chartDesc")
-            .html(function(d){return d.description})
-
-      }
-
-      function addInfo(el){
-        let loookUp=el.category
-        let infoPanel=container.append("div")
-          .attr("class","panel")
-          .attr("id","infoPanel")
-          .style("background-color",el.colour)
-        infoPanel.append("div")
-          .attr("class","infoHeading")
-          .html(loookUp)
-        infoPanel.append("div")
-          .attr("class","infoText")
-          .html(el.description)
-        infoPanel.append("div")
-          .attr("class","infoSubhead")
-          .html("Examples of use")
-        infoPanel.append("div")
-          .attr("class","infoText")
-          .html(el.example)
-        infoPanel.append("div")
-          .attr("class","infoSubhead")
-          .html("Chart types")
-        infoPanel.append("div")
-          .attr("id","charts")
-          .attr("class","charts")
-
-        addCharts(loookUp)
-      }
-
-      function addLink(d) {
-        //console.log("d",d)
-        d3.selectAll(".link")
-        .remove()
-        d3.selectAll(".panel")
-          .remove()
-        let x1=cellWidth*this.id+(cellWidth/2)
-        let lineData = [
-        {"x":x1,"y":40},
-        {"x":x1,"y":40},
-        {"x":x1,"y":40},
-        {"x":x1,"y":40}];
-        let lineData2 = [
-        {"x":x1,"y":40},
-        {"x":x1,"y":60},
-        {"x":10,"y":60},
-        {"x":10,"y":100}];
-
-        d3.selectAll(".link")
-        .data(d)
-        .enter()
-        menus.append("path")
-          .attr("class","link")
-          .attr("stroke",d.colour)
-          .attr("d", lineFunction(lineData))
-          .transition()
-          .duration(300)
-          .attr("d", lineFunction(lineData2))
-          .each("end", next)
-
-        function next(){
-          addInfo(d)
-        }
-      }
-
-      let lineFunction = d3.svg.line()
-        .x(function(d) { return d.x; })
-        .y(function(d) { return d.y; })
-        .interpolate("linear");
-
-      function redraw() {
-        plotWidth=container.node().getBoundingClientRect().width;
-        cellWidth=plotWidth/plotCategories.length
-        menus.attr("width",plotWidth)
-        d3.selectAll(".button")
-          .attr("x",function(d,i){return cellWidth*i})
-          .attr("width",cellWidth)
-        d3.selectAll(".buttonText")
-          .attr("x",function(d,i){return (cellWidth*i)+(cellWidth/2)})
-          .attr("width",cellWidth)
-      }
-
-      function pointer() {
-          this.style.cursor='pointer'
-
-      }
-    })//end data load
-
-
-
-    </script>
+  <main class="container">
+    <header class="hero">
+      <p class="eyebrow">Выбор визуализации по задаче</p>
+      <h1>Визуальный словарь</h1>
+      <p class="lead">
+        Сначала определите, какая связь в данных важнее всего. Затем выберите форму и откройте
+        интерактивный пример, чтобы увидеть, как она ведёт себя в цифровом интерфейсе.
+      </p>
+    </header>
+    <nav class="category-nav" aria-label="Аналитические задачи">
+      <p class="nav-label">Что нужно показать?</p>
+      <div class="category-grid" id="categoryGrid"></div>
+    </nav>
+    <section class="category-panel" id="categoryPanel" aria-live="polite">
+      <div class="panel-heading">
+        <span class="category-marker" id="categoryMarker" aria-hidden="true"></span>
+        <div><p class="panel-kicker">Аналитическая задача</p><h2 id="categoryTitle"></h2></div>
+      </div>
+      <div class="panel-copy">
+        <div><h3>Когда использовать</h3><p id="categoryDescription"></p></div>
+        <div><h3>Примеры</h3><p id="categoryExamples"></p></div>
+      </div>
+      <div class="charts-heading">
+        <div><p class="panel-kicker">Возможные формы</p><h3>Типы графиков</h3></div>
+        <p class="chart-count" id="chartCount"></p>
+      </div>
+      <div class="chart-grid" id="chartGrid"></div>
+    </section>
+    <footer>
+      <p>Русская адаптация <a href="https://ft-interactive.github.io/visual-vocabulary/">Visual Vocabulary</a>. Интерактивные учебные примеры построены на Apache ECharts.</p>
+    </footer>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@6.1.0/dist/echarts.min.js"></script>
+  <script src="./v2-data.js"></script>
+  <script src="./interactive-examples.js"></script>
+  <script src="./interactive-dialog.js"></script>
+  <script>
+    const state = { charts: [], activeCategory: categories[0].id };
+    function parseCsv(text) {
+      const rows=[]; let row=[], value="", quoted=false;
+      for(let i=0;i<text.length;i+=1){const c=text[i],n=text[i+1];if(c==='"'&&quoted&&n==='"'){value+='"';i+=1}else if(c==='"'){quoted=!quoted}else if(c===","&&!quoted){row.push(value);value=""}else if((c==="\n"||c==="\r")&&!quoted){if(c==="\r"&&n==="\n")i+=1;row.push(value);if(row.some(x=>x.trim()!==""))rows.push(row);row=[];value=""}else value+=c}
+      if(value||row.length){row.push(value);rows.push(row)} const headers=rows.shift();
+      return rows.map(cells=>Object.fromEntries(headers.map((h,i)=>[h,cells[i]||""])));
+    }
+    function renderNavigation(){
+      const grid=document.getElementById("categoryGrid"); grid.innerHTML="";
+      categories.forEach(category=>{const button=document.createElement("button");button.type="button";button.className="category-button";button.dataset.category=category.id;button.style.setProperty("--category-color",category.color);button.innerHTML=`<span class="button-dot" aria-hidden="true"></span><span>${category.title}</span>`;button.addEventListener("click",()=>selectCategory(category.id));grid.append(button)});
+    }
+    function selectCategory(categoryId){
+      state.activeCategory=categoryId;const category=categories.find(item=>item.id===categoryId);const charts=state.charts.filter(item=>item.category===categoryId);
+      document.querySelectorAll(".category-button").forEach(button=>{const selected=button.dataset.category===categoryId;button.classList.toggle("is-active",selected);button.setAttribute("aria-pressed",String(selected))});
+      document.getElementById("categoryMarker").style.backgroundColor=category.color;document.getElementById("categoryTitle").textContent=category.title;document.getElementById("categoryDescription").textContent=category.description;document.getElementById("categoryExamples").textContent=category.examples;document.getElementById("chartCount").textContent=`${charts.length} ${pluralize(charts.length,"вариант","варианта","вариантов")}`;
+      const grid=document.getElementById("chartGrid");grid.innerHTML="";
+      charts.forEach(chart=>{const card=document.createElement("article");card.className="chart-card";card.style.setProperty("--category-color",category.color);const visual=document.createElement("div");visual.className="chart-visual";const image=document.createElement("img");image.src=`icons/${chart.img}`;image.alt="";image.loading="lazy";visual.append(image);const content=document.createElement("div");content.className="chart-content";content.innerHTML=`<h4>${chart.chartName}</h4><p>${chart.description||"Краткое описание будет добавлено."}</p>`;if(chart.avail!=="TRUE"){const badge=document.createElement("span");badge.className="badge";badge.textContent="концепция";content.prepend(badge)}const button=document.createElement("button");button.type="button";button.className="example-button";button.textContent="Открыть интерактивный пример";button.addEventListener("click",()=>openInteractiveExample(chart));content.append(button);card.append(visual,content);grid.append(card)});
+      document.getElementById("categoryPanel").style.setProperty("--category-color",category.color);
+    }
+    function pluralize(n,one,few,many){const a=n%10,b=n%100;if(a===1&&b!==11)return one;if(a>=2&&a<=4&&(b<12||b>14))return few;return many}
+    async function init(){renderNavigation();try{const response=await fetch("./chartTypes.csv");if(!response.ok)throw new Error(`HTTP ${response.status}`);state.charts=parseCsv(await response.text());selectCategory(state.activeCategory)}catch(error){document.getElementById("categoryPanel").innerHTML=`<div class="error"><h2>Не удалось загрузить каталог</h2><p>Откройте сайт через локальный веб-сервер или GitHub Pages.</p></div>`;console.error(error)}}
+    init();
+  </script>
 </body>
 </html>
